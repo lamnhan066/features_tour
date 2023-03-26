@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
-    childConfig: ChildConfig.global.copyWith(
-      backgroundColor: Colors.white,
-    ),
     skipConfig: SkipConfig.global.copyWith(
       text: 'SKIP >>>',
     ),
