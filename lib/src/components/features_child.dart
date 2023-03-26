@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:features_tour/src/extensions/get_widget_position.dart';
-import 'package:features_tour/src/models/aligment.dart';
+import 'package:features_tour/src/models/alignment.dart';
 import 'package:flutter/material.dart';
 
 class FeaturesChild extends StatefulWidget {
@@ -9,13 +9,15 @@ class FeaturesChild extends StatefulWidget {
     super.key,
     required this.globalKey,
     required this.child,
+    required this.skip,
+    required this.skipAlignment,
     required this.introdure,
     required this.padding,
     required this.curve,
     required this.zoomScale,
     required this.animationDuration,
-    required this.horizontalAligment,
-    required this.verticalAlignment,
+    this.alignment,
+    required this.quadrantAlignment,
   });
 
   /// Add a `GlobalKey()` to control this widget
@@ -24,17 +26,32 @@ class FeaturesChild extends StatefulWidget {
   /// Child widget
   final Widget child;
 
+  /// Skip all the steps
+  final Widget skip;
+
+  /// Position of the skip widget
+  final Alignment skipAlignment;
+
   /// Feature introduction widget, normally `Text`
   final Widget introdure;
 
   /// Padding of the `introdure` widget
   final EdgeInsetsGeometry padding;
 
+  /// Alignmnent of the `introdure` widget in side `quarantAlignment`.
+  ///
+  /// This value automatically aligns depending on the `quarantAlignment`.
+  /// Make it as close as possible to other.
+  final Alignment? alignment;
+
+  /// Quadrant rectangle for `introdure` widget.
+  final QuadrantAlignment quadrantAlignment;
+
   /// Horizontal alignment of the `introdure` widget
-  final HorizontalAligment horizontalAligment;
+  // final HorizontalAligment horizontalAligment;
 
   /// Vertical alignment of the `introdure` widget
-  final VerticalAlignment verticalAlignment;
+  // final VerticalAlignment verticalAlignment;
 
   /// Zoom scale of the `child` widget when show up on the instruction
   final double zoomScale;
@@ -52,44 +69,30 @@ class _FeaturesChildState extends State<FeaturesChild>
     with WidgetsBindingObserver {
   double scale = 1;
   Rect? rect;
-  Rect? introdureRect;
-  Alignment? alignment;
+  late Rect introdureRect;
+  late Alignment alignment;
 
   void updateState() {
     rect = (widget.globalKey).globalPaintBounds;
     if (rect == null) return;
 
     final size = MediaQuery.of(context).size;
-    switch (widget.verticalAlignment) {
-      case VerticalAlignment.top:
+    switch (widget.quadrantAlignment) {
+      case QuadrantAlignment.top:
         introdureRect = Rect.fromLTRB(0, 0, size.width, rect!.top);
-
-        switch (widget.horizontalAligment) {
-          case HorizontalAligment.left:
-            alignment = Alignment.bottomLeft;
-            break;
-          case HorizontalAligment.center:
-            alignment = Alignment.bottomCenter;
-            break;
-          case HorizontalAligment.right:
-            alignment = Alignment.bottomRight;
-            break;
-        }
+        alignment = widget.alignment ?? Alignment.bottomCenter;
         break;
-      case VerticalAlignment.bottom:
+      case QuadrantAlignment.left:
+        introdureRect = Rect.fromLTRB(0, 0, rect!.left, size.height);
+        alignment = widget.alignment ?? Alignment.centerRight;
+        break;
+      case QuadrantAlignment.right:
+        introdureRect = Rect.fromLTRB(rect!.right, 0, size.width, size.height);
+        alignment = widget.alignment ?? Alignment.centerLeft;
+        break;
+      case QuadrantAlignment.bottom:
         introdureRect = Rect.fromLTRB(0, rect!.bottom, size.width, size.height);
-
-        switch (widget.horizontalAligment) {
-          case HorizontalAligment.left:
-            alignment = Alignment.topLeft;
-            break;
-          case HorizontalAligment.center:
-            alignment = Alignment.topCenter;
-            break;
-          case HorizontalAligment.right:
-            alignment = Alignment.topRight;
-            break;
-        }
+        alignment = widget.alignment ?? Alignment.topCenter;
         break;
     }
   }
@@ -103,6 +106,7 @@ class _FeaturesChildState extends State<FeaturesChild>
         updateState();
       });
 
+      // Control the animation of the `introdure` widget.
       Timer.periodic(widget.animationDuration, (timer) {
         if (!mounted) {
           timer.cancel();
@@ -130,11 +134,6 @@ class _FeaturesChildState extends State<FeaturesChild>
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   void didChangeMetrics() {
     setState(() {
       updateState();
@@ -145,10 +144,9 @@ class _FeaturesChildState extends State<FeaturesChild>
 
   @override
   Widget build(BuildContext context) {
-    return rect == null || introdureRect == null
+    return rect == null
         ? const CircularProgressIndicator()
         : Stack(
-            clipBehavior: Clip.none,
             children: [
               Positioned.fromRect(
                 rect: rect!,
@@ -160,13 +158,19 @@ class _FeaturesChildState extends State<FeaturesChild>
                 ),
               ),
               Positioned.fromRect(
-                rect: introdureRect!,
+                rect: introdureRect,
                 child: Padding(
                   padding: widget.padding,
                   child: Align(
-                    alignment: alignment!,
+                    alignment: alignment,
                     child: widget.introdure,
                   ),
+                ),
+              ),
+              Positioned.fill(
+                child: Align(
+                  alignment: widget.skipAlignment,
+                  child: widget.skip,
                 ),
               ),
             ],
