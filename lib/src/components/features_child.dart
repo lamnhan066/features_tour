@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/extensions/get_widget_position.dart';
-import 'package:features_tour/src/models/alignment.dart';
 import 'package:flutter/material.dart';
 
 class FeaturesChild extends StatefulWidget {
@@ -10,9 +10,9 @@ class FeaturesChild extends StatefulWidget {
     required this.globalKey,
     required this.child,
     required this.skip,
-    required this.skipAlignment,
+    required this.skipConfig,
     required this.next,
-    required this.nextAlignment,
+    required this.nextConfig,
     required this.introdure,
     required this.padding,
     required this.curve,
@@ -28,17 +28,17 @@ class FeaturesChild extends StatefulWidget {
   /// Child widget
   final Widget child;
 
-  /// Skip all the steps
+  /// Skip Button widget
   final Widget skip;
 
-  /// Position of the skip widget
-  final Alignment skipAlignment;
-
   /// Skip all the steps
+  final SkipConfig skipConfig;
+
+  /// Next button widget
   final Widget next;
 
-  /// Position of the skip widget
-  final Alignment nextAlignment;
+  /// Skip all the steps
+  final NextConfig nextConfig;
 
   /// Feature introduction widget, normally `Text`
   final Widget introdure;
@@ -175,18 +175,20 @@ class _FeaturesChildState extends State<FeaturesChild>
                   ),
                 ),
               ),
-              Positioned.fill(
-                child: Align(
-                  alignment: widget.skipAlignment,
-                  child: widget.skip,
+              if (widget.skipConfig.enabled)
+                Positioned.fill(
+                  child: Align(
+                    alignment: widget.skipConfig.alignment,
+                    child: widget.skip,
+                  ),
                 ),
-              ),
-              Positioned.fill(
-                child: Align(
-                  alignment: widget.nextAlignment,
-                  child: widget.next,
+              if (widget.nextConfig.enabled)
+                Positioned.fill(
+                  child: Align(
+                    alignment: widget.nextConfig.alignment,
+                    child: widget.next,
+                  ),
                 ),
-              ),
             ],
           );
   }

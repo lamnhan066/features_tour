@@ -13,10 +13,14 @@ class NextConfig {
   /// Color of ther next text
   final Color color;
 
+  /// Enable or disable the skip button
+  final bool enabled;
+
   const NextConfig({
     this.text = 'NEXT >>',
     this.alignment = Alignment.bottomRight,
     this.color = Colors.white,
+    this.enabled = true,
   });
 
   NextConfig copyWith({

@@ -13,10 +13,14 @@ class SkipConfig {
   /// Color of ther skip text
   final Color color;
 
+  /// Enable or disable the skip button
+  final bool enabled;
+
   const SkipConfig({
     this.text = 'SKIP >>>',
     this.alignment = Alignment.bottomLeft,
     this.color = Colors.white,
+    this.enabled = true,
   });
 
   SkipConfig copyWith({

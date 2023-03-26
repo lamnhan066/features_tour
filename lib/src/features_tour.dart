@@ -271,7 +271,7 @@ class _FeaturesTourState extends State<FeaturesTour>
               ),
             ),
           ),
-          skipAlignment: skipConfig.alignment,
+          skipConfig: skipConfig,
           next: Padding(
             padding: const EdgeInsets.all(12.0),
             child: TextButton(
@@ -290,7 +290,7 @@ class _FeaturesTourState extends State<FeaturesTour>
               ),
             ),
           ),
-          nextAlignment: nextConfig.alignment,
+          nextConfig: nextConfig,
           padding: introdureConfig.padding,
           curve: childConfig.curve,
           zoomScale: childConfig.zoomScale,
