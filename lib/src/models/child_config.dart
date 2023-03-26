@@ -32,7 +32,7 @@ class ChildConfig {
     this.backgroundColor = Colors.transparent,
     this.shapeBorder,
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
-    this.zoomScale = 1.5,
+    this.zoomScale = 1.2,
     this.curve = Curves.decelerate,
   });
 

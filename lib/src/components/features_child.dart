@@ -11,6 +11,8 @@ class FeaturesChild extends StatefulWidget {
     required this.child,
     required this.skip,
     required this.skipAlignment,
+    required this.next,
+    required this.nextAlignment,
     required this.introdure,
     required this.padding,
     required this.curve,
@@ -31,6 +33,12 @@ class FeaturesChild extends StatefulWidget {
 
   /// Position of the skip widget
   final Alignment skipAlignment;
+
+  /// Skip all the steps
+  final Widget next;
+
+  /// Position of the skip widget
+  final Alignment nextAlignment;
 
   /// Feature introduction widget, normally `Text`
   final Widget introdure;
@@ -171,6 +179,12 @@ class _FeaturesChildState extends State<FeaturesChild>
                 child: Align(
                   alignment: widget.skipAlignment,
                   child: widget.skip,
+                ),
+              ),
+              Positioned.fill(
+                child: Align(
+                  alignment: widget.nextAlignment,
+                  child: widget.next,
                 ),
               ),
             ],

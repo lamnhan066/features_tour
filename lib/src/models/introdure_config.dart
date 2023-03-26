@@ -24,7 +24,7 @@ class IntrodureConfig {
   final Duration animationDuration;
 
   const IntrodureConfig({
-    this.backgroundColor = Colors.black54,
+    this.backgroundColor = Colors.black87,
     this.padding = const EdgeInsets.all(20.0),
     this.alignment,
     this.quadrantAlignment = QuadrantAlignment.top,

@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 
-class SkipConfig {
+class NextConfig {
   /// Global configuration
-  static SkipConfig global = const SkipConfig();
+  static NextConfig global = const NextConfig();
 
-  /// Skip button text
+  /// Next button text
   final String text;
 
-  /// Position of the skip button
+  /// Position of the next button
   final Alignment alignment;
 
-  /// Color of ther skip text
+  /// Color of ther next text
   final Color color;
 
-  const SkipConfig({
-    this.text = 'SKIP >>>',
-    this.alignment = Alignment.bottomLeft,
+  const NextConfig({
+    this.text = 'NEXT >>',
+    this.alignment = Alignment.bottomRight,
     this.color = Colors.white,
   });
 
-  SkipConfig copyWith({
+  NextConfig copyWith({
     String? text,
     Alignment? alignment,
     Color? color,
   }) {
-    return SkipConfig(
+    return NextConfig(
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,

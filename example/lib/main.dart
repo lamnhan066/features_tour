@@ -3,6 +3,19 @@ import 'package:features_tour_example/next_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  FeaturesTour.setGlobalConfig(
+    childConfig: ChildConfig.global.copyWith(
+      backgroundColor: Colors.white,
+    ),
+    skipConfig: SkipConfig.global.copyWith(
+      text: 'SKIP >>>',
+    ),
+    nextConfig: NextConfig.global.copyWith(text: 'NEXT >>'),
+    introdureConfig: IntrodureConfig.global.copyWith(
+      backgroundColor: Colors.black,
+    ),
+  );
+
   runApp(const MaterialApp(home: MyApp()));
 }
 
@@ -16,8 +29,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    FeaturesTour.setPageName('MyApp');
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      FeaturesTour.start(context: context, isDebug: true)
+      FeaturesTour.start(context: context, pageName: 'MyApp', isDebug: true)
           .then((value) => print('Completed'));
     });
     super.initState();
