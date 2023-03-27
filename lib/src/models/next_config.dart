@@ -23,6 +23,20 @@ class NextConfig {
     this.enabled = true,
   });
 
+  factory NextConfig.copyWith({
+    String? text,
+    Alignment? alignment,
+    Color? color,
+    bool? enabled,
+  }) {
+    return NextConfig(
+      text: text ?? global.text,
+      alignment: alignment ?? global.alignment,
+      color: color ?? global.color,
+      enabled: enabled ?? global.enabled,
+    );
+  }
+
   NextConfig copyWith({
     String? text,
     Alignment? alignment,

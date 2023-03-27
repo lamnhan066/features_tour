@@ -217,7 +217,7 @@ class _FeaturesTourState extends State<FeaturesTour>
           zoomScale: childConfig.zoomScale,
           alignment: introdureConfig.alignment,
           quadrantAlignment: introdureConfig.quadrantAlignment,
-          animationDuration: introdureConfig.animationDuration,
+          animationDuration: childConfig.animationDuration,
           child: GestureDetector(
             onTap: () async {
               if (ctx.mounted) {

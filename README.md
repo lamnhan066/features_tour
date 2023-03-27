@@ -56,14 +56,14 @@ FeaturesTour(
         style: TextStyle(color: Colors.white),
     ),
     // Where to place the `introdure` widget.
-    introdureConfig: const IntrodureConfig(
+    introdureConfig: IntrodureConfig.copyWith(
         // Select the rectangle of the quadrant on the screen
         quadrantAlignment: QuadrantAlignment.bottom,
         // Alignment of the `introdure` widget in the quadrant rectangle
         alignment: Alignment.topCenter,
     ),
     // Config for the fake child widget. This fake child is default to original `child`.
-    childConfig: const ChildConfig(
+    childConfig: ChildConfig.copyWith(
         backgroundColor: Colors.white,
     ),
     // This is the real widget

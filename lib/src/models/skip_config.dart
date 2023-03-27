@@ -23,6 +23,20 @@ class SkipConfig {
     this.enabled = true,
   });
 
+  factory SkipConfig.copyWith({
+    String? text,
+    Alignment? alignment,
+    Color? color,
+    bool? enabled,
+  }) {
+    return SkipConfig(
+      text: text ?? global.text,
+      alignment: alignment ?? global.alignment,
+      color: color ?? global.color,
+      enabled: enabled ?? global.enabled,
+    );
+  }
+
   SkipConfig copyWith({
     String? text,
     Alignment? alignment,

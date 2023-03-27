@@ -20,16 +20,27 @@ class IntrodureConfig {
   /// Quadrant rectangle for `introdure` widget.
   final QuadrantAlignment quadrantAlignment;
 
-  /// Animation duration of the `child` widget when show up on the instruction
-  final Duration animationDuration;
-
   const IntrodureConfig({
     this.backgroundColor = Colors.black87,
     this.padding = const EdgeInsets.all(20.0),
     this.alignment,
     this.quadrantAlignment = QuadrantAlignment.top,
-    this.animationDuration = const Duration(milliseconds: 600),
   });
+
+  /// Apply new settings to the `introdure` widget base on [global] settings.
+  factory IntrodureConfig.copyWith({
+    Color? backgroundColor,
+    EdgeInsetsGeometry? padding,
+    Alignment? alignment,
+    QuadrantAlignment? quadrantAlignment,
+  }) {
+    return IntrodureConfig(
+      backgroundColor: backgroundColor ?? global.backgroundColor,
+      padding: padding ?? global.padding,
+      alignment: alignment ?? global.alignment,
+      quadrantAlignment: quadrantAlignment ?? global.quadrantAlignment,
+    );
+  }
 
   IntrodureConfig copyWith({
     Color? backgroundColor,
@@ -43,7 +54,6 @@ class IntrodureConfig {
       padding: padding ?? this.padding,
       alignment: alignment ?? this.alignment,
       quadrantAlignment: quadrantAlignment ?? this.quadrantAlignment,
-      animationDuration: animationDuration ?? this.animationDuration,
     );
   }
 }

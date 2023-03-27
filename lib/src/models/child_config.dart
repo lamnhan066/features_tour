@@ -27,6 +27,10 @@ class ChildConfig {
   /// Animation of the `child` widget when show up on the instruction
   final Curve curve;
 
+  /// Animation duration of the `child` widget when show up on the instruction
+  final Duration animationDuration;
+
+  /// Default value of the `child` widget
   const ChildConfig({
     this.child,
     this.backgroundColor = Colors.transparent,
@@ -34,8 +38,31 @@ class ChildConfig {
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
     this.zoomScale = 1.2,
     this.curve = Curves.decelerate,
+    this.animationDuration = const Duration(milliseconds: 600),
   });
 
+  /// Apply new settings to the `child` widget base on [global] settings.
+  factory ChildConfig.copyWith({
+    Widget? child,
+    Color? backgroundColor,
+    ShapeBorder? shapeBorder,
+    BorderRadiusGeometry? borderRadius,
+    double? zoomScale,
+    Curve? curve,
+    Duration? animationDuration,
+  }) {
+    return ChildConfig(
+      child: child ?? global.child,
+      backgroundColor: backgroundColor ?? global.backgroundColor,
+      shapeBorder: shapeBorder ?? global.shapeBorder,
+      borderRadius: borderRadius ?? global.borderRadius,
+      zoomScale: zoomScale ?? global.zoomScale,
+      curve: curve ?? global.curve,
+      animationDuration: animationDuration ?? global.animationDuration,
+    );
+  }
+
+  /// Apply new settings to the current settings.
   ChildConfig copyWith({
     Widget? child,
     Color? backgroundColor,
@@ -43,6 +70,7 @@ class ChildConfig {
     BorderRadiusGeometry? borderRadius,
     double? zoomScale,
     Curve? curve,
+    Duration? animationDuration,
   }) {
     return ChildConfig(
       child: child ?? this.child,
@@ -51,6 +79,7 @@ class ChildConfig {
       borderRadius: borderRadius ?? this.borderRadius,
       zoomScale: zoomScale ?? this.zoomScale,
       curve: curve ?? this.curve,
+      animationDuration: animationDuration ?? this.animationDuration,
     );
   }
 }
