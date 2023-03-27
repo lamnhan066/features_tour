@@ -5,6 +5,7 @@ import 'next_page.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
+    force: true,
     skipConfig: SkipConfig.global.copyWith(
       text: 'SKIP >>>',
     ),

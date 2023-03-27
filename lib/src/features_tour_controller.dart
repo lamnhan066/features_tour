@@ -41,7 +41,7 @@ class FeaturesTourController {
   /// ```
   Future<void> start({
     required BuildContext context,
-    bool force = false,
+    bool? force,
   }) async {
     // Wait until the next frame of the application's UI has been drawn
     await Future.delayed(Duration.zero);
@@ -74,11 +74,14 @@ class FeaturesTourController {
 
       printDebug('Page transition completed.');
     }
-    printDebug('Start the tour');
 
     // Sort the `_states` with its `index`
     if (_states.length > 1) _states.sort((a, b) => a.index.compareTo(b.index));
 
+    // Get default value from global `force`
+    force ??= FeaturesTour._force;
+
+    printDebug('Start the tour');
     while (_states.isNotEmpty) {
       // ignore: use_build_context_synchronously
       if (!context.mounted) break;

@@ -14,6 +14,8 @@ class FeaturesTour extends StatefulWidget {
   /// Prefix of this package
   static String _prefix = 'FeaturesTour';
 
+  static bool _force = false;
+
   /// Store all available controllers
   static final List<FeaturesTourController> _controllers = [];
 
@@ -34,12 +36,14 @@ class FeaturesTour extends StatefulWidget {
   /// );
   /// ```
   static void setGlobalConfig({
+    bool? force,
     ChildConfig? childConfig,
     SkipConfig? skipConfig,
     NextConfig? nextConfig,
     IntrodureConfig? introdureConfig,
     String? preferencePrefix,
   }) {
+    if (force != null) _force = force;
     if (childConfig != null) ChildConfig.global = childConfig;
     if (skipConfig != null) SkipConfig.global = skipConfig;
     if (nextConfig != null) NextConfig.global = nextConfig;
