@@ -44,7 +44,7 @@ class FeaturesTourController {
     bool force = false,
   }) async {
     // Wait until the next frame of the application's UI has been drawn
-    await null;
+    await Future.delayed(Duration.zero);
 
     if (_states.isEmpty) {
       printDebug('This value has no state');
