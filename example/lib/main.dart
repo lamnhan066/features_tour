@@ -1,13 +1,16 @@
 import 'package:features_tour/features_tour.dart';
-import 'package:features_tour_example/next_page.dart';
 import 'package:flutter/material.dart';
+
+import 'next_page.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
     skipConfig: SkipConfig.global.copyWith(
       text: 'SKIP >>>',
     ),
-    nextConfig: NextConfig.global.copyWith(text: 'NEXT >>'),
+    nextConfig: NextConfig.global.copyWith(
+      text: 'NEXT >>',
+    ),
     introdureConfig: IntrodureConfig.global.copyWith(
       backgroundColor: Colors.black,
     ),
@@ -24,12 +27,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final tourController = FeaturesTourController('MyApp');
+
   @override
   void initState() {
-    FeaturesTour.setPageName('MyApp');
+    // FeaturesTour.setPageName('MyApp');
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      FeaturesTour.start(context: context, pageName: 'MyApp', isDebug: true)
-          .then((value) => print('Completed'));
+      tourController.start(context: context, isDebug: true);
     });
     super.initState();
   }
@@ -40,13 +44,13 @@ class _MyAppState extends State<MyApp> {
       appBar: AppBar(
         title: const Text('Plugin example app'),
       ),
+      drawer: const Drawer(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FeaturesTour(
-            // enabled: false,
-            key: GlobalKey(),
+            controller: tourController,
             index: 1,
             introdure: const Text(
               'This button will be shown after Button 1',
@@ -63,8 +67,7 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
           FeaturesTour(
-            // enabled: false,
-            key: GlobalKey(),
+            controller: tourController,
             index: 0,
             introdure: const Text(
               'This button will show first',
@@ -82,7 +85,8 @@ class _MyAppState extends State<MyApp> {
             onPressed: () async {},
           ),
           FeaturesTour(
-            key: GlobalKey(),
+            controller: tourController,
+            // key: GlobalKey(),
             index: 2,
             introdure: const Text(
               'This is a TextField\nLine 2\nLine 3',
@@ -101,8 +105,7 @@ class _MyAppState extends State<MyApp> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               FeaturesTour(
-                // enabled: false,
-                key: GlobalKey(),
+                controller: tourController,
                 index: 3,
                 introdure: const Text(
                   'This is the Button 3',
@@ -120,8 +123,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
               FeaturesTour(
-                // enabled: false,
-                key: GlobalKey(),
+                controller: tourController,
                 index: 4,
                 introdure: const Text(
                   'This is the Button 4',
@@ -144,7 +146,7 @@ class _MyAppState extends State<MyApp> {
         ],
       ),
       floatingActionButton: FeaturesTour(
-        key: GlobalKey(),
+        controller: tourController,
         index: 5,
         introdure: const Text(
           'This is the last Button. Press to navigate to the NextPage >>',
@@ -154,17 +156,24 @@ class _MyAppState extends State<MyApp> {
           alignment: Alignment.bottomRight,
           quadrantAlignment: QuadrantAlignment.top,
         ),
+        skipConfig: const SkipConfig(
+          enabled: false,
+        ),
+        nextConfig: const NextConfig(
+          enabled: false,
+        ),
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const NextPage()));
+        },
         child: FloatingActionButton(
+          heroTag: UniqueKey(),
           child: const Icon(Icons.add),
           onPressed: () {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => const NextPage()));
           },
         ),
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const NextPage()));
-        },
       ),
     );
   }

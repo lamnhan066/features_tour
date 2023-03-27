@@ -10,18 +10,13 @@ class NextPage extends StatefulWidget {
 }
 
 class _NextPageState extends State<NextPage> {
+  final tourController = FeaturesTourController('NextPage');
+
   @override
   void initState() {
-    FeaturesTour.setPageName('NextPage');
-    // Timer(const Duration(seconds: 1), () {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      FeaturesTour.start(
-        context: context,
-        pageName: 'NextPage',
-        isDebug: true,
-      );
+      tourController.start(context: context);
     });
-    // });
     super.initState();
   }
 
@@ -34,9 +29,8 @@ class _NextPageState extends State<NextPage> {
       body: Column(
         children: [
           FeaturesTour(
-            key: GlobalKey(),
+            controller: tourController,
             index: 0,
-            name: 'nextpage0',
             introdure: const Text(
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
@@ -53,9 +47,8 @@ class _NextPageState extends State<NextPage> {
             ),
           ),
           FeaturesTour(
-            key: GlobalKey(),
+            controller: tourController,
             index: 1,
-            name: 'nextpage1',
             introdure: const Text(
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
@@ -72,9 +65,8 @@ class _NextPageState extends State<NextPage> {
             ),
           ),
           FeaturesTour(
-            key: GlobalKey(),
+            controller: tourController,
             index: 2,
-            name: 'nextpage2',
             introdure: const Text(
               'This is TextButton 3',
               style: TextStyle(color: Colors.white),
@@ -91,7 +83,7 @@ class _NextPageState extends State<NextPage> {
             ),
           ),
           FeaturesTour(
-            key: GlobalKey(),
+            controller: tourController,
             index: 3,
             introdure: const Text(
               'Go to ThirdPage',

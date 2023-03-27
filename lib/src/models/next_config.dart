@@ -27,11 +27,13 @@ class NextConfig {
     String? text,
     Alignment? alignment,
     Color? color,
+    bool? enabled,
   }) {
     return NextConfig(
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,
+      enabled: enabled ?? this.enabled,
     );
   }
 }

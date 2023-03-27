@@ -27,18 +27,18 @@ void main() {
 ```
 
 ``` dart
+// Use this method to set name for this page. This value will prevent the dupplicated `index` issues.
+final tourController = FeaturesTourController('MyApp');
+
 @override
 void initState() {
-    // Use this method to set name for this page. This value will prevent the dupplicated `index` issues.
-    FeaturesTour.setPageName('MyApp');
-
     // Use this method to start all the available features tour. This `context` 
     // should be wrapped in `WidgetsBinding.instance.addPostFrameCallback` to
     // prevent `context` issues.
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         // You should add `context` to let the package to wait for the page transition
         // animation to complete before start the tour.
-        FeaturesTour.start(context: context, pageName: 'MyApp', isDebug: true);
+        tourController.start(context: context, isDebug: true);
     });
     super.initState();
 }
@@ -46,12 +46,10 @@ void initState() {
 
 ``` dart
 FeaturesTour(
-    // Use `GlobalKey`
-    key: GlobalKey(),
+    // Add the controller
+    controller: tourController,
     // Index of this widget in the tour. It must be unique at least in the same page.
     index: 0,
-    // Set the name of this widget, default is the value of index.
-    name: 'textbutton1',
     // Introduction of this widget
     introdure: const Text(
         'This is TextButton 1',
