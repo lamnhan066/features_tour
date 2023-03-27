@@ -55,6 +55,7 @@ class FeaturesTour extends StatefulWidget {
     printDebug('All pages has been removed');
   }
 
+  /// Get key for shared preferences
   static String _getPrefKey(
     String? pageName,
     FeaturesTourStateMixin controller,
@@ -62,9 +63,29 @@ class FeaturesTour extends StatefulWidget {
     return '${_prefix}_${pageName}_${controller.index}';
   }
 
+  /// Create a [FeaturesTour] to show the tour for specified widget.
+  ///
+  /// This widget only requires [controller] is [FeaturesTourController] and
+  /// [child] is your widget. There is [childConfig] to configure the child widget.
+  ///
+  /// The [index] is a unique value and it's very important because it will decide
+  /// which widget to show first due to its ordered, if you want the package to
+  /// maintain it automatically then you just need to let it `null` for
+  /// **all widgets in the same page**, if not you have to set it manually also
+  /// for **all widgets in the same page**.
+  ///
+  /// You can disable this feature by using [enabled].
+  ///
+  /// [introdure] is a widget that will show the introdure information, you can
+  /// also configure it with [introdureConfig].
+  ///
+  /// There are Next button and Skip button that you can configure it with [nextConfig]
+  /// and [skipConfig].
+  ///
+  /// The [onPressed] will be triggered when this widget is pressed.
   FeaturesTour({
     required this.controller,
-    required this.index,
+    int? index,
     required this.child,
     this.childConfig,
     this.introdure = const SizedBox.shrink(),
@@ -73,12 +94,16 @@ class FeaturesTour extends StatefulWidget {
     this.skipConfig,
     this.enabled = true,
     this.onPressed,
-  }) : super(key: GlobalKey());
+  }) : super(key: GlobalKey()) {
+    this.index = index ?? controller.autoIndex;
+  }
 
+  /// Controller of the current page
   final FeaturesTourController controller;
 
-  /// The tour will sort by this index, and it must be not dupplicated.
-  final int index;
+  /// The tour will sort by this index, and it must be not dupplicated. You can
+  /// leave this black if you want to let the package to control it automatically.
+  late final int index;
 
   /// Enable or disable the action of this widget
   final bool enabled;

@@ -13,12 +13,8 @@ class _ThirdPageState extends State<ThirdPage> {
 
   @override
   void initState() {
-    // FeaturesTour.setPageName('ThirdPage');
+    tourController.start(context: context);
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      tourController.start(context: context, isDebug: true);
-    });
-    // });
     super.initState();
   }
 
@@ -32,7 +28,6 @@ class _ThirdPageState extends State<ThirdPage> {
         children: [
           FeaturesTour(
             controller: tourController,
-            index: 0,
             introdure: const Text(
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
@@ -50,7 +45,6 @@ class _ThirdPageState extends State<ThirdPage> {
           ),
           FeaturesTour(
             controller: tourController,
-            index: 1,
             introdure: const Text(
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
@@ -68,7 +62,6 @@ class _ThirdPageState extends State<ThirdPage> {
           ),
           FeaturesTour(
             controller: tourController,
-            index: 2,
             introdure: const Text(
               'This is the last Button. Choose Finish to comback to the Home page.',
               style: TextStyle(color: Colors.white),

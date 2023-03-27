@@ -31,10 +31,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    // FeaturesTour.setPageName('MyApp');
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      tourController.start(context: context, isDebug: true);
-    });
+    tourController.start(context: context);
+
     super.initState();
   }
 

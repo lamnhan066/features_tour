@@ -11,6 +11,9 @@ class FeaturesTourController {
     FeaturesTour._controllers.add(this);
   }
 
+  int _index = 0;
+  int get autoIndex => _index++;
+
   /// Name of this page
   final String pageName;
 
@@ -38,36 +41,43 @@ class FeaturesTourController {
   /// ```
   Future<void> start({
     required BuildContext context,
-    bool isDebug = false,
+    bool force = false,
   }) async {
+    // Wait until the next frame of the application's UI has been drawn
+    await null;
+
+    if (_states.isEmpty) {
+      printDebug('This value has no state');
+      return;
+    }
+
     _prefs ??= await SharedPreferences.getInstance();
 
     // Wait until the page transition animation is complete.
     if (context.mounted) {
       printDebug('Waiting for the page transition to complete..');
       final modalRoute = ModalRoute.of(context)?.animation;
-      Completer completer = Completer();
 
       if (modalRoute == null ||
           modalRoute.isCompleted ||
           modalRoute.isDismissed) {
-        if (!completer.isCompleted) completer.complete();
       } else {
+        Completer completer = Completer();
         modalRoute.addStatusListener((status) {
           if (status == AnimationStatus.completed ||
               status == AnimationStatus.dismissed) {
             if (!completer.isCompleted) completer.complete();
           }
         });
+        await completer.future;
       }
 
-      await completer.future;
       printDebug('Page transition completed.');
     }
     printDebug('Start the tour');
 
     // Sort the `_states` with its `index`
-    _states.sort((a, b) => a.index.compareTo(b.index));
+    if (_states.length > 1) _states.sort((a, b) => a.index.compareTo(b.index));
 
     while (_states.isNotEmpty) {
       // ignore: use_build_context_synchronously
@@ -77,11 +87,11 @@ class FeaturesTourController {
       final key = FeaturesTour._getPrefKey(pageName, state);
       printDebug('Start widget with key $key');
 
-      if (_prefs!.getBool(key) != true || isDebug) {
+      if (_prefs!.getBool(key) != true || force) {
         await state.showIntrodure();
       }
 
-      await _removeState(state, !isDebug);
+      await _removeState(state, !force);
     }
 
     printDebug('This tour has been completed');
