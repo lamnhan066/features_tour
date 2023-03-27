@@ -16,7 +16,7 @@ class _ThirdPageState extends State<ThirdPage> {
     // FeaturesTour.setPageName('ThirdPage');
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      tourController.start(context: context);
+      tourController.start(context: context, isDebug: true);
     });
     // });
     super.initState();

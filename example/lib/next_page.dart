@@ -15,7 +15,7 @@ class _NextPageState extends State<NextPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      tourController.start(context: context);
+      tourController.start(context: context, isDebug: true);
     });
     super.initState();
   }

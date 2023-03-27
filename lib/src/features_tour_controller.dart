@@ -31,23 +31,19 @@ class FeaturesTourController {
   ///
   /// Ex:
   /// ``` dart
-  /// void initState() {
-  ///   Timer(Duration(seconds:1), () {
-  ///     tourController.start();
-  ///   });
+  /// WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  ///   tourController.start(context: context, isDebug: true);
+  /// });
   /// }
   /// ```
   Future<void> start({
-    /// If this `context` is not null, it will be used to wait for the page
-    /// transition to complete before showing the instructions.
-    BuildContext? context,
-
-    /// Forces show up on the instructions.
+    required BuildContext context,
     bool isDebug = false,
   }) async {
     _prefs ??= await SharedPreferences.getInstance();
 
-    if (context != null && context.mounted) {
+    // Wait until the page transition animation is complete.
+    if (context.mounted) {
       printDebug('Waiting for the page transition to complete..');
       final modalRoute = ModalRoute.of(context)?.animation;
       Completer completer = Completer();
@@ -70,39 +66,23 @@ class FeaturesTourController {
     }
     printDebug('Start the tour');
 
+    // Sort the `_states` with its `index`
     _states.sort((a, b) => a.index.compareTo(b.index));
-    // while (_states.isNotEmpty) {
-    //   // Skip this tour if it's skipped
-    //   if (_states.isEmpty) {
-    //     printDebug('This page $pageName is skipped');
-    //     break;
-    //   }
 
-    //   final state = _states.removeAt(0);
-    //   // ignore: use_build_context_synchronously
-    //   final key = FeaturesTour._getPrefKey(pageName, state);
-
-    //   printDebug('Start widget with key $key');
-
-    //   if (_prefs!.getBool(key) != true || isDebug) {
-    //     await state.showIntrodure();
-    //   }
-
-    //   await _prefs!.setBool(key, true);
-    //   _unregister(state);
-    // }
-    for (final state in _states) {
+    while (_states.isNotEmpty) {
       // ignore: use_build_context_synchronously
-      final key = FeaturesTour._getPrefKey(pageName, state);
+      if (!context.mounted) break;
 
+      final state = _states.elementAt(0);
+      final key = FeaturesTour._getPrefKey(pageName, state);
       printDebug('Start widget with key $key');
 
       if (_prefs!.getBool(key) != true || isDebug) {
         await state.showIntrodure();
       }
-    }
 
-    await removePage(markAsShowed: !isDebug);
+      await _removeState(state, !isDebug);
+    }
 
     printDebug('This tour has been completed');
   }
@@ -117,16 +97,9 @@ class FeaturesTourController {
     _prefs ??= await SharedPreferences.getInstance();
 
     while (_states.isNotEmpty) {
-      final state = _states.removeAt(0);
-      if (markAsShowed) {
-        // ignore: use_build_context_synchronously
-        final key = FeaturesTour._getPrefKey(pageName, state);
-        await _prefs!.setBool(key, true);
-      }
-      _unregister(state);
+      final state = _states.elementAt(0);
+      await _removeState(state, markAsShowed);
     }
-
-    _states.clear();
 
     printDebug('Remove page: $pageName');
   }
@@ -134,4 +107,16 @@ class FeaturesTourController {
   /// Removes all controllers for all pages
   Future<void> removeAll({bool markAsShowed = true}) =>
       FeaturesTour.removeAll(markAsShowed: markAsShowed);
+
+  Future<void> _removeState(
+    FeaturesTourStateMixin state,
+    bool markAsShowed,
+  ) async {
+    if (markAsShowed) {
+      // ignore: use_build_context_synchronously
+      final key = FeaturesTour._getPrefKey(pageName, state);
+      await _prefs!.setBool(key, true);
+    }
+    _unregister(state);
+  }
 }
