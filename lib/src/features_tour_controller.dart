@@ -29,8 +29,10 @@ class FeaturesTourController {
   /// Start the tour. This packaga automatically save the state of the widget,
   /// so it will skip the showed widget.
   ///
-  /// Please note that the page navigation may affect this widget, so if you add
-  /// this method to `initState`, you should delay for a second before calling this.
+  /// [context] will be used to wait for the page transition animation to complete.
+  /// After that, delay for [delay] duration before starting the tour, it makes
+  /// sure that all the widgets are rendered correctly, to enable all the tours,
+  /// just need to set the [force] to true.
   ///
   /// Ex:
   /// ``` dart
@@ -41,10 +43,11 @@ class FeaturesTourController {
   /// ```
   Future<void> start({
     required BuildContext context,
+    Duration delay = const Duration(milliseconds: 100),
     bool? force,
   }) async {
     // Wait until the next frame of the application's UI has been drawn
-    await Future.delayed(Duration.zero);
+    await null;
 
     if (_states.isEmpty) {
       printDebug('This value has no state');
@@ -74,6 +77,9 @@ class FeaturesTourController {
 
       printDebug('Page transition completed.');
     }
+
+    // Wait for `delay` duration before starting the tours.
+    await Future.delayed(delay);
 
     // Sort the `_states` with its `index`
     if (_states.length > 1) _states.sort((a, b) => a.index.compareTo(b.index));
