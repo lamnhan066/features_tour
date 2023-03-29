@@ -43,7 +43,7 @@ class FeaturesTourController {
   /// ```
   Future<void> start({
     required BuildContext context,
-    Duration delay = const Duration(milliseconds: 100),
+    Duration delay = Duration.zero,
     bool? force,
   }) async {
     // Wait until the next frame of the application's UI has been drawn
