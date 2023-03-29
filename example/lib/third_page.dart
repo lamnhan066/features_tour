@@ -28,11 +28,11 @@ class _ThirdPageState extends State<ThirdPage> {
         children: [
           FeaturesTour(
             controller: tourController,
-            introdure: const Text(
+            introduce: const Text(
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
             ),
-            introdureConfig: const IntrodureConfig(
+            introduceConfig: const IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             childConfig: const ChildConfig(
@@ -45,11 +45,11 @@ class _ThirdPageState extends State<ThirdPage> {
           ),
           FeaturesTour(
             controller: tourController,
-            introdure: const Text(
+            introduce: const Text(
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
             ),
-            introdureConfig: const IntrodureConfig(
+            introduceConfig: const IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             childConfig: const ChildConfig(
@@ -62,11 +62,11 @@ class _ThirdPageState extends State<ThirdPage> {
           ),
           FeaturesTour(
             controller: tourController,
-            introdure: const Text(
+            introduce: const Text(
               'This is the last Button. Choose Finish to comback to the Home page.',
               style: TextStyle(color: Colors.white),
             ),
-            introdureConfig: const IntrodureConfig(
+            introduceConfig: const IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             childConfig: const ChildConfig(

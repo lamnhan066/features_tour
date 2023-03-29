@@ -95,15 +95,20 @@ class FeaturesTourController {
 
     printDebug('Start the tour');
     while (_states.isNotEmpty) {
-      // ignore: use_build_context_synchronously
-      if (!context.mounted) break;
-
       final state = _states.elementAt(0);
       final key = FeaturesTour._getPrefKey(pageName, state);
       printDebug('Start widget with key $key:');
 
+      // ignore: use_build_context_synchronously
+      if (!context.mounted) {
+        printDebug('   -> This widget was unmounted');
+        break;
+      }
+
       if (_prefs!.getBool(key) == true) {
         printDebug('   -> This widget is already shown');
+
+        // If not forcing to show this widget introduce, just continuing
         if (!force) {
           await _removeState(state, false);
           continue;
@@ -112,21 +117,22 @@ class FeaturesTourController {
         printDebug('   -> Force is true, continue to show this widget');
       }
 
-      final result = await state.showIntrodure(state);
+      final result = await state.showIntroduce(state);
 
       switch (result) {
-        case IntrodureResult.disabled:
-        case IntrodureResult.notMounted:
-        case IntrodureResult.wrongState:
+        case IntroduceResult.disabled:
+        case IntroduceResult.notMounted:
+        case IntroduceResult.wrongState:
           printDebug(
-              '   -> This widget has benn cancelled with result: $result');
+            '   -> This widget has been cancelled with result: ${result.name}',
+          );
           await _removeState(state, false);
           break;
-        case IntrodureResult.next:
+        case IntroduceResult.next:
           printDebug('   -> Move to next widget');
           await _removeState(state, true);
           break;
-        case IntrodureResult.skip:
+        case IntroduceResult.skip:
           printDebug('   -> Skip this tour');
           await _removePage(markAsShowed: true);
           break;

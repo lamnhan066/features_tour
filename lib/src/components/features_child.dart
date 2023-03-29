@@ -13,7 +13,7 @@ class FeaturesChild extends StatefulWidget {
     required this.skipConfig,
     required this.next,
     required this.nextConfig,
-    required this.introdure,
+    required this.introduce,
     required this.padding,
     required this.curve,
     required this.zoomScale,
@@ -41,24 +41,24 @@ class FeaturesChild extends StatefulWidget {
   final NextConfig nextConfig;
 
   /// Feature introduction widget, normally `Text`
-  final Widget introdure;
+  final Widget introduce;
 
-  /// Padding of the `introdure` widget
+  /// Padding of the `introduce` widget
   final EdgeInsetsGeometry padding;
 
-  /// Alignmnent of the `introdure` widget in side `quarantAlignment`.
+  /// Alignmnent of the `introduce` widget in side `quarantAlignment`.
   ///
   /// This value automatically aligns depending on the `quarantAlignment`.
   /// Make it as close as possible to other.
   final Alignment? alignment;
 
-  /// Quadrant rectangle for `introdure` widget.
+  /// Quadrant rectangle for `introduce` widget.
   final QuadrantAlignment quadrantAlignment;
 
-  /// Horizontal alignment of the `introdure` widget
+  /// Horizontal alignment of the `introduce` widget
   // final HorizontalAligment horizontalAligment;
 
-  /// Vertical alignment of the `introdure` widget
+  /// Vertical alignment of the `introduce` widget
   // final VerticalAlignment verticalAlignment;
 
   /// Zoom scale of the `child` widget when show up on the instruction
@@ -77,7 +77,7 @@ class _FeaturesChildState extends State<FeaturesChild>
     with WidgetsBindingObserver {
   double scale = 1;
   Rect? rect;
-  late Rect introdureRect;
+  late Rect introduceRect;
   late Alignment alignment;
 
   void updateState() {
@@ -87,23 +87,23 @@ class _FeaturesChildState extends State<FeaturesChild>
     final size = MediaQuery.of(context).size;
     switch (widget.quadrantAlignment) {
       case QuadrantAlignment.top:
-        introdureRect = Rect.fromLTRB(0, 0, size.width, rect!.top);
+        introduceRect = Rect.fromLTRB(0, 0, size.width, rect!.top);
         alignment = widget.alignment ?? Alignment.bottomCenter;
         break;
       case QuadrantAlignment.left:
-        introdureRect = Rect.fromLTRB(0, 0, rect!.left, size.height);
+        introduceRect = Rect.fromLTRB(0, 0, rect!.left, size.height);
         alignment = widget.alignment ?? Alignment.centerRight;
         break;
       case QuadrantAlignment.right:
-        introdureRect = Rect.fromLTRB(rect!.right, 0, size.width, size.height);
+        introduceRect = Rect.fromLTRB(rect!.right, 0, size.width, size.height);
         alignment = widget.alignment ?? Alignment.centerLeft;
         break;
       case QuadrantAlignment.bottom:
-        introdureRect = Rect.fromLTRB(0, rect!.bottom, size.width, size.height);
+        introduceRect = Rect.fromLTRB(0, rect!.bottom, size.width, size.height);
         alignment = widget.alignment ?? Alignment.topCenter;
         break;
       case QuadrantAlignment.inside:
-        introdureRect = rect!;
+        introduceRect = rect!;
         alignment = widget.alignment ?? Alignment.center;
         break;
     }
@@ -118,7 +118,7 @@ class _FeaturesChildState extends State<FeaturesChild>
         updateState();
       });
 
-      // Control the animation of the `introdure` widget.
+      // Control the animation of the `introduce` widget.
       Timer.periodic(widget.animationDuration, (timer) {
         if (!mounted) {
           timer.cancel();
@@ -170,12 +170,12 @@ class _FeaturesChildState extends State<FeaturesChild>
                 ),
               ),
               Positioned.fromRect(
-                rect: introdureRect,
+                rect: introduceRect,
                 child: Padding(
                   padding: widget.padding,
                   child: Align(
                     alignment: alignment,
-                    child: widget.introdure,
+                    child: widget.introduce,
                   ),
                 ),
               ),

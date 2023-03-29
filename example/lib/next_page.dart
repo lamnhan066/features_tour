@@ -30,11 +30,11 @@ class _NextPageState extends State<NextPage> {
           FeaturesTour(
             controller: tourController,
             index: 0,
-            introdure: const Text(
+            introduce: const Text(
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
             ),
-            introdureConfig: const IntrodureConfig(
+            introduceConfig: const IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             childConfig: const ChildConfig(
@@ -48,11 +48,11 @@ class _NextPageState extends State<NextPage> {
           FeaturesTour(
             controller: tourController,
             index: 1,
-            introdure: const Text(
+            introduce: const Text(
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
             ),
-            introdureConfig: const IntrodureConfig(
+            introduceConfig: const IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             childConfig: const ChildConfig(
@@ -66,11 +66,11 @@ class _NextPageState extends State<NextPage> {
           FeaturesTour(
             controller: tourController,
             index: 2,
-            introdure: const Text(
+            introduce: const Text(
               'This is TextButton 3',
               style: TextStyle(color: Colors.white),
             ),
-            introdureConfig: const IntrodureConfig(
+            introduceConfig: const IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             childConfig: const ChildConfig(
@@ -84,11 +84,11 @@ class _NextPageState extends State<NextPage> {
           FeaturesTour(
             controller: tourController,
             index: 3,
-            introdure: const Text(
+            introduce: const Text(
               'Go to ThirdPage',
               style: TextStyle(color: Colors.white),
             ),
-            introdureConfig: const IntrodureConfig(
+            introduceConfig: const IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             childConfig: const ChildConfig(

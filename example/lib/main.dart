@@ -12,7 +12,7 @@ void main() {
     nextConfig: NextConfig.global.copyWith(
       text: 'NEXT >>',
     ),
-    introdureConfig: IntrodureConfig.global.copyWith(
+    introduceConfig: IntroduceConfig.global.copyWith(
       backgroundColor: Colors.black,
     ),
   );
@@ -51,11 +51,11 @@ class _MyAppState extends State<MyApp> {
           FeaturesTour(
             controller: tourController,
             index: 1,
-            introdure: const Text(
+            introduce: const Text(
               'This button will be shown after Button 1',
               style: TextStyle(color: Colors.white),
             ),
-            introdureConfig: const IntrodureConfig(
+            introduceConfig: const IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             child: Center(
@@ -68,11 +68,11 @@ class _MyAppState extends State<MyApp> {
           FeaturesTour(
             controller: tourController,
             index: 0,
-            introdure: const Text(
+            introduce: const Text(
               'This button will show first',
               style: TextStyle(color: Colors.white),
             ),
-            introdureConfig: const IntrodureConfig(
+            introduceConfig: const IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             child: Center(
@@ -87,11 +87,11 @@ class _MyAppState extends State<MyApp> {
             controller: tourController,
             // key: GlobalKey(),
             index: 2,
-            introdure: const Text(
+            introduce: const Text(
               'This text will be shown inside the TextField',
               style: TextStyle(color: Colors.black),
             ),
-            introdureConfig: const IntrodureConfig(
+            introduceConfig: const IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.inside,
             ),
             childConfig: const ChildConfig(
@@ -114,11 +114,11 @@ class _MyAppState extends State<MyApp> {
               FeaturesTour(
                 controller: tourController,
                 index: 3,
-                introdure: const Text(
+                introduce: const Text(
                   'This is the Button 3',
                   style: TextStyle(color: Colors.white),
                 ),
-                introdureConfig: const IntrodureConfig(
+                introduceConfig: const IntroduceConfig(
                   alignment: Alignment.bottomLeft,
                   quadrantAlignment: QuadrantAlignment.top,
                 ),
@@ -132,11 +132,11 @@ class _MyAppState extends State<MyApp> {
               FeaturesTour(
                 controller: tourController,
                 index: 4,
-                introdure: const Text(
+                introduce: const Text(
                   'This is the Button 4',
                   style: TextStyle(color: Colors.white),
                 ),
-                introdureConfig: const IntrodureConfig(
+                introduceConfig: const IntroduceConfig(
                   alignment: Alignment.bottomRight,
                   quadrantAlignment: QuadrantAlignment.top,
                 ),
@@ -155,11 +155,11 @@ class _MyAppState extends State<MyApp> {
       floatingActionButton: FeaturesTour(
         controller: tourController,
         index: 5,
-        introdure: const Text(
+        introduce: const Text(
           'This is the last Button. Press to navigate to the NextPage >>',
           style: TextStyle(color: Colors.white),
         ),
-        introdureConfig: const IntrodureConfig(
+        introduceConfig: const IntroduceConfig(
           alignment: Alignment.bottomRight,
           quadrantAlignment: QuadrantAlignment.top,
         ),

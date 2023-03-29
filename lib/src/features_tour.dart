@@ -31,7 +31,7 @@ class FeaturesTour extends StatefulWidget {
   ///   skipConfig: SkipConfig.global.copyWith(
   ///     text: 'SKIP >>>',
   ///   ),
-  ///   introdureConfig: IntrodureConfig.global.copyWith(
+  ///   introduceConfig: IntroduceConfig.global.copyWith(
   ///     backgroundColor = Colors.black,
   ///   ),
   /// );
@@ -41,14 +41,14 @@ class FeaturesTour extends StatefulWidget {
     ChildConfig? childConfig,
     SkipConfig? skipConfig,
     NextConfig? nextConfig,
-    IntrodureConfig? introdureConfig,
+    IntroduceConfig? introduceConfig,
     String? preferencePrefix,
   }) {
     if (force != null) _force = force;
     if (childConfig != null) ChildConfig.global = childConfig;
     if (skipConfig != null) SkipConfig.global = skipConfig;
     if (nextConfig != null) NextConfig.global = nextConfig;
-    if (introdureConfig != null) IntrodureConfig.global = introdureConfig;
+    if (introduceConfig != null) IntroduceConfig.global = introduceConfig;
     if (preferencePrefix != null) _prefix = preferencePrefix;
   }
 
@@ -81,8 +81,8 @@ class FeaturesTour extends StatefulWidget {
   ///
   /// You can disable this feature by using [enabled].
   ///
-  /// [introdure] is a widget that will show the introdure information, you can
-  /// also configure it with [introdureConfig].
+  /// [introduce] is a widget that will show the introduce information, you can
+  /// also configure it with [introduceConfig].
   ///
   /// There are Next button and Skip button that you can configure it with [nextConfig]
   /// and [skipConfig].
@@ -93,8 +93,8 @@ class FeaturesTour extends StatefulWidget {
     int? index,
     required this.child,
     this.childConfig,
-    this.introdure = const SizedBox.shrink(),
-    this.introdureConfig,
+    this.introduce = const SizedBox.shrink(),
+    this.introduceConfig,
     this.nextConfig,
     this.skipConfig,
     this.enabled = true,
@@ -116,11 +116,11 @@ class FeaturesTour extends StatefulWidget {
   /// Child widget
   final Widget child;
 
-  /// Introdure this feature
-  final Widget introdure;
+  /// Introduce this feature
+  final Widget introduce;
 
-  /// Introdure widget config. If this value is `null`, the `IntrodureConfig.global` is used.
-  final IntrodureConfig? introdureConfig;
+  /// Introduce widget config. If this value is `null`, the `IntroduceConfig.global` is used.
+  final IntroduceConfig? introduceConfig;
 
   /// Next button config. If this value is `null`, the `NextConfig.global` is used.
   final NextConfig? nextConfig;
@@ -132,7 +132,7 @@ class FeaturesTour extends StatefulWidget {
   /// the `ChildConfig.global` is used.
   final ChildConfig? childConfig;
 
-  /// Will be triggered when the `introdure` widget is tapped.
+  /// Will be triggered when the `introduce` widget is tapped.
   ///
   /// Please notice that the widget inside it will not be triggered even it's a button.
   /// So if you want to trigger that button, you have to add it into both widgets.
@@ -157,37 +157,37 @@ class _FeaturesTourState extends State<FeaturesTour>
   int get index => widget.index;
 
   @override
-  Future<IntrodureResult> showIntrodure(
+  Future<IntroduceResult> showIntroduce(
     FeaturesTourStateMixin calledState,
   ) async {
-    if (!widget.enabled) return IntrodureResult.disabled;
+    if (!widget.enabled) return IntroduceResult.disabled;
 
-    if (!mounted) return IntrodureResult.notMounted;
+    if (!mounted) return IntroduceResult.notMounted;
 
     // Avoid calling in the wrong state
-    if (this != calledState) return IntrodureResult.wrongState;
+    if (this != calledState) return IntroduceResult.wrongState;
 
-    final introdureConfig = widget.introdureConfig ?? IntrodureConfig.global;
+    final introduceConfig = widget.introduceConfig ?? IntroduceConfig.global;
     final childConfig = widget.childConfig ?? ChildConfig.global;
     final skipConfig = widget.skipConfig ?? SkipConfig.global;
     final nextConfig = widget.nextConfig ?? NextConfig.global;
 
-    final result = await showDialog<IntrodureResult>(
+    final result = await showDialog<IntroduceResult>(
       context: context,
       barrierDismissible: false,
       useSafeArea: false,
-      barrierColor: introdureConfig.backgroundColor,
+      barrierColor: introduceConfig.backgroundColor,
       builder: (ctx) {
         return FeaturesChild(
           globalKey: widget.key as GlobalKey,
-          introdure: widget.introdure,
+          introduce: widget.introduce,
           skip: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: TextButton(
                 onPressed: () async {
                   if (ctx.mounted) {
-                    Navigator.pop(ctx, IntrodureResult.skip);
+                    Navigator.pop(ctx, IntroduceResult.skip);
                   }
                 },
                 child: Text(
@@ -204,7 +204,7 @@ class _FeaturesTourState extends State<FeaturesTour>
               child: TextButton(
                 onPressed: () async {
                   if (ctx.mounted) {
-                    Navigator.pop(ctx, IntrodureResult.next);
+                    Navigator.pop(ctx, IntroduceResult.next);
                   }
 
                   if (widget.onPressed != null) {
@@ -219,16 +219,16 @@ class _FeaturesTourState extends State<FeaturesTour>
             ),
           ),
           nextConfig: nextConfig,
-          padding: introdureConfig.padding,
+          padding: introduceConfig.padding,
           curve: childConfig.curve,
           zoomScale: childConfig.zoomScale,
-          alignment: introdureConfig.alignment,
-          quadrantAlignment: introdureConfig.quadrantAlignment,
+          alignment: introduceConfig.alignment,
+          quadrantAlignment: introduceConfig.quadrantAlignment,
           animationDuration: childConfig.animationDuration,
           child: GestureDetector(
             onTap: () async {
               if (ctx.mounted) {
-                Navigator.pop(ctx, IntrodureResult.next);
+                Navigator.pop(ctx, IntroduceResult.next);
               }
 
               if (widget.onPressed != null) {
@@ -251,7 +251,7 @@ class _FeaturesTourState extends State<FeaturesTour>
     );
 
     if (result == null) {
-      return IntrodureResult.notMounted;
+      return IntroduceResult.notMounted;
     }
 
     return result;
