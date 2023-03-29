@@ -88,7 +88,15 @@ class FeaturesTourController {
     // Wait for `delay` duration before starting the tours.
     await Future.delayed(delay);
 
-    if (_shouldShowPredialog()) {
+    // Get default value from global `force`
+    force ??= FeaturesTour._force;
+
+    bool shouldShowDialog = _shouldShowPredialog();
+    if (!shouldShowDialog && force) {
+      printDebug('Should show dialog is false but force is true.');
+      shouldShowDialog = true;
+    }
+    if (shouldShowDialog) {
       printDebug('Should show predialog return true');
       predialogConfig ??= PredialogConfig.global;
 
@@ -114,9 +122,6 @@ class FeaturesTourController {
 
     // Sort the `_states` with its `index`
     if (_states.length > 1) _states.sort((a, b) => a.index.compareTo(b.index));
-
-    // Get default value from global `force`
-    force ??= FeaturesTour._force;
 
     printDebug('Start the tour');
     while (_states.isNotEmpty) {

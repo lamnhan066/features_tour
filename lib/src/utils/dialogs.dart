@@ -35,13 +35,13 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
               style: TextStyle(color: config.textColor),
             ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                StatefulBuilder(
-                  builder: (context, setState) {
-                    return Checkbox(
+            StatefulBuilder(
+              builder: (context, setState) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Checkbox(
                       value: checkbox,
                       onChanged: (value) {
                         if (value != null) {
@@ -50,11 +50,18 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
                           });
                         }
                       },
-                    );
-                  },
-                ),
-                Text(config.doNotAskAgainText),
-              ],
+                    ),
+                    GestureDetector(
+                      child: Text(config.doNotAskAgainText),
+                      onTap: () {
+                        setState(() {
+                          checkbox = !checkbox;
+                        });
+                      },
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),

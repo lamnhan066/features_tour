@@ -5,17 +5,19 @@ import 'next_page.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
-    force: true,
-    skipConfig: SkipConfig.copyWith(
-      text: 'SKIP >>>',
-    ),
-    nextConfig: NextConfig.copyWith(
-      text: 'NEXT >>',
-    ),
-    introduceConfig: IntroduceConfig.copyWith(
-      backgroundColor: Colors.black,
-    ),
-  );
+      force: true,
+      skipConfig: SkipConfig.copyWith(
+        text: 'SKIP >>>',
+      ),
+      nextConfig: NextConfig.copyWith(
+        text: 'NEXT >>',
+      ),
+      introduceConfig: IntroduceConfig.copyWith(
+        backgroundColor: Colors.black,
+      ),
+      predialogConfig: PredialogConfig.copyWith(
+        enabled: true,
+      ));
 
   runApp(const MaterialApp(home: MyApp()));
 }

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/models/instruction_result.dart';
-import 'package:features_tour/src/models/predialog_config.dart';
 import 'package:features_tour/src/utils/dialogs.dart';
 import 'package:features_tour/src/utils/print_debug.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +24,18 @@ class FeaturesTour extends StatefulWidget {
 
   /// Set the global configs
   ///
+  /// [force] to show the instructions
+  ///
+  /// [preferencePrefix] if the prefix of the shared preferences
+  ///
+  /// [childConfig] to configure child widget
+  ///
+  /// [introduceConfig] to configure introduce widget
+  ///
+  /// [predialogConfig] to configure predialog widget
+  ///
+  /// [skipConfig] and [nextConfig] to configure Skip and Next buttons
+  ///
   /// Ex:
   /// ``` dart
   /// setGlobalConfig(
@@ -41,12 +52,12 @@ class FeaturesTour extends StatefulWidget {
   /// ```
   static void setGlobalConfig({
     bool? force,
+    String? preferencePrefix,
     ChildConfig? childConfig,
-    SkipConfig? skipConfig,
-    NextConfig? nextConfig,
     IntroduceConfig? introduceConfig,
     PredialogConfig? predialogConfig,
-    String? preferencePrefix,
+    SkipConfig? skipConfig,
+    NextConfig? nextConfig,
   }) {
     if (force != null) _force = force;
     if (childConfig != null) ChildConfig.global = childConfig;
