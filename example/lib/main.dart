@@ -88,16 +88,24 @@ class _MyAppState extends State<MyApp> {
             // key: GlobalKey(),
             index: 2,
             introdure: const Text(
-              'This is a TextField\nLine 2\nLine 3',
-              style: TextStyle(color: Colors.white),
+              'This text will be shown inside the TextField',
+              style: TextStyle(color: Colors.black),
             ),
             introdureConfig: const IntrodureConfig(
-              quadrantAlignment: QuadrantAlignment.top,
+              quadrantAlignment: QuadrantAlignment.inside,
             ),
             childConfig: const ChildConfig(
               backgroundColor: Colors.white,
+              zoomScale: 1.05,
             ),
-            child: const Center(child: TextField()),
+            child: Container(
+              margin: const EdgeInsets.all(8),
+              height: 100,
+              child: const TextField(
+                maxLines: null,
+                expands: true,
+              ),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

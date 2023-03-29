@@ -102,6 +102,10 @@ class _FeaturesChildState extends State<FeaturesChild>
         introdureRect = Rect.fromLTRB(0, rect!.bottom, size.width, size.height);
         alignment = widget.alignment ?? Alignment.topCenter;
         break;
+      case QuadrantAlignment.inside:
+        introdureRect = rect!;
+        alignment = widget.alignment ?? Alignment.center;
+        break;
     }
   }
 

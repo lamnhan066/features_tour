@@ -49,8 +49,14 @@ class FeaturesTourController {
     // Wait until the next frame of the application's UI has been drawn
     await null;
 
+    final addBlank = ' $pageName ';
+    printDebug(''.padLeft(50, '='));
+    printDebug('${addBlank.padLeft(25 + (addBlank.length / 2).round(), '=')}'
+        '${''.padRight(25 - (addBlank.length / 2).round(), '=')}');
+    printDebug(''.padLeft(50, '='));
+
     if (_states.isEmpty) {
-      printDebug('This value has no state');
+      printDebug('This page has no state');
       return;
     }
 
@@ -94,20 +100,44 @@ class FeaturesTourController {
 
       final state = _states.elementAt(0);
       final key = FeaturesTour._getPrefKey(pageName, state);
-      printDebug('Start widget with key $key');
+      printDebug('Start widget with key $key:');
 
-      if (_prefs!.getBool(key) != true || force) {
-        await state.showIntrodure();
+      if (_prefs!.getBool(key) == true) {
+        printDebug('   -> This widget is already shown');
+        if (!force) {
+          await _removeState(state, false);
+          continue;
+        }
+
+        printDebug('   -> Force is true, continue to show this widget');
       }
 
-      await _removeState(state, !force);
+      final result = await state.showIntrodure(state);
+
+      switch (result) {
+        case IntrodureResult.disabled:
+        case IntrodureResult.notMounted:
+        case IntrodureResult.wrongState:
+          printDebug(
+              '   -> This widget has benn cancelled with result: $result');
+          await _removeState(state, false);
+          break;
+        case IntrodureResult.next:
+          printDebug('   -> Move to next widget');
+          await _removeState(state, true);
+          break;
+        case IntrodureResult.skip:
+          printDebug('   -> Skip this tour');
+          await _removePage(markAsShowed: true);
+          break;
+      }
     }
 
     printDebug('This tour has been completed');
   }
 
   /// Removes all controllers for specific `pageName`
-  Future<void> removePage({bool markAsShowed = true}) async {
+  Future<void> _removePage({bool markAsShowed = true}) async {
     if (_states.isEmpty) {
       printDebug('Page $pageName has already been removed');
       return;
@@ -124,8 +154,8 @@ class FeaturesTourController {
   }
 
   /// Removes all controllers for all pages
-  Future<void> removeAll({bool markAsShowed = true}) =>
-      FeaturesTour.removeAll(markAsShowed: markAsShowed);
+  // Future<void> _removeAll({bool markAsShowed = true}) =>
+  //     FeaturesTour.removeAll(markAsShowed: markAsShowed);
 
   Future<void> _removeState(
     FeaturesTourStateMixin state,

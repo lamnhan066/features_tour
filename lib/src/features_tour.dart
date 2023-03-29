@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:features_tour/features_tour.dart';
+import 'package:features_tour/src/models/instruction_result.dart';
 import 'package:features_tour/src/utils/print_debug.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,7 +55,7 @@ class FeaturesTour extends StatefulWidget {
   /// Removes all controllers for all pages
   static Future<void> removeAll({bool markAsShowed = true}) async {
     for (final controller in _controllers) {
-      await controller.removePage(markAsShowed: markAsShowed);
+      await controller._removePage(markAsShowed: markAsShowed);
     }
     printDebug('All pages has been removed');
   }
@@ -156,16 +157,22 @@ class _FeaturesTourState extends State<FeaturesTour>
   int get index => widget.index;
 
   @override
-  Future<void> showIntrodure() async {
-    if (!widget.enabled) return;
-    if (!mounted) return;
+  Future<IntrodureResult> showIntrodure(
+    FeaturesTourStateMixin calledState,
+  ) async {
+    if (!widget.enabled) return IntrodureResult.disabled;
+
+    if (!mounted) return IntrodureResult.notMounted;
+
+    // Avoid calling in the wrong state
+    if (this != calledState) return IntrodureResult.wrongState;
 
     final introdureConfig = widget.introdureConfig ?? IntrodureConfig.global;
     final childConfig = widget.childConfig ?? ChildConfig.global;
     final skipConfig = widget.skipConfig ?? SkipConfig.global;
     final nextConfig = widget.nextConfig ?? NextConfig.global;
 
-    await showDialog<void>(
+    final result = await showDialog<IntrodureResult>(
       context: context,
       barrierDismissible: false,
       useSafeArea: false,
@@ -179,12 +186,8 @@ class _FeaturesTourState extends State<FeaturesTour>
               padding: const EdgeInsets.all(12.0),
               child: TextButton(
                 onPressed: () async {
-                  await widget.controller.removePage(
-                    markAsShowed: true,
-                  );
-
                   if (ctx.mounted) {
-                    Navigator.pop(ctx);
+                    Navigator.pop(ctx, IntrodureResult.skip);
                   }
                 },
                 child: Text(
@@ -201,7 +204,7 @@ class _FeaturesTourState extends State<FeaturesTour>
               child: TextButton(
                 onPressed: () async {
                   if (ctx.mounted) {
-                    Navigator.pop(ctx);
+                    Navigator.pop(ctx, IntrodureResult.next);
                   }
 
                   if (widget.onPressed != null) {
@@ -225,7 +228,7 @@ class _FeaturesTourState extends State<FeaturesTour>
           child: GestureDetector(
             onTap: () async {
               if (ctx.mounted) {
-                Navigator.pop(ctx);
+                Navigator.pop(ctx, IntrodureResult.next);
               }
 
               if (widget.onPressed != null) {
@@ -246,6 +249,12 @@ class _FeaturesTourState extends State<FeaturesTour>
         );
       },
     );
+
+    if (result == null) {
+      return IntrodureResult.notMounted;
+    }
+
+    return result;
   }
 
   @override
