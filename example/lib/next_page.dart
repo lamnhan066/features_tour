@@ -85,7 +85,7 @@ class _NextPageState extends State<NextPage> {
             controller: tourController,
             index: 3,
             introduce: const Text(
-              'Go to ThirdPage',
+              'Go to the ThirdPage',
               style: TextStyle(color: Colors.white),
             ),
             introduceConfig: const IntroduceConfig(

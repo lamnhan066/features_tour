@@ -45,6 +45,7 @@ class FeaturesTourController {
     required BuildContext context,
     Duration delay = Duration.zero,
     bool? force,
+    PredialogConfig? predialogConfig,
   }) async {
     // Wait until the next frame of the application's UI has been drawn
     await null;
@@ -86,6 +87,30 @@ class FeaturesTourController {
 
     // Wait for `delay` duration before starting the tours.
     await Future.delayed(delay);
+
+    if (_shouldShowPredialog()) {
+      printDebug('Should show predialog return true');
+      predialogConfig ??= PredialogConfig.global;
+
+      if (predialogConfig.enabled) {
+        printDebug('Predialog is enabled');
+
+        // ignore: use_build_context_synchronously
+        final predialogResult = await predialog(
+          context,
+          predialogConfig,
+        );
+
+        if (predialogResult != true) {
+          printDebug('User is cancelled to show the introduction');
+          return;
+        }
+      } else {
+        printDebug('Predialog is not enabled');
+      }
+    } else {
+      printDebug('Should show predialog return false');
+    }
 
     // Sort the `_states` with its `index`
     if (_states.length > 1) _states.sort((a, b) => a.index.compareTo(b.index));
@@ -173,5 +198,16 @@ class FeaturesTourController {
       await _prefs!.setBool(key, true);
     }
     _unregister(state);
+  }
+
+  bool _shouldShowPredialog() {
+    for (final state in _states) {
+      final key = FeaturesTour._getPrefKey(pageName, state);
+      if (!_prefs!.containsKey(key)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

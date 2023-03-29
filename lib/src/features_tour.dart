@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/models/instruction_result.dart';
+import 'package:features_tour/src/models/predialog_config.dart';
+import 'package:features_tour/src/utils/dialogs.dart';
 import 'package:features_tour/src/utils/print_debug.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +17,7 @@ class FeaturesTour extends StatefulWidget {
   /// Prefix of this package
   static String _prefix = 'FeaturesTour';
 
+  /// Global force variable
   static bool _force = false;
 
   /// Store all available controllers
@@ -42,6 +45,7 @@ class FeaturesTour extends StatefulWidget {
     SkipConfig? skipConfig,
     NextConfig? nextConfig,
     IntroduceConfig? introduceConfig,
+    PredialogConfig? predialogConfig,
     String? preferencePrefix,
   }) {
     if (force != null) _force = force;
@@ -49,6 +53,7 @@ class FeaturesTour extends StatefulWidget {
     if (skipConfig != null) SkipConfig.global = skipConfig;
     if (nextConfig != null) NextConfig.global = nextConfig;
     if (introduceConfig != null) IntroduceConfig.global = introduceConfig;
+    if (predialogConfig != null) PredialogConfig.global = predialogConfig;
     if (preferencePrefix != null) _prefix = preferencePrefix;
   }
 

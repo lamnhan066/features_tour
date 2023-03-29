@@ -171,11 +171,13 @@ class _FeaturesChildState extends State<FeaturesChild>
               ),
               Positioned.fromRect(
                 rect: introduceRect,
-                child: Padding(
-                  padding: widget.padding,
-                  child: Align(
-                    alignment: alignment,
-                    child: widget.introduce,
+                child: IgnorePointer(
+                  child: Padding(
+                    padding: widget.padding,
+                    child: Align(
+                      alignment: alignment,
+                      child: widget.introduce,
+                    ),
                   ),
                 ),
               ),

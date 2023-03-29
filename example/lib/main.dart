@@ -6,13 +6,13 @@ import 'next_page.dart';
 void main() {
   FeaturesTour.setGlobalConfig(
     force: true,
-    skipConfig: SkipConfig.global.copyWith(
+    skipConfig: SkipConfig.copyWith(
       text: 'SKIP >>>',
     ),
-    nextConfig: NextConfig.global.copyWith(
+    nextConfig: NextConfig.copyWith(
       text: 'NEXT >>',
     ),
-    introduceConfig: IntroduceConfig.global.copyWith(
+    introduceConfig: IntroduceConfig.copyWith(
       backgroundColor: Colors.black,
     ),
   );
