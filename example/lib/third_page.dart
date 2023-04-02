@@ -32,10 +32,10 @@ class _ThirdPageState extends State<ThirdPage> {
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: const IntroduceConfig(
+            introduceConfig: IntroduceConfig.copyWith(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
-            childConfig: const ChildConfig(
+            childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
             child: TextButton(
@@ -49,10 +49,10 @@ class _ThirdPageState extends State<ThirdPage> {
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: const IntroduceConfig(
+            introduceConfig: IntroduceConfig.copyWith(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
-            childConfig: const ChildConfig(
+            childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
             child: TextButton(
@@ -66,14 +66,14 @@ class _ThirdPageState extends State<ThirdPage> {
               'This is the last Button. Choose Finish to comback to the Home page.',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: const IntroduceConfig(
+            introduceConfig: IntroduceConfig.copyWith(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
-            childConfig: const ChildConfig(
+            childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
-            nextConfig: const NextConfig(text: 'Finish'),
-            skipConfig: const SkipConfig(enabled: false),
+            nextConfig: NextConfig.copyWith(text: 'Finish'),
+            skipConfig: SkipConfig.copyWith(enabled: false),
             child: TextButton(
               onPressed: () {},
               child: const Text('TextButton 3'),

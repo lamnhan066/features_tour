@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ChildConfig {
   /// Global configuration
-  static ChildConfig global = const ChildConfig();
+  static ChildConfig global = const ChildConfig._();
 
   /// If this `child` is null, the original `child` will be used.
   final Widget? child;
@@ -31,7 +31,7 @@ class ChildConfig {
   final Duration animationDuration;
 
   /// Default value of the `child` widget
-  const ChildConfig({
+  const ChildConfig._({
     this.child,
     this.backgroundColor = Colors.transparent,
     this.shapeBorder,
@@ -51,7 +51,7 @@ class ChildConfig {
     Curve? curve,
     Duration? animationDuration,
   }) {
-    return ChildConfig(
+    return ChildConfig._(
       child: child ?? global.child,
       backgroundColor: backgroundColor ?? global.backgroundColor,
       shapeBorder: shapeBorder ?? global.shapeBorder,
@@ -72,7 +72,7 @@ class ChildConfig {
     Curve? curve,
     Duration? animationDuration,
   }) {
-    return ChildConfig(
+    return ChildConfig._(
       child: child ?? this.child,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       shapeBorder: shapeBorder ?? this.shapeBorder,

@@ -34,10 +34,10 @@ class _NextPageState extends State<NextPage> {
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: const IntroduceConfig(
+            introduceConfig: IntroduceConfig.copyWith(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
-            childConfig: const ChildConfig(
+            childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
             child: TextButton(
@@ -52,10 +52,10 @@ class _NextPageState extends State<NextPage> {
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: const IntroduceConfig(
+            introduceConfig: IntroduceConfig.copyWith(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
-            childConfig: const ChildConfig(
+            childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
             child: TextButton(
@@ -70,10 +70,10 @@ class _NextPageState extends State<NextPage> {
               'This is TextButton 3',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: const IntroduceConfig(
+            introduceConfig: IntroduceConfig.copyWith(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
-            childConfig: const ChildConfig(
+            childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
             child: TextButton(
@@ -88,10 +88,10 @@ class _NextPageState extends State<NextPage> {
               'Go to the ThirdPage',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: const IntroduceConfig(
+            introduceConfig: IntroduceConfig.copyWith(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
-            childConfig: const ChildConfig(
+            childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
             child: TextButton(

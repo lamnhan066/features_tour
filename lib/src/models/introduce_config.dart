@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class IntroduceConfig {
   /// Global configuration
-  static IntroduceConfig global = const IntroduceConfig();
+  static IntroduceConfig global = const IntroduceConfig._();
 
   /// Color of the background
   final Color backgroundColor;
@@ -20,7 +20,7 @@ class IntroduceConfig {
   /// Quadrant rectangle for `introduce` widget.
   final QuadrantAlignment quadrantAlignment;
 
-  const IntroduceConfig({
+  const IntroduceConfig._({
     this.backgroundColor = Colors.black87,
     this.padding = const EdgeInsets.all(20.0),
     this.alignment,
@@ -34,7 +34,7 @@ class IntroduceConfig {
     Alignment? alignment,
     QuadrantAlignment? quadrantAlignment,
   }) {
-    return IntroduceConfig(
+    return IntroduceConfig._(
       backgroundColor: backgroundColor ?? global.backgroundColor,
       padding: padding ?? global.padding,
       alignment: alignment ?? global.alignment,
@@ -49,7 +49,7 @@ class IntroduceConfig {
     QuadrantAlignment? quadrantAlignment,
     Duration? animationDuration,
   }) {
-    return IntroduceConfig(
+    return IntroduceConfig._(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       padding: padding ?? this.padding,
       alignment: alignment ?? this.alignment,

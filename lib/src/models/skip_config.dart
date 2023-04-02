@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SkipConfig {
   /// Global configuration
-  static SkipConfig global = const SkipConfig();
+  static SkipConfig global = const SkipConfig._();
 
   /// Skip button text
   final String text;
@@ -16,7 +16,7 @@ class SkipConfig {
   /// Enable or disable the skip button
   final bool enabled;
 
-  const SkipConfig({
+  const SkipConfig._({
     this.text = 'SKIP >>>',
     this.alignment = Alignment.bottomLeft,
     this.color = Colors.white,
@@ -29,7 +29,7 @@ class SkipConfig {
     Color? color,
     bool? enabled,
   }) {
-    return SkipConfig(
+    return SkipConfig._(
       text: text ?? global.text,
       alignment: alignment ?? global.alignment,
       color: color ?? global.color,
@@ -43,7 +43,7 @@ class SkipConfig {
     Color? color,
     bool? enabled,
   }) {
-    return SkipConfig(
+    return SkipConfig._(
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,

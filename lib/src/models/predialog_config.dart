@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class PredialogConfig {
   /// Global configuration
-  static PredialogConfig global = PredialogConfig();
+  static PredialogConfig global = PredialogConfig._();
 
   /// This is the configuration for Predialog.
   ///
@@ -21,7 +21,7 @@ class PredialogConfig {
   /// [backgroundColor] is the background color of the dialog
   ///
   /// [textColor] is the color of all the text
-  PredialogConfig({
+  PredialogConfig._({
     this.enabled = true,
     this.title = 'Introduction',
     this.content =
@@ -56,7 +56,7 @@ class PredialogConfig {
     String? cancelButtonText,
     double? borderRadius,
   }) =>
-      PredialogConfig(
+      PredialogConfig._(
         enabled: enabled ?? global.enabled,
         backgroundColor: backgroundColor ?? global.backgroundColor,
         textColor: textColor ?? global.textColor,
@@ -79,7 +79,7 @@ class PredialogConfig {
     String? cancelButtonText,
     double? borderRadius,
   }) {
-    return PredialogConfig(
+    return PredialogConfig._(
       enabled: enabled ?? this.enabled,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       textColor: textColor ?? this.textColor,

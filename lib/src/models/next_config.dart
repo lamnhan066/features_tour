@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class NextConfig {
   /// Global configuration
-  static NextConfig global = const NextConfig();
+  static NextConfig global = const NextConfig._();
 
   /// Next button text
   final String text;
@@ -16,7 +16,7 @@ class NextConfig {
   /// Enable or disable the skip button
   final bool enabled;
 
-  const NextConfig({
+  const NextConfig._({
     this.text = 'NEXT >>',
     this.alignment = Alignment.bottomRight,
     this.color = Colors.white,
@@ -29,7 +29,7 @@ class NextConfig {
     Color? color,
     bool? enabled,
   }) {
-    return NextConfig(
+    return NextConfig._(
       text: text ?? global.text,
       alignment: alignment ?? global.alignment,
       color: color ?? global.color,
@@ -43,7 +43,7 @@ class NextConfig {
     Color? color,
     bool? enabled,
   }) {
-    return NextConfig(
+    return NextConfig._(
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,

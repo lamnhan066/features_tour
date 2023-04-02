@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
               'This button will be shown after Button 1',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: const IntroduceConfig(
+            introduceConfig: IntroduceConfig.copyWith(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             child: Center(
@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
               'This button will show first',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: const IntroduceConfig(
+            introduceConfig: IntroduceConfig.copyWith(
               quadrantAlignment: QuadrantAlignment.bottom,
             ),
             child: Center(
@@ -93,10 +93,10 @@ class _MyAppState extends State<MyApp> {
               'This text will be shown inside the TextField',
               style: TextStyle(color: Colors.black),
             ),
-            introduceConfig: const IntroduceConfig(
+            introduceConfig: IntroduceConfig.copyWith(
               quadrantAlignment: QuadrantAlignment.inside,
             ),
-            childConfig: const ChildConfig(
+            childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
               zoomScale: 1.05,
             ),
@@ -120,7 +120,7 @@ class _MyAppState extends State<MyApp> {
                   'This is the Button 3',
                   style: TextStyle(color: Colors.white),
                 ),
-                introduceConfig: const IntroduceConfig(
+                introduceConfig: IntroduceConfig.copyWith(
                   alignment: Alignment.bottomLeft,
                   quadrantAlignment: QuadrantAlignment.top,
                 ),
@@ -138,7 +138,7 @@ class _MyAppState extends State<MyApp> {
                   'This is the Button 4',
                   style: TextStyle(color: Colors.white),
                 ),
-                introduceConfig: const IntroduceConfig(
+                introduceConfig: IntroduceConfig.copyWith(
                   alignment: Alignment.bottomRight,
                   quadrantAlignment: QuadrantAlignment.top,
                 ),
@@ -161,14 +161,14 @@ class _MyAppState extends State<MyApp> {
           'This is the last Button. Press to navigate to the NextPage >>',
           style: TextStyle(color: Colors.white),
         ),
-        introduceConfig: const IntroduceConfig(
+        introduceConfig: IntroduceConfig.copyWith(
           alignment: Alignment.bottomRight,
           quadrantAlignment: QuadrantAlignment.top,
         ),
-        skipConfig: const SkipConfig(
+        skipConfig: SkipConfig.copyWith(
           enabled: false,
         ),
-        nextConfig: const NextConfig(
+        nextConfig: NextConfig.copyWith(
           enabled: false,
         ),
         onPressed: () {
