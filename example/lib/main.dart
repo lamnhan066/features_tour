@@ -12,9 +12,6 @@ void main() {
     nextConfig: NextConfig.copyWith(
       text: 'NEXT >>',
     ),
-    introduceConfig: IntroduceConfig.copyWith(
-      backgroundColor: Colors.black,
-    ),
     predialogConfig: PredialogConfig.copyWith(
       enabled: true,
     ),

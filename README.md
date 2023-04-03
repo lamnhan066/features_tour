@@ -2,6 +2,10 @@
 
 Features Tour is a package that enables you to easily create tours to introduce your widget features in your app with order. It provides a straightforward and flexible API that allows you to customize the look and feel of the tour to match your app's design.
 
+## Introduction
+
+![Alt Text](assets/introduction.gif)
+
 ## Usage
 
 Start by importing the package in your Dart code:
