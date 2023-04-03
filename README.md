@@ -8,16 +8,16 @@ Make it easier to create instructions in your app with specific animation.
 void main() {
     // Set the default value for this app
     FeaturesTour.setGlobalConfig(
-        childConfig: ChildConfig.global.copyWith(
+        childConfig: ChildConfig.copyWith(
             backgroundColor: Colors.white,
         ),
-        skipConfig: SkipConfig.global.copyWith(
+        skipConfig: SkipConfig.copyWith(
             text: 'SKIP >>>',
         ),
-        nextConfig: NextConfig.global.copyWith(
+        nextConfig: NextConfig.copyWith(
             text: 'NEXT >>'
         ),
-        introdureConfig: IntrodureConfig.global.copyWith(
+        introdureConfig: IntrodureConfig.copyWith(
             backgroundColor: Colors.black,
         ),
     );
@@ -32,14 +32,10 @@ final tourController = FeaturesTourController('MyApp');
 
 @override
 void initState() {
-    // Use this method to start all the available features tour. This `context` 
-    // should be wrapped in `WidgetsBinding.instance.addPostFrameCallback` to
-    // prevent `context` issues.
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        // You should add `context` to let the package to wait for the page transition
-        // animation to complete before start the tour.
-        tourController.start(context: context, isDebug: true);
-    });
+    // Use this method to start all the available features tour.
+    // The `context will be used to wait for the page transition
+    // animation to complete before starting the tour.
+    tourController.start(context: context, isDebug: true);
     super.initState();
 }
 ```
@@ -48,7 +44,7 @@ void initState() {
 FeaturesTour(
     // Add the controller
     controller: tourController,
-    // Index of this widget in the tour. It must be unique at least in the same page.
+    // Index of this widget in the tour. It must be unique in the same page.
     index: 0,
     // Introduction of this widget
     introdure: const Text(
