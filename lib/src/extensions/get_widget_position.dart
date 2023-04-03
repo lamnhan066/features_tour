@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 extension GlobalKeyExtension on GlobalKey {
   /// Get global paint bounds
+  ///
+  /// Source: https://stackoverflow.com/a/71568630/16589995
   Rect? get globalPaintBounds {
     final renderObject = currentContext?.findRenderObject();
     final matrix = renderObject?.getTransformTo(null);

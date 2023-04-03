@@ -5,6 +5,7 @@ import 'package:features_tour/src/extensions/get_widget_position.dart';
 import 'package:flutter/material.dart';
 
 class FeaturesChild extends StatefulWidget {
+  /// Internal widget to show all the needed widgets in Stack
   const FeaturesChild({
     super.key,
     required this.globalKey,
