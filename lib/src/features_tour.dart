@@ -93,7 +93,9 @@ class FeaturesTour extends StatefulWidget {
   /// which widget to show first due to its ordered, if you want the package to
   /// maintain it automatically then you just need to let it `null` for
   /// **all widgets in the same page**, if not you have to set it manually also
-  /// for **all widgets in the same page**.
+  /// for **all widgets in the same page**. I make this index as `double` because
+  /// you can add new feature to between 2 other features. This number must be
+  /// not changed if you don't want to introduce that feature again.
   ///
   /// You can disable this feature by using [enabled].
   ///
@@ -106,7 +108,7 @@ class FeaturesTour extends StatefulWidget {
   /// The [onPressed] will be triggered when this widget is pressed.
   FeaturesTour({
     required this.controller,
-    int? index,
+    double? index,
     required this.child,
     this.childConfig,
     this.introduce = const SizedBox.shrink(),
@@ -124,7 +126,7 @@ class FeaturesTour extends StatefulWidget {
 
   /// The tour will sort by this index, and it must be not dupplicated. You can
   /// leave this black if you want to let the package to control it automatically.
-  late final int index;
+  late final double index;
 
   /// Enable or disable the action of this widget
   final bool enabled;
@@ -170,7 +172,7 @@ class FeaturesTour extends StatefulWidget {
 class _FeaturesTourState extends State<FeaturesTour>
     with FeaturesTourStateMixin {
   @override
-  int get index => widget.index;
+  double get index => widget.index;
 
   @override
   Future<IntroduceResult> showIntroduce(
