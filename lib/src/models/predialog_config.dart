@@ -45,6 +45,7 @@ class PredialogConfig {
   final String noButtonText;
   final double borderRadius;
 
+  /// Create a new Predialog base on the [global] values
   factory PredialogConfig.copyWith({
     bool? enabled,
     Color? backgroundColor,
@@ -68,6 +69,7 @@ class PredialogConfig {
         borderRadius: borderRadius ?? global.borderRadius,
       );
 
+  /// Create a new Predialog base on this values
   PredialogConfig copyWith({
     bool? enabled,
     Color? backgroundColor,

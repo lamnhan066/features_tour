@@ -27,7 +27,7 @@ class IntroduceConfig {
     this.quadrantAlignment = QuadrantAlignment.top,
   });
 
-  /// Apply new settings to the `introduce` widget base on [global] settings.
+  /// Create a new IntroduceConfig base on [global] values
   factory IntroduceConfig.copyWith({
     Color? backgroundColor,
     EdgeInsetsGeometry? padding,
@@ -42,6 +42,7 @@ class IntroduceConfig {
     );
   }
 
+  /// Create a new IntroduceConfig base on this values
   IntroduceConfig copyWith({
     Color? backgroundColor,
     EdgeInsetsGeometry? padding,

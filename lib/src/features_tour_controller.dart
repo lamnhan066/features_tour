@@ -11,8 +11,9 @@ class FeaturesTourController {
     FeaturesTour._controllers.add(this);
   }
 
+  /// Get auto increment index number
+  double get _getAutoIndex => _index++;
   double _index = 0;
-  double get autoIndex => _index++;
 
   /// Name of this page
   final String pageName;
@@ -32,14 +33,14 @@ class FeaturesTourController {
   /// [context] will be used to wait for the page transition animation to complete.
   /// After that, delay for [delay] duration before starting the tour, it makes
   /// sure that all the widgets are rendered correctly, to enable all the tours,
-  /// just need to set the [force] to true.
+  /// just need to set the [force] to `true`.
+  ///
+  /// You can also configure the predialog by using [predialogConfig], this dialog
+  /// will show to ask the user want to start the tour or not.
   ///
   /// Ex:
   /// ``` dart
-  /// WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  ///   tourController.start(context: context, isDebug: true);
-  /// });
-  /// }
+  /// tourController.start(context: context, force: true);
   /// ```
   Future<void> start({
     required BuildContext context,
@@ -120,7 +121,7 @@ class FeaturesTourController {
       printDebug('Should show predialog return false');
     }
 
-    // Sort the `_states` with its `index`
+    // Sort the `_states` with its' `index`
     if (_states.length > 1) _states.sort((a, b) => a.index.compareTo(b.index));
 
     printDebug('Start the tour');
@@ -189,10 +190,7 @@ class FeaturesTourController {
     printDebug('Remove page: $pageName');
   }
 
-  /// Removes all controllers for all pages
-  // Future<void> _removeAll({bool markAsShowed = true}) =>
-  //     FeaturesTour.removeAll(markAsShowed: markAsShowed);
-
+  /// Removes specific state of this page
   Future<void> _removeState(
     FeaturesTourStateMixin state,
     bool markAsShowed,
@@ -205,6 +203,7 @@ class FeaturesTourController {
     _unregister(state);
   }
 
+  /// Checks whether there is any new features available to show predialog
   bool _shouldShowPredialog() {
     for (final state in _states) {
       final key = FeaturesTour._getPrefKey(pageName, state);

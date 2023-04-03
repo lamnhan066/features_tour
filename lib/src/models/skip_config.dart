@@ -23,6 +23,7 @@ class SkipConfig {
     this.enabled = true,
   });
 
+  /// Create a new SkipConfig base on the [global] values
   factory SkipConfig.copyWith({
     String? text,
     Alignment? alignment,
@@ -37,6 +38,7 @@ class SkipConfig {
     );
   }
 
+  /// Create a new SkipConfig base on this values
   SkipConfig copyWith({
     String? text,
     Alignment? alignment,

@@ -5,9 +5,7 @@ extension GlobalKeyExtension on GlobalKey {
   /// Get global paint bounds
   Rect? get globalPaintBounds {
     final renderObject = currentContext?.findRenderObject();
-
     final matrix = renderObject?.getTransformTo(null);
-
     if (matrix != null && renderObject?.paintBounds != null) {
       final rect = MatrixUtils.transformRect(matrix, renderObject!.paintBounds);
       return rect;

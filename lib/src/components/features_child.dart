@@ -80,6 +80,7 @@ class _FeaturesChildState extends State<FeaturesChild>
   late Rect introduceRect;
   late Alignment alignment;
 
+  /// Update the current state
   void updateState() {
     rect = (widget.globalKey).globalPaintBounds;
     if (rect == null) return;

@@ -23,6 +23,7 @@ class NextConfig {
     this.enabled = true,
   });
 
+  /// Create a new NextConfig base on the [global] values
   factory NextConfig.copyWith({
     String? text,
     Alignment? alignment,
@@ -37,6 +38,7 @@ class NextConfig {
     );
   }
 
+  /// Create a new NextConfig base on this values
   NextConfig copyWith({
     String? text,
     Alignment? alignment,

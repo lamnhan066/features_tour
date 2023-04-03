@@ -51,12 +51,26 @@ class FeaturesTour extends StatefulWidget {
   /// );
   /// ```
   static void setGlobalConfig({
+    /// Force to show all the tours. Default is `false`.
     bool? force,
+
+    /// Prefix of local database name to save the widget showing state
+    /// Default is 'FeaturesTour'.
     String? preferencePrefix,
+
+    /// Configuration of the fake [child] widget. Default is [ChildConfig.global].
     ChildConfig? childConfig,
+
+    /// Configuration of the [introduce] widget. Default is [IntroduceConfig.global].
     IntroduceConfig? introduceConfig,
+
+    /// Configuration of the predialog widget. Default is [PredialogConfig.global
     PredialogConfig? predialogConfig,
+
+    /// Configuration of the skip button. Default is [SkipConfig.global].
     SkipConfig? skipConfig,
+
+    /// Configuration of the next button. Default is [NextConfig.global].
     NextConfig? nextConfig,
   }) {
     if (force != null) _force = force;
@@ -118,7 +132,7 @@ class FeaturesTour extends StatefulWidget {
     this.enabled = true,
     this.onPressed,
   }) : super(key: GlobalKey()) {
-    this.index = index ?? controller.autoIndex;
+    this.index = index ?? controller._getAutoIndex;
   }
 
   /// Controller of the current page
