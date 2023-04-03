@@ -4,7 +4,7 @@ Features Tour is a package that enables you to easily create tours to introduce 
 
 ## Introduction
 
-![Alt Text](assets/introduction.gif)
+![Alt Text](https://raw.githubusercontent.com/vursin/features_tour/main/assets/introduction.gif)
 
 ## Usage
 
