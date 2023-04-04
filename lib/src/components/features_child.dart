@@ -113,13 +113,10 @@ class _FeaturesChildState extends State<FeaturesChild>
 
   @override
   void initState() {
+    super.initState();
     WidgetsBinding.instance.addObserver(this);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        updateState();
-      });
-
       // Control the animation of the `introduce` widget.
       Timer.periodic(widget.animationDuration, (timer) {
         if (!mounted) {
@@ -138,7 +135,14 @@ class _FeaturesChildState extends State<FeaturesChild>
         }
       });
     });
-    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    setState(() {
+      updateState();
+    });
+    super.didChangeDependencies();
   }
 
   @override
@@ -159,7 +163,7 @@ class _FeaturesChildState extends State<FeaturesChild>
   @override
   Widget build(BuildContext context) {
     return rect == null
-        ? const CircularProgressIndicator()
+        ? const Center(child: CircularProgressIndicator())
         : Stack(
             children: [
               Positioned.fromRect(
