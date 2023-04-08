@@ -4,7 +4,7 @@
 * The tours now will sort the new added states (some states need time to appear).
 * Add `isAnimateChild` and `borderSizeInflate` to ChildConfig:
   * `isAnimateChild` is allow it to be animated along with the border.
-  * `borderSizeInflate` is alow to set it to be bigger than the child widget.
+  * `borderSizeInflate` is alow to set it to be bigger than the child widget. So the border widget is now bigger than the child widget 3 delta.
 * Add `isCallOnPressed` to ChildConfig to allow the `onPressed` method to be called when user presses the Skip button.
 * Avoid `onPressed` is called multiple times when it needs time to be completed.
 
