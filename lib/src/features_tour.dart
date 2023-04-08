@@ -187,9 +187,6 @@ class FeaturesTour extends StatefulWidget {
 
 class _FeaturesTourState extends State<FeaturesTour>
     with FeaturesTourStateMixin {
-  /// This variable is used to prevent the onPressed function call multiple times
-  final bool _isButtonPressed = false;
-
   @override
   double get index => widget.index;
 
