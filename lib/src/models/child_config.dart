@@ -39,7 +39,7 @@ class ChildConfig {
   /// Default value of the `child` widget
   const ChildConfig._({
     this.child,
-    this.isAnimateChild = false,
+    this.isAnimateChild = true,
     this.borderSizeInflate = 3,
     this.backgroundColor = Colors.transparent,
     this.shapeBorder,
@@ -53,7 +53,7 @@ class ChildConfig {
   ///
   /// If this [child] is null, the original [child] will be used.
   ///
-  /// [isAnimateChild] will let the child be animated along with the border. Default is `false`.
+  /// [isAnimateChild] will let the child be animated along with the border. Default is `true`.
   ///
   /// [borderSizeInflate] is how big the border rectangle is when compared to the child widget.
   /// Default is `3`.
