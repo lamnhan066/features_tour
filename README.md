@@ -62,6 +62,10 @@ FeaturesTour(
     controller: tourController,
     // Index of this widget in the tour. It must be unique in the same page.
     index: 0,
+    // On this widget pressed. This can be a `Future` method, the next introduction will be delayed until this method is completed.
+    onPressed: () async {
+        // Handle the press event
+    },
     // Introduction of this widget
     introdure: const Text(
         'This is TextButton 1',
