@@ -180,7 +180,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                     scale: scale,
                     curve: widget.childConfig.curve,
                     duration: widget.childConfig.animationDuration,
-                    child: widget.childConfig.child,
+                    child: widget.child,
                   ),
                 )
               else
