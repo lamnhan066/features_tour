@@ -10,6 +10,7 @@ class FeaturesChild extends StatefulWidget {
     super.key,
     required this.globalKey,
     required this.child,
+    required this.childConfig,
     required this.skip,
     required this.skipConfig,
     required this.next,
@@ -28,6 +29,9 @@ class FeaturesChild extends StatefulWidget {
 
   /// Child widget
   final Widget child;
+
+  /// Child configuration
+  final ChildConfig childConfig;
 
   /// Skip Button widget
   final Widget skip;
@@ -117,6 +121,9 @@ class _FeaturesChildState extends State<FeaturesChild>
     WidgetsBinding.instance.addObserver(this);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        scale = widget.zoomScale;
+      });
       // Control the animation of the `introduce` widget.
       Timer.periodic(widget.animationDuration, (timer) {
         if (!mounted) {
@@ -166,15 +173,40 @@ class _FeaturesChildState extends State<FeaturesChild>
         ? const Center(child: CircularProgressIndicator())
         : Stack(
             children: [
+              // Border widget
               Positioned.fromRect(
-                rect: rect!,
+                rect: rect!.inflate(widget.childConfig.borderSizeInflate),
                 child: AnimatedScale(
                   scale: scale,
                   curve: widget.curve,
                   duration: widget.animationDuration,
-                  child: widget.child,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: widget.childConfig.backgroundColor,
+                      borderRadius: widget.childConfig.borderRadius,
+                    ),
+                  ),
                 ),
               ),
+
+              // Child widget
+              if (widget.childConfig.isAnimateChild)
+                Positioned.fromRect(
+                  rect: rect!,
+                  child: AnimatedScale(
+                    scale: scale,
+                    curve: widget.curve,
+                    duration: widget.animationDuration,
+                    child: widget.child,
+                  ),
+                )
+              else
+                Positioned.fromRect(
+                  rect: rect!,
+                  child: widget.child,
+                ),
+
+              // Introduction widget
               Positioned.fromRect(
                 rect: introduceRect,
                 child: IgnorePointer(
@@ -187,6 +219,8 @@ class _FeaturesChildState extends State<FeaturesChild>
                   ),
                 ),
               ),
+
+              // Skip text widget
               if (widget.skipConfig.enabled)
                 Positioned.fill(
                   child: Align(
@@ -194,6 +228,8 @@ class _FeaturesChildState extends State<FeaturesChild>
                     child: widget.skip,
                   ),
                 ),
+
+              // Next text widget
               if (widget.nextConfig.enabled)
                 Positioned.fill(
                   child: Align(

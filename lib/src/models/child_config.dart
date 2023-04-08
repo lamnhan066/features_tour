@@ -7,6 +7,12 @@ class ChildConfig {
   /// If this `child` is null, the original `child` will be used.
   final Widget? child;
 
+  /// Also scale child widget along with the border.
+  final bool isAnimateChild;
+
+  /// How bigger the border rectangle is when compared to the child widget.
+  final double borderSizeInflate;
+
   /// Background color of the `child` widget.
   ///
   /// This color is useful for TextField, Text, TextButton,.. which does not
@@ -33,6 +39,8 @@ class ChildConfig {
   /// Default value of the `child` widget
   const ChildConfig._({
     this.child,
+    this.isAnimateChild = false,
+    this.borderSizeInflate = 3,
     this.backgroundColor = Colors.transparent,
     this.shapeBorder,
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
@@ -42,8 +50,36 @@ class ChildConfig {
   });
 
   /// Apply new settings to the `child` widget base on [global] settings.
+  ///
+  /// If this [child] is null, the original [child] will be used.
+  ///
+  /// [isAnimateChild] will let the child be animated along with the border. Default is `false`.
+  ///
+  /// [borderSizeInflate] is how big the border rectangle is when compared to the child widget.
+  /// Default is `3`.
+  ///
+  /// [backgroundColor] is the background color of the `child` widget. Default is `Colors.transparent`.
+  /// This color is useful for TextField, Text, TextButton,.. which does not
+  /// have a background color.
+  ///
+  /// [shapeBorder] is the shape of border of the background. Default is Rectangle.
+  /// Something like: `RoundedRectangleBorder()`, `CircleBorder()`
+  ///
+  /// [borderRadius] is radius of the background of the child.
+  /// Default is `BorderRadius.all(Radius.circular(12))`.
+  ///
+  /// [zoomScale] is the zoom scale of the `child` widget when show up on the instruction.
+  /// Default is `1.2`.
+  ///
+  /// [curve] is the animation of the `child` widget when show up on the instruction.
+  /// Default is `Curves.decelerate`.
+  ///
+  /// [animationDuration] is the animation duration of the `child` widget when show up on the instruction.
+  /// Default is `Duration(milliseconds: 600)`.
   factory ChildConfig.copyWith({
     Widget? child,
+    bool? isAnimateChild,
+    double? borderSizeInflate,
     Color? backgroundColor,
     ShapeBorder? shapeBorder,
     BorderRadiusGeometry? borderRadius,
@@ -53,6 +89,8 @@ class ChildConfig {
   }) {
     return ChildConfig._(
       child: child ?? global.child,
+      isAnimateChild: isAnimateChild ?? global.isAnimateChild,
+      borderSizeInflate: borderSizeInflate ?? global.borderSizeInflate,
       backgroundColor: backgroundColor ?? global.backgroundColor,
       shapeBorder: shapeBorder ?? global.shapeBorder,
       borderRadius: borderRadius ?? global.borderRadius,
@@ -65,6 +103,8 @@ class ChildConfig {
   /// Apply new settings to the current settings.
   ChildConfig copyWith({
     Widget? child,
+    bool? isAnimateChild,
+    double? borderSizeInflate,
     Color? backgroundColor,
     ShapeBorder? shapeBorder,
     BorderRadiusGeometry? borderRadius,
@@ -74,6 +114,8 @@ class ChildConfig {
   }) {
     return ChildConfig._(
       child: child ?? this.child,
+      isAnimateChild: isAnimateChild ?? this.isAnimateChild,
+      borderSizeInflate: borderSizeInflate ?? this.borderSizeInflate,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       shapeBorder: shapeBorder ?? this.shapeBorder,
       borderRadius: borderRadius ?? this.borderRadius,
