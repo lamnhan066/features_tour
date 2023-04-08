@@ -221,6 +221,12 @@ class _FeaturesTourState extends State<FeaturesTour>
               padding: const EdgeInsets.all(12.0),
               child: TextButton(
                 onPressed: () async {
+                  if (skipConfig.isCallOnPressed && widget.onPressed != null) {
+                    Completer completer = Completer();
+                    completer.complete(widget.onPressed!());
+                    await completer.future;
+                  }
+
                   if (ctx.mounted) {
                     Navigator.pop(ctx, IntroduceResult.skip);
                   }
@@ -257,11 +263,8 @@ class _FeaturesTourState extends State<FeaturesTour>
           ),
           nextConfig: nextConfig,
           padding: introduceConfig.padding,
-          curve: childConfig.curve,
-          zoomScale: childConfig.zoomScale,
           alignment: introduceConfig.alignment,
           quadrantAlignment: introduceConfig.quadrantAlignment,
-          animationDuration: childConfig.animationDuration,
           child: GestureDetector(
             onTap: () async {
               if (widget.onPressed != null) {
@@ -277,8 +280,6 @@ class _FeaturesTourState extends State<FeaturesTour>
             child: Material(
               color: childConfig.backgroundColor,
               type: MaterialType.canvas,
-              // borderRadius: childConfig.borderRadius,
-              // shape: childConfig.shapeBorder,
               child: AbsorbPointer(
                 absorbing: true,
                 child: childConfig.child ?? widget.child,

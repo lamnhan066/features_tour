@@ -17,9 +17,6 @@ class FeaturesChild extends StatefulWidget {
     required this.nextConfig,
     required this.introduce,
     required this.padding,
-    required this.curve,
-    required this.zoomScale,
-    required this.animationDuration,
     this.alignment,
     required this.quadrantAlignment,
   });
@@ -60,20 +57,6 @@ class FeaturesChild extends StatefulWidget {
   /// Quadrant rectangle for `introduce` widget.
   final QuadrantAlignment quadrantAlignment;
 
-  /// Horizontal alignment of the `introduce` widget
-  // final HorizontalAligment horizontalAligment;
-
-  /// Vertical alignment of the `introduce` widget
-  // final VerticalAlignment verticalAlignment;
-
-  /// Zoom scale of the `child` widget when show up on the instruction
-  final double zoomScale;
-
-  /// Animation of the `child` widget when show up on the instruction
-  final Curve curve;
-
-  /// Animation duration of the `child` widget when show up on the instruction
-  final Duration animationDuration;
   @override
   State<FeaturesChild> createState() => _FeaturesChildState();
 }
@@ -122,10 +105,10 @@ class _FeaturesChildState extends State<FeaturesChild>
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setState(() {
-        scale = widget.zoomScale;
+        scale = widget.childConfig.zoomScale;
       });
       // Control the animation of the `introduce` widget.
-      Timer.periodic(widget.animationDuration, (timer) {
+      Timer.periodic(widget.childConfig.animationDuration, (timer) {
         if (!mounted) {
           timer.cancel();
           return;
@@ -133,9 +116,9 @@ class _FeaturesChildState extends State<FeaturesChild>
 
         if (scale == 1) {
           setState(() {
-            scale = widget.zoomScale;
+            scale = widget.childConfig.zoomScale;
           });
-        } else if (scale == widget.zoomScale) {
+        } else if (scale == widget.childConfig.zoomScale) {
           setState(() {
             scale = 1;
           });
@@ -178,8 +161,8 @@ class _FeaturesChildState extends State<FeaturesChild>
                 rect: rect!.inflate(widget.childConfig.borderSizeInflate),
                 child: AnimatedScale(
                   scale: scale,
-                  curve: widget.curve,
-                  duration: widget.animationDuration,
+                  curve: widget.childConfig.curve,
+                  duration: widget.childConfig.animationDuration,
                   child: Container(
                     decoration: BoxDecoration(
                       color: widget.childConfig.backgroundColor,
@@ -195,9 +178,9 @@ class _FeaturesChildState extends State<FeaturesChild>
                   rect: rect!,
                   child: AnimatedScale(
                     scale: scale,
-                    curve: widget.curve,
-                    duration: widget.animationDuration,
-                    child: widget.child,
+                    curve: widget.childConfig.curve,
+                    duration: widget.childConfig.animationDuration,
+                    child: widget.childConfig.child,
                   ),
                 )
               else
