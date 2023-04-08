@@ -121,11 +121,12 @@ class FeaturesTourController {
       printDebug('Should show predialog return false');
     }
 
-    // Sort the `_states` with its' `index`
-    if (_states.length > 1) _states.sort((a, b) => a.index.compareTo(b.index));
-
     printDebug('Start the tour');
     while (_states.isNotEmpty) {
+      // Sort the `_states` with its' `index`
+      // Place sort in this place will improve the sort behavior, specially when new states are added.
+      _states.sort((a, b) => a.index.compareTo(b.index));
+
       final state = _states.elementAt(0);
       final key = FeaturesTour._getPrefKey(pageName, state);
       printDebug('Start widget with key $key:');
