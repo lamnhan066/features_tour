@@ -46,6 +46,22 @@ class PredialogConfig {
   final double borderRadius;
 
   /// Create a new Predialog base on the [global] values
+  ///
+  /// [enabled] to enable or disable the Predialog. Default is `true`.
+  ///
+  /// [title] is the title of the dialog, default is 'Introduction'
+  ///
+  /// [content] is the content, default is "This page has some new features that you might want to discover.\n\nWould you like to take a tour?"
+  ///
+  /// [doNotAskAgainText] is the text for doNotAskAgain checkbox. Default is 'Do not ask again this time'.
+  ///
+  /// [yesButtonText] and [noButtonText] are the text of the corresponding buttons
+  ///
+  /// [borderRadius] is the radius of the dialog border. Default is 12.
+  ///
+  /// [backgroundColor] is the background color of the dialog. Default is Colors.white.
+  ///
+  /// [textColor] is the color of all the text. Default is Colors.black.
   factory PredialogConfig.copyWith({
     bool? enabled,
     Color? backgroundColor,

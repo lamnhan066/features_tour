@@ -24,6 +24,14 @@ class NextConfig {
   });
 
   /// Create a new NextConfig base on the [global] values
+  ///
+  /// [text] of the next button. Default is "NEXT >>".
+  ///
+  /// [alignment] is the alignment of the next button. Default is `Alignment.bottomRight`.
+  ///
+  /// [color] is the color of the next text. Default is `Colors.white`.
+  ///
+  /// [enabled] is true if the next button is enabled. Default is `true`.
   factory NextConfig.copyWith({
     String? text,
     Alignment? alignment,
