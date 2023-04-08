@@ -119,7 +119,9 @@ class FeaturesTour extends StatefulWidget {
   /// There are Next button and Skip button that you can configure it with [nextConfig]
   /// and [skipConfig].
   ///
-  /// The [onPressed] will be triggered when this widget is pressed.
+  /// The [onPressed] will be triggered when this widget is pressed. This can be
+  /// a `Future` method, the next introduction will be delayed until this method
+  /// is completed.
   FeaturesTour({
     required this.controller,
     double? index,
@@ -177,7 +179,7 @@ class FeaturesTour extends StatefulWidget {
   ///   onPressed: onPressed,
   /// )
   /// ```
-  final void Function()? onPressed;
+  final FutureOr<void> Function()? onPressed;
 
   @override
   State<FeaturesTour> createState() => _FeaturesTourState();
@@ -212,6 +214,7 @@ class _FeaturesTourState extends State<FeaturesTour>
       builder: (ctx) {
         return FeaturesChild(
           globalKey: widget.key as GlobalKey,
+          childConfig: childConfig,
           introduce: widget.introduce,
           skip: SafeArea(
             child: Padding(
@@ -235,12 +238,14 @@ class _FeaturesTourState extends State<FeaturesTour>
               padding: const EdgeInsets.all(12.0),
               child: TextButton(
                 onPressed: () async {
-                  if (ctx.mounted) {
-                    Navigator.pop(ctx, IntroduceResult.next);
+                  if (widget.onPressed != null) {
+                    Completer completer = Completer();
+                    completer.complete(widget.onPressed!());
+                    await completer.future;
                   }
 
-                  if (widget.onPressed != null) {
-                    widget.onPressed!();
+                  if (ctx.mounted) {
+                    Navigator.pop(ctx, IntroduceResult.next);
                   }
                 },
                 child: Text(
@@ -259,19 +264,21 @@ class _FeaturesTourState extends State<FeaturesTour>
           animationDuration: childConfig.animationDuration,
           child: GestureDetector(
             onTap: () async {
-              if (ctx.mounted) {
-                Navigator.pop(ctx, IntroduceResult.next);
+              if (widget.onPressed != null) {
+                Completer completer = Completer();
+                completer.complete(widget.onPressed!());
+                await completer.future;
               }
 
-              if (widget.onPressed != null) {
-                widget.onPressed!();
+              if (ctx.mounted) {
+                Navigator.pop(ctx, IntroduceResult.next);
               }
             },
             child: Material(
               color: childConfig.backgroundColor,
               type: MaterialType.canvas,
-              borderRadius: childConfig.borderRadius,
-              shape: childConfig.shapeBorder,
+              // borderRadius: childConfig.borderRadius,
+              // shape: childConfig.shapeBorder,
               child: AbsorbPointer(
                 absorbing: true,
                 child: childConfig.child ?? widget.child,
