@@ -187,6 +187,15 @@ class FeaturesTour extends StatefulWidget {
 
 class _FeaturesTourState extends State<FeaturesTour>
     with FeaturesTourStateMixin {
+  /// This variable is used to prevent the onPressed function call multiple times
+  bool get isButtonPressed {
+    if (_isButtonPressed) return true;
+    _isButtonPressed = true;
+    return false;
+  }
+
+  bool _isButtonPressed = false;
+
   @override
   double get index => widget.index;
 
@@ -221,6 +230,8 @@ class _FeaturesTourState extends State<FeaturesTour>
               padding: const EdgeInsets.all(12.0),
               child: TextButton(
                 onPressed: () async {
+                  if (isButtonPressed) return;
+
                   if (skipConfig.isCallOnPressed && widget.onPressed != null) {
                     Completer completer = Completer();
                     completer.complete(widget.onPressed!());
@@ -244,6 +255,8 @@ class _FeaturesTourState extends State<FeaturesTour>
               padding: const EdgeInsets.all(12.0),
               child: TextButton(
                 onPressed: () async {
+                  if (isButtonPressed) return;
+
                   if (widget.onPressed != null) {
                     Completer completer = Completer();
                     completer.complete(widget.onPressed!());
@@ -267,6 +280,8 @@ class _FeaturesTourState extends State<FeaturesTour>
           quadrantAlignment: introduceConfig.quadrantAlignment,
           child: GestureDetector(
             onTap: () async {
+              if (isButtonPressed) return;
+
               if (widget.onPressed != null) {
                 Completer completer = Completer();
                 completer.complete(widget.onPressed!());
