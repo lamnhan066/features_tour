@@ -104,11 +104,19 @@ class FeaturesTourController {
       if (predialogConfig.enabled) {
         printDebug('Predialog is enabled');
 
-        // ignore: use_build_context_synchronously
-        final predialogResult = await predialog(
-          context,
-          predialogConfig,
-        );
+        final bool? predialogResult;
+        if (predialogConfig.modifiedDialogResult != null) {
+          Completer<bool> completer = Completer();
+          // ignore: use_build_context_synchronously
+          completer.complete(predialogConfig.modifiedDialogResult!(context));
+          predialogResult = await completer.future;
+        } else {
+          // ignore: use_build_context_synchronously
+          predialogResult = await predialog(
+            context,
+            predialogConfig,
+          );
+        }
 
         if (predialogResult != true) {
           printDebug('User is cancelled to show the introduction');

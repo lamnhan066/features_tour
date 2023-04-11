@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class PredialogConfig {
@@ -7,6 +9,9 @@ class PredialogConfig {
   /// This is the configuration for Predialog.
   ///
   /// [enabled] to enable or disable the Predialog
+  ///
+  /// [modifiedDialogResult] is the value the return from your modified dialog
+  /// If this variable is set, others will be ignored.
   ///
   /// [title] is the title of the dialog, default is 'Introduction'
   ///
@@ -33,6 +38,7 @@ class PredialogConfig {
     this.borderRadius = 12,
     this.backgroundColor = Colors.white,
     this.textColor = Colors.black,
+    this.modifiedDialogResult,
   });
 
   final bool enabled;
@@ -44,6 +50,7 @@ class PredialogConfig {
   final String yesButtonText;
   final String noButtonText;
   final double borderRadius;
+  final FutureOr<bool> Function(BuildContext context)? modifiedDialogResult;
 
   /// Create a new Predialog base on the [global] values
   ///
@@ -64,6 +71,7 @@ class PredialogConfig {
   /// [textColor] is the color of all the text. Default is Colors.black.
   factory PredialogConfig.copyWith({
     bool? enabled,
+    FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
     Color? backgroundColor,
     Color? textColor,
     String? title,
@@ -75,6 +83,8 @@ class PredialogConfig {
   }) =>
       PredialogConfig._(
         enabled: enabled ?? global.enabled,
+        modifiedDialogResult:
+            modifiedDialogResult ?? global.modifiedDialogResult,
         backgroundColor: backgroundColor ?? global.backgroundColor,
         textColor: textColor ?? global.textColor,
         title: title ?? global.title,
@@ -88,6 +98,7 @@ class PredialogConfig {
   /// Create a new Predialog base on this values
   PredialogConfig copyWith({
     bool? enabled,
+    FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
     Color? backgroundColor,
     Color? textColor,
     String? title,
@@ -99,6 +110,7 @@ class PredialogConfig {
   }) {
     return PredialogConfig._(
       enabled: enabled ?? this.enabled,
+      modifiedDialogResult: modifiedDialogResult ?? this.modifiedDialogResult,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       textColor: textColor ?? this.textColor,
       title: title ?? this.title,

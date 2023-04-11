@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:features_tour/features_tour.dart';
+import 'package:features_tour/src/components/dialogs.dart';
 import 'package:features_tour/src/models/instruction_result.dart';
-import 'package:features_tour/src/utils/dialogs.dart';
 import 'package:features_tour/src/utils/print_debug.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
