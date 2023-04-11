@@ -29,7 +29,7 @@ void main() {
         nextConfig: NextConfig.copyWith(
             text: 'NEXT >>'
         ),
-        introdureConfig: IntrodureConfig.copyWith(
+        introduceConfig: IntroduceConfig.copyWith(
             backgroundColor: Colors.black,
         ),
     );
@@ -49,7 +49,21 @@ void initState() {
     // Use this method to start all the available features tour.
     // The `context` will be used to wait for the page transition
     // animation to complete before starting the tour.
-    tourController.start(context: context, isDebug: true);
+    tourController.start(
+      /// Context of the current Page
+      context: context,
+
+      /// Delay before starting the tour
+      delay: Duration.zero,
+
+      /// If true, it will force to start the tour even already shown.
+      /// If false, it will force not to start the tour.
+      /// Default is null (depends on the global config).
+      force: false,
+
+      /// Show specific pre-dialog for this Page
+      predialogConfig: PredialogConfig.copyWith(),
+    );
     super.initState();
 }
 ```
@@ -67,15 +81,15 @@ FeaturesTour(
         // Handle the press event
     },
     // Introduction of this widget
-    introdure: const Text(
+    introduce: const Text(
         'This is TextButton 1',
         style: TextStyle(color: Colors.white),
     ),
-    // Where to place the `introdure` widget.
-    introdureConfig: IntrodureConfig.copyWith(
+    // Where to place the `introduce` widget.
+    introduceConfig: IntroduceConfig.copyWith(
         // Select the rectangle of the quadrant on the screen
         quadrantAlignment: QuadrantAlignment.bottom,
-        // Alignment of the `introdure` widget in the quadrant rectangle
+        // Alignment of the `introduce` widget in the quadrant rectangle
         alignment: Alignment.topCenter,
     ),
     // Config for the fake child widget. This fake child is default to original `child`.
@@ -93,6 +107,8 @@ FeaturesTour(
     // Config for the pre-dialog, it will show before the tours to ask the permission.
     predialogConfig: PredialogConfig.copyWith(
       enabled: true,
+      // You can add your own dialog here. All others parameters will be ignored when using this method.
+      modifiedDialogResult: (context) => showDialog<bool>(context: context, builder: builder),
     ),
     // This is the real widget
     child: TextButton(

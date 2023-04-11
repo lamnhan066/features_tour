@@ -1,3 +1,9 @@
+## 0.0.4
+
+* Allow using your own pre-dialog by using `modifiedDialogResult` parameter in `PredialogConfig`.
+* Slightly reduce the default pre-dialog content bottom padding.
+* Update README.
+
 ## 0.0.3
 
 * `onPressed` is now can use as `Future` method. The next widget of the tour will be only called when this Future is completed.

@@ -1,7 +1,7 @@
 name: features_tour
 description: Features Tour is a package that enables you to easily create tours to introduce your widget features in your app with order.
-version: 0.0.3
-homepage: https://github.com/vursin/features_tour
+version: 0.0.4
+homepage: https://github.com/vnniz/features_tour
 
 environment:
   sdk: ">=2.17.0 <3.0.0"

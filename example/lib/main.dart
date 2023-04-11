@@ -32,7 +32,21 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    tourController.start(context: context);
+    tourController.start(
+      /// Context of the current Page
+      context: context,
+
+      /// Delay before starting the tour
+      delay: Duration.zero,
+
+      /// If true, it will force to start the tour even already shown.
+      /// If false, it will force not to start the tour.
+      /// Default is null (depends on the global config).
+      force: false,
+
+      /// Show specific pre-dialog for this Page
+      predialogConfig: PredialogConfig.copyWith(),
+    );
 
     super.initState();
   }
