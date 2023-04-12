@@ -42,13 +42,68 @@ class _MyAppState extends State<MyApp> {
       /// If true, it will force to start the tour even already shown.
       /// If false, it will force not to start the tour.
       /// Default is null (depends on the global config).
-      force: false,
+      force: true,
 
       /// Show specific pre-dialog for this Page
       predialogConfig: PredialogConfig.copyWith(),
     );
 
     super.initState();
+  }
+
+  void showDialogOnPressed() {
+    Future.delayed(const Duration(seconds: 1)).then((timer) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Show this dialog'),
+            content: FeaturesTour(
+              controller: tourController,
+              index: 1.1,
+              introduce: const Center(
+                child: Text(
+                  'This tour will wait for the dialog to be shown',
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              childConfig: ChildConfig.copyWith(backgroundColor: Colors.white),
+              onPressed: () => Navigator.pop(context),
+              child: const Text('This is a introduction field'),
+            ),
+          );
+        },
+      );
+    });
+  }
+
+  void showDialogTimeoutOnPressed() {
+    Future.delayed(const Duration(seconds: 4)).then((timer) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Show this dialog'),
+            content: FeaturesTour(
+              controller: tourController,
+              index: 3.1,
+              introduce: const Center(
+                child: Text(
+                  'This tour will wait for the dialog to be shown',
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              childConfig: ChildConfig.copyWith(backgroundColor: Colors.white),
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                  'This widget will be not introduced because of the timeout'),
+            ),
+          );
+        },
+      );
+    });
   }
 
   @override
@@ -65,6 +120,8 @@ class _MyAppState extends State<MyApp> {
           FeaturesTour(
             controller: tourController,
             index: 1,
+            waitForIndex: 1.1,
+            onPressed: showDialogOnPressed,
             introduce: const Text(
               'This button will be shown after Button 1',
               style: TextStyle(color: Colors.white),
@@ -74,8 +131,8 @@ class _MyAppState extends State<MyApp> {
             ),
             child: Center(
               child: ElevatedButton(
-                onPressed: () {},
-                child: const Text('Button 2'),
+                onPressed: showDialogOnPressed,
+                child: const Text('Show the dialog after 1 second'),
               ),
             ),
           ),
@@ -128,6 +185,7 @@ class _MyAppState extends State<MyApp> {
               FeaturesTour(
                 controller: tourController,
                 index: 3,
+                waitForIndex: 3.1,
                 introduce: const Text(
                   'This is the Button 3',
                   style: TextStyle(color: Colors.white),
@@ -136,10 +194,11 @@ class _MyAppState extends State<MyApp> {
                   alignment: Alignment.bottomLeft,
                   quadrantAlignment: QuadrantAlignment.top,
                 ),
+                onPressed: showDialogTimeoutOnPressed,
                 child: Center(
                   child: ElevatedButton(
                     onPressed: () {},
-                    child: const Text('Button 3'),
+                    child: const Text('Show dialog timeout (4 seconds)'),
                   ),
                 ),
               ),
