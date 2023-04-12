@@ -58,33 +58,25 @@ class FeaturesTourController {
     printDebug(''.padLeft(50, '='));
 
     if (_states.isEmpty) {
-      printDebug('This page has no state');
+      printDebug('The page $pageName has no state');
+      return;
+    }
+
+    // ignore: use_build_context_synchronously
+    if (!context.mounted) {
+      printDebug('The page $pageName context is not mounted');
       return;
     }
 
     _prefs ??= await SharedPreferences.getInstance();
 
     // Wait until the page transition animation is complete.
-    if (context.mounted) {
-      printDebug('Waiting for the page transition to complete..');
-      final modalRoute = ModalRoute.of(context)?.animation;
+    printDebug('Waiting for the page transition to complete..');
 
-      if (modalRoute == null ||
-          modalRoute.isCompleted ||
-          modalRoute.isDismissed) {
-      } else {
-        Completer completer = Completer();
-        modalRoute.addStatusListener((status) {
-          if (status == AnimationStatus.completed ||
-              status == AnimationStatus.dismissed) {
-            if (!completer.isCompleted) completer.complete();
-          }
-        });
-        await completer.future;
-      }
+    // ignore: use_build_context_synchronously
+    await _waitForTransition(context); // Main page transition
 
-      printDebug('Page transition completed.');
-    }
+    printDebug('Page transition completed.');
 
     // Wait for `delay` duration before starting the tours.
     await Future.delayed(delay);
@@ -129,21 +121,35 @@ class FeaturesTourController {
       printDebug('Should show predialog return false');
     }
 
+    // Watching for the `waitForIndex` value
+    FeaturesTourStateMixin? waitForIndexState;
+
     printDebug('Start the tour');
     while (_states.isNotEmpty) {
-      // Sort the `_states` with its' `index`
-      // Place sort in this place will improve the sort behavior, specially when new states are added.
-      _states.sort((a, b) => a.index.compareTo(b.index));
+      final FeaturesTourStateMixin state;
 
-      final state = _states.elementAt(0);
+      if (waitForIndexState == null) {
+        // Sort the `_states` with its' `index`
+        // Place sort in this place will improve the sort behavior, specially when new states are added.
+        _states.sort((a, b) => a.index.compareTo(b.index));
+        state = _states.elementAt(0);
+      } else {
+        state = waitForIndexState;
+      }
+
+      final waitForIndex = state.waitForIndex;
+      final waitForTimeout = state.waitForTimeout;
       final key = FeaturesTour._getPrefKey(pageName, state);
       printDebug('Start widget with key $key:');
 
       // ignore: use_build_context_synchronously
-      if (!context.mounted) {
+      if (!context.mounted || !state.currentContext.mounted) {
         printDebug('   -> This widget was unmounted');
         break;
       }
+
+      // Wait for the child widget transition to complete
+      await _waitForTransition(state.currentContext);
 
       if (_prefs!.getBool(key) == true) {
         printDebug('   -> This widget is already shown');
@@ -177,9 +183,65 @@ class FeaturesTourController {
           await _removePage(markAsShowed: true);
           break;
       }
+
+      // Wait for the next state to appear if `waitForIndex` is non-null
+      if (waitForIndex != null) {
+        printDebug(
+            'The `waitForIndex` is non-null => Waiting for the next index: $waitForIndex ...');
+        waitForIndexState = await _waitForIndex(waitForIndex, waitForTimeout);
+
+        if (waitForIndexState == null) {
+          printDebug(
+              '   -> Cannot not wait for next index because timeout is reached. Use orderd values instead.');
+        } else {
+          printDebug('   -> Next index is available with state: $state');
+        }
+      } else {
+        waitForIndexState = null;
+      }
     }
 
     printDebug('This tour has been completed');
+  }
+
+  /// Wait for the next index to be available
+  Future<FeaturesTourStateMixin?> _waitForIndex(
+    double index,
+    Duration timeout,
+  ) async {
+    Stopwatch stopwatch = Stopwatch()..start();
+    while (true) {
+      for (final state in _states) {
+        if (state.index == index) return state;
+      }
+
+      // Timeout is reached.
+      if (stopwatch.elapsed >= timeout) return null;
+
+      // Delay for 100 milliseconds.
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+  }
+
+  /// Wait until the page transition animation is complete.
+  Future<void> _waitForTransition(BuildContext context) async {
+    if (!context.mounted) return;
+
+    final modalRoute = ModalRoute.of(context)?.animation;
+
+    if (modalRoute == null ||
+        modalRoute.isCompleted ||
+        modalRoute.isDismissed) {
+    } else {
+      Completer completer = Completer();
+      modalRoute.addStatusListener((status) {
+        if (status == AnimationStatus.completed ||
+            status == AnimationStatus.dismissed) {
+          if (!completer.isCompleted) completer.complete();
+        }
+      });
+      await completer.future;
+    }
   }
 
   /// Removes all controllers for specific `pageName`

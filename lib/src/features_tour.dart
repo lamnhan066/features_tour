@@ -124,7 +124,12 @@ class FeaturesTour extends StatefulWidget {
   /// is completed.
   FeaturesTour({
     required this.controller,
+
+    /// The tour will sort by this index, and it must be not dupplicated. You can
+    /// leave this black if you want to let the package to control it automatically.
     double? index,
+    this.waitForIndex,
+    this.waitForTimeout = const Duration(seconds: 3),
     required this.child,
     this.childConfig,
     this.introduce = const SizedBox.shrink(),
@@ -143,6 +148,20 @@ class FeaturesTour extends StatefulWidget {
   /// The tour will sort by this index, and it must be not dupplicated. You can
   /// leave this black if you want to let the package to control it automatically.
   late final double index;
+
+  /// This is the next index that you want to start. The plugin will wait for it
+  /// until it's appeared or [waitForTimeout] is reached. If this value is `null`,
+  /// the order of the [index] will be used.
+  ///
+  /// Remember that this index is only using in the same [controller].
+  ///
+  /// Ex: You want to wait for the dialog to appear to show the next introduction.
+  final double? waitForIndex;
+
+  /// Timeout when [waitForTimeout] is set. Defaults to 3 seconds.
+  ///
+  /// This value must not be to long to avoid UX issues.
+  final Duration waitForTimeout;
 
   /// Enable or disable the action of this widget
   final bool enabled;
@@ -189,6 +208,15 @@ class _FeaturesTourState extends State<FeaturesTour>
     with FeaturesTourStateMixin {
   @override
   double get index => widget.index;
+
+  @override
+  double? get waitForIndex => widget.waitForIndex;
+
+  @override
+  Duration get waitForTimeout => widget.waitForTimeout;
+
+  @override
+  BuildContext get currentContext => context;
 
   @override
   Future<IntroduceResult> showIntroduce(
