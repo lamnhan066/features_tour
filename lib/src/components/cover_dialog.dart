@@ -16,7 +16,12 @@ void showCover(BuildContext context) {
     barrierDismissible: false,
     useSafeArea: false,
     barrierColor: Colors.transparent,
-    builder: (context) => const SizedBox.shrink(),
+    builder: (context) {
+      return WillPopScope(
+        onWillPop: () => Future.value(false),
+        child: const SizedBox.shrink(),
+      );
+    },
   );
 
   Navigator.of(context).push(_coverDialog!);
