@@ -166,7 +166,16 @@ class FeaturesTourController {
       if (waitForIndex != null) {
         printDebug(
             'The `waitForIndex` is non-null => Waiting for the next index: $waitForIndex ...');
+
+        // Show the cover to avoid user tapping the screen
+        // ignore: use_build_context_synchronously
+        showCover(context);
+
         waitForIndexState = await _waitForIndex(waitForIndex, waitForTimeout);
+
+        // Hide the cover
+        // ignore: use_build_context_synchronously
+        hideCover(context);
 
         if (waitForIndexState == null) {
           printDebug(
