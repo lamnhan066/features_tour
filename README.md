@@ -20,15 +20,29 @@ Then, set the default configuration for the app using the FeaturesTour.setGlobal
 void main() {
     // Set the default value for this app
     FeaturesTour.setGlobalConfig(
+        /// This value is the base value for all tours, each tour will have its own configurations.
+        ///
+        /// `true` : force to show all the tours, even the pre-dialogs
+        /// `false` : force to not show all the tours and pre-dialogs
+        /// `null` (default) : show when needed.
+        force: null,
+
+        /// Configuration for the `child` widget.
         childConfig: ChildConfig.copyWith(
             backgroundColor: Colors.white,
         ),
+
+        /// Configuration for the `Skip` text button.
         skipConfig: SkipConfig.copyWith(
             text: 'SKIP >>>',
         ),
+
+        /// Configuration for the `Next` text button.
         nextConfig: NextConfig.copyWith(
             text: 'NEXT >>'
         ),
+
+        /// Configuration for the `introduce` widget, can know as the description.
         introduceConfig: IntroduceConfig.copyWith(
             backgroundColor: Colors.black,
         ),
@@ -56,9 +70,9 @@ void initState() {
       /// Delay before starting the tour
       delay: Duration.zero,
 
-      /// If true, it will force to start the tour even already shown.
-      /// If false, it will force not to start the tour.
-      /// Default is null (depends on the global config).
+      /// If `true`, it will force to start the tour even already shown.
+      /// If `false,` it will force not to start the tour.
+      /// Default is `null` (depends on the global config).
       force: false,
 
       /// Show specific pre-dialog for this Page
@@ -72,45 +86,60 @@ To create a tour step, you need to create a FeaturesTour widget. This widget tak
 
 ``` dart
 FeaturesTour(
-    // Add the controller
+    /// Add the controller
     controller: tourController,
-    // Index of this widget in the tour. It must be unique in the same page.
+
+    /// Index of this widget in the tour. It must be unique in the same page.
     index: 0,
-    // On this widget pressed. This can be a `Future` method, the next introduction will be delayed until this method is completed.
+
+    /// [Optional] The app will be freezed until this index is appeared, so careful when using this feature.
+    waitForIndex: 1,
+
+    /// Timeout for the [waitForIndex] action.
+    waitForTimeout: Duration(seconds: 3),
+
+    /// On this widget pressed. This can be a `Future` method, the next introduction will be delayed until this method is completed.
     onPressed: () async {
         // Handle the press event
     },
-    // Introduction of this widget
+
+    /// Introduction of this widget (Known as the description of the feature)
     introduce: const Text(
         'This is TextButton 1',
         style: TextStyle(color: Colors.white),
     ),
-    // Where to place the `introduce` widget.
+
+    /// Where to place the `introduce` widget.
     introduceConfig: IntroduceConfig.copyWith(
         // Select the rectangle of the quadrant on the screen
         quadrantAlignment: QuadrantAlignment.bottom,
         // Alignment of the `introduce` widget in the quadrant rectangle
         alignment: Alignment.topCenter,
     ),
-    // Config for the fake child widget. This fake child is default to original `child`.
+
+    /// Config for the fake child widget. This fake child is default to original `child`.
     childConfig: ChildConfig.copyWith(
         backgroundColor: Colors.white,
     ),
-    // Config for the next button, this button will move to the next widget base on its' index.
+
+    /// Config for the next button, this button will move to the next widget base on its' index.
     nextConfig: NextConfig.copyWith(
         text: 'NEXT >>',
     ),
-    // Config for the skip button. This button will skip the current tour.
+
+    /// Config for the skip button. This button will skip the current tour.
     skipConfig: SkipConfig.copyWith(
         text: 'SKIP >>>',
     ),
-    // Config for the pre-dialog, it will show before the tours to ask the permission.
+
+    /// Config for the pre-dialog, it will show before the tours to ask the permission.
     predialogConfig: PredialogConfig.copyWith(
       enabled: true,
       // You can add your own dialog here. All others parameters will be ignored when using this method.
       modifiedDialogResult: (context) => showDialog<bool>(context: context, builder: builder),
     ),
-    // This is the real widget
+
+    /// This is the real widget
     child: TextButton(
         onPressed: () {},
         child: const Text('TextButton 1'),

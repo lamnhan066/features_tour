@@ -1,3 +1,12 @@
+## 0.0.5
+
+* Add `waitForIndex` and `waitForTimeout` to able to wait for a next specific index. The screen will be freesed when waiting for the next index.
+* The tours is now respect the `force` parameter correctly:
+  * `null` (default): only show when needed.
+  * `true`: force to show all the tours, including pre-dialogs.
+  * `false`: force to not show all the tours and pre-dialogs.
+* Add example for the new parameters.
+
 ## 0.0.4
 
 * Allow using your own pre-dialog by using `modifiedDialogResult` parameter in `PredialogConfig`.
