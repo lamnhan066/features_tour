@@ -113,6 +113,14 @@ class FeaturesTour extends StatefulWidget {
   /// you can add new feature to between 2 other features. This number must be
   /// not changed if you don't want to introduce that feature again.
   ///
+  /// You can specify the next index to show with [waitForIndex], the app will
+  /// freeze until the next index is available (users cannot tap any where on the screen).
+  /// It's useful when you want to show the [FeaturesTour] in the dialog that
+  /// will be opened after this feature is shown. So please careful by using
+  /// the [waitForTimeout] to specify the timeout for each action to avoid
+  /// the bad UX, default timeout is 3 seconds. Remember that this index is only
+  /// using in the same [controller].
+  ///
   /// You can disable this feature by using [enabled].
   ///
   /// [introduce] is a widget that will show the introduce information, you can
