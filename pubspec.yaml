@@ -3,6 +3,10 @@ description: Features Tour is a package that enables you to easily create tours 
 version: 0.0.4
 homepage: https://github.com/vnniz/features_tour
 
+screenshots:
+  - description: "Introduction GIF"
+    path: assets/introduction.gif
+
 environment:
   sdk: ">=2.17.0 <3.0.0"
   flutter: ">=2.5.0"
