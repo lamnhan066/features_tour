@@ -7,6 +7,7 @@ import 'package:features_tour/src/utils/print_debug.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'components/cover_dialog.dart';
 import 'components/features_child.dart';
 import 'components/features_tour_minxin.dart';
 
@@ -17,14 +18,15 @@ class FeaturesTour extends StatefulWidget {
   static String _prefix = 'FeaturesTour';
 
   /// Global force variable
-  static bool _force = false;
+  static bool? _force;
 
   /// Store all available controllers
   static final List<FeaturesTourController> _controllers = [];
 
   /// Set the global configs
   ///
-  /// [force] to show the instructions
+  /// [force] to show all or hide all the instructions, including predialogs.
+  /// Default is `null`, means it depends on it's own `start` configuration.
   ///
   /// [preferencePrefix] if the prefix of the shared preferences
   ///

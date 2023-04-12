@@ -30,10 +30,14 @@ class FeaturesTourController {
   /// Start the tour. This packaga automatically save the state of the widget,
   /// so it will skip the showed widget.
   ///
+  /// All of this parameters will be applied to this controller (this page only)
+  /// if it is set. Otherwise, it will depends on the global configurations.
+  ///
   /// [context] will be used to wait for the page transition animation to complete.
   /// After that, delay for [delay] duration before starting the tour, it makes
-  /// sure that all the widgets are rendered correctly, to enable all the tours,
-  /// just need to set the [force] to `true`.
+  /// sure that all the widgets are rendered correctly. To enable/disable all the tours,
+  /// just need to set the [force] to `true` or `false, it will force to show
+  /// all the pre-dialogs.
   ///
   /// You can also configure the predialog by using [predialogConfig], this dialog
   /// will show to ask the user want to start the tour or not.
@@ -84,41 +88,10 @@ class FeaturesTourController {
     // Get default value from global `force`
     force ??= FeaturesTour._force;
 
-    bool shouldShowDialog = _shouldShowPredialog();
-    if (!shouldShowDialog && force) {
-      printDebug('Should show dialog is false but force is true.');
-      shouldShowDialog = true;
-    }
-    if (shouldShowDialog) {
-      printDebug('Should show predialog return true');
-      predialogConfig ??= PredialogConfig.global;
-
-      if (predialogConfig.enabled) {
-        printDebug('Predialog is enabled');
-
-        final bool? predialogResult;
-        if (predialogConfig.modifiedDialogResult != null) {
-          Completer<bool> completer = Completer();
-          // ignore: use_build_context_synchronously
-          completer.complete(predialogConfig.modifiedDialogResult!(context));
-          predialogResult = await completer.future;
-        } else {
-          // ignore: use_build_context_synchronously
-          predialogResult = await predialog(
-            context,
-            predialogConfig,
-          );
-        }
-
-        if (predialogResult != true) {
-          printDebug('User is cancelled to show the introduction');
-          return;
-        }
-      } else {
-        printDebug('Predialog is not enabled');
-      }
-    } else {
-      printDebug('Should show predialog return false');
+    // ignore: use_build_context_synchronously
+    if (!(await _showPredialog(context, force, predialogConfig))) {
+      // User pressed cancel
+      return;
     }
 
     // Watching for the `waitForIndex` value
@@ -148,20 +121,25 @@ class FeaturesTourController {
         break;
       }
 
+      bool shouldShowIntroduce;
+      if (force != null) {
+        printDebug('`force` is $force, so the introduction must respect it.');
+        shouldShowIntroduce = force;
+      } else {
+        printDebug('`force` is null, so the introduce will act like normal.');
+        final isShown = _prefs!.getBool(key);
+        shouldShowIntroduce = isShown != true;
+      }
+
+      if (!shouldShowIntroduce) {
+        printDebug(
+            '   -> This widget is already shown -> move to the next widget.');
+        await _removeState(state, false);
+        continue;
+      }
+
       // Wait for the child widget transition to complete
       await _waitForTransition(state.currentContext);
-
-      if (_prefs!.getBool(key) == true) {
-        printDebug('   -> This widget is already shown');
-
-        // If not forcing to show this widget introduce, just continuing
-        if (!force) {
-          await _removeState(state, false);
-          continue;
-        }
-
-        printDebug('   -> Force is true, continue to show this widget');
-      }
 
       final result = await state.showIntroduce(state);
 
@@ -202,6 +180,59 @@ class FeaturesTourController {
     }
 
     printDebug('This tour has been completed');
+  }
+
+  /// Show the predialog if possible
+  Future<bool> _showPredialog(
+    BuildContext context,
+    bool? force,
+    PredialogConfig? config,
+  ) async {
+    // Should show the predialog or not
+    bool shouldShowPredialog;
+
+    // Respect `force`
+    if (force != null) {
+      printDebug('`force` is $force, so the dialog must respect it.');
+      shouldShowPredialog = force;
+    } else {
+      printDebug('`force` is null, so the dialog will be got from local data');
+      shouldShowPredialog = _shouldShowPredialog();
+    }
+
+    if (shouldShowPredialog) {
+      printDebug('Should show predialog return true');
+      config ??= PredialogConfig.global;
+
+      if (config.enabled) {
+        printDebug('Predialog is enabled');
+
+        final bool? predialogResult;
+        if (config.modifiedDialogResult != null) {
+          Completer<bool> completer = Completer();
+          // ignore: use_build_context_synchronously
+          completer.complete(config.modifiedDialogResult!(context));
+          predialogResult = await completer.future;
+        } else {
+          // ignore: use_build_context_synchronously
+          predialogResult = await predialog(
+            context,
+            config,
+          );
+        }
+
+        if (predialogResult != true) {
+          printDebug('User is cancelled to show the introduction');
+          return false;
+        }
+      } else {
+        printDebug('Predialog is not enabled');
+      }
+    } else {
+      printDebug('Should show predialog return false');
+    }
+
+    return true;
   }
 
   /// Wait for the next index to be available
