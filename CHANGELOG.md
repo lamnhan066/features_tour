@@ -1,3 +1,7 @@
+# 0.0.5+1
+
+* Improve pub score.
+
 ## 0.0.5
 
 * Add `waitForIndex` and `waitForTimeout` to able to wait for a next specific index. The screen will be freesed when waiting for the next index.
