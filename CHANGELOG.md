@@ -1,3 +1,8 @@
+## 0.0.5+3
+
+* Update dependencies.
+* Improve pub score.
+
 ## 0.0.5+2
 
 * Improve pub score.

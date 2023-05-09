@@ -157,7 +157,7 @@ Contributions to this project are welcome! If you would like to contribute, plea
 
 If you find this project helpful and would like to support its development, you can make a donation through the following channels:
 
-**PayPal:** [Donate Now](https://www.paypal.com/donate?hosted_button_id=lamnhan066)
+**PayPal:** [Donate](https://www.paypal.com/donate?hosted_button_id=lamnhan066)
 
 <p align='center'><a href="https://www.buymeacoffee.com/vursin"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=vursin&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" width="200"></a></p>
 
