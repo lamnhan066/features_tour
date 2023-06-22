@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../features_tour.dart';
+import '../features_tour.dart';
+import '../models/predialog_config.dart';
 
 /// Save the state of the doNotAskAgain checkbox
 bool? _applyToAllScreens;

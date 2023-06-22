@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../features_tour.dart';
+import '../features_tour.dart';
 
 DialogRoute? _coverDialog;
 
