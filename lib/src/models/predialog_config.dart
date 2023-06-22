@@ -32,7 +32,7 @@ class PredialogConfig {
     this.content =
         'This page has some new features that you might want to discover.\n\n'
             'Would you like to take a tour?',
-    this.applyToAllScreensText = 'Apply to all screens',
+    this.applyToAllScreensText = 'Apply to all pages',
     this.yesButtonText = 'Yes',
     this.noButtonText = 'No',
     this.borderRadius = 12,

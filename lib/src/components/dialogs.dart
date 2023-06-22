@@ -34,20 +34,22 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
           children: [
             Text(
               config.content,
-              style: TextStyle(color: config.textColor),
+              style: TextStyle(color: config.textColor, fontSize: 13.5),
             ),
             const SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Checkbox(
+            StatefulBuilder(
+              builder: (context, setState) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: Checkbox(
+                        // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: checkbox,
-                        side: BorderSide(color: config.textColor, width: 2),
+                        side: BorderSide(color: config.textColor, width: 1.5),
                         onChanged: (value) {
                           if (value != null) {
                             setState(() {
@@ -56,27 +58,25 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
                           }
                         },
                       ),
-                      GestureDetector(
-                        child: Text(
-                          config.applyToAllScreensText,
-                          style: TextStyle(
-                            color: config.textColor,
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.fontSize,
-                          ),
+                    ),
+                    const SizedBox(width: 6),
+                    GestureDetector(
+                      child: Text(
+                        config.applyToAllScreensText,
+                        style: TextStyle(
+                          color: config.textColor,
+                          fontSize: 12,
                         ),
-                        onTap: () {
-                          setState(() {
-                            checkbox = !checkbox;
-                          });
-                        },
                       ),
-                    ],
-                  );
-                },
-              ),
+                      onTap: () {
+                        setState(() {
+                          checkbox = !checkbox;
+                        });
+                      },
+                    ),
+                  ],
+                );
+              },
             ),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,
