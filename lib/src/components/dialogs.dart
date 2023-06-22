@@ -4,16 +4,16 @@ import '../features_tour.dart';
 import '../models/predialog_config.dart';
 
 /// Save the state of the doNotAskAgain checkbox
-bool? _applyToAllScreens;
+bool? _applyToAllPages;
 
 /// Show the predialog with specific configuration
 Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
   // If `_dontAskAgainResult` is not null, the `doNotAksAgain` is checked
   // so just return the result.
-  if (_applyToAllScreens != null) {
+  if (_applyToAllPages != null) {
     printDebug(
-        'Apply to all screens is checked in the previous dialog, return previous result: $_applyToAllScreens');
-    return _applyToAllScreens;
+        'Apply to all screens is checked in the previous dialog, return previous result: $_applyToAllPages');
+    return _applyToAllPages;
   }
 
   bool checkbox = false;
@@ -63,7 +63,7 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
                     const SizedBox(width: 6),
                     GestureDetector(
                       child: Text(
-                        config.applyToAllScreensText,
+                        config.applyToAllPagesText,
                         style: TextStyle(
                           color: config.textColor,
                           fontSize: 12,
@@ -133,7 +133,7 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
   if (checkbox && result != null) {
     printDebug(
         'applyToAllScreens checkbox is checked => Update global predialog configuration');
-    _applyToAllScreens = result;
+    _applyToAllPages = result;
   }
 
   return result;

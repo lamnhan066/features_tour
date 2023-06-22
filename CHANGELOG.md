@@ -1,6 +1,6 @@
-## 0.1.1
+## 0.1.2
 
-* Rename `doNotAskAgainText` to `applyToAllScreensText` in `PredialogConfig` to make it easier to understand. Also changed from `Do not ask again this time` to `Apply to all pages`.
+* Rename `doNotAskAgainText` to `applyToAllPagesText` in `PredialogConfig` to make it easier to understand. Also changed from `Do not ask again this time` to `Apply to all pages`.
 * Resize the predialog text and checkbox.
 * Using sdk: ">=2.18.0 <4.0.0" and flutter: ">=3.3.0".
 * Add `debugLog` parameter to `setGlobalConfig` to allow disabling the debug logs.
