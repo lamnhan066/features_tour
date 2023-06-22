@@ -17,7 +17,7 @@ class PredialogConfig {
   ///
   /// [content] is the content, default is "This page has some new features that you might want to discover.\n\nWould you like to take a tour?"
   ///
-  /// [doNotAskAgainText] is the text for doNotAskAgain checkbox
+  /// [applyToAllScreensText] is the text for doNotAskAgain checkbox
   ///
   /// [yesButtonText] and [noButtonText] are the text of the corresponding buttons
   ///
@@ -32,7 +32,7 @@ class PredialogConfig {
     this.content =
         'This page has some new features that you might want to discover.\n\n'
             'Would you like to take a tour?',
-    this.doNotAskAgainText = 'Do not ask again this time',
+    this.applyToAllScreensText = 'Apply to all screens',
     this.yesButtonText = 'Yes',
     this.noButtonText = 'No',
     this.borderRadius = 12,
@@ -46,7 +46,7 @@ class PredialogConfig {
   final Color textColor;
   final String title;
   final String content;
-  final String doNotAskAgainText;
+  final String applyToAllScreensText;
   final String yesButtonText;
   final String noButtonText;
   final double borderRadius;
@@ -75,7 +75,7 @@ class PredialogConfig {
     Color? backgroundColor,
     Color? textColor,
     String? title,
-    String? doNotAskAgainText,
+    String? applyToAllScreensText,
     String? content,
     String? acceptButtonText,
     String? cancelButtonText,
@@ -88,7 +88,8 @@ class PredialogConfig {
         backgroundColor: backgroundColor ?? global.backgroundColor,
         textColor: textColor ?? global.textColor,
         title: title ?? global.title,
-        doNotAskAgainText: doNotAskAgainText ?? global.doNotAskAgainText,
+        applyToAllScreensText:
+            applyToAllScreensText ?? global.applyToAllScreensText,
         content: content ?? global.content,
         yesButtonText: acceptButtonText ?? global.yesButtonText,
         noButtonText: cancelButtonText ?? global.noButtonText,
@@ -103,7 +104,7 @@ class PredialogConfig {
     Color? textColor,
     String? title,
     String? content,
-    String? doNotAskAgainText,
+    String? applyToAllScreensText,
     String? acceptButtonText,
     String? cancelButtonText,
     double? borderRadius,
@@ -115,7 +116,8 @@ class PredialogConfig {
       textColor: textColor ?? this.textColor,
       title: title ?? this.title,
       content: content ?? this.content,
-      doNotAskAgainText: doNotAskAgainText ?? this.doNotAskAgainText,
+      applyToAllScreensText:
+          applyToAllScreensText ?? this.applyToAllScreensText,
       yesButtonText: acceptButtonText ?? yesButtonText,
       noButtonText: cancelButtonText ?? noButtonText,
       borderRadius: borderRadius ?? this.borderRadius,

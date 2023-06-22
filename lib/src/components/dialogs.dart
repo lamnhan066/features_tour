@@ -1,18 +1,18 @@
-import 'package:features_tour/src/models/predialog_config.dart';
-import 'package:features_tour/src/utils/print_debug.dart';
 import 'package:flutter/material.dart';
 
+import '../../features_tour.dart';
+
 /// Save the state of the doNotAskAgain checkbox
-bool? _doNotAskAgainResult;
+bool? _applyToAllScreens;
 
 /// Show the predialog with specific configuration
 Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
   // If `_dontAskAgainResult` is not null, the `doNotAksAgain` is checked
   // so just return the result.
-  if (_doNotAskAgainResult != null) {
+  if (_applyToAllScreens != null) {
     printDebug(
-        'Do not ask again is checked in the previous dialog, return previous result: $_doNotAskAgainResult');
-    return _doNotAskAgainResult;
+        'Apply to all screens is checked in the previous dialog, return previous result: $_applyToAllScreens');
+    return _applyToAllScreens;
   }
 
   bool checkbox = false;
@@ -58,7 +58,7 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
                       ),
                       GestureDetector(
                         child: Text(
-                          config.doNotAskAgainText,
+                          config.applyToAllScreensText,
                           style: TextStyle(
                             color: config.textColor,
                             fontSize: Theme.of(context)
@@ -131,8 +131,8 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
   // updated
   if (checkbox && result != null) {
     printDebug(
-        'dontAskAgain checkbox is checked => Update global predialog configuration');
-    _doNotAskAgainResult = result;
+        'applyToAllScreens checkbox is checked => Update global predialog configuration');
+    _applyToAllScreens = result;
   }
 
   return result;
