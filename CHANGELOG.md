@@ -1,3 +1,9 @@
+## 0.1.0
+
+* Rename `doNotAskAgainText` to `applyToAllScreensText` in `PredialogConfig` to make it easier to understand. Also changed from `Do not ask again this time` to `Apply to all screens`.
+* Using sdk: ">=2.18.0 <4.0.0" and flutter: ">=3.3.0".
+* Add `debugLog` parameter to `setGlobalConfig` to allow disabling the debug logs.
+
 ## 0.0.5+3
 
 * Update dependencies.
