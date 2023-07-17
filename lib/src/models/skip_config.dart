@@ -10,28 +10,32 @@ class SkipConfig {
   /// Position of the skip button
   final Alignment alignment;
 
-  /// Color of ther skip text
+  /// Color of the Skip text. You can use [textStyle] for more control.
   final Color color;
 
-  /// Enable or disable the skip button
+  /// Enable or disable the Skip button
   final bool enabled;
 
   /// Call the `onPressed` action when the skip button is pressed. Default is `false`.
   final bool isCallOnPressed;
 
+  /// Set the style for the text
+  final TextStyle? textStyle;
+
   /// The [ButtonStyle] of the button
   /// Default:
   /// ``` dart
-  ///   TextButton.styleFrom(
-  ///     RoundedRectangleBorder(
-  ///       side: BorderSide(
-  ///         color: nextConfig.color,
-  ///       ),
-  ///       borderRadius: BorderRadius.circular(10),
-  ///     ),
-  ///   )
+  ///    style: TextButton.styleFrom(
+  ///      shape: RoundedRectangleBorder(
+  ///        side: const BorderSide(
+  ///          color: Colors.red,
+  ///        ),
+  ///        borderRadius: BorderRadius.circular(10),
+  ///      ),
+  ///    ),
+  ///  ),
   /// ```
-  final ButtonStyle? style;
+  final ButtonStyle? buttonStyle;
 
   const SkipConfig._({
     this.text = 'SKIP >>>',
@@ -39,7 +43,8 @@ class SkipConfig {
     this.color = Colors.white,
     this.enabled = true,
     this.isCallOnPressed = false,
-    this.style,
+    this.textStyle,
+    this.buttonStyle,
   });
 
   /// Create a new SkipConfig base on the [global] values
@@ -55,17 +60,20 @@ class SkipConfig {
   /// [isCallOnPressed] allows the tour to call `onPressed` when the skip button is pressed.
   /// Default is `false`. Means that doesn't call `onPressed` when the skip button is pressed.
   ///
-  /// [style] is the [ButtonStyle] of the button.
+  /// [textStyle] is the [TextStyle] of the button
+  ///
+  /// [buttonStyle] is the [ButtonStyle] of the button
   /// Default:
   /// ``` dart
-  ///   TextButton.styleFrom(
-  ///     RoundedRectangleBorder(
-  ///       side: BorderSide(
-  ///         color: nextConfig.color,
-  ///       ),
-  ///       borderRadius: BorderRadius.circular(10),
-  ///     ),
-  ///   )
+  ///    style: TextButton.styleFrom(
+  ///      shape: RoundedRectangleBorder(
+  ///        side: const BorderSide(
+  ///          color: Colors.red,
+  ///        ),
+  ///        borderRadius: BorderRadius.circular(10),
+  ///      ),
+  ///    ),
+  ///  ),
   /// ```
   factory SkipConfig.copyWith({
     String? text,
@@ -73,7 +81,8 @@ class SkipConfig {
     Color? color,
     bool? enabled,
     bool? isCallOnPressed,
-    ButtonStyle? style,
+    TextStyle? textStyle,
+    ButtonStyle? buttonStyle,
   }) {
     return SkipConfig._(
       text: text ?? global.text,
@@ -81,7 +90,8 @@ class SkipConfig {
       color: color ?? global.color,
       enabled: enabled ?? global.enabled,
       isCallOnPressed: isCallOnPressed ?? global.isCallOnPressed,
-      style: style ?? global.style,
+      textStyle: textStyle ?? global.textStyle,
+      buttonStyle: buttonStyle ?? global.buttonStyle,
     );
   }
 
@@ -92,7 +102,8 @@ class SkipConfig {
     Color? color,
     bool? enabled,
     bool? isCallOnPressed,
-    ButtonStyle? style,
+    TextStyle? textStyle,
+    ButtonStyle? buttonStyle,
   }) {
     return SkipConfig._(
       text: text ?? this.text,
@@ -100,7 +111,8 @@ class SkipConfig {
       color: color ?? this.color,
       enabled: enabled ?? this.enabled,
       isCallOnPressed: isCallOnPressed ?? this.isCallOnPressed,
-      style: style ?? this.style,
+      textStyle: textStyle ?? this.textStyle,
+      buttonStyle: buttonStyle ?? this.buttonStyle,
     );
   }
 }

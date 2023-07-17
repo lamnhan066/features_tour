@@ -10,32 +10,37 @@ class NextConfig {
   /// Position of the next button
   final Alignment alignment;
 
-  /// Color of ther next text
+  /// Color of the Next text. You can use [textStyle] for more control.
   final Color color;
 
-  /// Enable or disable the skip button
+  /// Enable or disable the Skip button
   final bool enabled;
+
+  /// Set the style for the text
+  final TextStyle? textStyle;
 
   /// The [ButtonStyle] of the button
   /// Default:
   /// ``` dart
-  ///   TextButton.styleFrom(
-  ///     RoundedRectangleBorder(
-  ///       side: BorderSide(
-  ///         color: nextConfig.color,
-  ///       ),
-  ///       borderRadius: BorderRadius.circular(10),
-  ///     ),
-  ///   )
+  ///    style: TextButton.styleFrom(
+  ///      shape: RoundedRectangleBorder(
+  ///        side: const BorderSide(
+  ///          color: Colors.red,
+  ///        ),
+  ///        borderRadius: BorderRadius.circular(10),
+  ///      ),
+  ///    ),
+  ///  ),
   /// ```
-  final ButtonStyle? style;
+  final ButtonStyle? buttonStyle;
 
   const NextConfig._({
     this.text = 'NEXT >>',
     this.alignment = Alignment.bottomRight,
     this.color = Colors.white,
     this.enabled = true,
-    this.style,
+    this.textStyle,
+    this.buttonStyle,
   });
 
   /// Create a new NextConfig base on the [global] values
@@ -48,31 +53,36 @@ class NextConfig {
   ///
   /// [enabled] is true if the next button is enabled. Default is `true`.
   ///
-  /// [style] is the [ButtonStyle] of the button
+  /// [textStyle] is the [TextStyle] of the button
+  ///
+  /// [buttonStyle] is the [ButtonStyle] of the button
   /// Default:
   /// ``` dart
-  ///   TextButton.styleFrom(
-  ///     RoundedRectangleBorder(
-  ///       side: BorderSide(
-  ///         color: nextConfig.color,
-  ///       ),
-  ///       borderRadius: BorderRadius.circular(10),
-  ///     ),
-  ///   )
+  ///    style: TextButton.styleFrom(
+  ///      shape: RoundedRectangleBorder(
+  ///        side: const BorderSide(
+  ///          color: Colors.red,
+  ///        ),
+  ///        borderRadius: BorderRadius.circular(10),
+  ///      ),
+  ///    ),
+  ///  ),
   /// ```
   factory NextConfig.copyWith({
     String? text,
     Alignment? alignment,
     Color? color,
     bool? enabled,
-    ButtonStyle? style,
+    TextStyle? textStyle,
+    ButtonStyle? buttonStyle,
   }) {
     return NextConfig._(
       text: text ?? global.text,
       alignment: alignment ?? global.alignment,
       color: color ?? global.color,
       enabled: enabled ?? global.enabled,
-      style: style ?? global.style,
+      textStyle: textStyle ?? global.textStyle,
+      buttonStyle: buttonStyle ?? global.buttonStyle,
     );
   }
 
@@ -82,14 +92,16 @@ class NextConfig {
     Alignment? alignment,
     Color? color,
     bool? enabled,
-    ButtonStyle? style,
+    TextStyle? textStyle,
+    ButtonStyle? buttonStyle,
   }) {
     return NextConfig._(
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,
       enabled: enabled ?? this.enabled,
-      style: style ?? this.style,
+      textStyle: textStyle ?? this.textStyle,
+      buttonStyle: buttonStyle ?? this.buttonStyle,
     );
   }
 }
