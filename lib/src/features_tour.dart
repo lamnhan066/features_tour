@@ -271,14 +271,15 @@ class _FeaturesTourState extends State<FeaturesTour>
                 onPressed: () {
                   Navigator.pop(ctx, IntroduceResult.skip);
                 },
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: nextConfig.color,
+                style: skipConfig.style ??
+                    TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: nextConfig.color,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
                 child: Text(
                   skipConfig.text,
                   style: TextStyle(color: skipConfig.color),
@@ -294,14 +295,15 @@ class _FeaturesTourState extends State<FeaturesTour>
                 onPressed: () {
                   Navigator.pop(ctx, IntroduceResult.next);
                 },
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: nextConfig.color,
+                style: nextConfig.style ??
+                    TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: nextConfig.color,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
                 child: Text(
                   nextConfig.text,
                   style: TextStyle(color: nextConfig.color),

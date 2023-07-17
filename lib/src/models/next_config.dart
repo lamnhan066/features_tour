@@ -16,11 +16,26 @@ class NextConfig {
   /// Enable or disable the skip button
   final bool enabled;
 
+  /// The [ButtonStyle] of the button
+  /// Default:
+  /// ``` dart
+  ///   TextButton.styleFrom(
+  ///     RoundedRectangleBorder(
+  ///       side: BorderSide(
+  ///         color: nextConfig.color,
+  ///       ),
+  ///       borderRadius: BorderRadius.circular(10),
+  ///     ),
+  ///   )
+  /// ```
+  final ButtonStyle? style;
+
   const NextConfig._({
     this.text = 'NEXT >>',
     this.alignment = Alignment.bottomRight,
     this.color = Colors.white,
     this.enabled = true,
+    this.style,
   });
 
   /// Create a new NextConfig base on the [global] values
@@ -32,17 +47,32 @@ class NextConfig {
   /// [color] is the color of the next text. Default is `Colors.white`.
   ///
   /// [enabled] is true if the next button is enabled. Default is `true`.
+  ///
+  /// [style] is the [ButtonStyle] of the button
+  /// Default:
+  /// ``` dart
+  ///   TextButton.styleFrom(
+  ///     RoundedRectangleBorder(
+  ///       side: BorderSide(
+  ///         color: nextConfig.color,
+  ///       ),
+  ///       borderRadius: BorderRadius.circular(10),
+  ///     ),
+  ///   )
+  /// ```
   factory NextConfig.copyWith({
     String? text,
     Alignment? alignment,
     Color? color,
     bool? enabled,
+    ButtonStyle? style,
   }) {
     return NextConfig._(
       text: text ?? global.text,
       alignment: alignment ?? global.alignment,
       color: color ?? global.color,
       enabled: enabled ?? global.enabled,
+      style: style ?? global.style,
     );
   }
 
@@ -52,12 +82,14 @@ class NextConfig {
     Alignment? alignment,
     Color? color,
     bool? enabled,
+    ButtonStyle? style,
   }) {
     return NextConfig._(
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,
       enabled: enabled ?? this.enabled,
+      style: style ?? this.style,
     );
   }
 }

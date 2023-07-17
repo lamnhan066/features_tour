@@ -19,12 +19,27 @@ class SkipConfig {
   /// Call the `onPressed` action when the skip button is pressed. Default is `false`.
   final bool isCallOnPressed;
 
+  /// The [ButtonStyle] of the button
+  /// Default:
+  /// ``` dart
+  ///   TextButton.styleFrom(
+  ///     RoundedRectangleBorder(
+  ///       side: BorderSide(
+  ///         color: nextConfig.color,
+  ///       ),
+  ///       borderRadius: BorderRadius.circular(10),
+  ///     ),
+  ///   )
+  /// ```
+  final ButtonStyle? style;
+
   const SkipConfig._({
     this.text = 'SKIP >>>',
     this.alignment = Alignment.bottomLeft,
     this.color = Colors.white,
     this.enabled = true,
     this.isCallOnPressed = false,
+    this.style,
   });
 
   /// Create a new SkipConfig base on the [global] values
@@ -39,12 +54,26 @@ class SkipConfig {
   ///
   /// [isCallOnPressed] allows the tour to call `onPressed` when the skip button is pressed.
   /// Default is `false`. Means that doesn't call `onPressed` when the skip button is pressed.
+  ///
+  /// [style] is the [ButtonStyle] of the button.
+  /// Default:
+  /// ``` dart
+  ///   TextButton.styleFrom(
+  ///     RoundedRectangleBorder(
+  ///       side: BorderSide(
+  ///         color: nextConfig.color,
+  ///       ),
+  ///       borderRadius: BorderRadius.circular(10),
+  ///     ),
+  ///   )
+  /// ```
   factory SkipConfig.copyWith({
     String? text,
     Alignment? alignment,
     Color? color,
     bool? enabled,
     bool? isCallOnPressed,
+    ButtonStyle? style,
   }) {
     return SkipConfig._(
       text: text ?? global.text,
@@ -52,6 +81,7 @@ class SkipConfig {
       color: color ?? global.color,
       enabled: enabled ?? global.enabled,
       isCallOnPressed: isCallOnPressed ?? global.isCallOnPressed,
+      style: style ?? global.style,
     );
   }
 
@@ -62,6 +92,7 @@ class SkipConfig {
     Color? color,
     bool? enabled,
     bool? isCallOnPressed,
+    ButtonStyle? style,
   }) {
     return SkipConfig._(
       text: text ?? this.text,
@@ -69,6 +100,7 @@ class SkipConfig {
       color: color ?? this.color,
       enabled: enabled ?? this.enabled,
       isCallOnPressed: isCallOnPressed ?? this.isCallOnPressed,
+      style: style ?? this.style,
     );
   }
 }
