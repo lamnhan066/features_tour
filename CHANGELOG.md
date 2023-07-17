@@ -1,3 +1,8 @@
+## 0.1.3
+
+* Add border to the Skip and Next button by default (with color of text color).
+* Add `textStyle` and `buttonStyle` parameters to `SkipConfig` and `NextConfig` to modify the Next and Skip button style.
+
 ## 0.1.2
 
 * Rename `doNotAskAgainText` to `applyToAllPagesText` in `PredialogConfig` to make it easier to understand. Also changed from `Do not ask again this time` to `Apply to all pages`.

@@ -8,6 +8,14 @@ void main() {
     force: true,
     skipConfig: SkipConfig.copyWith(
       text: 'SKIP >>>',
+      buttonStyle: TextButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(
+            color: Colors.red,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
     ),
     nextConfig: NextConfig.copyWith(
       text: 'NEXT >>',
@@ -195,6 +203,12 @@ class _MyAppState extends State<MyApp> {
                   quadrantAlignment: QuadrantAlignment.top,
                 ),
                 onPressed: showDialogTimeoutOnPressed,
+                nextConfig: NextConfig.copyWith(
+                  alignment: Alignment.centerRight,
+                ),
+                skipConfig: SkipConfig.copyWith(
+                  alignment: Alignment.centerLeft,
+                ),
                 child: Center(
                   child: ElevatedButton(
                     onPressed: () {},
@@ -214,6 +228,12 @@ class _MyAppState extends State<MyApp> {
                   quadrantAlignment: QuadrantAlignment.top,
                 ),
                 onPressed: () async {},
+                nextConfig: NextConfig.copyWith(
+                  alignment: Alignment.centerRight,
+                ),
+                skipConfig: SkipConfig.copyWith(
+                  alignment: Alignment.centerLeft,
+                ),
                 child: Center(
                   child: ElevatedButton(
                     onPressed: () {},
