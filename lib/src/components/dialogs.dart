@@ -114,14 +114,14 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
             onPressed: () {
               Navigator.pop(context, true);
             },
-            child: Text(config.yesButtonText),
+            child: Text(config.acceptButtonText),
           ),
           const SizedBox(width: 16),
           TextButton(
             onPressed: () {
               Navigator.pop(context, false);
             },
-            child: Text(config.noButtonText),
+            child: Text(config.cancelButtonText),
           ),
         ],
       );
