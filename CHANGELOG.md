@@ -1,3 +1,8 @@
+## 0.1.4
+
+* **[BREAKING CHANGE BUG]** Not completely renamed from `yesButtonText` and `noButtonText` to `acceptButtonText` and `cancelButtonText` in the `PredialogConfig`.
+* [BUG] `SkipButton` get a wrong text color from `NextButton`.
+
 ## 0.1.3
 
 * Add border to the Skip and Next button by default (with color of text color).

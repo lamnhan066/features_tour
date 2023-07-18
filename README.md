@@ -14,11 +14,12 @@ Start by importing the package in your Dart code:
 import 'package:features_tour/features_tour.dart';
 ```
 
-Then, set the default configuration for the app using the FeaturesTour.setGlobalConfig() method. This sets the default values for all the configuration options for the Features Tour. You can override these values when you create individual tour steps. Here is an example:
+Then, set the default configuration for the app using the FeaturesTour.setGlobalConfig() method. This sets the default values for all the configuration options for the Features Tour. You can override these values when you create individual tour steps. **Please notice** that this method should be call in `main` method or before the widget is rendered to avoid unexpected behavior. Here is an example:
 
 ``` dart
 void main() {
-    // Set the default value for this app
+    // Set the default value for this app. Please notice that this method should be call here or before
+    // the widget is rendered to avoid unexpected behavior.
     FeaturesTour.setGlobalConfig(
         /// This value is the base value for all tours, each tour will have its own configurations.
         ///
