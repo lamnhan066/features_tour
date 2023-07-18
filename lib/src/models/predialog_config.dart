@@ -19,7 +19,7 @@ class PredialogConfig {
   ///
   /// [applyToAllPagesText] is the text for doNotAskAgain checkbox
   ///
-  /// [yesButtonText] and [noButtonText] are the text of the corresponding buttons
+  /// [acceptButtonText] and [cancelButtonText] are the text of the corresponding buttons
   ///
   /// [borderRadius] is the radius of the dialog border
   ///
@@ -33,23 +33,43 @@ class PredialogConfig {
         'This page has some new features that you might want to discover.\n\n'
             'Would you like to take a tour?',
     this.applyToAllPagesText = 'Apply to all pages',
-    this.yesButtonText = 'Yes',
-    this.noButtonText = 'No',
+    this.acceptButtonText = 'Yes',
+    this.cancelButtonText = 'No',
     this.borderRadius = 12,
     this.backgroundColor = Colors.white,
     this.textColor = Colors.black,
     this.modifiedDialogResult,
   });
 
+  /// [enabled] to enable or disable the Predialog
   final bool enabled;
+
+  /// [backgroundColor] is the background color of the dialog
   final Color backgroundColor;
+
+  /// [textColor] is the color of all the text
   final Color textColor;
+
+  /// [title] is the title of the dialog, default is 'Introduction'
   final String title;
+
+  /// [content] is the content, default is "This page has some new features that you might want to discover.\n\nWould you like to take a tour?"
   final String content;
+
+  /// [applyToAllPagesText] is the text for doNotAskAgain checkbox
   final String applyToAllPagesText;
-  final String yesButtonText;
-  final String noButtonText;
+
+  /// [acceptButtonText] and [cancelButtonText] are the text of the corresponding buttons
+  final String acceptButtonText;
+
+  /// [acceptButtonText] and [cancelButtonText] are the text of the corresponding buttons
+  final String cancelButtonText;
+
+  /// [borderRadius] is the radius of the dialog border
   final double borderRadius;
+
+  /// [modifiedDialogResult] is the value the return from your modified dialog
+  /// If this variable is set, others will be ignored.
   final FutureOr<bool> Function(BuildContext context)? modifiedDialogResult;
 
   /// Create a new Predialog base on the [global] values
@@ -62,7 +82,7 @@ class PredialogConfig {
   ///
   /// [applyToAllPagesText] is the text for applyToAllPages checkbox. Default is 'Do not ask again this time'.
   ///
-  /// [yesButtonText] and [noButtonText] are the text of the corresponding buttons
+  /// [acceptButtonText] and [cancelButtonText] are the text of the corresponding buttons
   ///
   /// [borderRadius] is the radius of the dialog border. Default is 12.
   ///
@@ -81,18 +101,17 @@ class PredialogConfig {
     String? cancelButtonText,
     double? borderRadius,
   }) =>
-      PredialogConfig._(
-        enabled: enabled ?? global.enabled,
-        modifiedDialogResult:
-            modifiedDialogResult ?? global.modifiedDialogResult,
-        backgroundColor: backgroundColor ?? global.backgroundColor,
-        textColor: textColor ?? global.textColor,
-        title: title ?? global.title,
-        applyToAllPagesText: applyToAllPagesText ?? global.applyToAllPagesText,
-        content: content ?? global.content,
-        yesButtonText: acceptButtonText ?? global.yesButtonText,
-        noButtonText: cancelButtonText ?? global.noButtonText,
-        borderRadius: borderRadius ?? global.borderRadius,
+      global.copyWith(
+        enabled: enabled,
+        modifiedDialogResult: modifiedDialogResult,
+        backgroundColor: backgroundColor,
+        textColor: textColor,
+        title: title,
+        applyToAllPagesText: applyToAllPagesText,
+        content: content,
+        acceptButtonText: acceptButtonText,
+        cancelButtonText: cancelButtonText,
+        borderRadius: borderRadius,
       );
 
   /// Create a new Predialog base on this values
@@ -116,8 +135,8 @@ class PredialogConfig {
       title: title ?? this.title,
       content: content ?? this.content,
       applyToAllPagesText: applyToAllPagesText ?? this.applyToAllPagesText,
-      yesButtonText: acceptButtonText ?? yesButtonText,
-      noButtonText: cancelButtonText ?? noButtonText,
+      acceptButtonText: acceptButtonText ?? this.acceptButtonText,
+      cancelButtonText: cancelButtonText ?? this.cancelButtonText,
       borderRadius: borderRadius ?? this.borderRadius,
     );
   }
