@@ -276,7 +276,7 @@ class _FeaturesTourState extends State<FeaturesTour>
                       shape: RoundedRectangleBorder(
                         side: BorderSide(
                           color:
-                              skipConfig.textStyle?.color ?? nextConfig.color,
+                              skipConfig.textStyle?.color ?? skipConfig.color,
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
