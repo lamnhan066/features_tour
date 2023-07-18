@@ -76,13 +76,13 @@ class NextConfig {
     TextStyle? textStyle,
     ButtonStyle? buttonStyle,
   }) {
-    return NextConfig._(
-      text: text ?? global.text,
-      alignment: alignment ?? global.alignment,
-      color: color ?? global.color,
-      enabled: enabled ?? global.enabled,
-      textStyle: textStyle ?? global.textStyle,
-      buttonStyle: buttonStyle ?? global.buttonStyle,
+    return global.copyWith(
+      text: text,
+      alignment: alignment,
+      color: color,
+      enabled: enabled,
+      textStyle: textStyle,
+      buttonStyle: buttonStyle,
     );
   }
 

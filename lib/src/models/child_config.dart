@@ -87,16 +87,16 @@ class ChildConfig {
     Curve? curve,
     Duration? animationDuration,
   }) {
-    return ChildConfig._(
-      child: child ?? global.child,
-      isAnimateChild: isAnimateChild ?? global.isAnimateChild,
-      borderSizeInflate: borderSizeInflate ?? global.borderSizeInflate,
-      backgroundColor: backgroundColor ?? global.backgroundColor,
-      shapeBorder: shapeBorder ?? global.shapeBorder,
-      borderRadius: borderRadius ?? global.borderRadius,
-      zoomScale: zoomScale ?? global.zoomScale,
-      curve: curve ?? global.curve,
-      animationDuration: animationDuration ?? global.animationDuration,
+    return global.copyWith(
+      child: child,
+      isAnimateChild: isAnimateChild,
+      borderSizeInflate: borderSizeInflate,
+      backgroundColor: backgroundColor,
+      shapeBorder: shapeBorder,
+      borderRadius: borderRadius,
+      zoomScale: zoomScale,
+      curve: curve,
+      animationDuration: animationDuration,
     );
   }
 

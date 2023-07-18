@@ -46,11 +46,11 @@ class IntroduceConfig {
     QuadrantAlignment? quadrantAlignment,
     Alignment? alignment,
   }) {
-    return IntroduceConfig._(
-      backgroundColor: backgroundColor ?? global.backgroundColor,
-      padding: padding ?? global.padding,
-      alignment: alignment ?? global.alignment,
-      quadrantAlignment: quadrantAlignment ?? global.quadrantAlignment,
+    return global.copyWith(
+      backgroundColor: backgroundColor,
+      padding: padding,
+      alignment: alignment,
+      quadrantAlignment: quadrantAlignment,
     );
   }
 

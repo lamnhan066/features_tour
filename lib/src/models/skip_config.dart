@@ -84,14 +84,14 @@ class SkipConfig {
     TextStyle? textStyle,
     ButtonStyle? buttonStyle,
   }) {
-    return SkipConfig._(
-      text: text ?? global.text,
-      alignment: alignment ?? global.alignment,
-      color: color ?? global.color,
-      enabled: enabled ?? global.enabled,
-      isCallOnPressed: isCallOnPressed ?? global.isCallOnPressed,
-      textStyle: textStyle ?? global.textStyle,
-      buttonStyle: buttonStyle ?? global.buttonStyle,
+    return global.copyWith(
+      text: text,
+      alignment: alignment,
+      color: color,
+      enabled: enabled,
+      isCallOnPressed: isCallOnPressed,
+      textStyle: textStyle,
+      buttonStyle: buttonStyle,
     );
   }
 
