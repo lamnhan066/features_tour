@@ -5,7 +5,7 @@ import 'next_page.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
-    force: true,
+    // force: true,
     skipConfig: SkipConfig.copyWith(
       text: 'SKIP >>>',
       buttonStyle: TextButton.styleFrom(
