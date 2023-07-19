@@ -7,25 +7,6 @@ class PredialogConfig {
   static PredialogConfig global = PredialogConfig._();
 
   /// This is the configuration for Predialog.
-  ///
-  /// [enabled] to enable or disable the Predialog
-  ///
-  /// [modifiedDialogResult] is the value the return from your modified dialog
-  /// If this variable is set, others will be ignored.
-  ///
-  /// [title] is the title of the dialog, default is 'Introduction'
-  ///
-  /// [content] is the content, default is "This page has some new features that you might want to discover.\n\nWould you like to take a tour?"
-  ///
-  /// [applyToAllPagesText] is the text for doNotAskAgain checkbox
-  ///
-  /// [acceptButtonText] and [cancelButtonText] are the text of the corresponding buttons
-  ///
-  /// [borderRadius] is the radius of the dialog border
-  ///
-  /// [backgroundColor] is the background color of the dialog
-  ///
-  /// [textColor] is the color of all the text
   PredialogConfig._({
     this.enabled = true,
     this.title = 'Introduction',
@@ -33,8 +14,15 @@ class PredialogConfig {
         'This page has some new features that you might want to discover.\n\n'
             'Would you like to take a tour?',
     this.applyToAllPagesText = 'Apply to all pages',
-    this.acceptButtonText = 'Yes',
-    this.cancelButtonText = 'No',
+    this.acceptButtonText = const Text('Okay'),
+    this.acceptButtonStyle,
+    this.laterButtonText = const Text('Later'),
+    this.laterButtonStyle,
+    this.dismissButtonText = const Text(
+      'Dismiss',
+      style: TextStyle(color: Colors.grey),
+    ),
+    this.dismissButtonStyle,
     this.borderRadius = 12,
     this.backgroundColor = Colors.white,
     this.textColor = Colors.black,
@@ -59,11 +47,23 @@ class PredialogConfig {
   /// [applyToAllPagesText] is the text for doNotAskAgain checkbox
   final String applyToAllPagesText;
 
-  /// [acceptButtonText] and [cancelButtonText] are the text of the corresponding buttons
-  final String acceptButtonText;
+  /// Accept the action
+  final Text acceptButtonText;
 
-  /// [acceptButtonText] and [cancelButtonText] are the text of the corresponding buttons
-  final String cancelButtonText;
+  /// Style of the accept button [ElevatedButton]
+  final ButtonStyle? acceptButtonStyle;
+
+  /// Ask again in the next time
+  final Text laterButtonText;
+
+  /// Style of the later button [TextButton]
+  final ButtonStyle? laterButtonStyle;
+
+  /// Don't ask again
+  final Text dismissButtonText;
+
+  /// Style of the dismiss button [TextButton]
+  final ButtonStyle? dismissButtonStyle;
 
   /// [borderRadius] is the radius of the dialog border
   final double borderRadius;
@@ -82,7 +82,17 @@ class PredialogConfig {
   ///
   /// [applyToAllPagesText] is the text for applyToAllPages checkbox. Default is 'Do not ask again this time'.
   ///
-  /// [acceptButtonText] and [cancelButtonText] are the text of the corresponding buttons
+  /// [acceptButtonText] Accept the action
+  ///
+  /// [acceptButtonStyle] Style of the accept button [ElevatedButton]
+  ///
+  /// [laterButtonText] Ask again in the next time
+  ///
+  /// [laterButtonStyle] Style of the later button [TextButton]
+  ///
+  /// [dismissButtonText] Do not show and don't ask again
+  ///
+  /// [dismissButtonStyle] Style of the dismiss button [TextButton]
   ///
   /// [borderRadius] is the radius of the dialog border. Default is 12.
   ///
@@ -97,8 +107,12 @@ class PredialogConfig {
     String? title,
     String? applyToAllPagesText,
     String? content,
-    String? acceptButtonText,
-    String? cancelButtonText,
+    Text? acceptButtonText,
+    ButtonStyle? acceptButtonStyle,
+    Text? laterButtonText,
+    ButtonStyle? laterButtonStyle,
+    Text? dismissButtonText,
+    ButtonStyle? dismissButtonStyle,
     double? borderRadius,
   }) =>
       global.copyWith(
@@ -110,7 +124,11 @@ class PredialogConfig {
         applyToAllPagesText: applyToAllPagesText,
         content: content,
         acceptButtonText: acceptButtonText,
-        cancelButtonText: cancelButtonText,
+        acceptButtonStyle: acceptButtonStyle,
+        laterButtonText: laterButtonText,
+        laterButtonStyle: laterButtonStyle,
+        dismissButtonText: dismissButtonText,
+        dismissButtonStyle: dismissButtonStyle,
         borderRadius: borderRadius,
       );
 
@@ -123,8 +141,12 @@ class PredialogConfig {
     String? title,
     String? content,
     String? applyToAllPagesText,
-    String? acceptButtonText,
-    String? cancelButtonText,
+    Text? acceptButtonText,
+    ButtonStyle? acceptButtonStyle,
+    Text? laterButtonText,
+    ButtonStyle? laterButtonStyle,
+    Text? dismissButtonText,
+    ButtonStyle? dismissButtonStyle,
     double? borderRadius,
   }) {
     return PredialogConfig._(
@@ -136,7 +158,11 @@ class PredialogConfig {
       content: content ?? this.content,
       applyToAllPagesText: applyToAllPagesText ?? this.applyToAllPagesText,
       acceptButtonText: acceptButtonText ?? this.acceptButtonText,
-      cancelButtonText: cancelButtonText ?? this.cancelButtonText,
+      acceptButtonStyle: acceptButtonStyle ?? this.acceptButtonStyle,
+      laterButtonText: laterButtonText ?? this.laterButtonText,
+      laterButtonStyle: laterButtonStyle ?? this.laterButtonStyle,
+      dismissButtonText: dismissButtonText ?? this.dismissButtonText,
+      dismissButtonStyle: dismissButtonStyle ?? this.dismissButtonStyle,
       borderRadius: borderRadius ?? this.borderRadius,
     );
   }
