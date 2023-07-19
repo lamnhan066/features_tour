@@ -13,6 +13,7 @@ import 'components/features_tour_minxin.dart';
 
 part 'features_tour_controller.dart';
 part 'utils/print_debug.dart';
+part 'utils/shared_prefs.dart';
 
 class FeaturesTour extends StatefulWidget {
   /// Prefix of this package
