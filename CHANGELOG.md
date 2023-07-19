@@ -1,3 +1,10 @@
+## 0.2.0-dev.1
+
+* Add `waitForFirstIndex` and `waitForFirstTimeout`
+* Add `acceptButtonStyle`, `laterButtonStyle` and `dismissButtonStyle`.
+* Change button text type from `String` to `Text`.
+* Allow dismissing all tours
+
 ## 0.1.4
 
 * **[BREAKING CHANGE BUG]** Not completely renamed from `yesButtonText` and `noButtonText` to `acceptButtonText` and `cancelButtonText` in the `PredialogConfig`.
