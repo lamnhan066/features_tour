@@ -1,3 +1,7 @@
+## 0.2.0-dev.2
+
+* Update `intro.webp`.
+
 ## 0.2.0-dev.1
 
 * Add `waitForFirstIndex` and `waitForFirstTimeout`

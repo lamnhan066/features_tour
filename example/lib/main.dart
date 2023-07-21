@@ -11,7 +11,7 @@ void main() {
       buttonStyle: TextButton.styleFrom(
         shape: RoundedRectangleBorder(
           side: const BorderSide(
-            color: Colors.red,
+            color: Colors.blue,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -19,10 +19,19 @@ void main() {
     ),
     nextConfig: NextConfig.copyWith(
       text: 'NEXT >>',
+      buttonStyle: TextButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(
+            color: Colors.blue,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
     ),
     predialogConfig: PredialogConfig.copyWith(
       enabled: true,
     ),
+    debugLog: true,
   );
 
   runApp(const MaterialApp(home: MyApp()));

@@ -1,10 +1,10 @@
 name: features_tour
 description: Features Tour is a package that enables you to easily create tours to introduce your widget features in your app with order.
-version: 0.2.0-dev.1
+version: 0.2.0-dev.2
 homepage: https://github.com/vnniz/features_tour
 
 screenshots:
-  - description: "Introduction GIF"
+  - description: "Introduction"
     path: assets/intro.webp
 
 environment:
