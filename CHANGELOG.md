@@ -1,3 +1,7 @@
+## 0.2.0-dev.3
+
+* Improve README
+
 ## 0.2.0-dev.2
 
 * Update `intro.webp`.

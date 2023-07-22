@@ -8,82 +8,42 @@ Features Tour is a package that enables you to easily create tours to introduce 
 
 ## Usage
 
-Start by importing the package in your Dart code:
+### Create a controller
 
-``` dart
-import 'package:features_tour/features_tour.dart';
-```
-
-Then, set the default configuration for the app using the FeaturesTour.setGlobalConfig() method. This sets the default values for all the configuration options for the Features Tour. You can override these values when you create individual tour steps. **Please notice** that this method should be call in `main` method or before the widget is rendered to avoid unexpected behavior. Here is an example:
-
-``` dart
-void main() {
-    // Set the default value for this app. Please notice that this method should be call here or before
-    // the widget is rendered to avoid unexpected behavior.
-    FeaturesTour.setGlobalConfig(
-        /// This value is the base value for all tours, each tour will have its own configurations.
-        ///
-        /// `true` : force to show all the tours, even the pre-dialogs
-        /// `false` : force to not show all the tours and pre-dialogs
-        /// `null` (default) : show when needed.
-        force: null,
-
-        /// Configuration for the `child` widget.
-        childConfig: ChildConfig.copyWith(
-            backgroundColor: Colors.white,
-        ),
-
-        /// Configuration for the `Skip` text button.
-        skipConfig: SkipConfig.copyWith(
-            text: 'SKIP >>>',
-        ),
-
-        /// Configuration for the `Next` text button.
-        nextConfig: NextConfig.copyWith(
-            text: 'NEXT >>'
-        ),
-
-        /// Configuration for the `introduce` widget, can know as the description.
-        introduceConfig: IntroduceConfig.copyWith(
-            backgroundColor: Colors.black,
-        ),
-    );
-  
-    runApp(const MaterialApp(home: MyApp()));
-}
-```
-
-To create a tour, you need to create a FeaturesTourController instance for each page that you want to add tours to. You can then use the controller to start the tour, set the current step, and control the flow of the tour. Here is an example:
-
-``` dart
+```dart
 // Use this method to set name for this page. This value will prevent the dupplicated `index` issues.
-final tourController = FeaturesTourController('MyApp');
-
-@override
-void initState() {
-    // Use this method to start all the available features tour.
-    // The `context` will be used to wait for the page transition
-    // animation to complete before starting the tour.
-    tourController.start(
-      /// Context of the current Page
-      context: context,
-
-      /// Delay before starting the tour
-      delay: Duration.zero,
-
-      /// If `true`, it will force to start the tour even already shown.
-      /// If `false,` it will force not to start the tour.
-      /// Default is `null` (depends on the global config).
-      force: false,
-
-      /// Show specific pre-dialog for this Page
-      predialogConfig: PredialogConfig.copyWith(),
-    );
-    super.initState();
-}
+final tourController = FeaturesTourController('HomePage');
 ```
+
+### Create a tour widget
 
 To create a tour step, you need to create a FeaturesTour widget. This widget takes several configuration options, such as the index of the step, the introduction widget, the child widget, and the position and style of the introduction. Here is an example:
+
+```dart
+FeaturesTour(
+    /// Add the controller
+    controller: tourController,
+
+    /// Index of this widget in the tour. It must be unique at the same page.
+    index: 0,
+
+    /// Introduction of this widget (Known as the description of the feature)
+    introduce: const Text(
+        'This is TextButton 1',
+        style: TextStyle(color: Colors.white),
+    ),
+
+    /// This is the real widget
+    child: TextButton(
+        onPressed: () {},
+        child: const Text('TextButton 1'),
+    ),
+),
+```
+
+<details>
+
+<summary>Full parameters</summary>
 
 ``` dart
 FeaturesTour(
@@ -146,6 +106,91 @@ FeaturesTour(
         child: const Text('TextButton 1'),
     ),
 ),
+```
+
+</details>
+
+### Start a tour
+
+To create a tour, you need to create a FeaturesTourController instance for each page that you want to add tours to. You can then use the controller to start the tour, set the current step, and control the flow of the tour. Here is an example:
+
+``` dart
+@override
+void initState() {
+    // Use this method to start all the available features tour.
+    // The `context` will be used to wait for the page transition
+    // animation to complete before starting the tour.
+    tourController.start(context: context);
+    super.initState();
+}
+```
+
+<details>
+
+<summary>Full parameters</summary>
+
+``` dart
+    // Use this method to start all the available features tour.
+    // The `context` will be used to wait for the page transition
+    // animation to complete before starting the tour.
+    tourController.start(
+      /// Context of the current Page
+      context: context,
+
+      /// Delay before starting the tour
+      delay: Duration.zero,
+
+      /// If `true`, it will force to start the tour even already shown.
+      /// If `false,` it will force not to start the tour.
+      /// Default is `null` (depends on the global config).
+      force: false,
+
+      /// Show specific pre-dialog for this Page
+      predialogConfig: PredialogConfig.copyWith(),
+    );
+```
+
+</details>
+
+### Set default configuration
+
+You can set the default configuration for the app using the `FeaturesTour.setGlobalConfig()` method. This sets the default values for all the configuration options for the Features Tour. You can override these values when you create individual tour steps. **Please notice** that this method should be call in `main` method or before the widget is rendered to avoid unexpected behavior. Here is an example:
+
+``` dart
+void main() {
+    // Set the default value for this app. Please notice that this method should be call here or before
+    // the widget is rendered to avoid unexpected behavior.
+    FeaturesTour.setGlobalConfig(
+        /// This value is the base value for all tours, each tour will have its own configurations.
+        ///
+        /// `true` : force to show all the tours, even the pre-dialogs
+        /// `false` : force to not show all the tours and pre-dialogs
+        /// `null` (default) : show when needed.
+        force: null,
+
+        /// Configuration for the `child` widget.
+        childConfig: ChildConfig.copyWith(
+            backgroundColor: Colors.white,
+        ),
+
+        /// Configuration for the `Skip` text button.
+        skipConfig: SkipConfig.copyWith(
+            text: 'SKIP >>>',
+        ),
+
+        /// Configuration for the `Next` text button.
+        nextConfig: NextConfig.copyWith(
+            text: 'NEXT >>'
+        ),
+
+        /// Configuration for the `introduce` widget, can know as the description.
+        introduceConfig: IntroduceConfig.copyWith(
+            backgroundColor: Colors.black,
+        ),
+    );
+  
+    runApp(const MaterialApp(home: MyApp()));
+}
 ```
 
 With these steps, you can easily create a tour to showcase the features of your app.
