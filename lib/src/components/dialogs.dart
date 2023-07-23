@@ -79,30 +79,6 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
                 );
               },
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     SizedBox(
-            //       width: 90,
-            //       child: ElevatedButton(
-            //         onPressed: () {
-            //           Navigator.pop(context, true);
-            //         },
-            //         child: Text(config.yesButtonText),
-            //       ),
-            //     ),
-            //     const SizedBox(width: 16),
-            //     SizedBox(
-            //       width: 90,
-            //       child: TextButton(
-            //         onPressed: () {
-            //           Navigator.pop(context, false);
-            //         },
-            //         child: Text(config.noButtonText),
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ],
         ),
         backgroundColor: config.backgroundColor,
@@ -114,14 +90,22 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
             onPressed: () {
               Navigator.pop(context, true);
             },
-            child: Text(config.acceptButtonText),
+            style: config.acceptButtonStyle,
+            child: config.acceptButtonText,
           ),
-          const SizedBox(width: 16),
           TextButton(
             onPressed: () {
               Navigator.pop(context, false);
             },
-            child: Text(config.cancelButtonText),
+            style: config.laterButtonStyle,
+            child: config.laterButtonText,
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, null);
+            },
+            style: config.dismissButtonStyle,
+            child: config.dismissButtonText,
           ),
         ],
       );
@@ -130,10 +114,17 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
 
   // If the dontAskAgain checkbox is checked, the global configuration will be
   // updated
-  if (checkbox && result != null) {
+  if (checkbox) {
     printDebug(
-        'applyToAllScreens checkbox is checked => Update global predialog configuration');
+        'applyToAllPages checkbox is checked => Update global predialog configuration');
     _applyToAllPages = result;
+
+    if (result == null) {
+      printDebug('All pages will be disabled to show introduction');
+
+      // TODO: Find another way to dismiss and apply to all. Current: all the FeaturesTour even a new one will be all dismissed.
+      SharedPrefs.setDismissAllTours(true);
+    }
   }
 
   return result;

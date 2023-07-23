@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/dialogs.dart';
 import 'package:features_tour/src/models/instruction_result.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +12,7 @@ import 'components/features_tour_minxin.dart';
 
 part 'features_tour_controller.dart';
 part 'utils/print_debug.dart';
+part 'utils/shared_prefs.dart';
 
 class FeaturesTour extends StatefulWidget {
   /// Prefix of this package
@@ -82,7 +82,7 @@ class FeaturesTour extends StatefulWidget {
     NextConfig? nextConfig,
 
     /// Allow printing the debug logs. Default is `kDebugMode`.
-    bool debugLog = kDebugMode,
+    bool? debugLog,
   }) {
     if (force != null) _force = force;
     if (childConfig != null) ChildConfig.global = childConfig;
@@ -91,7 +91,7 @@ class FeaturesTour extends StatefulWidget {
     if (introduceConfig != null) IntroduceConfig.global = introduceConfig;
     if (predialogConfig != null) PredialogConfig.global = predialogConfig;
     if (preferencePrefix != null) _prefix = preferencePrefix;
-    _debugLog = debugLog;
+    if (debugLog != null) _debugLog = debugLog;
   }
 
   /// Removes all controllers for all pages

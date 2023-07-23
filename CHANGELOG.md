@@ -1,3 +1,12 @@
+## 0.2.0
+
+* Add `waitForFirstIndex` and `waitForFirstTimeout` to `FeaturesTourController`.
+* Pre-Dialog:
+  * Add `dismiss` button to dismiss the current page, the tour will not shows again even when a new one is added.
+  * Add `acceptButtonStyle`, `laterButtonStyle` and `dismissButtonStyle`.
+  * Change button text type from `String` to `Text`.
+* Improve README.
+
 ## 0.1.4
 
 * **[BREAKING CHANGE BUG]** Not completely renamed from `yesButtonText` and `noButtonText` to `acceptButtonText` and `cancelButtonText` in the `PredialogConfig`.

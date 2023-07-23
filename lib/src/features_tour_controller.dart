@@ -7,7 +7,11 @@ class FeaturesTourController {
   /// Create a controller for FeaturesTour with unique [pageName]. This value is
   /// used to store the state of the current page, so please do not change it
   /// if you don't want to re-show the instructions.
-  FeaturesTourController(this.pageName) {
+  FeaturesTourController(
+    this.pageName, {
+    this.waitForFirstIndex,
+    this.waitForFirstTimeout = const Duration(seconds: 3),
+  }) {
     FeaturesTour._controllers.add(this);
   }
 
@@ -17,6 +21,13 @@ class FeaturesTourController {
 
   /// Name of this page
   final String pageName;
+
+  /// Set the first index to force the Tour to wait until this index is exist
+  /// and show it first
+  final double? waitForFirstIndex;
+
+  /// Timeout waiting for the first index
+  final Duration waitForFirstTimeout;
 
   /// Internal list of the controllers
   final List<FeaturesTourStateMixin> _states = [];
@@ -88,14 +99,35 @@ class FeaturesTourController {
     // Get default value from global `force`
     force ??= FeaturesTour._force;
 
+    // Ignore all the tours
+    if (force == null && await SharedPrefs.getDismissAllTours() == true) {
+      printDebug('All tours have been dismissed');
+      _removePage(markAsShowed: true);
+      return;
+    }
+
     // ignore: use_build_context_synchronously
-    if (!(await _showPredialog(context, force, predialogConfig))) {
-      // User pressed cancel
+    final result = await _showPredialog(context, force, predialogConfig);
+
+    // User pressed dismiss button
+    if (result == null) {
+      _removePage(markAsShowed: true);
+      return;
+    }
+
+    // User pressed later button
+    if (result == false) {
       return;
     }
 
     // Watching for the `waitForIndex` value
     FeaturesTourStateMixin? waitForIndexState;
+
+    // Waiting for the first index
+    if (waitForFirstIndex != null) {
+      waitForIndexState =
+          await _waitForIndex(waitForFirstIndex!, waitForFirstTimeout);
+    }
 
     printDebug('Start the tour');
     while (_states.isNotEmpty) {
@@ -192,7 +224,7 @@ class FeaturesTourController {
   }
 
   /// Show the predialog if possible
-  Future<bool> _showPredialog(
+  Future<bool?> _showPredialog(
     BuildContext context,
     bool? force,
     PredialogConfig? config,
@@ -230,8 +262,13 @@ class FeaturesTourController {
           );
         }
 
-        if (predialogResult != true) {
-          printDebug('User is cancelled to show the introduction');
+        if (predialogResult == null) {
+          printDebug('User dismissed to show the introduction');
+          return null;
+        }
+
+        if (predialogResult == false) {
+          printDebug('User cancelled to show the introduction');
           return false;
         }
       } else {
