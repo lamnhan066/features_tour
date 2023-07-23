@@ -121,6 +121,8 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
 
     if (result == null) {
       printDebug('All pages will be disabled to show introduction');
+
+      // TODO: Find another way to dismiss and apply to all. Current: all the FeaturesTour even a new one will be all dismissed.
       SharedPrefs.setDismissAllTours(true);
     }
   }

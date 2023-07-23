@@ -59,7 +59,7 @@ class PredialogConfig {
   /// Style of the later button [TextButton]
   final ButtonStyle? laterButtonStyle;
 
-  /// Don't ask again
+  /// Don't show the tour even if a new one is added
   final Text dismissButtonText;
 
   /// Style of the dismiss button [TextButton]
