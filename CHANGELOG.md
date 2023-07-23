@@ -1,17 +1,11 @@
-## 0.2.0-dev.3
+## 0.2.0
 
-* Improve README
-
-## 0.2.0-dev.2
-
-* Update `intro.webp`.
-
-## 0.2.0-dev.1
-
-* Add `waitForFirstIndex` and `waitForFirstTimeout`
-* Add `acceptButtonStyle`, `laterButtonStyle` and `dismissButtonStyle`.
-* Change button text type from `String` to `Text`.
-* Allow dismissing all tours
+* Add `waitForFirstIndex` and `waitForFirstTimeout` to `FeaturesTourController`.
+* Pre-Dialog:
+  * Add `dismiss` button to dismiss the current page, the tour will not shows again even when a new one is added.
+  * Add `acceptButtonStyle`, `laterButtonStyle` and `dismissButtonStyle`.
+  * Change button text type from `String` to `Text`.
+* Improve README.
 
 ## 0.1.4
 
