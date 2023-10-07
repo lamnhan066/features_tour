@@ -5,7 +5,7 @@ import 'package:features_tour/src/extensions/get_widget_position.dart';
 import 'package:flutter/material.dart';
 
 class FeaturesChild extends StatefulWidget {
-  /// Internal widget to show all the needed widgets in Stack
+  /// Internal widget to show all the needed widgets in Stack.
   const FeaturesChild({
     super.key,
     required this.globalKey,
@@ -21,31 +21,31 @@ class FeaturesChild extends StatefulWidget {
     required this.quadrantAlignment,
   });
 
-  /// Add a `GlobalKey()` to control this widget
+  /// Add a `GlobalKey()` to control this widget.
   final GlobalKey globalKey;
 
-  /// Child widget
+  /// Child widget.
   final Widget child;
 
-  /// Child configuration
+  /// Child configuration.
   final ChildConfig childConfig;
 
-  /// Skip Button widget
+  /// Skip Button widget.
   final Widget skip;
 
-  /// Skip all the steps
+  /// Skip all the steps.
   final SkipConfig skipConfig;
 
-  /// Next button widget
+  /// Next button widget.
   final Widget next;
 
-  /// Skip all the steps
+  /// Skip all the steps.
   final NextConfig nextConfig;
 
-  /// Feature introduction widget, normally `Text`
+  /// Feature introduction widget, normally `Text`.
   final Widget introduce;
 
-  /// Padding of the `introduce` widget
+  /// Padding of the `introduce` widget.
   final EdgeInsetsGeometry padding;
 
   /// Alignmnent of the `introduce` widget in side `quarantAlignment`.
@@ -68,7 +68,7 @@ class _FeaturesChildState extends State<FeaturesChild>
   late Rect introduceRect;
   late Alignment alignment;
 
-  /// Update the current state
+  /// Update the current state.
   void updateState() {
     rect = (widget.globalKey).globalPaintBounds;
     if (rect == null) return;
@@ -172,7 +172,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                 ),
               ),
 
-              // Child widget
+              // Child widget.
               if (widget.childConfig.isAnimateChild)
                 Positioned.fromRect(
                   rect: rect!,
@@ -189,7 +189,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                   child: widget.child,
                 ),
 
-              // Introduction widget
+              // Introduction widget.
               Positioned.fromRect(
                 rect: introduceRect,
                 child: IgnorePointer(
@@ -203,7 +203,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                 ),
               ),
 
-              // Skip text widget
+              // Skip text widget.
               if (widget.skipConfig.enabled)
                 Positioned.fill(
                   child: Align(
@@ -212,7 +212,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                   ),
                 ),
 
-              // Next text widget
+              // Next text widget.
               if (widget.nextConfig.enabled)
                 Positioned.fill(
                   child: Align(

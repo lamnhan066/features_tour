@@ -1,7 +1,7 @@
 part of 'features_tour.dart';
 
 class FeaturesTourController {
-  /// Internal preferences
+  /// Internal preferences.
   static SharedPreferences? _prefs;
 
   /// Create a controller for FeaturesTour with unique [pageName]. This value is
@@ -15,27 +15,27 @@ class FeaturesTourController {
     FeaturesTour._controllers.add(this);
   }
 
-  /// Get auto increment index number
+  /// Get auto increment index number.
   double get _getAutoIndex => _index++;
   double _index = 0;
 
-  /// Name of this page
+  /// Name of this page.
   final String pageName;
 
   /// Set the first index to force the Tour to wait until this index is exist
-  /// and show it first
+  /// and show it first.
   final double? waitForFirstIndex;
 
-  /// Timeout waiting for the first index
+  /// Timeout waiting for the first index.
   final Duration waitForFirstTimeout;
 
-  /// Internal list of the controllers
+  /// Internal list of the controllers.
   final List<FeaturesTourStateMixin> _states = [];
 
-  /// Register the current FeaturesTour state
+  /// Register the current FeaturesTour state.
   void _register(FeaturesTourStateMixin state) => _states.add(state);
 
-  /// Unregister the current FeaturesTour state
+  /// Unregister the current FeaturesTour state.
   void _unregister(FeaturesTourStateMixin state) => _states.remove(state);
 
   /// Start the tour. This packaga automatically save the state of the widget,
@@ -63,7 +63,7 @@ class FeaturesTourController {
     bool? force,
     PredialogConfig? predialogConfig,
   }) async {
-    // Wait until the next frame of the application's UI has been drawn
+    // Wait until the next frame of the application's UI has been drawn.
     await null;
 
     final addBlank = ' $pageName ';
@@ -96,7 +96,7 @@ class FeaturesTourController {
     // Wait for `delay` duration before starting the tours.
     await Future.delayed(delay);
 
-    // Get default value from global `force`
+    // Get default value from global `force`.
     force ??= FeaturesTour._force;
 
     // Ignore all the tours
@@ -109,21 +109,21 @@ class FeaturesTourController {
     // ignore: use_build_context_synchronously
     final result = await _showPredialog(context, force, predialogConfig);
 
-    // User pressed dismiss button
+    // User pressed dismiss button.
     if (result == null) {
       _removePage(markAsShowed: true);
       return;
     }
 
-    // User pressed later button
+    // User pressed later button.
     if (result == false) {
       return;
     }
 
-    // Watching for the `waitForIndex` value
+    // Watching for the `waitForIndex` value.
     FeaturesTourStateMixin? waitForIndexState;
 
-    // Waiting for the first index
+    // Waiting for the first index.
     if (waitForFirstIndex != null) {
       waitForIndexState =
           await _waitForIndex(waitForFirstIndex!, waitForFirstTimeout);
@@ -134,7 +134,7 @@ class FeaturesTourController {
       final FeaturesTourStateMixin state;
 
       if (waitForIndexState == null) {
-        // Sort the `_states` with its' `index`
+        // Sort the `_states` with its' `index`.
         // Place sort in this place will improve the sort behavior, specially when new states are added.
         _states.sort((a, b) => a.index.compareTo(b.index));
         state = _states.elementAt(0);
@@ -170,7 +170,8 @@ class FeaturesTourController {
         continue;
       }
 
-      // Wait for the child widget transition to complete
+      // Wait for the child widget transition to complete.
+      // ignore: use_build_context_synchronously
       await _waitForTransition(state.currentContext);
 
       final result = await state.showIntroduce(state);
@@ -194,18 +195,18 @@ class FeaturesTourController {
           break;
       }
 
-      // Wait for the next state to appear if `waitForIndex` is non-null
+      // Wait for the next state to appear if `waitForIndex` is non-null.
       if (waitForIndex != null) {
         printDebug(
             'The `waitForIndex` is non-null => Waiting for the next index: $waitForIndex ...');
 
-        // Show the cover to avoid user tapping the screen
+        // Show the cover to avoid user tapping the screen.
         // ignore: use_build_context_synchronously
         showCover(context);
 
         waitForIndexState = await _waitForIndex(waitForIndex, waitForTimeout);
 
-        // Hide the cover
+        // Hide the cover.
         // ignore: use_build_context_synchronously
         hideCover(context);
 
@@ -223,16 +224,16 @@ class FeaturesTourController {
     printDebug('This tour has been completed');
   }
 
-  /// Show the predialog if possible
+  /// Show the predialog if possible.
   Future<bool?> _showPredialog(
     BuildContext context,
     bool? force,
     PredialogConfig? config,
   ) async {
-    // Should show the predialog or not
+    // Should show the predialog or not.
     bool shouldShowPredialog;
 
-    // Respect `force`
+    // Respect `force`.
     if (force != null) {
       printDebug('`force` is $force, so the dialog must respect it.');
       shouldShowPredialog = force;
@@ -281,7 +282,7 @@ class FeaturesTourController {
     return true;
   }
 
-  /// Wait for the next index to be available
+  /// Wait for the next index to be available.
   Future<FeaturesTourStateMixin?> _waitForIndex(
     double index,
     Duration timeout,
@@ -321,7 +322,7 @@ class FeaturesTourController {
     }
   }
 
-  /// Removes all controllers for specific `pageName`
+  /// Removes all controllers for specific `pageName`.
   Future<void> _removePage({bool markAsShowed = true}) async {
     if (_states.isEmpty) {
       printDebug('Page $pageName has already been removed');
@@ -338,7 +339,7 @@ class FeaturesTourController {
     printDebug('Remove page: $pageName');
   }
 
-  /// Removes specific state of this page
+  /// Removes specific state of this page.
   Future<void> _removeState(
     FeaturesTourStateMixin state,
     bool markAsShowed,
@@ -351,7 +352,7 @@ class FeaturesTourController {
     _unregister(state);
   }
 
-  /// Checks whether there is any new features available to show predialog
+  /// Checks whether there is any new features available to show predialog.
   bool _shouldShowPredialog() {
     for (final state in _states) {
       final key = FeaturesTour._getPrefKey(pageName, state);

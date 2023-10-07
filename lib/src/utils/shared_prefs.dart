@@ -23,7 +23,7 @@ class SharedPrefs {
     } else if (value is double) {
       prefs.setDouble(key, value);
     } else {
-      throw UnsupportedError('Khong ho tro kieu ${value.runtimeType}');
+      throw UnsupportedError('This is unsupported type: ${value.runtimeType}');
     }
   }
 

@@ -2,13 +2,13 @@ import 'package:features_tour/features_tour.dart';
 import 'package:flutter/material.dart';
 
 class IntroduceConfig {
-  /// Global configuration
+  /// Global configuration.
   static IntroduceConfig global = const IntroduceConfig._();
 
-  /// Color of the background
+  /// Color of the background.
   final Color backgroundColor;
 
-  /// Padding of the `introduce` widget
+  /// Padding of the `introduce` widget.
   final EdgeInsetsGeometry padding;
 
   /// Quadrant rectangle for `introduce` widget.
@@ -27,7 +27,7 @@ class IntroduceConfig {
     this.alignment,
   });
 
-  /// Create a new IntroduceConfig base on [global] values
+  /// Create a new IntroduceConfig base on [global] values.
   ///
   /// [backgroundColor] is the color of the background. Default is `Colors.black87`.
   ///
@@ -54,7 +54,7 @@ class IntroduceConfig {
     );
   }
 
-  /// Create a new IntroduceConfig base on this values
+  /// Create a new IntroduceConfig base on this values.
   IntroduceConfig copyWith({
     Color? backgroundColor,
     EdgeInsetsGeometry? padding,

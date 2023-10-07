@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../features_tour.dart';
 import '../models/predialog_config.dart';
 
-/// Save the state of the doNotAskAgain checkbox
+/// Save the state of the doNotAskAgain checkbox.
 bool? _applyToAllPages;
 
-/// Show the predialog with specific configuration
+/// Show the predialog with specific configuration.
 Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
   // If `_dontAskAgainResult` is not null, the `doNotAksAgain` is checked
   // so just return the result.
@@ -113,7 +113,7 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
   );
 
   // If the dontAskAgain checkbox is checked, the global configuration will be
-  // updated
+  // updated.
   if (checkbox) {
     printDebug(
         'applyToAllPages checkbox is checked => Update global predialog configuration');

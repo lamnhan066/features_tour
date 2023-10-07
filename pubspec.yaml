@@ -1,7 +1,7 @@
 name: features_tour
 description: Features Tour is a package that enables you to easily create tours to introduce your widget features in your app with order.
-version: 0.2.0
-homepage: https://github.com/vnniz/features_tour
+version: 0.2.1
+homepage: https://github.com/lamnhan066/features_tour
 
 screenshots:
   - description: "Introduction"
@@ -9,7 +9,7 @@ screenshots:
 
 environment:
   sdk: ">=2.18.0 <4.0.0"
-  flutter: ">=3.3.0"
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:

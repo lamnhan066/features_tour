@@ -1,6 +1,6 @@
 part of '../features_tour.dart';
 
-/// Print debug log
+/// Print debug log.
 void printDebug(Object? object) {
   if (!FeaturesTour._debugLog) return;
 

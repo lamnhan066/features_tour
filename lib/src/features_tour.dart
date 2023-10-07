@@ -15,10 +15,10 @@ part 'utils/print_debug.dart';
 part 'utils/shared_prefs.dart';
 
 class FeaturesTour extends StatefulWidget {
-  /// Prefix of this package
+  /// Prefix of this package.
   static String _prefix = 'FeaturesTour';
 
-  /// Global force variable
+  /// Global force variable.
   static bool? _force;
 
   /// Store all available controllers
@@ -27,20 +27,20 @@ class FeaturesTour extends StatefulWidget {
   /// Allow printing the debug logs.
   static bool _debugLog = false;
 
-  /// Set the global configs
+  /// Set the global configs.
   ///
   /// [force] to show all or hide all the instructions, including predialogs.
   /// Default is `null`, means it depends on it's own `start` configuration.
   ///
-  /// [preferencePrefix] if the prefix of the shared preferences
+  /// [preferencePrefix] if the prefix of the shared preferences.
   ///
-  /// [childConfig] to configure child widget
+  /// [childConfig] to configure child widget.
   ///
-  /// [introduceConfig] to configure introduce widget
+  /// [introduceConfig] to configure introduce widget.
   ///
-  /// [predialogConfig] to configure predialog widget
+  /// [predialogConfig] to configure predialog widget.
   ///
-  /// [skipConfig] and [nextConfig] to configure Skip and Next buttons
+  /// [skipConfig] and [nextConfig] to configure Skip and Next buttons.
   ///
   /// [debugLog] allow printing the debug logs. Default is `kDebugMode`.
   ///
@@ -94,7 +94,7 @@ class FeaturesTour extends StatefulWidget {
     if (debugLog != null) _debugLog = debugLog;
   }
 
-  /// Removes all controllers for all pages
+  /// Removes all controllers for all pages.
   static Future<void> removeAll({bool markAsShowed = true}) async {
     for (final controller in _controllers) {
       await controller._removePage(markAsShowed: markAsShowed);
@@ -102,7 +102,7 @@ class FeaturesTour extends StatefulWidget {
     printDebug('All pages has been removed');
   }
 
-  /// Get key for shared preferences
+  /// Get key for shared preferences.
   static String _getPrefKey(
     String? pageName,
     FeaturesTourStateMixin controller,
@@ -162,7 +162,7 @@ class FeaturesTour extends StatefulWidget {
     this.index = index ?? controller._getAutoIndex;
   }
 
-  /// Controller of the current page
+  /// Controller of the current page.
   final FeaturesTourController controller;
 
   /// The tour will sort by this index, and it must be not dupplicated. You can
@@ -183,13 +183,13 @@ class FeaturesTour extends StatefulWidget {
   /// This value must not be to long to avoid UX issues.
   final Duration waitForTimeout;
 
-  /// Enable or disable the action of this widget
+  /// Enable or disable the action of this widget.
   final bool enabled;
 
-  /// Child widget
+  /// Child widget.
   final Widget child;
 
-  /// Introduce this feature
+  /// Introduce this feature.
   final Widget introduce;
 
   /// Introduce widget config. If this value is `null`, the `IntroduceConfig.global` is used.

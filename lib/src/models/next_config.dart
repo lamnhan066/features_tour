@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
 class NextConfig {
-  /// Global configuration
+  /// Global configuration.
   static NextConfig global = const NextConfig._();
 
-  /// Next button text
+  /// Next button text.
   final String text;
 
-  /// Position of the next button
+  /// Position of the next button.
   final Alignment alignment;
 
   /// Color of the Next text. You can use [textStyle] for more control.
   final Color color;
 
-  /// Enable or disable the Skip button
+  /// Enable or disable the Skip button.
   final bool enabled;
 
-  /// Set the style for the text
+  /// Set the style for the text.
   final TextStyle? textStyle;
 
-  /// The [ButtonStyle] of the button
+  /// The [ButtonStyle] of the button.
   /// Default:
   /// ``` dart
   ///    style: TextButton.styleFrom(
@@ -43,7 +43,7 @@ class NextConfig {
     this.buttonStyle,
   });
 
-  /// Create a new NextConfig base on the [global] values
+  /// Create a new NextConfig base on the [global] values.
   ///
   /// [text] of the next button. Default is "NEXT >>".
   ///
@@ -53,9 +53,9 @@ class NextConfig {
   ///
   /// [enabled] is true if the next button is enabled. Default is `true`.
   ///
-  /// [textStyle] is the [TextStyle] of the button
+  /// [textStyle] is the [TextStyle] of the button.
   ///
-  /// [buttonStyle] is the [ButtonStyle] of the button
+  /// [buttonStyle] is the [ButtonStyle] of the button.
   /// Default:
   /// ``` dart
   ///    style: TextButton.styleFrom(
@@ -86,7 +86,7 @@ class NextConfig {
     );
   }
 
-  /// Create a new NextConfig base on this values
+  /// Create a new NextConfig base on this values.
   NextConfig copyWith({
     String? text,
     Alignment? alignment,

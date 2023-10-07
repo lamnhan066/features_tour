@@ -1,3 +1,8 @@
+## 0.2.1
+
+* Update comments.
+* Update homepage URL.
+
 ## 0.2.0
 
 * Add `waitForFirstIndex` and `waitForFirstTimeout` to `FeaturesTourController`.

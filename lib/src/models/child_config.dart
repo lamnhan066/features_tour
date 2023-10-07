@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ChildConfig {
-  /// Global configuration
+  /// Global configuration.
   static ChildConfig global = const ChildConfig._();
 
   /// If this `child` is null, the original `child` will be used.
@@ -27,16 +27,16 @@ class ChildConfig {
   /// Border radius of the background of the child. Default is `BorderRadius.all(12)`.
   final BorderRadiusGeometry borderRadius;
 
-  /// Zoom scale of the `child` widget when show up on the instruction
+  /// Zoom scale of the `child` widget when show up on the instruction.
   final double zoomScale;
 
-  /// Animation of the `child` widget when show up on the instruction
+  /// Animation of the `child` widget when show up on the instruction.
   final Curve curve;
 
-  /// Animation duration of the `child` widget when show up on the instruction
+  /// Animation duration of the `child` widget when show up on the instruction.
   final Duration animationDuration;
 
-  /// Default value of the `child` widget
+  /// Default value of the `child` widget.
   const ChildConfig._({
     this.child,
     this.isAnimateChild = true,

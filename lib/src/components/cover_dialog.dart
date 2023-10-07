@@ -4,7 +4,7 @@ import '../features_tour.dart';
 
 DialogRoute? _coverDialog;
 
-/// Show the cover to avoid user tapping the screen
+/// Show the cover to avoid user tapping the screen.
 void showCover(BuildContext context) {
   if (!context.mounted) {
     printDebug(
@@ -28,7 +28,7 @@ void showCover(BuildContext context) {
   Navigator.of(context).push(_coverDialog!);
 }
 
-/// Hide the cover to let the user able to tap the screen
+/// Hide the cover to let the user able to tap the screen.
 void hideCover(BuildContext context) {
   if (!context.mounted) {
     printDebug(
