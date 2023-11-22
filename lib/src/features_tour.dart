@@ -256,7 +256,7 @@ class _FeaturesTourState extends State<FeaturesTour>
 
     final result = await showDialog<IntroduceResult>(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: childConfig.barrierDismissible,
       useSafeArea: false,
       barrierColor: introduceConfig.backgroundColor,
       builder: (ctx) {

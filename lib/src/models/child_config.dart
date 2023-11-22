@@ -19,6 +19,10 @@ class ChildConfig {
   /// have a background color.
   final Color backgroundColor;
 
+  /// Tap anywhere on the background to dismiss the current introduce. Default is
+  /// set to `false`.
+  final bool barrierDismissible;
+
   /// Shape of border of the background. Default is Rectangle.
   ///
   /// Something like: `RoundedRectangleBorder()`, `CircleBorder()`
@@ -42,6 +46,7 @@ class ChildConfig {
     this.isAnimateChild = true,
     this.borderSizeInflate = 3,
     this.backgroundColor = Colors.transparent,
+    this.barrierDismissible = false,
     this.shapeBorder,
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
     this.zoomScale = 1.2,
@@ -62,6 +67,9 @@ class ChildConfig {
   /// This color is useful for TextField, Text, TextButton,.. which does not
   /// have a background color.
   ///
+  /// [barrierDismissible] Tap anywhere on the background to dismiss the current introduce. Default is
+  /// set to `false`.
+  ///
   /// [shapeBorder] is the shape of border of the background. Default is Rectangle.
   /// Something like: `RoundedRectangleBorder()`, `CircleBorder()`
   ///
@@ -81,6 +89,7 @@ class ChildConfig {
     bool? isAnimateChild,
     double? borderSizeInflate,
     Color? backgroundColor,
+    bool? barrierDismissible,
     ShapeBorder? shapeBorder,
     BorderRadiusGeometry? borderRadius,
     double? zoomScale,
@@ -92,6 +101,7 @@ class ChildConfig {
       isAnimateChild: isAnimateChild,
       borderSizeInflate: borderSizeInflate,
       backgroundColor: backgroundColor,
+      barrierDismissible: barrierDismissible,
       shapeBorder: shapeBorder,
       borderRadius: borderRadius,
       zoomScale: zoomScale,
@@ -106,6 +116,7 @@ class ChildConfig {
     bool? isAnimateChild,
     double? borderSizeInflate,
     Color? backgroundColor,
+    bool? barrierDismissible,
     ShapeBorder? shapeBorder,
     BorderRadiusGeometry? borderRadius,
     double? zoomScale,
@@ -117,6 +128,7 @@ class ChildConfig {
       isAnimateChild: isAnimateChild ?? this.isAnimateChild,
       borderSizeInflate: borderSizeInflate ?? this.borderSizeInflate,
       backgroundColor: backgroundColor ?? this.backgroundColor,
+      barrierDismissible: barrierDismissible ?? this.barrierDismissible,
       shapeBorder: shapeBorder ?? this.shapeBorder,
       borderRadius: borderRadius ?? this.borderRadius,
       zoomScale: zoomScale ?? this.zoomScale,
