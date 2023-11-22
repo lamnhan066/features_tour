@@ -1,3 +1,8 @@
+## 0.2.2
+
+* Add `dismissible` parameter to `ChildConfig`, so users can tap anywhere to move to the next introduce (can be a replacement for the Next button).
+* Update dependencies.
+
 ## 0.2.1
 
 * Update comments.
