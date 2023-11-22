@@ -18,14 +18,16 @@ void showCover(BuildContext context) {
     useSafeArea: false,
     barrierColor: Colors.transparent,
     builder: (context) {
-      return WillPopScope(
-        onWillPop: () => Future.value(false),
-        child: const SizedBox.shrink(),
+      return const PopScope(
+        canPop: false,
+        child: SizedBox.shrink(),
       );
     },
   );
 
-  Navigator.of(context).push(_coverDialog!);
+  Navigator.of(context).push(_coverDialog!).then((value) {
+    _coverDialog = null;
+  });
 }
 
 /// Hide the cover to let the user able to tap the screen.
