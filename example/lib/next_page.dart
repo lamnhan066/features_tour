@@ -34,8 +34,16 @@ class _NextPageState extends State<NextPage> {
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: IntroduceConfig.copyWith(
-              quadrantAlignment: QuadrantAlignment.bottom,
+            // introduceConfig: IntroduceConfig.copyWith(
+            // quadrantAlignment: QuadrantAlignment.bottom,
+            // ),
+            nextConfig: NextConfig.copyWith(
+              child: (onPressed) {
+                return TextButton(
+                  onPressed: onPressed,
+                  child: const Text('aaaa'),
+                );
+              },
             ),
             childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
@@ -52,9 +60,9 @@ class _NextPageState extends State<NextPage> {
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: IntroduceConfig.copyWith(
-              quadrantAlignment: QuadrantAlignment.bottom,
-            ),
+            // introduceConfig: IntroduceConfig.copyWith(
+            // quadrantAlignment: QuadrantAlignment.bottom,
+            // ),
             childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
@@ -70,9 +78,9 @@ class _NextPageState extends State<NextPage> {
               'This is TextButton 3',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: IntroduceConfig.copyWith(
-              quadrantAlignment: QuadrantAlignment.bottom,
-            ),
+            // introduceConfig: IntroduceConfig.copyWith(
+            // quadrantAlignment: QuadrantAlignment.bottom,
+            // ),
             childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
@@ -88,9 +96,9 @@ class _NextPageState extends State<NextPage> {
               'Go to the ThirdPage',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: IntroduceConfig.copyWith(
-              quadrantAlignment: QuadrantAlignment.bottom,
-            ),
+            // introduceConfig: IntroduceConfig.copyWith(
+            // quadrantAlignment: QuadrantAlignment.bottom,
+            // ),
             childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),

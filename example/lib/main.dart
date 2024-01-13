@@ -9,28 +9,28 @@ void main() {
       barrierDismissible: true,
     ),
     // force: true,
-    skipConfig: SkipConfig.copyWith(
-      text: 'SKIP >>>',
-      buttonStyle: TextButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(
-            color: Colors.blue,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    ),
-    nextConfig: NextConfig.copyWith(
-      text: 'NEXT >>',
-      buttonStyle: TextButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(
-            color: Colors.blue,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    ),
+    // skipConfig: SkipConfig.copyWith(
+    //   text: 'SKIP >>>',
+    //   buttonStyle: TextButton.styleFrom(
+    //     shape: RoundedRectangleBorder(
+    //       side: const BorderSide(
+    //         color: Colors.blue,
+    //       ),
+    //       borderRadius: BorderRadius.circular(10),
+    //     ),
+    //   ),
+    // ),
+    // nextConfig: NextConfig.copyWith(
+    //   text: 'NEXT >>',
+    //   buttonStyle: TextButton.styleFrom(
+    //     shape: RoundedRectangleBorder(
+    //       side: const BorderSide(
+    //         color: Colors.blue,
+    //       ),
+    //       borderRadius: BorderRadius.circular(10),
+    //     ),
+    //   ),
+    // ),
     predialogConfig: PredialogConfig.copyWith(
       enabled: true,
     ),
@@ -146,9 +146,9 @@ class _MyAppState extends State<MyApp> {
               'This button will be shown after Button 1',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: IntroduceConfig.copyWith(
-              quadrantAlignment: QuadrantAlignment.bottom,
-            ),
+            // introduceConfig: IntroduceConfig.copyWith(
+            // quadrantAlignment: QuadrantAlignment.bottom,
+            // ),
             child: Center(
               child: ElevatedButton(
                 onPressed: showDialogOnPressed,
@@ -164,8 +164,8 @@ class _MyAppState extends State<MyApp> {
               style: TextStyle(color: Colors.white),
             ),
             introduceConfig: IntroduceConfig.copyWith(
-              quadrantAlignment: QuadrantAlignment.bottom,
-            ),
+                // quadrantAlignment: QuadrantAlignment.bottom,
+                ),
             child: Center(
               child: ElevatedButton(
                 onPressed: () {},
@@ -198,62 +198,86 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              FeaturesTour(
-                controller: tourController,
-                index: 3,
-                waitForIndex: 3.1,
-                introduce: const Text(
-                  'This is the Button 3',
-                  style: TextStyle(color: Colors.white),
-                ),
-                introduceConfig: IntroduceConfig.copyWith(
-                  alignment: Alignment.bottomLeft,
-                  quadrantAlignment: QuadrantAlignment.top,
-                ),
-                onPressed: showDialogTimeoutOnPressed,
-                nextConfig: NextConfig.copyWith(
-                  alignment: Alignment.centerRight,
-                ),
-                skipConfig: SkipConfig.copyWith(
-                  alignment: Alignment.centerLeft,
-                ),
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Show dialog timeout (4 seconds)'),
+          FeaturesTour(
+            controller: tourController,
+            index: 2.5,
+            childConfig: ChildConfig.copyWith(
+              child: (child) => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Show dialog timeout (4 seconds)'),
+                    ),
+                  ),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Button 4'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                FeaturesTour(
+                  controller: tourController,
+                  index: 3,
+                  waitForIndex: 3.1,
+                  introduce: const Text(
+                    'This is the Button 3',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  // introduceConfig: IntroduceConfig.copyWith(
+                  // alignment: Alignment.bottomLeft,
+                  // quadrantAlignment: QuadrantAlignment.top,
+                  // ),
+                  onPressed: showDialogTimeoutOnPressed,
+                  nextConfig: NextConfig.copyWith(
+                    alignment: Alignment.centerRight,
+                  ),
+                  skipConfig: SkipConfig.copyWith(
+                    alignment: Alignment.centerLeft,
+                  ),
+                  child: Center(
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Show dialog timeout (4 seconds)'),
+                    ),
                   ),
                 ),
-              ),
-              FeaturesTour(
-                controller: tourController,
-                index: 4,
-                introduce: const Text(
-                  'This is the Button 4',
-                  style: TextStyle(color: Colors.white),
-                ),
-                introduceConfig: IntroduceConfig.copyWith(
-                  alignment: Alignment.bottomRight,
-                  quadrantAlignment: QuadrantAlignment.top,
-                ),
-                onPressed: () async {},
-                nextConfig: NextConfig.copyWith(
-                  alignment: Alignment.centerRight,
-                ),
-                skipConfig: SkipConfig.copyWith(
-                  alignment: Alignment.centerLeft,
-                ),
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Button 4'),
+                FeaturesTour(
+                  controller: tourController,
+                  index: 4,
+                  introduce: const Text(
+                    'This is the Button 4',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  // introduceConfig: IntroduceConfig.copyWith(
+                  //   alignment: Alignment.bottomRight,
+                  // quadrantAlignment: QuadrantAlignment.top,
+                  // ),
+                  onPressed: () async {},
+                  nextConfig: NextConfig.copyWith(
+                    alignment: Alignment.centerRight,
+                  ),
+                  skipConfig: SkipConfig.copyWith(
+                    alignment: Alignment.centerLeft,
+                  ),
+                  child: Center(
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Button 4'),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -264,10 +288,10 @@ class _MyAppState extends State<MyApp> {
           'This is the last Button. Press to navigate to the NextPage >>',
           style: TextStyle(color: Colors.white),
         ),
-        introduceConfig: IntroduceConfig.copyWith(
-          alignment: Alignment.bottomRight,
-          quadrantAlignment: QuadrantAlignment.top,
-        ),
+        // introduceConfig: IntroduceConfig.copyWith(
+        // alignment: Alignment.bottomRight,
+        // quadrantAlignment: QuadrantAlignment.top,
+        // ),
         skipConfig: SkipConfig.copyWith(
           enabled: false,
         ),
