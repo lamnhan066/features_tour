@@ -78,19 +78,28 @@ FeaturesTour(
         alignment: Alignment.topCenter,
     ),
 
-    /// Config for the fake child widget. This fake child is default to original `child`.
-    childConfig: ChildConfig.copyWith(
-        backgroundColor: Colors.white,
-    ),
-
     /// Config for the next button, this button will move to the next widget base on its' index.
     nextConfig: NextConfig.copyWith(
-        text: 'NEXT >>',
+        // Use the default `Elevated` button with this text.
+        text: 'NEXT',
+
+        // Create your own button.
+        child: (onPressed) => ElevatedButton(
+            onPressed: onPressed,
+            child: Text('NEXT'),
+        ),
     ),
 
     /// Config for the skip button. This button will skip the current tour.
     skipConfig: SkipConfig.copyWith(
-        text: 'SKIP >>>',
+        // Use the default `Elevated` button with this text.
+        text: 'SKIP',
+
+        // Create your own button.
+        child: (onPressed) => ElevatedButton(
+            onPressed: onPressed,
+            child: Text('SKIP'),
+        ),
     ),
 
     /// Config for the pre-dialog, it will show before the tours to ask the permission.
@@ -98,6 +107,15 @@ FeaturesTour(
       enabled: true,
       // You can add your own dialog here. All others parameters will be ignored when using this method.
       modifiedDialogResult: (context) => showDialog<bool>(context: context, builder: builder),
+    ),
+
+    /// Config for the fake child widget. This fake child is default to original `child`.
+    childConfig: ChildConfig.copyWith(
+        child: (child) => TextButton(
+            onPressed: () {},
+            child: const Text('A fake button 1'),
+        ),
+        backgroundColor: Colors.white,
     ),
 
     /// This is the real widget
@@ -194,6 +212,56 @@ void main() {
 ```
 
 With these steps, you can easily create a tour to showcase the features of your app.
+
+## Additional
+
+If you want to use `FeaturesTour`s inside a `FeaturesTour`, you need to clone the `Widget`s inside the child `FeaturesTour`s and pass it to the parent `FeaturesTour` in the `childConfig` parameter like below:
+
+```dart
+FeaturesTour(
+    controller: tourController,
+    childConfig: ChildConfig.copyWith(
+        child: (child) => Row(
+            children: [
+                Center(
+                    child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text('Button 1'),
+                    ),
+                ),
+                Center(
+                    child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text('Button 2'),
+                    ),
+                ),
+            ],
+        ),
+    ),
+    child: Row(
+        children: [
+            FeaturesTour(
+                controller: tourController,
+                child: Center(
+                    child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text('Button 1'),
+                    ),
+                ),
+            ),
+            FeaturesTour(
+                controller: tourController,
+                child: Center(
+                    child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text('Button 2'),
+                    ),
+                ),
+            ),
+        ]
+    ),
+)
+```
 
 ## Contributions
 

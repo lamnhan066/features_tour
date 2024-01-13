@@ -1,3 +1,33 @@
+## 0.3.0-rc
+
+* Bump Dart min sdk to 3.0.0.
+* The parameter `child` inside the `ChildConfig` is now passed the "real", so we can easily modify the child widget.
+
+  * Before:
+
+  ```dart
+  ChildConfig.copyWith(
+    child: YourFakeChildWidget(),
+  ),
+  ```
+
+  * Now:
+
+  ```dart
+  ChildConfig.copyWith(
+    child: (child) {
+      return YourFakeWidget(
+        child: child,
+      );
+    },
+  ),
+  ```
+
+* The `Next` button and `Skip` button are changed to `ElevatedButton` by default.
+* The `Next` button text is changed to `NEXT` and `Skip` button text is changed to `SKIP`.
+* The `NextConfig` and `SkipConfig` button have a `child` parameter to create your own button.
+* The `introduce` alignment is automaticaly calculated denpens on the position of the `child` widget.
+
 ## 0.2.2
 
 * Add `dismissible` parameter to `ChildConfig`, so users can tap anywhere to move to the next introduce (can be a replacement for the Next button).
