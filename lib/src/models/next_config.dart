@@ -1,55 +1,30 @@
+import 'package:features_tour/src/models/base_config.dart';
 import 'package:flutter/material.dart';
 
-class NextConfig {
+class NextConfig extends BaseConfig {
   /// Global configuration.
   static NextConfig global = const NextConfig._();
 
-  /// Next button text.
-  final String text;
-
-  /// Position of the next button.
-  final Alignment alignment;
-
-  /// Color of the Next text. You can use [textStyle] for more control.
-  final Color color;
-
-  /// Enable or disable the Skip button.
-  final bool enabled;
-
-  /// Set the style for the text.
-  final TextStyle? textStyle;
-
-  /// The [ButtonStyle] of the button.
-  /// Default:
-  /// ``` dart
-  ///    style: TextButton.styleFrom(
-  ///      shape: RoundedRectangleBorder(
-  ///        side: const BorderSide(
-  ///          color: Colors.red,
-  ///        ),
-  ///        borderRadius: BorderRadius.circular(10),
-  ///      ),
-  ///    ),
-  ///  ),
-  /// ```
-  final ButtonStyle? buttonStyle;
-
   const NextConfig._({
-    this.text = 'NEXT >>',
-    this.alignment = Alignment.bottomRight,
-    this.color = Colors.white,
-    this.enabled = true,
-    this.textStyle,
-    this.buttonStyle,
+    super.child,
+    super.text = 'NEXT',
+    super.alignment = Alignment.bottomRight,
+    super.color,
+    super.enabled = true,
+    super.textStyle,
+    super.buttonStyle,
   });
 
   /// Create a new NextConfig base on the [global] values.
   ///
-  /// [text] of the next button. Default is "NEXT >>".
+  /// [child] Modified widget for the next button. When this Widget is set, you have to
+  /// pass `onPressed` method
+  ///
+  /// [text] of the next button. Default is "NEXT".
   ///
   /// [alignment] is the alignment of the next button. Default is `Alignment.bottomRight`.
   ///
-  /// [color] is the color of the next text. Default is `Colors.white`.
+  /// [color] is the color of the next text. Default is `null`.
   ///
   /// [enabled] is true if the next button is enabled. Default is `true`.
   ///
@@ -58,7 +33,7 @@ class NextConfig {
   /// [buttonStyle] is the [ButtonStyle] of the button.
   /// Default:
   /// ``` dart
-  ///    style: TextButton.styleFrom(
+  ///    style: ElevatedButton.styleFrom(
   ///      shape: RoundedRectangleBorder(
   ///        side: const BorderSide(
   ///          color: Colors.red,
@@ -69,6 +44,7 @@ class NextConfig {
   ///  ),
   /// ```
   factory NextConfig.copyWith({
+    Widget Function(VoidCallback onPressed)? child,
     String? text,
     Alignment? alignment,
     Color? color,
@@ -77,6 +53,7 @@ class NextConfig {
     ButtonStyle? buttonStyle,
   }) {
     return global.copyWith(
+      child: child,
       text: text,
       alignment: alignment,
       color: color,
@@ -87,7 +64,9 @@ class NextConfig {
   }
 
   /// Create a new NextConfig base on this values.
+  @override
   NextConfig copyWith({
+    Widget Function(VoidCallback onPressed)? child,
     String? text,
     Alignment? alignment,
     Color? color,
@@ -96,6 +75,7 @@ class NextConfig {
     ButtonStyle? buttonStyle,
   }) {
     return NextConfig._(
+      child: child ?? this.child,
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,

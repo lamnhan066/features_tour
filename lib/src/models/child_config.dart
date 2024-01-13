@@ -5,7 +5,9 @@ class ChildConfig {
   static ChildConfig global = const ChildConfig._();
 
   /// If this `child` is null, the original `child` will be used.
-  final Widget? child;
+  ///
+  /// The original child is alse passed through the function.
+  final Widget Function(Widget child)? child;
 
   /// Also scale child widget along with the border.
   final bool isAnimateChild;
@@ -85,7 +87,7 @@ class ChildConfig {
   /// [animationDuration] is the animation duration of the `child` widget when show up on the instruction.
   /// Default is `Duration(milliseconds: 600)`.
   factory ChildConfig.copyWith({
-    Widget? child,
+    Widget Function(Widget child)? child,
     bool? isAnimateChild,
     double? borderSizeInflate,
     Color? backgroundColor,
@@ -112,7 +114,7 @@ class ChildConfig {
 
   /// Apply new settings to the current settings.
   ChildConfig copyWith({
-    Widget? child,
+    Widget Function(Widget child)? child,
     bool? isAnimateChild,
     double? borderSizeInflate,
     Color? backgroundColor,

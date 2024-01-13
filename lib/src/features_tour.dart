@@ -213,7 +213,6 @@ class FeaturesTour extends StatefulWidget {
   /// Ex:
   /// ```dart
   /// FeaturesTour(
-  ///   globalKey: GlobalKey(),
   ///   child: ElevatedButton(onPressed: onPressed, child: Text('Button')),
   ///   onPressed: onPressed,
   /// )
@@ -267,52 +266,40 @@ class _FeaturesTourState extends State<FeaturesTour>
           skip: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pop(ctx, IntroduceResult.skip);
-                },
-                style: skipConfig.buttonStyle ??
-                    TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color:
-                              skipConfig.textStyle?.color ?? skipConfig.color,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
+              child: skipConfig.child != null
+                  ? skipConfig
+                      .child!(() => Navigator.pop(ctx, IntroduceResult.skip))
+                  : ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(ctx, IntroduceResult.skip);
+                      },
+                      style: skipConfig.buttonStyle,
+                      child: Text(
+                        skipConfig.text,
+                        style: skipConfig.textStyle ??
+                            TextStyle(color: skipConfig.color),
                       ),
                     ),
-                child: Text(
-                  skipConfig.text,
-                  style: skipConfig.textStyle ??
-                      TextStyle(color: skipConfig.color),
-                ),
-              ),
             ),
           ),
           skipConfig: skipConfig,
           next: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pop(ctx, IntroduceResult.next);
-                },
-                style: nextConfig.buttonStyle ??
-                    TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color:
-                              nextConfig.textStyle?.color ?? nextConfig.color,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
+              child: nextConfig.child != null
+                  ? nextConfig
+                      .child!(() => Navigator.pop(ctx, IntroduceResult.next))
+                  : ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(ctx, IntroduceResult.next);
+                      },
+                      style: nextConfig.buttonStyle,
+                      child: Text(
+                        nextConfig.text,
+                        style: nextConfig.textStyle ??
+                            TextStyle(color: nextConfig.color),
                       ),
                     ),
-                child: Text(
-                  nextConfig.text,
-                  style: nextConfig.textStyle ??
-                      TextStyle(color: nextConfig.color),
-                ),
-              ),
             ),
           ),
           nextConfig: nextConfig,
@@ -328,7 +315,9 @@ class _FeaturesTourState extends State<FeaturesTour>
               type: MaterialType.canvas,
               child: AbsorbPointer(
                 absorbing: true,
-                child: childConfig.child ?? widget.child,
+                child: childConfig.child == null
+                    ? widget.child
+                    : childConfig.child!(widget.child),
               ),
             ),
           ),
