@@ -12,7 +12,7 @@ class IntroduceConfig {
   final EdgeInsetsGeometry padding;
 
   /// Quadrant rectangle for `introduce` widget.
-  final QuadrantAlignment quadrantAlignment;
+  final QuadrantAlignment? quadrantAlignment;
 
   /// Alignmnent of the `introduce` widget in side `quarantAlignment`.
   ///
@@ -23,7 +23,7 @@ class IntroduceConfig {
   const IntroduceConfig._({
     this.backgroundColor = Colors.black87,
     this.padding = const EdgeInsets.all(20.0),
-    this.quadrantAlignment = QuadrantAlignment.top,
+    this.quadrantAlignment,
     this.alignment,
   });
 
@@ -38,7 +38,7 @@ class IntroduceConfig {
   /// show at the top of the main `child`.
   ///
   /// [alignment] is the alignmnent of the `introduce` widget in side `quarantAlignment`.
-  /// This value automatically aligns depending on the `quarantAlignment`.
+  /// This value automatically aligns depending on the `quadrantAlignment`.
   /// Make it as close as possible to other.
   factory IntroduceConfig.copyWith({
     Color? backgroundColor,

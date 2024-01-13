@@ -18,7 +18,7 @@ class FeaturesChild extends StatefulWidget {
     required this.introduce,
     required this.padding,
     this.alignment,
-    required this.quadrantAlignment,
+    this.quadrantAlignment,
   });
 
   /// Add a `GlobalKey()` to control this widget.
@@ -55,7 +55,10 @@ class FeaturesChild extends StatefulWidget {
   final Alignment? alignment;
 
   /// Quadrant rectangle for `introduce` widget.
-  final QuadrantAlignment quadrantAlignment;
+  ///
+  /// If this value is `null`, the `top` and `bottom` will be automatically
+  /// caculated to get the larger side.
+  final QuadrantAlignment? quadrantAlignment;
 
   @override
   State<FeaturesChild> createState() => _FeaturesChildState();
@@ -67,35 +70,111 @@ class _FeaturesChildState extends State<FeaturesChild>
   Rect? rect;
   late Rect introduceRect;
   late Alignment alignment;
+  QuadrantAlignment? _quadrantAlignment;
 
   /// Update the current state.
   void updateState() {
     rect = (widget.globalKey).globalPaintBounds;
     if (rect == null) return;
 
+    _autoSetQuadrantAlignment(rect!);
+
     final size = MediaQuery.of(context).size;
-    switch (widget.quadrantAlignment) {
+    switch (_quadrantAlignment!) {
       case QuadrantAlignment.top:
         introduceRect = Rect.fromLTRB(0, 0, size.width, rect!.top);
-        alignment = widget.alignment ?? Alignment.bottomCenter;
-        break;
+        if (widget.alignment != null) {
+          alignment = widget.alignment!;
+        } else {
+          alignment = switch (_calculateAlignmentHorizontal(rect!, size)) {
+            Alignment.centerLeft => Alignment.bottomLeft,
+            Alignment.centerRight => Alignment.bottomRight,
+            _ => Alignment.bottomCenter,
+          };
+        }
       case QuadrantAlignment.left:
         introduceRect = Rect.fromLTRB(0, 0, rect!.left, size.height);
-        alignment = widget.alignment ?? Alignment.centerRight;
-        break;
+        if (widget.alignment != null) {
+          alignment = widget.alignment!;
+        } else {
+          alignment = switch (_calculateAlignmentVertical(rect!, size)) {
+            Alignment.topCenter => Alignment.topRight,
+            Alignment.bottomCenter => Alignment.bottomRight,
+            _ => Alignment.centerRight,
+          };
+        }
       case QuadrantAlignment.right:
         introduceRect = Rect.fromLTRB(rect!.right, 0, size.width, size.height);
         alignment = widget.alignment ?? Alignment.centerLeft;
-        break;
+        if (widget.alignment != null) {
+          alignment = widget.alignment!;
+        } else {
+          alignment = switch (_calculateAlignmentVertical(rect!, size)) {
+            Alignment.topCenter => Alignment.topLeft,
+            Alignment.bottomCenter => Alignment.bottomLeft,
+            _ => Alignment.centerLeft,
+          };
+        }
       case QuadrantAlignment.bottom:
         introduceRect = Rect.fromLTRB(0, rect!.bottom, size.width, size.height);
-        alignment = widget.alignment ?? Alignment.topCenter;
-        break;
+        if (widget.alignment != null) {
+          alignment = widget.alignment!;
+        } else {
+          alignment = switch (_calculateAlignmentHorizontal(rect!, size)) {
+            Alignment.centerLeft => Alignment.topLeft,
+            Alignment.centerRight => Alignment.topRight,
+            _ => Alignment.topCenter,
+          };
+        }
       case QuadrantAlignment.inside:
         introduceRect = rect!;
         alignment = widget.alignment ?? Alignment.center;
-        break;
     }
+  }
+
+  /// Find the larger height between the top and bottom rectangle to set the
+  /// quadrantAlignment
+  void _autoSetQuadrantAlignment(Rect rect) {
+    if (_quadrantAlignment != null) return;
+
+    if (widget.quadrantAlignment != null) {
+      _quadrantAlignment = widget.quadrantAlignment!;
+    } else {
+      final size = MediaQuery.of(context).size;
+      final topRect = Rect.fromLTRB(0, 0, size.width, rect.top);
+      final bottomRect = Rect.fromLTRB(0, rect.bottom, size.width, size.height);
+      if (topRect.height > bottomRect.height) {
+        _quadrantAlignment = QuadrantAlignment.top;
+      } else {
+        _quadrantAlignment = QuadrantAlignment.bottom;
+      }
+    }
+  }
+
+  /// Calculate to get the prefer alignment for the `introduce` widget.
+  ///
+  /// For the `top` and `bottom` quadrant alignment.
+  Alignment _calculateAlignmentHorizontal(Rect rect, Size size) {
+    if (rect.left > size.width / 2) {
+      return Alignment.centerRight;
+    } else if (rect.right < size.width / 2) {
+      return Alignment.centerLeft;
+    }
+
+    return Alignment.center;
+  }
+
+  /// Calculate to get the prefer alignment for the `introduce` widget.
+  ///
+  /// For the `left` and `right` quadrant alignment.
+  Alignment _calculateAlignmentVertical(Rect rect, Size size) {
+    if (rect.top > size.height / 2) {
+      return Alignment.bottomCenter;
+    } else if (rect.bottom < size.height / 2) {
+      return Alignment.topCenter;
+    }
+
+    return Alignment.center;
   }
 
   @override
