@@ -29,14 +29,44 @@ class FeaturesTourController {
   /// Timeout waiting for the first index.
   final Duration waitForFirstTimeout;
 
-  /// Internal list of the controllers.
+  /// The internal list of the states.
   final List<FeaturesTourStateMixin> _states = [];
 
+  /// The internal list of the introduced states.
+  final Set<double> _introducedIndexes = {};
+
   /// Register the current FeaturesTour state.
-  void _register(FeaturesTourStateMixin state) => _states.add(state);
+  void _register(FeaturesTourStateMixin state) {
+    for (final vs in _introducedIndexes) {
+      if (vs == state.index) {
+        printDebug(
+            'The index `${state.index}` has been introduced -> Do not need to register');
+        return;
+      }
+    }
+
+    for (int i = 0; i < _states.length; i++) {
+      final e = _states.elementAt(i);
+      if (e.index == state.index) {
+        _states.remove(e);
+        _states.add(state);
+        printDebug(
+            'The index `${state.index}` exists -> Replace with the newer state');
+        return;
+      }
+    }
+
+    _states.add(state);
+    printDebug(
+        'Number of the `$pageName` states after registered: ${_states.length}');
+  }
 
   /// Unregister the current FeaturesTour state.
-  void _unregister(FeaturesTourStateMixin state) => _states.remove(state);
+  void _unregister(FeaturesTourStateMixin state) {
+    _states.remove(state);
+    printDebug(
+        'Number of the `$pageName` states after unregistered: ${_states.length}');
+  }
 
   /// Start the tour. This packaga automatically save the state of the widget,
   /// so it will skip the showed widget.
@@ -44,11 +74,12 @@ class FeaturesTourController {
   /// All of this parameters will be applied to this controller (this page only)
   /// if it is set. Otherwise, it will depends on the global configurations.
   ///
-  /// [context] will be used to wait for the page transition animation to complete.
+  /// The [context] will be used to wait for the page transition animation to complete.
   /// After that, delay for [delay] duration before starting the tour, it makes
   /// sure that all the widgets are rendered correctly. To enable/disable all the tours,
-  /// just need to set the [force] to `true` or `false, it will force to show
-  /// all the pre-dialogs.
+  /// just need to set the [force] to `true` or `false`, it will aslo force to show
+  /// all the pre-dialogs, **you have to set this value to `null` before releasing to
+  /// make the [FeaturesTour] works as expected**
   ///
   /// You can also configure the predialog by using [predialogConfig], this dialog
   /// will show to ask the user want to start the tour or not.
@@ -129,10 +160,7 @@ class FeaturesTourController {
       final FeaturesTourStateMixin state;
 
       if (waitForIndexState == null) {
-        // Sort the `_states` with its' `index`.
-        // Place sort in this place will improve the sort behavior, specially when new states are added.
-        _states.sort((a, b) => a.index.compareTo(b.index));
-        state = _states.elementAt(0);
+        state = _popState();
       } else {
         state = waitForIndexState;
       }
@@ -169,12 +197,11 @@ class FeaturesTourController {
       // ignore: use_build_context_synchronously
       await _waitForTransition(state.currentContext);
 
-      final result = await state.showIntroduce(state);
+      final result = await state.showIntroduce();
 
       switch (result) {
         case IntroduceResult.disabled:
         case IntroduceResult.notMounted:
-        case IntroduceResult.wrongState:
           printDebug(
             '   -> This widget has been cancelled with result: ${result.name}',
           );
@@ -339,14 +366,24 @@ class FeaturesTourController {
     printDebug('Remove page: $pageName');
   }
 
+  FeaturesTourStateMixin _popState() {
+    // Sort the `_states` with its' `index`.
+    // Place sort in this place will improve the sort behavior, specially when new states are added.
+    _states.sort((a, b) => a.index.compareTo(b.index));
+
+    final state = _states.removeAt(0);
+    _introducedIndexes.add(state.index);
+    return state;
+  }
+
   /// Removes specific state of this page.
   Future<void> _removeState(
     FeaturesTourStateMixin state,
-    bool markAsShowed,
+    bool markAsIntroduced,
   ) async {
-    if (markAsShowed) {
-      // ignore: use_build_context_synchronously
+    if (markAsIntroduced) {
       final key = FeaturesTour._getPrefKey(pageName, state);
+      _introducedIndexes.add(state.index);
       await _prefs!.setBool(key, true);
     }
     _unregister(state);
