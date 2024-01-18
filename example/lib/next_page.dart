@@ -39,9 +39,9 @@ class _NextPageState extends State<NextPage> {
             // ),
             nextConfig: NextConfig.copyWith(
               child: (onPressed) {
-                return TextButton(
+                return ElevatedButton(
                   onPressed: onPressed,
-                  child: const Text('aaaa'),
+                  child: const Text('Modified Next'),
                 );
               },
             ),

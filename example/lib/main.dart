@@ -1,10 +1,12 @@
 import 'package:features_tour/features_tour.dart';
+import 'package:features_tour_example/main_drawer.dart';
 import 'package:flutter/material.dart';
 
 import 'next_page.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
+    force: true,
     childConfig: ChildConfig.copyWith(
       barrierDismissible: true,
     ),
@@ -132,7 +134,7 @@ class _MyAppState extends State<MyApp> {
       appBar: AppBar(
         title: const Text('Plugin example app'),
       ),
-      drawer: const Drawer(),
+      drawer: const MainDrawer(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
