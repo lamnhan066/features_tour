@@ -14,7 +14,7 @@ class _NextPageState extends State<NextPage> {
 
   @override
   void initState() {
-    tourController.start(context: context);
+    tourController.start(context);
 
     super.initState();
   }

@@ -14,7 +14,7 @@ class _MainDrawerState extends State<MainDrawer> {
   @override
   void initState() {
     tourController.start(
-      context: context,
+      context,
       predialogConfig: PredialogConfig.copyWith(enabled: false),
     );
     super.initState();
@@ -27,7 +27,13 @@ class _MainDrawerState extends State<MainDrawer> {
         child: FeaturesTour(
           controller: tourController,
           index: 0,
-          introduce: const Text('This text will be shown on the Drawer'),
+          introduce: const Text(
+            'This text will be shown on the Drawer',
+            style: TextStyle(color: Colors.white),
+          ),
+          childConfig: ChildConfig.copyWith(
+            isAnimateChild: true,
+          ),
           child: ElevatedButton(
             child: const Text('On the Drawer'),
             onPressed: () {},

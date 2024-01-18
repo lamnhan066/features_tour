@@ -13,7 +13,7 @@ class _ThirdPageState extends State<ThirdPage> {
 
   @override
   void initState() {
-    tourController.start(context: context);
+    tourController.start(context);
 
     super.initState();
   }

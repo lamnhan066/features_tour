@@ -7,9 +7,6 @@ import 'next_page.dart';
 void main() {
   FeaturesTour.setGlobalConfig(
     force: true,
-    childConfig: ChildConfig.copyWith(
-      barrierDismissible: true,
-    ),
     // force: true,
     // skipConfig: SkipConfig.copyWith(
     //   text: 'SKIP >>>',
@@ -56,7 +53,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     tourController.start(
       /// Context of the current Page
-      context: context,
+      context,
 
       /// Delay before starting the tour
       delay: Duration.zero,
