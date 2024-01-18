@@ -10,6 +10,5 @@ mixin FeaturesTourStateMixin {
 
   BuildContext get currentContext => throw UnimplementedError();
 
-  Future<IntroduceResult> showIntroduce(FeaturesTourStateMixin calledState) =>
-      throw UnimplementedError();
+  Future<IntroduceResult> showIntroduce() => throw UnimplementedError();
 }

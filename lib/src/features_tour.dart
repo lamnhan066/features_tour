@@ -22,7 +22,7 @@ class FeaturesTour extends StatefulWidget {
   static bool? _force;
 
   /// Store all available controllers
-  static final List<FeaturesTourController> _controllers = [];
+  static final Set<FeaturesTourController> _controllers = {};
 
   /// Allow printing the debug logs.
   static bool _debugLog = false;
@@ -59,7 +59,12 @@ class FeaturesTour extends StatefulWidget {
   /// );
   /// ```
   static void setGlobalConfig({
-    /// Force to show all the tours. Default is `false`.
+    /// Force to show all the [FeaturesTour] if this value is `true` and force
+    /// not to show it if this value is `false`. Default is `null`, only show
+    /// if there are new [FeaturesTour]s.
+    ///
+    /// **You have to set this value to `null` before releasing to make the package
+    /// works as expected**
     bool? force,
 
     /// Prefix of local database name to save the widget showing state
@@ -238,15 +243,10 @@ class _FeaturesTourState extends State<FeaturesTour>
   BuildContext get currentContext => context;
 
   @override
-  Future<IntroduceResult> showIntroduce(
-    FeaturesTourStateMixin calledState,
-  ) async {
+  Future<IntroduceResult> showIntroduce() async {
     if (!widget.enabled) return IntroduceResult.disabled;
 
     if (!mounted) return IntroduceResult.notMounted;
-
-    // Avoid calling in the wrong state
-    if (this != calledState) return IntroduceResult.wrongState;
 
     final introduceConfig = widget.introduceConfig ?? IntroduceConfig.global;
     final childConfig = widget.childConfig ?? ChildConfig.global;
