@@ -1,7 +1,11 @@
+## 0.3.0-rc.1
+
+* Fixes issue that the `rect` accept the `null` value causes infinity loading.
+
 ## 0.3.0-rc
 
 * Bump Dart min sdk to 3.0.0.
-* The parameter `child` inside the `ChildConfig` is now passed the "real", so we can easily modify the child widget.
+* The parameter `child` inside the `ChildConfig` is now passed with the "real" child, so we can easily modify the child widget.
 
   * Before:
 
