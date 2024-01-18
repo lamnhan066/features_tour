@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/dialogs.dart';
@@ -8,13 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'components/cover_dialog.dart';
 import 'components/features_child.dart';
-import 'components/features_tour_minxin.dart';
 
 part 'features_tour_controller.dart';
 part 'utils/print_debug.dart';
 part 'utils/shared_prefs.dart';
 
-class FeaturesTour extends StatefulWidget {
+class FeaturesTour extends StatelessWidget {
   /// Prefix of this package.
   static String _prefix = 'FeaturesTour';
 
@@ -110,9 +110,9 @@ class FeaturesTour extends StatefulWidget {
   /// Get key for shared preferences.
   static String _getPrefKey(
     String? pageName,
-    FeaturesTourStateMixin controller,
+    FeaturesTour state,
   ) {
-    return '${_prefix}_${pageName}_${controller.index}';
+    return '${_prefix}_${pageName}_${state.index}';
   }
 
   /// Create a [FeaturesTour] to show the tour for specified widget.
@@ -148,9 +148,10 @@ class FeaturesTour extends StatefulWidget {
   /// a `Future` method, the next introduction will be delayed until this method
   /// is completed.
   FeaturesTour({
+    GlobalKey? key,
     required this.controller,
 
-    /// The tour will sort by this index, and it must be not dupplicated. You can
+    /// The tour will sort by this index, and it must be not duplicated. You can
     /// leave this black if you want to let the package to control it automatically.
     double? index,
     this.waitForIndex,
@@ -163,7 +164,7 @@ class FeaturesTour extends StatefulWidget {
     this.skipConfig,
     this.enabled = true,
     this.onPressed,
-  }) : super(key: GlobalKey()) {
+  }) : super(key: key ?? controller._states[index]?.key ?? GlobalKey()) {
     this.index = index ?? controller._getAutoIndex;
   }
 
@@ -224,45 +225,28 @@ class FeaturesTour extends StatefulWidget {
   /// ```
   final FutureOr<void> Function()? onPressed;
 
-  @override
-  State<FeaturesTour> createState() => _FeaturesTourState();
-}
+  late final BuildContext _context;
 
-class _FeaturesTourState extends State<FeaturesTour>
-    with FeaturesTourStateMixin {
-  @override
-  double get index => widget.index;
-
-  @override
-  double? get waitForIndex => widget.waitForIndex;
-
-  @override
-  Duration get waitForTimeout => widget.waitForTimeout;
-
-  @override
-  BuildContext get currentContext => context;
-
-  @override
   Future<IntroduceResult> showIntroduce() async {
-    if (!widget.enabled) return IntroduceResult.disabled;
+    if (!enabled) return IntroduceResult.disabled;
 
-    if (!mounted) return IntroduceResult.notMounted;
+    if (!_context.mounted) return IntroduceResult.notMounted;
 
-    final introduceConfig = widget.introduceConfig ?? IntroduceConfig.global;
-    final childConfig = widget.childConfig ?? ChildConfig.global;
-    final skipConfig = widget.skipConfig ?? SkipConfig.global;
-    final nextConfig = widget.nextConfig ?? NextConfig.global;
+    final introduceConfig = this.introduceConfig ?? IntroduceConfig.global;
+    final childConfig = this.childConfig ?? ChildConfig.global;
+    final skipConfig = this.skipConfig ?? SkipConfig.global;
+    final nextConfig = this.nextConfig ?? NextConfig.global;
 
     final result = await showDialog<IntroduceResult>(
-      context: context,
+      context: _context,
       barrierDismissible: childConfig.barrierDismissible,
       useSafeArea: false,
       barrierColor: introduceConfig.backgroundColor,
       builder: (ctx) {
         return FeaturesChild(
-          globalKey: widget.key as GlobalKey,
+          globalKey: key as GlobalKey,
           childConfig: childConfig,
-          introduce: widget.introduce,
+          introduce: introduce,
           skip: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(12.0),
@@ -316,8 +300,8 @@ class _FeaturesTourState extends State<FeaturesTour>
               child: AbsorbPointer(
                 absorbing: true,
                 child: childConfig.child == null
-                    ? widget.child
-                    : childConfig.child!(widget.child),
+                    ? child
+                    : childConfig.child!(child),
               ),
             ),
           ),
@@ -331,15 +315,15 @@ class _FeaturesTourState extends State<FeaturesTour>
 
     if (result == IntroduceResult.skip &&
         skipConfig.isCallOnPressed &&
-        widget.onPressed != null) {
+        onPressed != null) {
       Completer completer = Completer();
-      completer.complete(widget.onPressed!());
+      completer.complete(onPressed!());
       await completer.future;
     }
 
-    if (result == IntroduceResult.next && widget.onPressed != null) {
+    if (result == IntroduceResult.next && onPressed != null) {
       Completer completer = Completer();
-      completer.complete(widget.onPressed!());
+      completer.complete(onPressed!());
       await completer.future;
     }
 
@@ -347,26 +331,11 @@ class _FeaturesTourState extends State<FeaturesTour>
   }
 
   @override
-  void initState() {
-    if (widget.enabled) widget.controller._register(this);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    if (widget.enabled) widget.controller._unregister(this);
-    super.dispose();
-  }
-
-  @override
-  void reassemble() {
-    // To make the `assert` works when debugging
-    if (widget.enabled) widget.controller._unregister(this);
-    super.reassemble();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return widget.child;
+    try {
+      _context = context;
+    } catch (_) {}
+    if (enabled) controller._register(this);
+    return child;
   }
 }
