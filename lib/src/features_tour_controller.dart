@@ -85,13 +85,8 @@ class FeaturesTourController {
 
     _prefs ??= await SharedPreferences.getInstance();
 
-    // Wait until the page transition animation is complete.
-    printDebug('Waiting for the page transition to complete..');
-
     // ignore: use_build_context_synchronously
     await _waitForTransition(context); // Main page transition
-
-    printDebug('Page transition completed.');
 
     // Wait for `delay` duration before starting the tours.
     await Future.delayed(delay);
@@ -305,21 +300,26 @@ class FeaturesTourController {
   Future<void> _waitForTransition(BuildContext context) async {
     if (!context.mounted) return;
 
+    printDebug('Waiting for the page transition to complete...');
     final modalRoute = ModalRoute.of(context)?.animation;
 
-    if (modalRoute == null ||
-        modalRoute.isCompleted ||
-        modalRoute.isDismissed) {
-    } else {
+    if (modalRoute != null &&
+        !modalRoute.isCompleted &&
+        !modalRoute.isDismissed) {
       Completer completer = Completer();
       modalRoute.addStatusListener((status) {
-        if (status == AnimationStatus.completed ||
-            status == AnimationStatus.dismissed) {
-          if (!completer.isCompleted) completer.complete();
+        switch (status) {
+          case AnimationStatus.forward:
+          case AnimationStatus.reverse:
+            break;
+          case AnimationStatus.dismissed:
+          case AnimationStatus.completed:
+            if (!completer.isCompleted) completer.complete();
         }
       });
       await completer.future;
     }
+    printDebug('The page transition completed');
   }
 
   /// Removes all controllers for specific `pageName`.
