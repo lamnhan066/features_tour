@@ -72,11 +72,28 @@ class _FeaturesChildState extends State<FeaturesChild>
   late Alignment alignment;
   QuadrantAlignment? _quadrantAlignment;
 
+  /// Render longside with the transition, such as the Drawer.
+  void _autoUpdate() {
+    int times = 0;
+    Timer.periodic(const Duration(milliseconds: 10), (timer) {
+      if (!_updateState() && times >= 10) {
+        timer.cancel();
+      }
+      times++;
+    });
+  }
+
   /// Update the current state.
-  void updateState() async {
+  bool _updateState() {
+    if (!mounted) return false;
+
     final tempRect = (widget.globalKey).globalPaintBounds;
-    if (tempRect == null) return;
-    rect = tempRect;
+    if (tempRect != null) {
+      if (tempRect == rect) {
+        return false;
+      }
+      rect = tempRect;
+    }
 
     _autoSetQuadrantAlignment(rect!);
 
@@ -132,6 +149,9 @@ class _FeaturesChildState extends State<FeaturesChild>
         introduceRect = rect!;
         alignment = widget.alignment ?? Alignment.center;
     }
+
+    setState(() {});
+    return true;
   }
 
   /// Find the larger height between the top and bottom rectangle to set the
@@ -185,6 +205,8 @@ class _FeaturesChildState extends State<FeaturesChild>
     WidgetsBinding.instance.addObserver(this);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _autoUpdate();
+
       setState(() {
         scale = widget.childConfig.zoomScale;
       });
@@ -210,9 +232,7 @@ class _FeaturesChildState extends State<FeaturesChild>
 
   @override
   void didChangeDependencies() {
-    setState(() {
-      updateState();
-    });
+    _updateState();
     super.didChangeDependencies();
   }
 
@@ -224,9 +244,7 @@ class _FeaturesChildState extends State<FeaturesChild>
 
   @override
   void didChangeMetrics() {
-    setState(() {
-      updateState();
-    });
+    _updateState();
     super.didChangeMetrics();
   }
 
