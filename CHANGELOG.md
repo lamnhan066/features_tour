@@ -1,3 +1,36 @@
+## 0.3.0-rc.2
+
+* Move `waitForFirstIndex` and `waitForFirstTimeout` from `FeaturesTourController` to `start` method.
+* Change the `context` parameter in the `start` method from named to positioned parameter.
+* Change to use `StatelessWidget` for `FeaturesTour`.
+* Ignore the unmounted Widget correctly.
+* Able to adapt with the transition of the Widget like the Drawer.
+* Add an effective way to control the list of states to avoid the duplicated state issue.
+* Migration:
+  * Before:
+
+  ```dart
+  final tourController = FeaturesTourController(
+    'Page', 
+    waitForFirstIndex: 1.0,
+    waitForFirstTimeout: const Duration(seconds: 4),
+  );
+
+  tourController.start(context: context);
+  ```
+
+  * Now:
+
+  ```dart
+  final tourController = FeaturesTourController('Page');
+
+  tourController.start(
+    context,
+    waitForFirstIndex: 1.0,
+    waitForFirstTimeout: const Duration(seconds: 3),
+  );
+  ```  
+
 ## 0.3.0-rc.1
 
 * Fixes issue that the `rect` accept the `null` value causes infinity loading.

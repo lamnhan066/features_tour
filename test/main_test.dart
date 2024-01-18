@@ -12,10 +12,7 @@ void main() {
 
   testWidgets('', (tester) async {
     SharedPreferences.setMockInitialValues({});
-    final controller = FeaturesTourController(
-      'App',
-      waitForFirstIndex: 2,
-    );
+    final controller = FeaturesTourController('App');
     await tester.pumpWidget(
       App(tours: [
         FeaturesTour(
