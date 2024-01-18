@@ -73,13 +73,15 @@ class _FeaturesChildState extends State<FeaturesChild>
   QuadrantAlignment? _quadrantAlignment;
 
   /// Update the current state.
-  void updateState() {
-    rect = (widget.globalKey).globalPaintBounds;
-    if (rect == null) return;
+  void updateState() async {
+    final tempRect = (widget.globalKey).globalPaintBounds;
+    if (tempRect == null) return;
+    rect = tempRect;
 
     _autoSetQuadrantAlignment(rect!);
 
-    final size = MediaQuery.of(context).size;
+    var size = MediaQuery.maybeOf(context)?.size;
+    size ??= MediaQueryData.fromView(View.of(context)).size;
     switch (_quadrantAlignment!) {
       case QuadrantAlignment.top:
         introduceRect = Rect.fromLTRB(0, 0, size.width, rect!.top);
@@ -225,7 +227,6 @@ class _FeaturesChildState extends State<FeaturesChild>
     setState(() {
       updateState();
     });
-
     super.didChangeMetrics();
   }
 
