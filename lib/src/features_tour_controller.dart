@@ -7,11 +7,7 @@ class FeaturesTourController {
   /// Create a controller for FeaturesTour with unique [pageName]. This value is
   /// used to store the state of the current page, so please do not change it
   /// if you don't want to re-show the instructions.
-  FeaturesTourController(
-    this.pageName, {
-    this.waitForFirstIndex,
-    this.waitForFirstTimeout = const Duration(seconds: 3),
-  }) {
+  FeaturesTourController(this.pageName) {
     FeaturesTour._controllers.add(this);
   }
 
@@ -22,21 +18,15 @@ class FeaturesTourController {
   /// Name of this page.
   final String pageName;
 
-  /// Set the first index to force the Tour to wait until this index is exist
-  /// and show it first.
-  final double? waitForFirstIndex;
-
-  /// Timeout waiting for the first index.
-  final Duration waitForFirstTimeout;
-
   /// The internal list of the states.
-  final List<FeaturesTourStateMixin> _states = [];
+  final SplayTreeMap<double, FeaturesTour> _states =
+      SplayTreeMap.from({}, (a, b) => a.compareTo(b));
 
   /// The internal list of the introduced states.
   final Set<double> _introducedIndexes = {};
 
   /// Register the current FeaturesTour state.
-  void _register(FeaturesTourStateMixin state) {
+  void _register(FeaturesTour state) {
     for (final vs in _introducedIndexes) {
       if (vs == state.index) {
         printDebug(
@@ -45,25 +35,14 @@ class FeaturesTourController {
       }
     }
 
-    for (int i = 0; i < _states.length; i++) {
-      final e = _states.elementAt(i);
-      if (e.index == state.index) {
-        _states.remove(e);
-        _states.add(state);
-        printDebug(
-            'The index `${state.index}` exists -> Replace with the newer state');
-        return;
-      }
-    }
-
-    _states.add(state);
+    _states[state.index] = state;
     printDebug(
         'Number of the `$pageName` states after registered: ${_states.length}');
   }
 
   /// Unregister the current FeaturesTour state.
-  void _unregister(FeaturesTourStateMixin state) {
-    _states.remove(state);
+  void _unregister(FeaturesTour state) {
+    _states.removeWhere((key, value) => value == state);
     printDebug(
         'Number of the `$pageName` states after unregistered: ${_states.length}');
   }
@@ -81,6 +60,10 @@ class FeaturesTourController {
   /// all the pre-dialogs, **you have to set this value to `null` before releasing to
   /// make the [FeaturesTour] works as expected**
   ///
+  /// You can set the first index by setting [waitForFirstIndex] with timeout by
+  /// setting [waitForFirstTimeout]. If the timeout is exceeded, the smallest available
+  /// index will be used.
+  ///
   /// You can also configure the predialog by using [predialogConfig], this dialog
   /// will show to ask the user want to start the tour or not.
   ///
@@ -88,9 +71,11 @@ class FeaturesTourController {
   /// ``` dart
   /// tourController.start(context: context, force: true);
   /// ```
-  Future<void> start({
-    required BuildContext context,
-    Duration delay = Duration.zero,
+  Future<void> start(
+    BuildContext context, {
+    double? waitForFirstIndex,
+    Duration waitForFirstTimeout = const Duration(seconds: 3),
+    Duration delay = const Duration(milliseconds: 500),
     bool? force,
     PredialogConfig? predialogConfig,
   }) async {
@@ -132,6 +117,11 @@ class FeaturesTourController {
       return;
     }
 
+    if (!_shouldShowIntroduction() && force != true) {
+      printDebug('There is no new `FeaturesTour` -> Completed');
+      return;
+    }
+
     // ignore: use_build_context_synchronously
     final result = await _showPredialog(context, force, predialogConfig);
 
@@ -147,17 +137,17 @@ class FeaturesTourController {
     }
 
     // Watching for the `waitForIndex` value.
-    FeaturesTourStateMixin? waitForIndexState;
+    FeaturesTour? waitForIndexState;
 
     // Waiting for the first index.
     if (waitForFirstIndex != null) {
       waitForIndexState =
-          await _waitForIndex(waitForFirstIndex!, waitForFirstTimeout);
+          await _waitForIndex(waitForFirstIndex, waitForFirstTimeout);
     }
 
     printDebug('Start the tour');
     while (_states.isNotEmpty) {
-      final FeaturesTourStateMixin state;
+      final FeaturesTour state;
 
       if (waitForIndexState == null) {
         state = _popState();
@@ -171,8 +161,8 @@ class FeaturesTourController {
       printDebug('Start widget with key $key:');
 
       // ignore: use_build_context_synchronously
-      if (!context.mounted || !state.currentContext.mounted) {
-        printDebug('   -> This widget was unmounted');
+      if (!context.mounted) {
+        printDebug('   -> The parent widget was unmounted');
         break;
       }
 
@@ -195,7 +185,7 @@ class FeaturesTourController {
 
       // Wait for the child widget transition to complete.
       // ignore: use_build_context_synchronously
-      await _waitForTransition(state.currentContext);
+      await _waitForTransition(state._context);
 
       final result = await state.showIntroduce();
 
@@ -253,15 +243,12 @@ class FeaturesTourController {
     PredialogConfig? config,
   ) async {
     // Should show the predialog or not.
-    bool shouldShowPredialog;
+    bool shouldShowPredialog = true;
 
     // Respect `force`.
     if (force != null) {
       printDebug('`force` is $force, so the dialog must respect it.');
       shouldShowPredialog = force;
-    } else {
-      printDebug('`force` is null, so the dialog will be got from local data');
-      shouldShowPredialog = _shouldShowPredialog();
     }
 
     if (shouldShowPredialog) {
@@ -305,14 +292,14 @@ class FeaturesTourController {
   }
 
   /// Wait for the next index to be available.
-  Future<FeaturesTourStateMixin?> _waitForIndex(
+  Future<FeaturesTour?> _waitForIndex(
     double index,
     Duration timeout,
   ) async {
     Stopwatch stopwatch = Stopwatch()..start();
     while (true) {
-      for (final state in _states) {
-        if (state.index == index) return state;
+      for (final MapEntry(key: i, value: state) in _states.entries) {
+        if (i == index) return state;
       }
 
       // Timeout is reached.
@@ -359,26 +346,27 @@ class FeaturesTourController {
     _prefs ??= await SharedPreferences.getInstance();
 
     while (_states.isNotEmpty) {
-      final state = _states.elementAt(0);
+      final state = _states.values.first;
       await _removeState(state, markAsShowed);
     }
 
     printDebug('Remove page: $pageName');
   }
 
-  FeaturesTourStateMixin _popState() {
+  FeaturesTour _popState() {
     // Sort the `_states` with its' `index`.
     // Place sort in this place will improve the sort behavior, specially when new states are added.
-    _states.sort((a, b) => a.index.compareTo(b.index));
+    // _states.map((key, value) => null).sort((a, b) => a.index.compareTo(b.index));
+    // _states
 
-    final state = _states.removeAt(0);
+    final state = _states.remove(_states.firstKey())!;
     _introducedIndexes.add(state.index);
     return state;
   }
 
   /// Removes specific state of this page.
   Future<void> _removeState(
-    FeaturesTourStateMixin state,
+    FeaturesTour state,
     bool markAsIntroduced,
   ) async {
     if (markAsIntroduced) {
@@ -390,10 +378,10 @@ class FeaturesTourController {
   }
 
   /// Checks whether there is any new features available to show predialog.
-  bool _shouldShowPredialog() {
-    for (final state in _states) {
+  bool _shouldShowIntroduction() {
+    for (final state in _states.values) {
       final key = FeaturesTour._getPrefKey(pageName, state);
-      if (!_prefs!.containsKey(key)) {
+      if (!_prefs!.containsKey(key) && state._context.mounted) {
         return true;
       }
     }
