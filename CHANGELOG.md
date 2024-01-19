@@ -1,3 +1,7 @@
+## 0.3.0-rc.3
+
+* Only add `GlobalKey` to the enabled `FeaturesTour`.
+
 ## 0.3.0-rc.2
 
 * Move `waitForFirstIndex` and `waitForFirstTimeout` from `FeaturesTourController` to `start` method.
