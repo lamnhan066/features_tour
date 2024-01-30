@@ -27,24 +27,21 @@ class FeaturesTourController {
 
   /// Register the current FeaturesTour state.
   void _register(FeaturesTour state) {
-    for (final vs in _introducedIndexes) {
-      if (vs == state.index) {
-        printDebug(
-            'The index `${state.index}` has been introduced -> Do not need to register');
-        return;
-      }
+    if (!_states.containsKey(state.index)) {
+      printDebug(
+          '`$pageName`: register index ${state.index} => total: ${_states.length + 1}');
     }
-
     _states[state.index] = state;
-    printDebug(
-        'Number of the `$pageName` states after registered: ${_states.length}');
   }
 
   /// Unregister the current FeaturesTour state.
   void _unregister(FeaturesTour state) {
-    _states.removeWhere((key, value) => value == state);
-    printDebug(
-        'Number of the `$pageName` states after unregistered: ${_states.length}');
+    if (_states.containsKey(state.index)) {
+      printDebug(
+          '`$pageName`: unregister index ${state.index} => total: ${_states.length - 1}');
+    }
+    _states.remove(state.index);
+    _introducedIndexes.add(state.index);
   }
 
   /// Start the tour. This packaga automatically save the state of the widget,
@@ -176,9 +173,13 @@ class FeaturesTourController {
         shouldShowIntroduce = isShown != true;
       }
 
+      if (_introducedIndexes.contains(state.index)) {
+        shouldShowIntroduce = false;
+      }
+
       if (!shouldShowIntroduce) {
         printDebug(
-            '   -> This widget is already shown -> move to the next widget.');
+            '   -> This widget has been introduced -> move to the next widget.');
         await _removeState(state, false);
         continue;
       }
@@ -354,14 +355,7 @@ class FeaturesTourController {
   }
 
   FeaturesTour _popState() {
-    // Sort the `_states` with its' `index`.
-    // Place sort in this place will improve the sort behavior, specially when new states are added.
-    // _states.map((key, value) => null).sort((a, b) => a.index.compareTo(b.index));
-    // _states
-
-    final state = _states.remove(_states.firstKey())!;
-    _introducedIndexes.add(state.index);
-    return state;
+    return _states.remove(_states.firstKey())!;
   }
 
   /// Removes specific state of this page.
@@ -371,7 +365,6 @@ class FeaturesTourController {
   ) async {
     if (markAsIntroduced) {
       final key = FeaturesTour._getPrefKey(pageName, state);
-      _introducedIndexes.add(state.index);
       await _prefs!.setBool(key, true);
     }
     _unregister(state);
