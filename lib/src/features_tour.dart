@@ -136,7 +136,9 @@ class FeaturesTour extends StatelessWidget {
   /// the bad UX, default timeout is 3 seconds. Remember that this index is only
   /// using in the same [controller].
   ///
-  /// You can disable this feature by using [enabled].
+  /// You can disable this feature by setting [enable] to `false`. Especially,
+  /// when you're using the [FeaturesTour] for items of a List, you can
+  /// [enable] only one of them, so you have to set the [enable] of other items to `false`.
   ///
   /// [introduce] is a widget that will show the introduce information, you can
   /// also configure it with [introduceConfig].
@@ -162,12 +164,13 @@ class FeaturesTour extends StatelessWidget {
     this.introduceConfig,
     this.nextConfig,
     this.skipConfig,
-    this.enabled = true,
+    this.enable = true,
+    @Deprecated('Use `enable` instead.') bool? enabled,
     this.onPressed,
   })  : index = index ?? controller._getAutoIndex,
         super(
-            key: enabled
-                ? (key ?? controller._states[index]?.key ?? GlobalKey())
+            key: enabled ?? enable
+                ? (key ?? controller._globalKeys[index] ?? GlobalKey())
                 : null);
 
   /// Controller of the current page.
@@ -192,7 +195,7 @@ class FeaturesTour extends StatelessWidget {
   final Duration waitForTimeout;
 
   /// Enable or disable the action of this widget.
-  final bool enabled;
+  final bool enable;
 
   /// Child widget.
   final Widget child;
@@ -230,7 +233,7 @@ class FeaturesTour extends StatelessWidget {
   late final BuildContext _context;
 
   Future<IntroduceResult> showIntroduce() async {
-    if (!enabled) return IntroduceResult.disabled;
+    if (!enable) return IntroduceResult.disabled;
 
     if (!_context.mounted) return IntroduceResult.notMounted;
 
@@ -337,7 +340,7 @@ class FeaturesTour extends StatelessWidget {
     try {
       _context = context;
     } catch (_) {}
-    if (enabled) controller._register(this);
+    if (enable) controller._register(this);
     return child;
   }
 }

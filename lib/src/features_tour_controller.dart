@@ -22,6 +22,8 @@ class FeaturesTourController {
   final SplayTreeMap<double, FeaturesTour> _states =
       SplayTreeMap.from({}, (a, b) => a.compareTo(b));
 
+  final _globalKeys = <double, GlobalKey>{};
+
   /// The internal list of the introduced states.
   final Set<double> _introducedIndexes = {};
 
@@ -32,6 +34,7 @@ class FeaturesTourController {
           '`$pageName`: register index ${state.index} => total: ${_states.length + 1}');
     }
     _states[state.index] = state;
+    _globalKeys[state.index] = state.key as GlobalKey;
   }
 
   /// Unregister the current FeaturesTour state.
