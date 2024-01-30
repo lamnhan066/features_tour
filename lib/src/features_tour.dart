@@ -164,9 +164,11 @@ class FeaturesTour extends StatelessWidget {
     this.skipConfig,
     this.enabled = true,
     this.onPressed,
-  }) : super(key: enabled ? (key ?? GlobalKey()) : null) {
-    this.index = index ?? controller._getAutoIndex;
-  }
+  })  : index = index ?? controller._getAutoIndex,
+        super(
+            key: enabled
+                ? (key ?? controller._states[index]?.key ?? GlobalKey())
+                : null);
 
   /// Controller of the current page.
   final FeaturesTourController controller;
