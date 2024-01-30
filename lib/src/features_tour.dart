@@ -136,9 +136,9 @@ class FeaturesTour extends StatelessWidget {
   /// the bad UX, default timeout is 3 seconds. Remember that this index is only
   /// using in the same [controller].
   ///
-  /// You can disable this feature by setting [enable] to `false`. Especially,
+  /// You can disable this feature by setting [enabled] to `false`. Especially,
   /// when you're using the [FeaturesTour] for items of a List, you can
-  /// [enable] only one of them, so you have to set the [enable] of other items to `false`.
+  /// [enabled] only one of them, so you have to set the [enabled] of other items to `false`.
   ///
   /// [introduce] is a widget that will show the introduce information, you can
   /// also configure it with [introduceConfig].
@@ -164,12 +164,11 @@ class FeaturesTour extends StatelessWidget {
     this.introduceConfig,
     this.nextConfig,
     this.skipConfig,
-    this.enable = true,
-    @Deprecated('Use `enable` instead.') bool? enabled,
+    this.enabled = true,
     this.onPressed,
   })  : index = index ?? controller._getAutoIndex,
         super(
-            key: enabled ?? enable
+            key: enabled
                 ? (key ?? controller._globalKeys[index] ?? GlobalKey())
                 : null);
 
@@ -195,7 +194,7 @@ class FeaturesTour extends StatelessWidget {
   final Duration waitForTimeout;
 
   /// Enable or disable the action of this widget.
-  final bool enable;
+  final bool enabled;
 
   /// Child widget.
   final Widget child;
@@ -233,7 +232,7 @@ class FeaturesTour extends StatelessWidget {
   late final BuildContext _context;
 
   Future<IntroduceResult> showIntroduce() async {
-    if (!enable) return IntroduceResult.disabled;
+    if (!enabled) return IntroduceResult.disabled;
 
     if (!_context.mounted) return IntroduceResult.notMounted;
 
@@ -340,7 +339,7 @@ class FeaturesTour extends StatelessWidget {
     try {
       _context = context;
     } catch (_) {}
-    if (enable) controller._register(this);
+    if (enabled) controller._register(this);
     return child;
   }
 }
