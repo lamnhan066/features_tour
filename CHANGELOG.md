@@ -1,3 +1,7 @@
+## 0.3.0-rc.5
+
+* Caches the GlobalKey better.
+
 ## 0.3.0-rc.4
 
 * Avoid creating unnecessary new GlobalKey that causes issues (needs double taps to trigger a function).
