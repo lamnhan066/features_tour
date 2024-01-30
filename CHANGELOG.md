@@ -1,3 +1,7 @@
+## 0.3.0-rc.6
+
+* Fix an issue related to `enabled` parameter.
+
 ## 0.3.0-rc.5
 
 * Caches the GlobalKey better.
