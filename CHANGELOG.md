@@ -1,3 +1,8 @@
+## 0.3.0-rc.4
+
+* Avoid creating unnecessary new GlobalKey that causes issues (needs double taps to trigger a function).
+* Avoid duplicating an introduction.
+
 ## 0.3.0-rc.3
 
 * Only add `GlobalKey` to the enabled `FeaturesTour`.
