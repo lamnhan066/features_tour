@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Release to stable.
+
 ## 0.3.0-rc.6
 
 * Fix an issue related to `enabled` parameter.

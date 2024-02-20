@@ -1,11 +1,16 @@
 name: features_tour
 description: Features Tour is a package that enables you to easily create tours to introduce your widget features in your app with order.
-version: 0.3.0-rc.6
+version: 0.3.0
 homepage: https://github.com/lamnhan066/features_tour
 
 screenshots:
   - description: "Introduction"
     path: assets/intro.webp
+topics:
+  - features
+  - discovery
+  - introduction
+  - guide
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
