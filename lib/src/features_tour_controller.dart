@@ -207,6 +207,7 @@ class FeaturesTourController {
           break;
         case IntroduceResult.skip:
           printDebug('   -> Skip this tour');
+          await _removeState(state, true);
           await _removePage(markAsShowed: true);
           break;
       }
