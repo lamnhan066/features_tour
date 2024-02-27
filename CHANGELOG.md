@@ -1,3 +1,7 @@
+## 0.3.1
+
+* Fixes issue that the last state is not removed.
+
 ## 0.3.0
 
 * Release to stable.
