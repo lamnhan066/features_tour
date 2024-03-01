@@ -297,6 +297,9 @@ class _MyAppState extends State<MyApp> {
         nextConfig: NextConfig.copyWith(
           enabled: false,
         ),
+        doneConfig: DoneConfig.copyWith(
+          enabled: false,
+        ),
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (_) => const NextPage()));

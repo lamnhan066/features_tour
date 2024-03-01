@@ -28,6 +28,7 @@ class _ThirdPageState extends State<ThirdPage> {
         children: [
           FeaturesTour(
             controller: tourController,
+            index: 1,
             introduce: const Text(
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
@@ -45,6 +46,7 @@ class _ThirdPageState extends State<ThirdPage> {
           ),
           FeaturesTour(
             controller: tourController,
+            index: 2,
             introduce: const Text(
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
@@ -62,6 +64,7 @@ class _ThirdPageState extends State<ThirdPage> {
           ),
           FeaturesTour(
             controller: tourController,
+            index: 3,
             introduce: const Text(
               'This is the last Button. Choose Finish to comback to the Home page.',
               style: TextStyle(color: Colors.white),
