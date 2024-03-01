@@ -4,7 +4,7 @@ Features Tour is a package that enables you to easily create tours to introduce 
 
 ## Introduction
 
-![Alt Text](https://raw.githubusercontent.com/vnniz/features_tour/main/assets/intro.webp)
+![Alt Text](https://raw.githubusercontent.com/lamnhan066/features_tour/main/assets/intro.webp)
 
 ## Usage
 
@@ -102,6 +102,18 @@ FeaturesTour(
         ),
     ),
 
+    /// Config for the done button. This button will be shown on the last introduction.
+    doneConfig: DoneConfig.copyWith(
+        // Use the default `Elevated` button with this text.
+        text: 'DONE',
+
+        // Create your own button.
+        child: (onPressed) => ElevatedButton(
+            onPressed: onPressed,
+            child: Text('DONE'),
+        ),
+    ),
+
     /// Config for the pre-dialog, it will show before the tours to ask the permission.
     predialogConfig: PredialogConfig.copyWith(
       enabled: true,
@@ -193,12 +205,17 @@ void main() {
 
         /// Configuration for the `Skip` text button.
         skipConfig: SkipConfig.copyWith(
-            text: 'SKIP >>>',
+            text: 'SKIP',
         ),
 
         /// Configuration for the `Next` text button.
         nextConfig: NextConfig.copyWith(
-            text: 'NEXT >>'
+            text: 'NEXT'
+        ),
+
+        /// Configuration for the `Done` text button.
+        doneConfig: NextConfig.copyWith(
+            text: 'DONE'
         ),
 
         /// Configuration for the `introduce` widget, can know as the description.
@@ -220,6 +237,7 @@ If you want to use `FeaturesTour`s inside a `FeaturesTour`, you need to clone th
 ```dart
 FeaturesTour(
     controller: tourController,
+    index: 1,
     childConfig: ChildConfig.copyWith(
         child: (child) => Row(
             children: [
@@ -242,6 +260,7 @@ FeaturesTour(
         children: [
             FeaturesTour(
                 controller: tourController,
+                index: 2,
                 child: Center(
                     child: ElevatedButton(
                         onPressed: () {},
@@ -251,6 +270,7 @@ FeaturesTour(
             ),
             FeaturesTour(
                 controller: tourController,
+                index: 3,
                 child: Center(
                     child: ElevatedButton(
                         onPressed: () {},
@@ -273,6 +293,6 @@ If you find this project helpful and would like to support its development, you 
 
 **PayPal:** [Donate](https://www.paypal.com/donate?hosted_button_id=lamnhan066)
 
-<p align='center'><a href="https://www.buymeacoffee.com/vursin"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=vursin&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" width="200"></a></p>
+<p align='center'><a href="https://www.buymeacoffee.com/lamnhan066"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=lamnhan066&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" width="200"></a></p>
 
 Your donation will be used to cover the cost of maintaining and improving this project. Thank you for your support!
