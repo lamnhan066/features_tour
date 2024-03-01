@@ -162,7 +162,7 @@ class FeaturesTour extends StatelessWidget {
 
     /// The tour will sort by this index, and it must be not duplicated. You can
     /// leave this black if you want to let the package to control it automatically.
-    double? index,
+    required this.index,
     this.waitForIndex,
     this.waitForTimeout = const Duration(seconds: 3),
     required this.child,
@@ -174,8 +174,7 @@ class FeaturesTour extends StatelessWidget {
     this.doneConfig,
     this.enabled = true,
     this.onPressed,
-  })  : index = index ?? controller._getAutoIndex,
-        super(
+  }) : super(
             key: enabled
                 ? (key ?? controller._globalKeys[index] ?? GlobalKey())
                 : null);

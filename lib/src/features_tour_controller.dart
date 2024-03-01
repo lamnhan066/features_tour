@@ -11,10 +11,6 @@ class FeaturesTourController {
     FeaturesTour._controllers.add(this);
   }
 
-  /// Get auto increment index number.
-  double get _getAutoIndex => _index++;
-  double _index = 0;
-
   /// Name of this page.
   final String pageName;
 
