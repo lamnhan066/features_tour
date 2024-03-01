@@ -191,7 +191,7 @@ class FeaturesTourController {
       // ignore: use_build_context_synchronously
       await _waitForTransition(state._context);
 
-      final result = await state.showIntroduce();
+      final result = await state.showIntroduce(_states.isEmpty);
 
       switch (result) {
         case IntroduceResult.disabled:
@@ -201,6 +201,7 @@ class FeaturesTourController {
           );
           await _removeState(state, false);
           break;
+        case IntroduceResult.done:
         case IntroduceResult.next:
           printDebug('   -> Move to next widget');
           await _removeState(state, true);

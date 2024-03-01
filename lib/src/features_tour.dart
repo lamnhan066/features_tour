@@ -86,6 +86,12 @@ class FeaturesTour extends StatelessWidget {
     /// Configuration of the next button. Default is [NextConfig.global].
     NextConfig? nextConfig,
 
+    /// Configuration of the done button. Default is [DoneConfig.global].
+    ///
+    /// This button only shows when the current introduction is the last and
+    /// `doneConfig.enabled` is `true`.
+    DoneConfig? doneConfig,
+
     /// Allow printing the debug logs. Default is `kDebugMode`.
     bool? debugLog,
   }) {
@@ -93,6 +99,7 @@ class FeaturesTour extends StatelessWidget {
     if (childConfig != null) ChildConfig.global = childConfig;
     if (skipConfig != null) SkipConfig.global = skipConfig;
     if (nextConfig != null) NextConfig.global = nextConfig;
+    if (doneConfig != null) DoneConfig.global = doneConfig;
     if (introduceConfig != null) IntroduceConfig.global = introduceConfig;
     if (predialogConfig != null) PredialogConfig.global = predialogConfig;
     if (preferencePrefix != null) _prefix = preferencePrefix;
@@ -164,6 +171,7 @@ class FeaturesTour extends StatelessWidget {
     this.introduceConfig,
     this.nextConfig,
     this.skipConfig,
+    this.doneConfig,
     this.enabled = true,
     this.onPressed,
   })  : index = index ?? controller._getAutoIndex,
@@ -211,6 +219,9 @@ class FeaturesTour extends StatelessWidget {
   /// Skip button config. If this value is `null`, the `SkipConfig.global` is used.
   final SkipConfig? skipConfig;
 
+  /// Done button config. If this value is `null`, the `DoneConfig.global` is used.
+  final DoneConfig? doneConfig;
+
   /// Child widget that shows up on the original child widget.  If this value is `null`,
   /// the `ChildConfig.global` is used.
   final ChildConfig? childConfig;
@@ -231,7 +242,7 @@ class FeaturesTour extends StatelessWidget {
 
   late final BuildContext _context;
 
-  Future<IntroduceResult> showIntroduce() async {
+  Future<IntroduceResult> showIntroduce(bool isEnd) async {
     if (!enabled) return IntroduceResult.disabled;
 
     if (!_context.mounted) return IntroduceResult.notMounted;
@@ -240,6 +251,7 @@ class FeaturesTour extends StatelessWidget {
     final childConfig = this.childConfig ?? ChildConfig.global;
     final skipConfig = this.skipConfig ?? SkipConfig.global;
     final nextConfig = this.nextConfig ?? NextConfig.global;
+    final doneConfig = this.doneConfig ?? DoneConfig.global;
 
     final result = await showDialog<IntroduceResult>(
       context: _context,
@@ -290,6 +302,27 @@ class FeaturesTour extends StatelessWidget {
                     ),
             ),
           ),
+          doneConfig: doneConfig,
+          done: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: doneConfig.child != null
+                  ? doneConfig
+                      .child!(() => Navigator.pop(ctx, IntroduceResult.done))
+                  : ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(ctx, IntroduceResult.done);
+                      },
+                      style: doneConfig.buttonStyle,
+                      child: Text(
+                        doneConfig.text,
+                        style: doneConfig.textStyle ??
+                            TextStyle(color: doneConfig.color),
+                      ),
+                    ),
+            ),
+          ),
+          isEnd: isEnd,
           nextConfig: nextConfig,
           padding: introduceConfig.padding,
           alignment: introduceConfig.alignment,

@@ -18,5 +18,8 @@ enum IntroduceResult {
   skip,
 
   /// [next] when the next button is pressed.
-  next;
+  next,
+
+  /// [done] when the done button is pressed.
+  done;
 }
