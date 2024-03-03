@@ -1,3 +1,8 @@
+## 0.4.0-rc.1
+
+* Add `Done` button to show on the last introduction (`Next` and `Skip` button will be hidden).
+* `index` in `FeaturesTour` is required since this version.
+
 ## 0.3.1
 
 * Fixes issue that the last state is not removed.
