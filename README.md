@@ -150,7 +150,7 @@ void initState() {
     // Use this method to start all the available features tour.
     // The `context` will be used to wait for the page transition
     // animation to complete before starting the tour.
-    tourController.start(context: context);
+    tourController.start(context);
     super.initState();
 }
 ```
@@ -165,7 +165,13 @@ void initState() {
     // animation to complete before starting the tour.
     tourController.start(
       /// Context of the current Page
-      context: context,
+      context,
+
+      /// You can set the first index by setting [waitForFirstIndex] with timeout by
+      /// setting [waitForFirstTimeout]. If the timeout is exceeded, the smallest available
+      /// index will be used.
+      waitForFirstIndex: 1.0,
+      waitForFirstTimeout: const Duration(seconds: 3),
 
       /// Delay before starting the tour
       delay: Duration.zero,
