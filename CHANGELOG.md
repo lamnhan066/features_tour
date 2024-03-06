@@ -1,3 +1,7 @@
+## 0.4.0-rc.2
+
+* Improves the Done button behavior when there is a new FeaturesTour is added.
+
 ## 0.4.0-rc.1
 
 * Add `Done` button to show on the last introduction (`Next` and `Skip` button will be hidden).
