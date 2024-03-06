@@ -349,18 +349,27 @@ class FeaturesTour extends StatelessWidget {
       return IntroduceResult.notMounted;
     }
 
-    if (result == IntroduceResult.skip &&
-        skipConfig.isCallOnPressed &&
-        onPressed != null) {
-      Completer completer = Completer();
-      completer.complete(onPressed!());
-      await completer.future;
-    }
+    if (onPressed != null) {
+      Future<void> callOnPressed() async {
+        Completer completer = Completer();
+        completer.complete(onPressed!());
+        await completer.future;
+      }
 
-    if (result == IntroduceResult.next && onPressed != null) {
-      Completer completer = Completer();
-      completer.complete(onPressed!());
-      await completer.future;
+      switch (result) {
+        case IntroduceResult.disabled:
+        case IntroduceResult.notMounted:
+          break;
+        case IntroduceResult.skip:
+          if (skipConfig.isCallOnPressed) {
+            await callOnPressed();
+          }
+          break;
+        case IntroduceResult.next:
+        case IntroduceResult.done:
+          await callOnPressed();
+          break;
+      }
     }
 
     return result;

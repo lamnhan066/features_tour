@@ -143,6 +143,9 @@ class FeaturesTourController {
 
     printDebug('Start the tour');
     while (_states.isNotEmpty) {
+      await _removedAllShownIntroductions(force);
+      if (_states.isEmpty) break;
+
       final FeaturesTour state;
 
       if (waitForIndexState == null) {
@@ -236,6 +239,31 @@ class FeaturesTourController {
     }
 
     printDebug('This tour has been completed');
+  }
+
+  Future<void> _removedAllShownIntroductions(bool? force) async {
+    if (force == true) return;
+    if (force == false) {
+      _states.clear();
+    }
+
+    List<double> removedIndexes = [];
+    for (final state in _states.entries) {
+      final tour = state.value;
+      if (_introducedIndexes.contains(state.key)) {
+        removedIndexes.add(state.key);
+      } else {
+        final key = FeaturesTour._getPrefKey(pageName, tour);
+        final isShown = _prefs!.getBool(key);
+        if (isShown == true) {
+          removedIndexes.add(state.key);
+        }
+      }
+    }
+
+    for (final key in removedIndexes) {
+      _states.remove(key);
+    }
   }
 
   /// Show the predialog if possible.
