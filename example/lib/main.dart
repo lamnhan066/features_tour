@@ -6,30 +6,6 @@ import 'next_page.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
-    force: true,
-    // force: true,
-    // skipConfig: SkipConfig.copyWith(
-    //   text: 'SKIP >>>',
-    //   buttonStyle: TextButton.styleFrom(
-    //     shape: RoundedRectangleBorder(
-    //       side: const BorderSide(
-    //         color: Colors.blue,
-    //       ),
-    //       borderRadius: BorderRadius.circular(10),
-    //     ),
-    //   ),
-    // ),
-    // nextConfig: NextConfig.copyWith(
-    //   text: 'NEXT >>',
-    //   buttonStyle: TextButton.styleFrom(
-    //     shape: RoundedRectangleBorder(
-    //       side: const BorderSide(
-    //         color: Colors.blue,
-    //       ),
-    //       borderRadius: BorderRadius.circular(10),
-    //     ),
-    //   ),
-    // ),
     predialogConfig: PredialogConfig.copyWith(
       enabled: true,
     ),
@@ -61,7 +37,7 @@ class _MyAppState extends State<MyApp> {
       /// If true, it will force to start the tour even already shown.
       /// If false, it will force not to start the tour.
       /// Default is null (depends on the global config).
-      force: true,
+      // force: true,
 
       /// Show specific pre-dialog for this Page
       predialogConfig: PredialogConfig.copyWith(),
