@@ -1,3 +1,8 @@
+## 0.4.0
+
+* Change to BSD 3-Clause License.
+* Release to stable.
+
 ## 0.4.0-rc.2
 
 * Improves the Done button behavior when there is a new FeaturesTour is added.
