@@ -34,9 +34,6 @@ class _NextPageState extends State<NextPage> {
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
             ),
-            // introduceConfig: IntroduceConfig.copyWith(
-            // quadrantAlignment: QuadrantAlignment.bottom,
-            // ),
             nextConfig: NextConfig.copyWith(
               child: (onPressed) {
                 return ElevatedButton(
@@ -60,9 +57,6 @@ class _NextPageState extends State<NextPage> {
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
             ),
-            // introduceConfig: IntroduceConfig.copyWith(
-            // quadrantAlignment: QuadrantAlignment.bottom,
-            // ),
             childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
@@ -78,9 +72,6 @@ class _NextPageState extends State<NextPage> {
               'This is TextButton 3',
               style: TextStyle(color: Colors.white),
             ),
-            // introduceConfig: IntroduceConfig.copyWith(
-            // quadrantAlignment: QuadrantAlignment.bottom,
-            // ),
             childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
@@ -96,9 +87,6 @@ class _NextPageState extends State<NextPage> {
               'Go to the ThirdPage',
               style: TextStyle(color: Colors.white),
             ),
-            // introduceConfig: IntroduceConfig.copyWith(
-            // quadrantAlignment: QuadrantAlignment.bottom,
-            // ),
             childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
@@ -107,7 +95,7 @@ class _NextPageState extends State<NextPage> {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (_) => const ThirdPage()));
               },
-              child: const Text('TextButton 3'),
+              child: const Text('Third Page'),
             ),
             onPressed: () {
               Navigator.of(context)

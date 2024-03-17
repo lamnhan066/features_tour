@@ -6,6 +6,7 @@ import 'next_page.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
+    force: true,
     predialogConfig: PredialogConfig.copyWith(
       enabled: true,
     ),
@@ -121,9 +122,6 @@ class _MyAppState extends State<MyApp> {
               'This button will be shown after Button 1',
               style: TextStyle(color: Colors.white),
             ),
-            // introduceConfig: IntroduceConfig.copyWith(
-            // quadrantAlignment: QuadrantAlignment.bottom,
-            // ),
             child: Center(
               child: ElevatedButton(
                 onPressed: showDialogOnPressed,
@@ -151,7 +149,6 @@ class _MyAppState extends State<MyApp> {
           ),
           FeaturesTour(
             controller: tourController,
-            // key: GlobalKey(),
             index: 2,
             introduce: const Text(
               'This text will be shown inside the TextField',
@@ -208,10 +205,6 @@ class _MyAppState extends State<MyApp> {
                     'This is the Button 3',
                     style: TextStyle(color: Colors.white),
                   ),
-                  // introduceConfig: IntroduceConfig.copyWith(
-                  // alignment: Alignment.bottomLeft,
-                  // quadrantAlignment: QuadrantAlignment.top,
-                  // ),
                   onPressed: showDialogTimeoutOnPressed,
                   nextConfig: NextConfig.copyWith(
                     alignment: Alignment.centerRight,
@@ -233,10 +226,6 @@ class _MyAppState extends State<MyApp> {
                     'This is the Button 4',
                     style: TextStyle(color: Colors.white),
                   ),
-                  // introduceConfig: IntroduceConfig.copyWith(
-                  //   alignment: Alignment.bottomRight,
-                  // quadrantAlignment: QuadrantAlignment.top,
-                  // ),
                   onPressed: () async {},
                   nextConfig: NextConfig.copyWith(
                     alignment: Alignment.centerRight,
@@ -263,10 +252,6 @@ class _MyAppState extends State<MyApp> {
           'This is the last Button. Press to navigate to the NextPage >>',
           style: TextStyle(color: Colors.white),
         ),
-        // introduceConfig: IntroduceConfig.copyWith(
-        // alignment: Alignment.bottomRight,
-        // quadrantAlignment: QuadrantAlignment.top,
-        // ),
         skipConfig: SkipConfig.copyWith(
           enabled: false,
         ),

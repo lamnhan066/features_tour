@@ -33,9 +33,6 @@ class _ThirdPageState extends State<ThirdPage> {
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
             ),
-            // introduceConfig: IntroduceConfig.copyWith(
-            // quadrantAlignment: QuadrantAlignment.bottom,
-            // ),
             childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
@@ -51,9 +48,6 @@ class _ThirdPageState extends State<ThirdPage> {
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
             ),
-            // introduceConfig: IntroduceConfig.copyWith(
-            // quadrantAlignment: QuadrantAlignment.bottom,
-            // ),
             childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
@@ -65,26 +59,46 @@ class _ThirdPageState extends State<ThirdPage> {
           FeaturesTour(
             controller: tourController,
             index: 3,
+            waitForIndex: 4,
+            waitForTimeout: const Duration(seconds: 10),
             introduce: const Text(
-              'This is the last Button. Choose Finish to comback to the Home page.',
+              'There is another button that will appear in 5 seconds',
               style: TextStyle(color: Colors.white),
             ),
-            // introduceConfig: IntroduceConfig.copyWith(
-            // quadrantAlignment: QuadrantAlignment.bottom,
-            // ),
             childConfig: ChildConfig.copyWith(
               backgroundColor: Colors.white,
             ),
-            nextConfig: NextConfig.copyWith(text: 'Finish'),
-            skipConfig: SkipConfig.copyWith(enabled: false),
             child: TextButton(
               onPressed: () {},
               child: const Text('TextButton 3'),
             ),
-            onPressed: () {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            },
           ),
+          FutureBuilder<bool>(future: () async {
+            await Future.delayed(const Duration(seconds: 5));
+            return true;
+          }(), builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox();
+            }
+            return FeaturesTour(
+              controller: tourController,
+              index: 4,
+              introduce: const Text(
+                'This is the last Button. Choose Done to comback to the Home page.',
+                style: TextStyle(color: Colors.white),
+              ),
+              childConfig: ChildConfig.copyWith(
+                backgroundColor: Colors.white,
+              ),
+              child: TextButton(
+                onPressed: () {},
+                child: const Text('TextButton 4'),
+              ),
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+            );
+          }),
         ],
       ),
     );
