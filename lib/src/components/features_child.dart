@@ -17,7 +17,7 @@ class FeaturesChild extends StatefulWidget {
     required this.nextConfig,
     required this.done,
     required this.doneConfig,
-    required this.isEnd,
+    required this.isLastState,
     required this.introduce,
     required this.padding,
     this.alignment,
@@ -52,7 +52,7 @@ class FeaturesChild extends StatefulWidget {
   final DoneConfig doneConfig;
 
   /// Is this the final steps.
-  final bool isEnd;
+  final bool isLastState;
 
   /// Feature introduction widget, normally `Text`.
   final Widget introduce;
@@ -314,7 +314,7 @@ class _FeaturesChildState extends State<FeaturesChild>
               ),
 
               // Skip text widget.
-              if (!(widget.isEnd && widget.doneConfig.enabled) &&
+              if (!(widget.isLastState && widget.doneConfig.enabled) &&
                   widget.skipConfig.enabled)
                 Positioned.fill(
                   child: Align(
@@ -324,7 +324,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                 ),
 
               // Next text widget.
-              if (!(widget.isEnd && widget.doneConfig.enabled) &&
+              if (!(widget.isLastState && widget.doneConfig.enabled) &&
                   widget.nextConfig.enabled)
                 Positioned.fill(
                   child: Align(
@@ -334,7 +334,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                 ),
 
               // Done text widget.
-              if (widget.isEnd && widget.doneConfig.enabled)
+              if (widget.isLastState && widget.doneConfig.enabled)
                 Positioned.fill(
                   child: Align(
                     alignment: widget.doneConfig.alignment,

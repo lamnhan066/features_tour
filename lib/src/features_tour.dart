@@ -241,7 +241,7 @@ class FeaturesTour extends StatelessWidget {
 
   late final BuildContext _context;
 
-  Future<IntroduceResult> showIntroduce(bool isEnd) async {
+  Future<IntroduceResult> showIntroduce(bool isLastState) async {
     if (!enabled) return IntroduceResult.disabled;
 
     if (!_context.mounted) return IntroduceResult.notMounted;
@@ -321,7 +321,7 @@ class FeaturesTour extends StatelessWidget {
                     ),
             ),
           ),
-          isEnd: isEnd,
+          isLastState: isLastState,
           nextConfig: nextConfig,
           padding: introduceConfig.padding,
           alignment: introduceConfig.alignment,
