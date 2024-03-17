@@ -1,3 +1,9 @@
+## 0.4.1
+
+* The Done button doesn't show correctly when it's called by a `waitForIndex` introduction.
+* Automatically calculate the position of the introduce widget in QuadrantAlignment.top and bottom, so the `introduce` widget is always at the top/bottom center comparing to its `child`.
+* Update example.
+
 ## 0.4.0
 
 * Change to BSD 3-Clause License.
