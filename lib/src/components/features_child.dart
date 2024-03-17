@@ -117,11 +117,19 @@ class _FeaturesChildState extends State<FeaturesChild>
         if (widget.alignment != null) {
           alignment = widget.alignment!;
         } else {
-          alignment = switch (_calculateAlignmentHorizontal(rect!, size)) {
-            Alignment.centerLeft => Alignment.bottomLeft,
-            Alignment.centerRight => Alignment.bottomRight,
-            _ => Alignment.bottomCenter,
-          };
+          double dialogWidth = size.width.clamp(280, 400);
+          double left = rect!.topCenter.dx - dialogWidth / 2;
+          if (left < 0) {
+            alignment = Alignment.bottomLeft;
+            left = 0;
+          } else if (left + dialogWidth > size.width) {
+            alignment = Alignment.bottomRight;
+            left = size.width - dialogWidth;
+          } else {
+            alignment = Alignment.bottomCenter;
+          }
+          introduceRect =
+              Rect.fromLTWH(left, 0, dialogWidth, introduceRect.height);
         }
       case QuadrantAlignment.left:
         introduceRect = Rect.fromLTRB(0, 0, rect!.left, size.height);
@@ -151,11 +159,19 @@ class _FeaturesChildState extends State<FeaturesChild>
         if (widget.alignment != null) {
           alignment = widget.alignment!;
         } else {
-          alignment = switch (_calculateAlignmentHorizontal(rect!, size)) {
-            Alignment.centerLeft => Alignment.topLeft,
-            Alignment.centerRight => Alignment.topRight,
-            _ => Alignment.topCenter,
-          };
+          double dialogWidth = size.width.clamp(280, 400);
+          double left = rect!.topCenter.dx - dialogWidth / 2;
+          if (left < 0) {
+            alignment = Alignment.topLeft;
+            left = 0;
+          } else if (left + dialogWidth > size.width) {
+            alignment = Alignment.topRight;
+            left = size.width - dialogWidth;
+          } else {
+            alignment = Alignment.topCenter;
+          }
+          introduceRect =
+              Rect.fromLTWH(left, introduceRect.top, dialogWidth, size.height);
         }
       case QuadrantAlignment.inside:
         introduceRect = rect!;
@@ -183,19 +199,6 @@ class _FeaturesChildState extends State<FeaturesChild>
         _quadrantAlignment = QuadrantAlignment.bottom;
       }
     }
-  }
-
-  /// Calculate to get the prefer alignment for the `introduce` widget.
-  ///
-  /// For the `top` and `bottom` quadrant alignment.
-  Alignment _calculateAlignmentHorizontal(Rect rect, Size size) {
-    if (rect.left > size.width / 2) {
-      return Alignment.centerRight;
-    } else if (rect.right < size.width / 2) {
-      return Alignment.centerLeft;
-    }
-
-    return Alignment.center;
   }
 
   /// Calculate to get the prefer alignment for the `introduce` widget.
