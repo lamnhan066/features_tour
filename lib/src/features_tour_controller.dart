@@ -149,9 +149,10 @@ class FeaturesTourController {
       final FeaturesTour state;
 
       if (waitForIndexState == null) {
-        state = _popState();
+        state = _states.remove(_states.firstKey())!;
       } else {
         state = waitForIndexState;
+        _states.remove(waitForIndexState.index);
       }
 
       final waitForIndex = state.waitForIndex;
@@ -190,7 +191,10 @@ class FeaturesTourController {
       // ignore: use_build_context_synchronously
       await _waitForTransition(state._context);
 
-      final result = await state.showIntroduce(_states.isEmpty);
+      // If there is no state in queue and no index to wait for then it's
+      // the last state.
+      final isLastState = _states.isEmpty && waitForIndex == null;
+      final result = await state.showIntroduce(isLastState);
 
       switch (result) {
         case IntroduceResult.disabled:
@@ -202,7 +206,7 @@ class FeaturesTourController {
           break;
         case IntroduceResult.done:
         case IntroduceResult.next:
-          printDebug('   -> Move to next widget');
+          printDebug('   -> Move to the next widget');
           await _removeState(state, true);
           break;
         case IntroduceResult.skip:
@@ -381,10 +385,6 @@ class FeaturesTourController {
     }
 
     printDebug('Remove page: $pageName');
-  }
-
-  FeaturesTour _popState() {
-    return _states.remove(_states.firstKey())!;
   }
 
   /// Removes specific state of this page.
