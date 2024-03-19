@@ -220,7 +220,7 @@ void main() {
         ),
 
         /// Configuration for the `Done` text button.
-        doneConfig: NextConfig.copyWith(
+        doneConfig: DoneConfig.copyWith(
             text: 'DONE'
         ),
 
