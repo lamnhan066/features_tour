@@ -1,3 +1,7 @@
+## 0.4.1+1
+
+* Fix:  README typo. (Thanks @ashwinkey04)
+
 ## 0.4.1
 
 * The Done button doesn't show correctly when it's called by a `waitForIndex` introduction.
