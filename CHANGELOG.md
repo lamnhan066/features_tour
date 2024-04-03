@@ -1,3 +1,8 @@
+## 0.4.1+2
+
+* Update example.
+* Add a demo website using the example on README.
+
 ## 0.4.1+1
 
 * Fix:  README typo. (Thanks @ashwinkey04)

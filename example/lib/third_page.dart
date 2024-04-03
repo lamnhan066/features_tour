@@ -22,7 +22,7 @@ class _ThirdPageState extends State<ThirdPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Next Page'),
+        title: const Text('Third Page'),
       ),
       body: Column(
         children: [
@@ -62,7 +62,7 @@ class _ThirdPageState extends State<ThirdPage> {
             waitForIndex: 4,
             waitForTimeout: const Duration(seconds: 10),
             introduce: const Text(
-              'There is another button that will appear in 5 seconds',
+              'You need to wait for a `TextButton 4` to appear (in 5 secs) to complete this tour',
               style: TextStyle(color: Colors.white),
             ),
             childConfig: ChildConfig.copyWith(
@@ -84,7 +84,7 @@ class _ThirdPageState extends State<ThirdPage> {
               controller: tourController,
               index: 4,
               introduce: const Text(
-                'This is the last Button. Choose Done to comback to the Home page.',
+                'This is the last Button. Tap Done to comback to the Home page.',
                 style: TextStyle(color: Colors.white),
               ),
               childConfig: ChildConfig.copyWith(

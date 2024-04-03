@@ -4,7 +4,7 @@ Features Tour is a package that enables you to easily create tours to introduce 
 
 ## Introduction
 
-![Alt Text](https://raw.githubusercontent.com/lamnhan066/features_tour/main/assets/intro.webp)
+Demo: [pub.lamnhan.dev/features_tour](https://pub.lamnhan.dev/features_tour)
 
 ## Usage
 
