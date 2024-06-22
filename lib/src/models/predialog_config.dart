@@ -44,7 +44,7 @@ class PredialogConfig {
   /// [content] is the content, default is "This page has some new features that you might want to discover.\n\nWould you like to take a tour?".
   final String content;
 
-  /// [applyToAllPagesText] is the text for doNotAskAgain checkbox.
+  /// [applyToAllPagesText] is the text for the apply to all pages checkbox. Default is 'Apply to all pages'.
   final String applyToAllPagesText;
 
   /// Accept the action.
@@ -80,7 +80,7 @@ class PredialogConfig {
   ///
   /// [content] is the content, default is "This page has some new features that you might want to discover.\n\nWould you like to take a tour?".
   ///
-  /// [applyToAllPagesText] is the text for applyToAllPages checkbox. Default is 'Do not ask again this time'.
+  /// [applyToAllPagesText] is the text for the apply to all pages checkbox. Default is 'Apply to all pages'.
   ///
   /// [acceptButtonText] Accept the action.
   ///
