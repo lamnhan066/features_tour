@@ -1,3 +1,7 @@
+## 0.4.2
+
+* Avoid text overflowing for the `applyToAllPagesText` in the pre-dialog by using `FittedBox`.
+
 ## 0.4.1+2
 
 * Update example.
