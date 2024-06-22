@@ -32,52 +32,55 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
             const EdgeInsets.only(bottom: 8, top: 20, left: 24, right: 24),
         content: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               config.content,
               style: TextStyle(color: config.textColor, fontSize: 13.5),
             ),
             const SizedBox(height: 20),
-            StatefulBuilder(
-              builder: (context, setState) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Checkbox(
-                        // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        value: checkbox,
-                        side: BorderSide(color: config.textColor, width: 1.5),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              checkbox = value;
-                            });
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    GestureDetector(
-                      child: Text(
-                        config.applyToAllPagesText,
-                        style: TextStyle(
-                          color: config.textColor,
-                          fontSize: 12,
+            FittedBox(
+              alignment: Alignment.centerLeft,
+              child: StatefulBuilder(
+                builder: (context, setState) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Checkbox(
+                          value: checkbox,
+                          side: BorderSide(color: config.textColor, width: 1.5),
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                checkbox = value;
+                              });
+                            }
+                          },
                         ),
                       ),
-                      onTap: () {
-                        setState(() {
-                          checkbox = !checkbox;
-                        });
-                      },
-                    ),
-                  ],
-                );
-              },
+                      const SizedBox(width: 6),
+                      GestureDetector(
+                        child: Text(
+                          config.applyToAllPagesText,
+                          style: TextStyle(
+                            color: config.textColor,
+                            fontSize: 12,
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            checkbox = !checkbox;
+                          });
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ],
         ),
