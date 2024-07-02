@@ -252,7 +252,7 @@ class FeaturesTour extends StatelessWidget {
     final nextConfig = this.nextConfig ?? NextConfig.global;
     final doneConfig = this.doneConfig ?? DoneConfig.global;
 
-    final result = await showDialog<IntroduceResult>(
+    var result = await showDialog<IntroduceResult>(
       context: _context,
       barrierDismissible: childConfig.barrierDismissible,
       useSafeArea: false,
@@ -345,9 +345,8 @@ class FeaturesTour extends StatelessWidget {
       },
     );
 
-    if (result == null) {
-      return IntroduceResult.notMounted;
-    }
+    /// Closed by the `barrierDismissible`.
+    result ??= IntroduceResult.next;
 
     if (onPressed != null) {
       Future<void> callOnPressed() async {
