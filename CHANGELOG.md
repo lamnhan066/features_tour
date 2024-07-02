@@ -1,3 +1,7 @@
+## 0.4.3
+
+* Fixed an issue caused `barrierDismissible` in the ChildConfig doesn't work properly.
+
 ## 0.4.2
 
 * Avoid text overflowing for the `applyToAllPagesText` in the pre-dialog by using `FittedBox`.
