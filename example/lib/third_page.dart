@@ -33,7 +33,7 @@ class _ThirdPageState extends State<ThirdPage> {
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
             ),
-            childConfig: ChildConfig.copyWith(
+            childConfig: ChildConfig(
               backgroundColor: Colors.white,
             ),
             child: TextButton(
@@ -48,7 +48,7 @@ class _ThirdPageState extends State<ThirdPage> {
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
             ),
-            childConfig: ChildConfig.copyWith(
+            childConfig: ChildConfig(
               backgroundColor: Colors.white,
             ),
             child: TextButton(
@@ -65,7 +65,7 @@ class _ThirdPageState extends State<ThirdPage> {
               'You need to wait for a `TextButton 4` to appear (in 5 secs) to complete this tour',
               style: TextStyle(color: Colors.white),
             ),
-            childConfig: ChildConfig.copyWith(
+            childConfig: ChildConfig(
               backgroundColor: Colors.white,
             ),
             child: TextButton(
@@ -87,7 +87,7 @@ class _ThirdPageState extends State<ThirdPage> {
                 'This is the last Button. Tap Done to comback to the Home page.',
                 style: TextStyle(color: Colors.white),
               ),
-              childConfig: ChildConfig.copyWith(
+              childConfig: ChildConfig(
                 backgroundColor: Colors.white,
               ),
               child: TextButton(

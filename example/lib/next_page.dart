@@ -29,7 +29,7 @@ class _SecondPageState extends State<SecondPage> {
       // force: true,
 
       /// Show specific pre-dialog for this Page
-      predialogConfig: PredialogConfig.copyWith(),
+      predialogConfig: PredialogConfig(),
     );
 
     super.initState();
@@ -52,7 +52,7 @@ class _SecondPageState extends State<SecondPage> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              childConfig: ChildConfig.copyWith(backgroundColor: Colors.white),
+              childConfig: ChildConfig(backgroundColor: Colors.white),
               onPressed: () => Navigator.pop(context),
               child: const Text('This is a introduction field'),
             ),
@@ -79,7 +79,7 @@ class _SecondPageState extends State<SecondPage> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              childConfig: ChildConfig.copyWith(backgroundColor: Colors.white),
+              childConfig: ChildConfig(backgroundColor: Colors.white),
               onPressed: () => Navigator.pop(context),
               child: const Text(
                   'This widget will be not introduced because of the timeout'),
@@ -124,7 +124,7 @@ class _SecondPageState extends State<SecondPage> {
               'This button will show first',
               style: TextStyle(color: Colors.white),
             ),
-            introduceConfig: IntroduceConfig.copyWith(
+            introduceConfig: IntroduceConfig(
                 // quadrantAlignment: QuadrantAlignment.bottom,
                 ),
             child: Center(
@@ -142,10 +142,10 @@ class _SecondPageState extends State<SecondPage> {
               'This text will be shown inside the TextField',
               style: TextStyle(color: Colors.black),
             ),
-            introduceConfig: IntroduceConfig.copyWith(
+            introduceConfig: IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.inside,
             ),
-            childConfig: ChildConfig.copyWith(
+            childConfig: ChildConfig(
               backgroundColor: Colors.white,
               zoomScale: 1.05,
             ),
@@ -165,7 +165,7 @@ class _SecondPageState extends State<SecondPage> {
               'FeaturesTours inside a FeaturesTour',
               style: TextStyle(color: Colors.white),
             ),
-            childConfig: ChildConfig.copyWith(
+            childConfig: ChildConfig(
               child: (child) => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -198,10 +198,10 @@ class _SecondPageState extends State<SecondPage> {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: showDialogTimeoutOnPressed,
-                  nextConfig: NextConfig.copyWith(
+                  nextConfig: NextConfig(
                     alignment: Alignment.centerRight,
                   ),
-                  skipConfig: SkipConfig.copyWith(
+                  skipConfig: SkipConfig(
                     alignment: Alignment.centerLeft,
                   ),
                   child: Center(
@@ -219,10 +219,10 @@ class _SecondPageState extends State<SecondPage> {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () async {},
-                  nextConfig: NextConfig.copyWith(
+                  nextConfig: NextConfig(
                     alignment: Alignment.centerRight,
                   ),
-                  skipConfig: SkipConfig.copyWith(
+                  skipConfig: SkipConfig(
                     alignment: Alignment.centerLeft,
                   ),
                   child: Center(
@@ -244,13 +244,13 @@ class _SecondPageState extends State<SecondPage> {
           'This is the last Button. Press to navigate to the Third Page >>',
           style: TextStyle(color: Colors.white),
         ),
-        skipConfig: SkipConfig.copyWith(
+        skipConfig: SkipConfig(
           enabled: false,
         ),
-        nextConfig: NextConfig.copyWith(
+        nextConfig: NextConfig(
           enabled: false,
         ),
-        doneConfig: DoneConfig.copyWith(
+        doneConfig: DoneConfig(
           enabled: false,
         ),
         onPressed: () {

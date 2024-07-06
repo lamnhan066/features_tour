@@ -6,7 +6,7 @@ import 'next_page.dart';
 void main() {
   FeaturesTour.setGlobalConfig(
     force: true,
-    predialogConfig: PredialogConfig.copyWith(
+    predialogConfig: PredialogConfig(
       enabled: true,
     ),
     debugLog: true,
@@ -49,7 +49,7 @@ class _AppState extends State<App> {
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
             ),
-            nextConfig: NextConfig.copyWith(
+            nextConfig: NextConfig(
               child: (onPressed) {
                 return ElevatedButton(
                   onPressed: onPressed,
@@ -57,7 +57,7 @@ class _AppState extends State<App> {
                 );
               },
             ),
-            childConfig: ChildConfig.copyWith(
+            childConfig: ChildConfig(
               backgroundColor: Colors.white,
             ),
             child: TextButton(
@@ -74,7 +74,7 @@ class _AppState extends State<App> {
                 'This is TextButton 2',
                 style: TextStyle(color: Colors.white),
               ),
-              childConfig: ChildConfig.copyWith(
+              childConfig: ChildConfig(
                 backgroundColor: Colors.white,
               ),
               child: TextButton(
@@ -92,7 +92,7 @@ class _AppState extends State<App> {
                 'This is TextButton 3',
                 style: TextStyle(color: Colors.white),
               ),
-              childConfig: ChildConfig.copyWith(
+              childConfig: ChildConfig(
                 backgroundColor: Colors.white,
               ),
               child: TextButton(
@@ -110,14 +110,14 @@ class _AppState extends State<App> {
                   'Go to the Second Page (A more complicated tour)',
                   style: TextStyle(color: Colors.white),
                 ),
-                childConfig: ChildConfig.copyWith(
+                childConfig: ChildConfig(
                   backgroundColor: Colors.white,
                 ),
                 onPressed: () {
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => const SecondPage()));
                 },
-                doneConfig: DoneConfig.copyWith(text: 'Second Page'),
+                doneConfig: DoneConfig(text: 'Second Page'),
                 child: TextButton(
                   onPressed: () {
                     Navigator.of(context).push(

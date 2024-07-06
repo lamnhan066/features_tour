@@ -15,7 +15,7 @@ class _MainDrawerState extends State<MainDrawer> {
   void initState() {
     tourController.start(
       context,
-      predialogConfig: PredialogConfig.copyWith(enabled: false),
+      predialogConfig: PredialogConfig(enabled: false),
     );
     super.initState();
   }
@@ -31,7 +31,7 @@ class _MainDrawerState extends State<MainDrawer> {
             'This text will be shown on the Drawer',
             style: TextStyle(color: Colors.white),
           ),
-          childConfig: ChildConfig.copyWith(
+          childConfig: ChildConfig(
             isAnimateChild: true,
           ),
           child: ElevatedButton(
