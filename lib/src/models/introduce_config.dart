@@ -40,7 +40,7 @@ class IntroduceConfig {
   /// [alignment] is the alignmnent of the `introduce` widget in side `quarantAlignment`.
   /// This value automatically aligns depending on the `quadrantAlignment`.
   /// Make it as close as possible to other.
-  factory IntroduceConfig.copyWith({
+  factory IntroduceConfig({
     Color? backgroundColor,
     EdgeInsetsGeometry? padding,
     QuadrantAlignment? quadrantAlignment,
@@ -53,6 +53,27 @@ class IntroduceConfig {
       quadrantAlignment: quadrantAlignment,
     );
   }
+
+  /// Create a new IntroduceConfig base on [global] values.
+  ///
+  /// [backgroundColor] is the color of the background. Default is `Colors.black87`.
+  ///
+  /// [padding] is the padding of the `introduce` widget. Default is `EdgeInsets.all(20.0)`.
+  ///
+  /// [quadrantAlignment] is the quadrant rectangle for `introduce` widget.
+  /// Default is `QuadrantAlignment.top`. Means the `introduce` widget will
+  /// show at the top of the main `child`.
+  ///
+  /// [alignment] is the alignmnent of the `introduce` widget in side `quarantAlignment`.
+  /// This value automatically aligns depending on the `quadrantAlignment`.
+  /// Make it as close as possible to other.
+  @Deprecated('Use `IntroduceConfig` instead.')
+  factory IntroduceConfig.copyWith({
+    Color? backgroundColor,
+    EdgeInsetsGeometry? padding,
+    QuadrantAlignment? quadrantAlignment,
+    Alignment? alignment,
+  }) = IntroduceConfig;
 
   /// Create a new IntroduceConfig base on this values.
   IntroduceConfig copyWith({

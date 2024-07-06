@@ -99,6 +99,68 @@ class PredialogConfig {
   /// [backgroundColor] is the background color of the dialog. Default is Colors.white.
   ///
   /// [textColor] is the color of all the text. Default is Colors.black.
+  factory PredialogConfig({
+    bool? enabled,
+    FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
+    Color? backgroundColor,
+    Color? textColor,
+    String? title,
+    String? applyToAllPagesText,
+    String? content,
+    Text? acceptButtonText,
+    ButtonStyle? acceptButtonStyle,
+    Text? laterButtonText,
+    ButtonStyle? laterButtonStyle,
+    Text? dismissButtonText,
+    ButtonStyle? dismissButtonStyle,
+    double? borderRadius,
+  }) {
+    return global.copyWith(
+      enabled: enabled,
+      modifiedDialogResult: modifiedDialogResult,
+      backgroundColor: backgroundColor,
+      textColor: textColor,
+      title: title,
+      applyToAllPagesText: applyToAllPagesText,
+      content: content,
+      acceptButtonText: acceptButtonText,
+      acceptButtonStyle: acceptButtonStyle,
+      laterButtonText: laterButtonText,
+      laterButtonStyle: laterButtonStyle,
+      dismissButtonText: dismissButtonText,
+      dismissButtonStyle: dismissButtonStyle,
+      borderRadius: borderRadius,
+    );
+  }
+
+  /// Create a new Predialog base on the [global] values.
+  ///
+  /// [enabled] to enable or disable the Predialog. Default is `true`.
+  ///
+  /// [title] is the title of the dialog, default is 'Introduction'.
+  ///
+  /// [content] is the content, default is "This page has some new features that you might want to discover.\n\nWould you like to take a tour?".
+  ///
+  /// [applyToAllPagesText] is the text for the apply to all pages checkbox. Default is 'Apply to all pages'.
+  ///
+  /// [acceptButtonText] Accept the action.
+  ///
+  /// [acceptButtonStyle] Style of the accept button [ElevatedButton].
+  ///
+  /// [laterButtonText] Ask again in the next time.
+  ///
+  /// [laterButtonStyle] Style of the later button [TextButton].
+  ///
+  /// [dismissButtonText] Do not show and don't ask again.
+  ///
+  /// [dismissButtonStyle] Style of the dismiss button [TextButton].
+  ///
+  /// [borderRadius] is the radius of the dialog border. Default is 12.
+  ///
+  /// [backgroundColor] is the background color of the dialog. Default is Colors.white.
+  ///
+  /// [textColor] is the color of all the text. Default is Colors.black.
+  @Deprecated('Use `PredialogConfig` instead.')
   factory PredialogConfig.copyWith({
     bool? enabled,
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
@@ -115,22 +177,7 @@ class PredialogConfig {
     ButtonStyle? dismissButtonStyle,
     double? borderRadius,
   }) =>
-      global.copyWith(
-        enabled: enabled,
-        modifiedDialogResult: modifiedDialogResult,
-        backgroundColor: backgroundColor,
-        textColor: textColor,
-        title: title,
-        applyToAllPagesText: applyToAllPagesText,
-        content: content,
-        acceptButtonText: acceptButtonText,
-        acceptButtonStyle: acceptButtonStyle,
-        laterButtonText: laterButtonText,
-        laterButtonStyle: laterButtonStyle,
-        dismissButtonText: dismissButtonText,
-        dismissButtonStyle: dismissButtonStyle,
-        borderRadius: borderRadius,
-      );
+      PredialogConfig as PredialogConfig;
 
   /// Create a new Predialog base on this values.
   PredialogConfig copyWith({
