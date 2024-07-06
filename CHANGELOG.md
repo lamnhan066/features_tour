@@ -1,3 +1,15 @@
+## 0.4.4
+
+* Rename and mark the old one as deprecated:
+  * `PredialogConfig.copyWith` to `PredialogConfig`.
+  * `ChildConfig.copyWith` to `ChildConfig`.
+  * `IntroduceConfig.copyWith` to `IntroduceConfig`.
+  * `NextConfig.copyWith` to `NextConfig`.
+  * `SkipConfig.copyWith` to `SkipConfig`.
+  * `DoneConfig.copyWith` to `DoneConfig`.
+* Improve the way to print the debug log.
+* Fix some TYPO.
+
 ## 0.4.3
 
 * Fixed an issue caused `barrierDismissible` in the ChildConfig doesn't work properly.
