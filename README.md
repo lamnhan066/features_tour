@@ -71,7 +71,7 @@ FeaturesTour(
     ),
 
     /// Where to place the `introduce` widget.
-    introduceConfig: IntroduceConfig.copyWith(
+    introduceConfig: IntroduceConfig(
         // Select the rectangle of the quadrant on the screen
         quadrantAlignment: QuadrantAlignment.bottom,
         // Alignment of the `introduce` widget in the quadrant rectangle
@@ -79,7 +79,7 @@ FeaturesTour(
     ),
 
     /// Config for the next button, this button will move to the next widget base on its' index.
-    nextConfig: NextConfig.copyWith(
+    nextConfig: NextConfig(
         // Use the default `Elevated` button with this text.
         text: 'NEXT',
 
@@ -91,7 +91,7 @@ FeaturesTour(
     ),
 
     /// Config for the skip button. This button will skip the current tour.
-    skipConfig: SkipConfig.copyWith(
+    skipConfig: SkipConfig(
         // Use the default `Elevated` button with this text.
         text: 'SKIP',
 
@@ -103,7 +103,7 @@ FeaturesTour(
     ),
 
     /// Config for the done button. This button will be shown on the last introduction.
-    doneConfig: DoneConfig.copyWith(
+    doneConfig: DoneConfig(
         // Use the default `Elevated` button with this text.
         text: 'DONE',
 
@@ -115,14 +115,14 @@ FeaturesTour(
     ),
 
     /// Config for the pre-dialog, it will show before the tours to ask the permission.
-    predialogConfig: PredialogConfig.copyWith(
+    predialogConfig: PredialogConfig(
       enabled: true,
       // You can add your own dialog here. All others parameters will be ignored when using this method.
       modifiedDialogResult: (context) => showDialog<bool>(context: context, builder: builder),
     ),
 
     /// Config for the fake child widget. This fake child is default to original `child`.
-    childConfig: ChildConfig.copyWith(
+    childConfig: ChildConfig(
         child: (child) => TextButton(
             onPressed: () {},
             child: const Text('A fake button 1'),
@@ -182,7 +182,7 @@ void initState() {
       force: false,
 
       /// Show specific pre-dialog for this Page
-      predialogConfig: PredialogConfig.copyWith(),
+      predialogConfig: PredialogConfig(),
     );
 ```
 
@@ -205,27 +205,27 @@ void main() {
         force: null,
 
         /// Configuration for the `child` widget.
-        childConfig: ChildConfig.copyWith(
+        childConfig: ChildConfig(
             backgroundColor: Colors.white,
         ),
 
         /// Configuration for the `Skip` text button.
-        skipConfig: SkipConfig.copyWith(
+        skipConfig: SkipConfig(
             text: 'SKIP',
         ),
 
         /// Configuration for the `Next` text button.
-        nextConfig: NextConfig.copyWith(
+        nextConfig: NextConfig(
             text: 'NEXT'
         ),
 
         /// Configuration for the `Done` text button.
-        doneConfig: DoneConfig.copyWith(
+        doneConfig: DoneConfig(
             text: 'DONE'
         ),
 
         /// Configuration for the `introduce` widget, can know as the description.
-        introduceConfig: IntroduceConfig.copyWith(
+        introduceConfig: IntroduceConfig(
             backgroundColor: Colors.black,
         ),
     );
@@ -244,7 +244,7 @@ If you want to use `FeaturesTour`s inside a `FeaturesTour`, you need to clone th
 FeaturesTour(
     controller: tourController,
     index: 1,
-    childConfig: ChildConfig.copyWith(
+    childConfig: ChildConfig(
         child: (child) => Row(
             children: [
                 Center(
