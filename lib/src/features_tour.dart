@@ -111,7 +111,7 @@ class FeaturesTour extends StatelessWidget {
     for (final controller in _controllers) {
       await controller._removePage(markAsShowed: markAsShowed);
     }
-    printDebug('All pages has been removed');
+    printDebug(() => 'All pages has been removed');
   }
 
   /// Get key for shared preferences.

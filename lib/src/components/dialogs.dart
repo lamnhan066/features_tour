@@ -11,7 +11,7 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
   // If `_dontAskAgainResult` is not null, the `doNotAksAgain` is checked
   // so just return the result.
   if (_applyToAllPages != null) {
-    printDebug(
+    printDebug(() =>
         'Apply to all screens is checked in the previous dialog, return previous result: $_applyToAllPages');
     return _applyToAllPages;
   }
@@ -118,12 +118,12 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
   // If the dontAskAgain checkbox is checked, the global configuration will be
   // updated.
   if (checkbox) {
-    printDebug(
+    printDebug(() =>
         'applyToAllPages checkbox is checked => Update global predialog configuration');
     _applyToAllPages = result;
 
     if (result == null) {
-      printDebug('All pages will be disabled to show introduction');
+      printDebug(() => 'All pages will be disabled to show introduction');
 
       // TODO: Find another way to dismiss and apply to all. Current: all the FeaturesTour even a new one will be all dismissed.
       SharedPrefs.setDismissAllTours(true);

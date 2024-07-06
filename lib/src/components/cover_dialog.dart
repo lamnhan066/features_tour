@@ -8,7 +8,7 @@ DialogRoute? _coverDialog;
 void showCover(BuildContext context) {
   if (!context.mounted) {
     printDebug(
-        'Cannot show the cover because the build context is not mounted');
+        () => 'Cannot show the cover because the build context is not mounted');
     return;
   }
 
@@ -34,7 +34,7 @@ void showCover(BuildContext context) {
 void hideCover(BuildContext context) {
   if (!context.mounted) {
     printDebug(
-        'Cannot hide the cover because the build context is not mounted');
+        () => 'Cannot hide the cover because the build context is not mounted');
     return;
   }
   if (_coverDialog != null) {
