@@ -77,7 +77,7 @@ class FeaturesTour extends StatelessWidget {
     /// Configuration of the [introduce] widget. Default is [IntroduceConfig.global].
     IntroduceConfig? introduceConfig,
 
-    /// Configuration of the predialog widget. Default is [PredialogConfig.global
+    /// Configuration of the predialog widget. Default is [PredialogConfig.global].
     PredialogConfig? predialogConfig,
 
     /// Configuration of the skip button. Default is [SkipConfig.global].
