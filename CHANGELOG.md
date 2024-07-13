@@ -1,3 +1,7 @@
+## 0.4.5
+
+* Replace the `showDialog` with the `Overlay` to avoid hiding the keyboard.
+
 ## 0.4.4
 
 * Rename and mark the old one as deprecated:
