@@ -85,11 +85,6 @@ class FeaturesTourController {
             '${''.padRight(25 - (addBlank.length / 2).round(), '=')}');
     printDebug(() => ''.padLeft(50, '='));
 
-    if (_states.isEmpty) {
-      printDebug(() => 'The page $pageName has no state');
-      return;
-    }
-
     // ignore: use_build_context_synchronously
     if (!context.mounted) {
       printDebug(() => 'The page $pageName context is not mounted');
@@ -103,6 +98,11 @@ class FeaturesTourController {
 
     // Wait for `delay` duration before starting the tours.
     await Future.delayed(delay);
+
+    if (_states.isEmpty && waitForFirstIndex == null) {
+      printDebug(() => 'The page $pageName has no state');
+      return;
+    }
 
     // Get default value from global `force`.
     force ??= FeaturesTour._force;
