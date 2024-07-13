@@ -252,101 +252,119 @@ class FeaturesTour extends StatelessWidget {
     final nextConfig = this.nextConfig ?? NextConfig.global;
     final doneConfig = this.doneConfig ?? DoneConfig.global;
 
-    var result = await showDialog<IntroduceResult>(
-      context: _context,
-      barrierDismissible: childConfig.barrierDismissible,
-      useSafeArea: false,
-      barrierColor: introduceConfig.backgroundColor,
-      builder: (ctx) {
-        return FeaturesChild(
-          globalKey: key as GlobalKey,
-          childConfig: childConfig,
-          introduce: introduce,
-          skip: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: skipConfig.child != null
-                  ? skipConfig
-                      .child!(() => Navigator.pop(ctx, IntroduceResult.skip))
-                  : ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(ctx, IntroduceResult.skip);
-                      },
-                      style: skipConfig.buttonStyle,
-                      child: Text(
-                        skipConfig.text,
-                        style: skipConfig.textStyle ??
-                            TextStyle(color: skipConfig.color),
+    final completer = Completer<IntroduceResult?>();
+    late OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(builder: (ctx) {
+      return GestureDetector(
+        onTap: childConfig.barrierDismissible
+            ? () {
+                completer.complete(null);
+                overlayEntry.remove();
+              }
+            : null,
+        child: Material(
+          color: introduceConfig.backgroundColor,
+          child: FeaturesChild(
+            globalKey: key as GlobalKey,
+            childConfig: childConfig,
+            introduce: introduce,
+            skip: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: skipConfig.child != null
+                    ? skipConfig.child!(() {
+                        completer.complete(IntroduceResult.skip);
+                        overlayEntry.remove();
+                      })
+                    : ElevatedButton(
+                        onPressed: () {
+                          completer.complete(IntroduceResult.skip);
+                          overlayEntry.remove();
+                        },
+                        style: skipConfig.buttonStyle,
+                        child: Text(
+                          skipConfig.text,
+                          style: skipConfig.textStyle ??
+                              TextStyle(color: skipConfig.color),
+                        ),
                       ),
-                    ),
+              ),
             ),
-          ),
-          skipConfig: skipConfig,
-          next: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: nextConfig.child != null
-                  ? nextConfig
-                      .child!(() => Navigator.pop(ctx, IntroduceResult.next))
-                  : ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(ctx, IntroduceResult.next);
-                      },
-                      style: nextConfig.buttonStyle,
-                      child: Text(
-                        nextConfig.text,
-                        style: nextConfig.textStyle ??
-                            TextStyle(color: nextConfig.color),
+            skipConfig: skipConfig,
+            next: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: nextConfig.child != null
+                    ? nextConfig.child!(() {
+                        completer.complete(IntroduceResult.next);
+                        overlayEntry.remove();
+                      })
+                    : ElevatedButton(
+                        onPressed: () {
+                          completer.complete(IntroduceResult.next);
+                          overlayEntry.remove();
+                        },
+                        style: nextConfig.buttonStyle,
+                        child: Text(
+                          nextConfig.text,
+                          style: nextConfig.textStyle ??
+                              TextStyle(color: nextConfig.color),
+                        ),
                       ),
-                    ),
+              ),
             ),
-          ),
-          doneConfig: doneConfig,
-          done: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: doneConfig.child != null
-                  ? doneConfig
-                      .child!(() => Navigator.pop(ctx, IntroduceResult.done))
-                  : ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(ctx, IntroduceResult.done);
-                      },
-                      style: doneConfig.buttonStyle,
-                      child: Text(
-                        doneConfig.text,
-                        style: doneConfig.textStyle ??
-                            TextStyle(color: doneConfig.color),
+            doneConfig: doneConfig,
+            done: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: doneConfig.child != null
+                    ? doneConfig.child!(() {
+                        completer.complete(IntroduceResult.done);
+                        overlayEntry.remove();
+                      })
+                    : ElevatedButton(
+                        onPressed: () {
+                          completer.complete(IntroduceResult.done);
+                          overlayEntry.remove();
+                        },
+                        style: doneConfig.buttonStyle,
+                        child: Text(
+                          doneConfig.text,
+                          style: doneConfig.textStyle ??
+                              TextStyle(color: doneConfig.color),
+                        ),
                       ),
-                    ),
+              ),
             ),
-          ),
-          isLastState: isLastState,
-          nextConfig: nextConfig,
-          padding: introduceConfig.padding,
-          alignment: introduceConfig.alignment,
-          quadrantAlignment: introduceConfig.quadrantAlignment,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pop(ctx, IntroduceResult.next);
-            },
-            child: Material(
-              color: childConfig.backgroundColor,
-              type: MaterialType.canvas,
-              child: AbsorbPointer(
-                absorbing: true,
-                child: childConfig.child == null
-                    ? child
-                    : childConfig.child!(child),
+            isLastState: isLastState,
+            nextConfig: nextConfig,
+            padding: introduceConfig.padding,
+            alignment: introduceConfig.alignment,
+            quadrantAlignment: introduceConfig.quadrantAlignment,
+            child: GestureDetector(
+              onTap: () {
+                completer.complete(IntroduceResult.next);
+                overlayEntry.remove();
+              },
+              child: Material(
+                color: childConfig.backgroundColor,
+                type: MaterialType.canvas,
+                child: AbsorbPointer(
+                  absorbing: true,
+                  child: childConfig.child == null
+                      ? child
+                      : childConfig.child!(child),
+                ),
               ),
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
+    Overlay.of(_context).insert(overlayEntry);
 
     /// Closed by the `barrierDismissible`.
-    result ??= IntroduceResult.next;
+    final result = (await completer.future) ?? IntroduceResult.next;
 
     if (onPressed != null) {
       Future<void> callOnPressed() async {

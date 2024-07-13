@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../features_tour.dart';
@@ -17,13 +19,12 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
   }
 
   bool checkbox = false;
-  final result = await showDialog<bool>(
-    context: context,
-    barrierDismissible: false,
-    useSafeArea: false,
-    barrierColor: Colors.black54,
-    builder: (ctx) {
-      return AlertDialog(
+  final completer = Completer<bool?>();
+  late OverlayEntry overlayEntry;
+  overlayEntry = OverlayEntry(builder: (context) {
+    return Material(
+      color: Colors.black54,
+      child: AlertDialog(
         title: Text(
           config.title,
           style: TextStyle(color: config.textColor),
@@ -91,29 +92,35 @@ Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
         actions: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context, true);
+              completer.complete(true);
+              overlayEntry.remove();
             },
             style: config.acceptButtonStyle,
             child: config.acceptButtonText,
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context, false);
+              completer.complete(false);
+              overlayEntry.remove();
             },
             style: config.laterButtonStyle,
             child: config.laterButtonText,
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context, null);
+              completer.complete(null);
+              overlayEntry.remove();
             },
             style: config.dismissButtonStyle,
             child: config.dismissButtonText,
           ),
         ],
-      );
-    },
-  );
+      ),
+    );
+  });
+  Overlay.of(context).insert(overlayEntry);
+
+  final result = await completer.future;
 
   // If the dontAskAgain checkbox is checked, the global configuration will be
   // updated.
