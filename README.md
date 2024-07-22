@@ -28,10 +28,7 @@ FeaturesTour(
     index: 0,
 
     /// Introduction of this widget (Known as the description of the feature)
-    introduce: const Text(
-        'This is TextButton 1',
-        style: TextStyle(color: Colors.white),
-    ),
+    introduce: const Text('This is TextButton 1'),
 
     /// This is the real widget
     child: TextButton(
@@ -65,10 +62,7 @@ FeaturesTour(
     },
 
     /// Introduction of this widget (Known as the description of the feature)
-    introduce: const Text(
-        'This is TextButton 1',
-        style: TextStyle(color: Colors.white),
-    ),
+    introduce: const Text('This is TextButton 1'),
 
     /// Where to place the `introduce` widget.
     introduceConfig: IntroduceConfig(

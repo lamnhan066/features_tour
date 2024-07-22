@@ -1,3 +1,9 @@
+## 0.4.6
+
+* The `shapeBorder` of the `ChildConfig` now works correctly.
+* Auto apply the dark theme to the `introduce` widget with the `applyDarkTheme` parameter in the `IntroduceConfig`.
+* Add a border to the outter child widget.
+
 ## 0.4.5
 
 * Replace the `showDialog` with the `Overlay` to avoid hiding the keyboard.
