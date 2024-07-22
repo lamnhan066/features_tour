@@ -265,6 +265,8 @@ class _FeaturesChildState extends State<FeaturesChild>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return rect == null
         ? const Center(child: CircularProgressIndicator())
         : Stack(
@@ -276,11 +278,16 @@ class _FeaturesChildState extends State<FeaturesChild>
                   scale: scale,
                   curve: widget.childConfig.curve,
                   duration: widget.childConfig.animationDuration,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: widget.childConfig.backgroundColor,
-                      borderRadius: widget.childConfig.borderRadius,
-                    ),
+                  child: Material(
+                    color: widget.childConfig.backgroundColor,
+                    shape: widget.childConfig.shapeBorder ??
+                        RoundedRectangleBorder(
+                          borderRadius: widget.childConfig.borderRadius,
+                          side: BorderSide(
+                            color: colorScheme.onSurface,
+                            width: 2,
+                          ),
+                        ),
                   ),
                 ),
               ),
