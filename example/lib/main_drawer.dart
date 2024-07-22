@@ -27,10 +27,7 @@ class _MainDrawerState extends State<MainDrawer> {
         child: FeaturesTour(
           controller: tourController,
           index: 0,
-          introduce: const Text(
-            'This text will be shown on the Drawer',
-            style: TextStyle(color: Colors.white),
-          ),
+          introduce: const Text('This text will be shown on the Drawer'),
           childConfig: ChildConfig(
             isAnimateChild: true,
           ),

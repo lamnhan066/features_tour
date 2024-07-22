@@ -9,10 +9,14 @@ void main() {
     predialogConfig: PredialogConfig(
       enabled: true,
     ),
+    childConfig: ChildConfig(isAnimateChild: false),
     debugLog: true,
   );
 
-  runApp(const MaterialApp(home: App()));
+  runApp(MaterialApp(
+    home: const App(),
+    theme: ThemeData.light(),
+  ));
 }
 
 class App extends StatefulWidget {
@@ -45,10 +49,7 @@ class _AppState extends State<App> {
           FeaturesTour(
             controller: tourController,
             index: 0,
-            introduce: const Text(
-              'This is TextButton 1',
-              style: TextStyle(color: Colors.white),
-            ),
+            introduce: const Text('This is TextButton 1'),
             nextConfig: NextConfig(
               child: (onPressed) {
                 return ElevatedButton(
@@ -56,9 +57,6 @@ class _AppState extends State<App> {
                   child: const Text('Modified Next'),
                 );
               },
-            ),
-            childConfig: ChildConfig(
-              backgroundColor: Colors.white,
             ),
             child: TextButton(
               onPressed: () {},
@@ -70,13 +68,7 @@ class _AppState extends State<App> {
             child: FeaturesTour(
               controller: tourController,
               index: 1,
-              introduce: const Text(
-                'This is TextButton 2',
-                style: TextStyle(color: Colors.white),
-              ),
-              childConfig: ChildConfig(
-                backgroundColor: Colors.white,
-              ),
+              introduce: const Text('This is TextButton 2'),
               child: TextButton(
                 onPressed: () {},
                 child: const Text('TextButton 2'),
@@ -88,13 +80,7 @@ class _AppState extends State<App> {
             child: FeaturesTour(
               controller: tourController,
               index: 2,
-              introduce: const Text(
-                'This is TextButton 3',
-                style: TextStyle(color: Colors.white),
-              ),
-              childConfig: ChildConfig(
-                backgroundColor: Colors.white,
-              ),
+              introduce: const Text('This is TextButton 3'),
               child: TextButton(
                 onPressed: () {},
                 child: const Text('TextButton 3'),
@@ -108,10 +94,6 @@ class _AppState extends State<App> {
                 index: 3,
                 introduce: const Text(
                   'Go to the Second Page (A more complicated tour)',
-                  style: TextStyle(color: Colors.white),
-                ),
-                childConfig: ChildConfig(
-                  backgroundColor: Colors.white,
                 ),
                 onPressed: () {
                   Navigator.of(context).push(

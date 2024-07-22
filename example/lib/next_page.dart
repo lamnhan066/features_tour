@@ -52,7 +52,6 @@ class _SecondPageState extends State<SecondPage> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              childConfig: ChildConfig(backgroundColor: Colors.white),
               onPressed: () => Navigator.pop(context),
               child: const Text('This is a introduction field'),
             ),
@@ -79,7 +78,6 @@ class _SecondPageState extends State<SecondPage> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              childConfig: ChildConfig(backgroundColor: Colors.white),
               onPressed: () => Navigator.pop(context),
               child: const Text(
                   'This widget will be not introduced because of the timeout'),
@@ -101,52 +99,41 @@ class _SecondPageState extends State<SecondPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          FeaturesTour(
-            controller: tourController,
-            index: 1,
-            waitForIndex: 1.1,
-            onPressed: showDialogOnPressed,
-            introduce: const Text(
-              'This button will be shown after Button 1',
-              style: TextStyle(color: Colors.white),
-            ),
-            child: Center(
+          Center(
+            child: FeaturesTour(
+              controller: tourController,
+              index: 1,
+              waitForIndex: 1.1,
+              onPressed: showDialogOnPressed,
+              introduce: const Text('This button will be shown after Button 1'),
               child: ElevatedButton(
                 onPressed: showDialogOnPressed,
                 child: const Text('Show the dialog after 1 second'),
               ),
             ),
           ),
-          FeaturesTour(
-            controller: tourController,
-            index: 0,
-            introduce: const Text(
-              'This button will show first',
-              style: TextStyle(color: Colors.white),
-            ),
-            introduceConfig: IntroduceConfig(
-                // quadrantAlignment: QuadrantAlignment.bottom,
-                ),
-            child: Center(
+          Center(
+            child: FeaturesTour(
+              controller: tourController,
+              index: 0,
+              introduce: const Text('This button will show first'),
               child: ElevatedButton(
                 onPressed: () {},
                 child: const Text('Button 1'),
               ),
             ),
-            onPressed: () async {},
           ),
           FeaturesTour(
             controller: tourController,
             index: 2,
             introduce: const Text(
               'This text will be shown inside the TextField',
-              style: TextStyle(color: Colors.black),
             ),
             introduceConfig: IntroduceConfig(
               quadrantAlignment: QuadrantAlignment.inside,
+              applyDarkTheme: false,
             ),
             childConfig: ChildConfig(
-              backgroundColor: Colors.white,
               zoomScale: 1.05,
             ),
             child: Container(
@@ -163,7 +150,6 @@ class _SecondPageState extends State<SecondPage> {
             index: 2.5,
             introduce: const Text(
               'FeaturesTours inside a FeaturesTour',
-              style: TextStyle(color: Colors.white),
             ),
             childConfig: ChildConfig(
               child: (child) => Row(
@@ -193,10 +179,7 @@ class _SecondPageState extends State<SecondPage> {
                   controller: tourController,
                   index: 3,
                   waitForIndex: 3.1,
-                  introduce: const Text(
-                    'This is the Button 3',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  introduce: const Text('This is the Button 3'),
                   onPressed: showDialogTimeoutOnPressed,
                   nextConfig: NextConfig(
                     alignment: Alignment.centerRight,
@@ -214,10 +197,7 @@ class _SecondPageState extends State<SecondPage> {
                 FeaturesTour(
                   controller: tourController,
                   index: 4,
-                  introduce: const Text(
-                    'This is the Button 4',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  introduce: const Text('This is the Button 4'),
                   onPressed: () async {},
                   nextConfig: NextConfig(
                     alignment: Alignment.centerRight,
@@ -242,7 +222,6 @@ class _SecondPageState extends State<SecondPage> {
         index: 5,
         introduce: const Text(
           'This is the last Button. Press to navigate to the Third Page >>',
-          style: TextStyle(color: Colors.white),
         ),
         skipConfig: SkipConfig(
           enabled: false,

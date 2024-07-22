@@ -33,9 +33,6 @@ class _ThirdPageState extends State<ThirdPage> {
               'This is TextButton 1',
               style: TextStyle(color: Colors.white),
             ),
-            childConfig: ChildConfig(
-              backgroundColor: Colors.white,
-            ),
             child: TextButton(
               onPressed: () {},
               child: const Text('TextButton 1'),
@@ -47,9 +44,6 @@ class _ThirdPageState extends State<ThirdPage> {
             introduce: const Text(
               'This is TextButton 2',
               style: TextStyle(color: Colors.white),
-            ),
-            childConfig: ChildConfig(
-              backgroundColor: Colors.white,
             ),
             child: TextButton(
               onPressed: () {},
@@ -63,10 +57,6 @@ class _ThirdPageState extends State<ThirdPage> {
             waitForTimeout: const Duration(seconds: 10),
             introduce: const Text(
               'You need to wait for a `TextButton 4` to appear (in 5 secs) to complete this tour',
-              style: TextStyle(color: Colors.white),
-            ),
-            childConfig: ChildConfig(
-              backgroundColor: Colors.white,
             ),
             child: TextButton(
               onPressed: () {},
@@ -86,9 +76,6 @@ class _ThirdPageState extends State<ThirdPage> {
               introduce: const Text(
                 'This is the last Button. Tap Done to comback to the Home page.',
                 style: TextStyle(color: Colors.white),
-              ),
-              childConfig: ChildConfig(
-                backgroundColor: Colors.white,
               ),
               child: TextButton(
                 onPressed: () {},
