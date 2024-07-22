@@ -19,18 +19,23 @@ class ChildConfig {
   ///
   /// This color is useful for TextField, Text, TextButton,.. which does not
   /// have a background color.
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// Tap anywhere on the background to dismiss the current introduce. Default is
   /// set to `false`.
   final bool barrierDismissible;
 
-  /// Shape of border of the background. Default is Rectangle.
+  /// Shape of border of the background. Default is `RoundedRectangleBorder()`.
   ///
-  /// Something like: `RoundedRectangleBorder()`, `CircleBorder()`
+  /// Something like: `RoundedRectangleBorder()`, `CircleBorder()`.
+  ///
+  /// If this value is specified, the [borderRadius] will be ignored.
   final ShapeBorder? shapeBorder;
 
   /// Border radius of the background of the child. Default is `BorderRadius.all(12)`.
+  ///
+  /// This value will be ignored if the [shapeBorder] is specified.
+  @Deprecated('Use `shapeBorder` instead')
   final BorderRadiusGeometry borderRadius;
 
   /// Zoom scale of the `child` widget when show up on the instruction.
@@ -47,7 +52,7 @@ class ChildConfig {
     this.child,
     this.isAnimateChild = true,
     this.borderSizeInflate = 3,
-    this.backgroundColor = Colors.transparent,
+    this.backgroundColor,
     this.barrierDismissible = false,
     this.shapeBorder,
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
@@ -94,6 +99,7 @@ class ChildConfig {
     bool? barrierDismissible,
     ShapeBorder? shapeBorder,
     BorderRadiusGeometry? borderRadius,
+    @Deprecated('Use `shapeBorder` instead') Color? borderColor,
     double? zoomScale,
     Curve? curve,
     Duration? animationDuration,
@@ -150,7 +156,7 @@ class ChildConfig {
     Color? backgroundColor,
     bool? barrierDismissible,
     ShapeBorder? shapeBorder,
-    BorderRadiusGeometry? borderRadius,
+    @Deprecated('Use `shapeBorder` instead') BorderRadiusGeometry? borderRadius,
     double? zoomScale,
     Curve? curve,
     Duration? animationDuration,
@@ -164,7 +170,7 @@ class ChildConfig {
     Color? backgroundColor,
     bool? barrierDismissible,
     ShapeBorder? shapeBorder,
-    BorderRadiusGeometry? borderRadius,
+    @Deprecated('Use `shapeBorder` instead') BorderRadiusGeometry? borderRadius,
     double? zoomScale,
     Curve? curve,
     Duration? animationDuration,
