@@ -267,7 +267,15 @@ class FeaturesTour extends StatelessWidget {
           child: FeaturesChild(
             globalKey: key as GlobalKey,
             childConfig: childConfig,
-            introduce: introduce,
+            introduce: introduceConfig.applyDarkTheme
+                ? Theme(
+                    data: ThemeData.dark(),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: introduce,
+                    ),
+                  )
+                : introduce,
             skip: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -347,7 +355,7 @@ class FeaturesTour extends StatelessWidget {
                 overlayEntry.remove();
               },
               child: Material(
-                color: childConfig.backgroundColor,
+                color: Colors.transparent,
                 type: MaterialType.canvas,
                 child: AbsorbPointer(
                   absorbing: true,

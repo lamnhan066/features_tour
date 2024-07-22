@@ -20,59 +20,47 @@ class IntroduceConfig {
   /// Make it as close as possible to other.
   final Alignment? alignment;
 
+  /// Auto apply the dark theme to the `introduce` Widget.
+  ///
+  /// The `introduce` background color is usually a dark color ([Colors.black87]
+  /// by default), so the foreground widget is usually a light color (like white
+  /// text). So this value will force the foreground widget use the dark theme
+  /// to make it visible on the dark background.
+  final bool applyDarkTheme;
+
   const IntroduceConfig._({
     this.backgroundColor = Colors.black87,
     this.padding = const EdgeInsets.all(20.0),
     this.quadrantAlignment,
     this.alignment,
+    this.applyDarkTheme = true,
   });
 
   /// Create a new IntroduceConfig base on [global] values.
-  ///
-  /// [backgroundColor] is the color of the background. Default is `Colors.black87`.
-  ///
-  /// [padding] is the padding of the `introduce` widget. Default is `EdgeInsets.all(20.0)`.
-  ///
-  /// [quadrantAlignment] is the quadrant rectangle for `introduce` widget.
-  /// Default is `QuadrantAlignment.top`. Means the `introduce` widget will
-  /// show at the top of the main `child`.
-  ///
-  /// [alignment] is the alignmnent of the `introduce` widget in side `quarantAlignment`.
-  /// This value automatically aligns depending on the `quadrantAlignment`.
-  /// Make it as close as possible to other.
   factory IntroduceConfig({
     Color? backgroundColor,
     EdgeInsetsGeometry? padding,
     QuadrantAlignment? quadrantAlignment,
     Alignment? alignment,
+    bool? applyDarkTheme,
   }) {
     return global.copyWith(
       backgroundColor: backgroundColor,
       padding: padding,
       alignment: alignment,
       quadrantAlignment: quadrantAlignment,
+      applyDarkTheme: applyDarkTheme,
     );
   }
 
   /// Create a new IntroduceConfig base on [global] values.
-  ///
-  /// [backgroundColor] is the color of the background. Default is `Colors.black87`.
-  ///
-  /// [padding] is the padding of the `introduce` widget. Default is `EdgeInsets.all(20.0)`.
-  ///
-  /// [quadrantAlignment] is the quadrant rectangle for `introduce` widget.
-  /// Default is `QuadrantAlignment.top`. Means the `introduce` widget will
-  /// show at the top of the main `child`.
-  ///
-  /// [alignment] is the alignmnent of the `introduce` widget in side `quarantAlignment`.
-  /// This value automatically aligns depending on the `quadrantAlignment`.
-  /// Make it as close as possible to other.
   @Deprecated('Use `IntroduceConfig` instead.')
   factory IntroduceConfig.copyWith({
     Color? backgroundColor,
     EdgeInsetsGeometry? padding,
     QuadrantAlignment? quadrantAlignment,
     Alignment? alignment,
+    bool? applyDarkTheme,
   }) = IntroduceConfig;
 
   /// Create a new IntroduceConfig base on this values.
@@ -82,12 +70,14 @@ class IntroduceConfig {
     Alignment? alignment,
     QuadrantAlignment? quadrantAlignment,
     Duration? animationDuration,
+    bool? applyDarkTheme,
   }) {
     return IntroduceConfig._(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       padding: padding ?? this.padding,
       alignment: alignment ?? this.alignment,
       quadrantAlignment: quadrantAlignment ?? this.quadrantAlignment,
+      applyDarkTheme: applyDarkTheme ?? this.applyDarkTheme,
     );
   }
 }
