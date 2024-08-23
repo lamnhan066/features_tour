@@ -1,3 +1,8 @@
+## 0.4.6+1
+
+* Improve pub score.
+* Small update for the example.
+
 ## 0.4.6
 
 * The `shapeBorder` of the `ChildConfig` now works correctly.
