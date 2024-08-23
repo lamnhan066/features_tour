@@ -37,54 +37,59 @@ class _SecondPageState extends State<SecondPage> {
 
   void showDialogOnPressed() {
     Future.delayed(const Duration(seconds: 1)).then((timer) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Show this dialog'),
-            content: FeaturesTour(
-              controller: tourController,
-              index: 1.1,
-              introduce: const Center(
-                child: Text(
-                  'This tour will wait for the dialog to be shown',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.center,
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Show this dialog'),
+              content: FeaturesTour(
+                controller: tourController,
+                index: 1.1,
+                introduce: const Center(
+                  child: Text(
+                    'This tour will wait for the dialog to be shown',
+                    style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
+                onPressed: () => Navigator.pop(context),
+                child: const Text('This is a introduction field'),
               ),
-              onPressed: () => Navigator.pop(context),
-              child: const Text('This is a introduction field'),
-            ),
-          );
-        },
-      );
+            );
+          },
+        );
+      }
     });
   }
 
   void showDialogTimeoutOnPressed() {
     Future.delayed(const Duration(seconds: 4)).then((timer) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Show this dialog'),
-            content: FeaturesTour(
-              controller: tourController,
-              index: 3.1,
-              introduce: const Center(
-                child: Text(
-                  'This tour will wait for the dialog to be shown',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.center,
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Show this dialog'),
+              content: FeaturesTour(
+                controller: tourController,
+                index: 3.1,
+                introduce: const Center(
+                  child: Text(
+                    'This tour will wait for the dialog to be shown',
+                    style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                    'This widget will not be shown after the `Show dialog timeout (4 seconds)` '
+                    'even when the `waitForIndex` is set because the `waitForTimeout` is reached.'),
               ),
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                  'This widget will be not introduced because of the timeout'),
-            ),
-          );
-        },
-      );
+            );
+          },
+        );
+      }
     });
   }
 

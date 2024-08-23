@@ -2,7 +2,7 @@ import 'package:features_tour/features_tour.dart';
 import 'package:flutter/material.dart';
 
 class ThirdPage extends StatefulWidget {
-  const ThirdPage({Key? key}) : super(key: key);
+  const ThirdPage({super.key});
 
   @override
   State<ThirdPage> createState() => _ThirdPageState();
