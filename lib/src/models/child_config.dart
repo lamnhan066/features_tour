@@ -29,6 +29,7 @@ class ChildConfig {
   ///
   /// Something like: `RoundedRectangleBorder()`, `CircleBorder()`.
   ///
+  // ignore: deprecated_member_use_from_same_package
   /// If this value is specified, the [borderRadius] will be ignored.
   final ShapeBorder? shapeBorder;
 
@@ -111,6 +112,7 @@ class ChildConfig {
       backgroundColor: backgroundColor,
       barrierDismissible: barrierDismissible,
       shapeBorder: shapeBorder,
+      // ignore: deprecated_member_use_from_same_package
       borderRadius: borderRadius,
       zoomScale: zoomScale,
       curve: curve,
@@ -182,6 +184,7 @@ class ChildConfig {
       backgroundColor: backgroundColor ?? this.backgroundColor,
       barrierDismissible: barrierDismissible ?? this.barrierDismissible,
       shapeBorder: shapeBorder ?? this.shapeBorder,
+      // ignore: deprecated_member_use_from_same_package
       borderRadius: borderRadius ?? this.borderRadius,
       zoomScale: zoomScale ?? this.zoomScale,
       curve: curve ?? this.curve,
