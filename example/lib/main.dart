@@ -49,7 +49,9 @@ class _AppState extends State<App> {
           FeaturesTour(
             controller: tourController,
             index: 0,
-            introduce: const Text('This is TextButton 1'),
+            introduce: const Text(
+              'This is TextButton 1\nWith enableAnimation = false',
+            ),
             nextConfig: NextConfig(
               child: (onPressed) {
                 return ElevatedButton(
@@ -57,6 +59,9 @@ class _AppState extends State<App> {
                   child: const Text('Modified Next'),
                 );
               },
+            ),
+            childConfig: ChildConfig(
+              enableAnimation: false,
             ),
             child: TextButton(
               onPressed: () {},
