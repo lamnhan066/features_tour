@@ -1,6 +1,11 @@
+## 0.4.7
+
+* Add the `enableAnimation` to the `ChildConfig` to make it easier to enable/disable the animation.
+* Update the topics.
+
 ## 0.4.6+1
 
-* Improve pub score.
+* Improve the pub score.
 * Small update for the example.
 
 ## 0.4.6
