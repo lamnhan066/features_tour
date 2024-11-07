@@ -222,26 +222,29 @@ class _FeaturesChildState extends State<FeaturesChild>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _autoUpdate();
 
-      setState(() {
-        scale = widget.childConfig.zoomScale;
-      });
       // Control the animation of the `introduce` widget.
-      Timer.periodic(widget.childConfig.animationDuration, (timer) {
-        if (!mounted) {
-          timer.cancel();
-          return;
-        }
+      if (widget.childConfig.enableAnimation) {
+        setState(() {
+          scale = widget.childConfig.zoomScale;
+        });
 
-        if (scale == 1) {
-          setState(() {
-            scale = widget.childConfig.zoomScale;
-          });
-        } else if (scale == widget.childConfig.zoomScale) {
-          setState(() {
-            scale = 1;
-          });
-        }
-      });
+        Timer.periodic(widget.childConfig.animationDuration, (timer) {
+          if (!mounted) {
+            timer.cancel();
+            return;
+          }
+
+          if (scale == 1) {
+            setState(() {
+              scale = widget.childConfig.zoomScale;
+            });
+          } else if (scale == widget.childConfig.zoomScale) {
+            setState(() {
+              scale = 1;
+            });
+          }
+        });
+      }
     });
   }
 
