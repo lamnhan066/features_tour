@@ -1,3 +1,7 @@
+## 0.4.8
+
+* Fixed the issue that the tours run incorrectly when `force` is set to `true`.
+
 ## 0.4.7
 
 * Add the `enableAnimation` to the `ChildConfig` to make it easier to enable/disable the animation.
