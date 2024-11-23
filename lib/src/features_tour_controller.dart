@@ -114,6 +114,10 @@ class FeaturesTourController {
       return;
     }
 
+    // All introduced states should be cleared before running a new tour to avoid
+    // caching.
+    _introducedIndexes.clear();
+
     if (!_shouldShowIntroduction() && force != true) {
       printDebug(() => 'There is no new `FeaturesTour` -> Completed');
       return;
