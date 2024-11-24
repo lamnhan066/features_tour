@@ -1,3 +1,7 @@
+## 0.4.9
+
+* Fixed the issue that make the package keeps introduce a widget even when `waitForTimeout` is reached.
+
 ## 0.4.8
 
 * Fixed the issue that the tours run incorrectly when `force` is set to `true`.
