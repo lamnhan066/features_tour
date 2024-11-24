@@ -184,6 +184,7 @@ class _SecondPageState extends State<SecondPage> {
                   controller: tourController,
                   index: 3,
                   waitForIndex: 3.1,
+                  waitForTimeout: const Duration(seconds: 3),
                   introduce: const Text('This is the Button 3'),
                   onPressed: showDialogTimeoutOnPressed,
                   nextConfig: NextConfig(
