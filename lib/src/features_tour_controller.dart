@@ -241,7 +241,11 @@ class FeaturesTourController {
 
         if (waitForIndexState == null) {
           printDebug(() =>
-              '   -> Cannot not wait for next index because timeout is reached. Use orderd values instead.');
+              '   -> Cannot not wait for the next index $waitForIndex because timeout is reached. Use the next ordered value instead.');
+
+          // Add the timeout state index to the introduced list so I will not
+          // be introduced even when it's shown.
+          _introducedIndexes.add(waitForIndex);
         } else {
           printDebug(() => '   -> Next index is available with state: $state');
         }
