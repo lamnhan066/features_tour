@@ -239,7 +239,8 @@ class FeaturesTour extends StatelessWidget {
   /// ```
   final FutureOr<void> Function()? onPressed;
 
-  late final BuildContext _context;
+  /// Get the current context.
+  BuildContext get _context => (key as GlobalKey).currentContext!;
 
   Future<IntroduceResult> showIntroduce(bool isLastState) async {
     if (!enabled) return IntroduceResult.disabled;
@@ -402,9 +403,6 @@ class FeaturesTour extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      _context = context;
-    } catch (_) {}
     if (enabled) controller._register(this);
     return child;
   }
