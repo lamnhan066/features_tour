@@ -4,56 +4,54 @@ class ChildConfig {
   /// Global configuration.
   static ChildConfig global = const ChildConfig._();
 
-  /// If this `child` is null, the original `child` will be used.
-  ///
-  /// The original child is alse passed through the function.
+  /// If this `child` is `null`, the original `child` will be used. The original
+  /// child is also passed through the function.
   final Widget Function(Widget child)? child;
 
-  /// Also scale child widget along with the border.
+  /// Determines whether the child widget should scale along with the border.
+  /// If set to `true`, the child will scale when the border scales.
   final bool isAnimateChild;
 
-  /// How bigger the border rectangle is when compared to the child widget.
+  /// Specifies how much larger the border rectangle is compared to the child
+  /// widget. This value controls the border's size relative to the child.
   final double borderSizeInflate;
 
-  /// Background color of the `child` widget.
-  ///
-  /// This color is useful for TextField, Text, TextButton,.. which does not
-  /// have a background color.
+  /// Sets the background color of the `child` widget. This is particularly useful
+  /// for widgets like [TextField], [Text], and [TextButton], which don't have
+  /// a background color by default.
   final Color? backgroundColor;
 
-  /// Tap anywhere on the background to dismiss the current introduce. Default is
-  /// set to `false`.
+  /// If set to `true`, tapping anywhere on the background will dismiss the
+  /// current introduction. Defaults to `false`.
   final bool barrierDismissible;
 
-  /// Shape of border of the background. Default is `RoundedRectangleBorder()`.
-  ///
-  /// Something like: `RoundedRectangleBorder()`, `CircleBorder()`.
-  ///
+  /// Specifies the shape of the background's border. By default, it is a
+  /// `RoundedRectangleBorder()`. You can set this to shapes like
   // ignore: deprecated_member_use_from_same_package
-  /// If this value is specified, the [borderRadius] will be ignored.
+  /// `RoundedRectangleBorder()` or `CircleBorder()`. If specified, the [borderRadius]
+  /// will be ignored.
   final ShapeBorder? shapeBorder;
 
-  /// Border radius of the background of the child. Default is `BorderRadius.all(12)`.
-  ///
-  /// This value will be ignored if the [shapeBorder] is specified.
+  /// Defines the border radius of the background around the child widget. The default
+  /// is `BorderRadius.all(12)`. This value will be ignored if [shapeBorder] is specified.
   @Deprecated('Use `shapeBorder` instead')
   final BorderRadiusGeometry borderRadius;
 
-  /// Zoom scale of the `child` widget when show up on the instruction.
+  /// Specifies the zoom scale of the `child` widget when it is shown during the
+  /// introduction. A larger value will make the child appear zoomed in.
   final double zoomScale;
 
-  /// Animation of the `child` widget when show up on the instruction.
+  /// Defines the animation curve used for the `child` widget when it appears during
+  /// the introduction. This curve controls the easing of the animation.
   final Curve curve;
 
-  /// Animation duration of the `child` widget when show up on the instruction.
+  /// Specifies the duration of the animation for the `child` widget when it appears
+  /// during the introduction. This controls how long the animation lasts.
   final Duration animationDuration;
 
-  /// Enable the animation when the current child is in introducing.
-  ///
-  /// If this value is set to `false` then the [zoomScale], [curve] and the
-  /// [animationDuration] are unused.
-  ///
-  /// Default is set to `true`.
+  /// If set to `false`, no animation will be applied to the current child widget
+  /// during the introduction. When set to `true`, the [zoomScale], [curve], and
+  /// [animationDuration] are used. Defaults to `true`.
   final bool enableAnimation;
 
   /// Default value of the `child` widget.

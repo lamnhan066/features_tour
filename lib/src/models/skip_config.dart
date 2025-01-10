@@ -19,24 +19,24 @@ class SkipConfig extends BaseConfig {
     super.buttonStyle,
   });
 
-  /// Create a new SkipConfig base on the [global] values.
+  /// Creates a new `SkipConfig` based on the provided [global] values.
   ///
-  /// [text] of skip button, default is 'SKIP'.
+  /// [text] defines the label for the skip button. Defaults to 'SKIP'.
   ///
-  /// [alignment] is the position of the skip text, default is `Alignment.bottomLeft`.
+  /// [alignment] specifies the position of the skip text. Defaults to `Alignment.bottomLeft`.
   ///
-  /// [color] is the color of skip text, default is `null`.
+  /// [color] determines the color of the skip text. Defaults to `null`.
   ///
-  /// [enabled] whether the skip button is enabled or not, default is `true`.
+  /// [enabled] indicates whether the skip button is enabled. Defaults to `true`.
   ///
-  /// [isCallOnPressed] allows the tour to call `onPressed` when the skip button is pressed.
-  /// Default is `false`. Means that doesn't call `onPressed` when the skip button is pressed.
+  /// [isCallOnPressed] controls whether the tour calls `onPressed` when the skip button is clicked.
+  /// Defaults to `false`, meaning it does not call `onPressed` by default.
   ///
-  /// [textStyle] is the [TextStyle] of the button.
+  /// [textStyle] defines the [TextStyle] of the skip button text.
   ///
-  /// [buttonStyle] is the [ButtonStyle] of the button.
-  /// Default:
-  /// ``` dart
+  /// [buttonStyle] defines the [ButtonStyle] of the button.
+  /// Defaults to:
+  /// ```dart
   ///    style: ElevatedButton.styleFrom(
   ///      shape: RoundedRectangleBorder(
   ///        side: const BorderSide(
@@ -47,6 +47,7 @@ class SkipConfig extends BaseConfig {
   ///    ),
   ///  ),
   /// ```
+
   factory SkipConfig({
     Widget Function(VoidCallback onPressed)? child,
     String? text,
@@ -69,24 +70,24 @@ class SkipConfig extends BaseConfig {
     );
   }
 
-  /// Create a new SkipConfig base on the [global] values.
+  /// Creates a new `SkipConfig` based on the provided [global] values.
   ///
-  /// [text] of skip button, default is 'SKIP'.
+  /// [text] defines the label for the skip button. Defaults to 'SKIP'.
   ///
-  /// [alignment] is the position of the skip text, default is `Alignment.bottomLeft`.
+  /// [alignment] specifies the position of the skip text. Defaults to `Alignment.bottomLeft`.
   ///
-  /// [color] is the color of skip text, default is `null`.
+  /// [color] determines the color of the skip text. Defaults to `null`.
   ///
-  /// [enabled] whether the skip button is enabled or not, default is `true`.
+  /// [enabled] indicates whether the skip button is enabled. Defaults to `true`.
   ///
-  /// [isCallOnPressed] allows the tour to call `onPressed` when the skip button is pressed.
-  /// Default is `false`. Means that doesn't call `onPressed` when the skip button is pressed.
+  /// [isCallOnPressed] controls whether the tour calls `onPressed` when the skip button is clicked.
+  /// Defaults to `false`, meaning it does not call `onPressed` by default.
   ///
-  /// [textStyle] is the [TextStyle] of the button.
+  /// [textStyle] defines the [TextStyle] of the skip button text.
   ///
-  /// [buttonStyle] is the [ButtonStyle] of the button.
-  /// Default:
-  /// ``` dart
+  /// [buttonStyle] defines the [ButtonStyle] of the button.
+  /// Defaults to:
+  /// ```dart
   ///    style: ElevatedButton.styleFrom(
   ///      shape: RoundedRectangleBorder(
   ///        side: const BorderSide(
@@ -97,6 +98,7 @@ class SkipConfig extends BaseConfig {
   ///    ),
   ///  ),
   /// ```
+
   @Deprecated('Use `SkipConfig` instead.')
   factory SkipConfig.copyWith({
     Widget Function(VoidCallback onPressed)? child,

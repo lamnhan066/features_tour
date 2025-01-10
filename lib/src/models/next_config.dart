@@ -15,24 +15,24 @@ class NextConfig extends BaseConfig {
     super.buttonStyle,
   });
 
-  /// Create a new NextConfig base on the [global] values.
+  /// Creates a new [NextConfig] based on the [global] values.
   ///
-  /// [child] Modified widget for the next button. When this Widget is set, you have to
-  /// pass `onPressed` method
+  /// [child] is a custom widget for the next button. When this is set,
+  /// you must pass the `onPressed` method.
   ///
-  /// [text] of the next button. Default is "NEXT".
+  /// [text] defines the text on the next button. Defaults to "NEXT".
   ///
-  /// [alignment] is the alignment of the next button. Default is `Alignment.bottomRight`.
+  /// [alignment] specifies the alignment of the next button. Defaults to
+  /// `Alignment.bottomRight`.
   ///
-  /// [color] is the color of the next text. Default is `null`.
+  /// [color] sets the color of the next button text. Defaults to `null`.
   ///
-  /// [enabled] is true if the next button is enabled. Default is `true`.
+  /// [enabled] indicates whether the next button is enabled. Defaults to `true`.
   ///
-  /// [textStyle] is the [TextStyle] of the button.
+  /// [textStyle] defines the [TextStyle] for the button text.
   ///
-  /// [buttonStyle] is the [ButtonStyle] of the button.
-  /// Default:
-  /// ``` dart
+  /// [buttonStyle] specifies the [ButtonStyle] of the button. Default:
+  /// ```dart
   ///    style: ElevatedButton.styleFrom(
   ///      shape: RoundedRectangleBorder(
   ///        side: const BorderSide(
