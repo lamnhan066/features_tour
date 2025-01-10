@@ -28,12 +28,18 @@ class IntroduceConfig {
   /// widget to use the dark theme, ensuring visibility on the dark background.
   final bool applyDarkTheme;
 
+  /// If `useRootOverlay` is set to true, the tour will show above all other [Overlay]s.
+  ///
+  /// This method can be expensive (it walks the element tree).
+  final bool useRootOverlay;
+
   const IntroduceConfig._({
     this.backgroundColor = Colors.black87,
     this.padding = const EdgeInsets.all(20.0),
     this.quadrantAlignment,
     this.alignment,
     this.applyDarkTheme = true,
+    this.useRootOverlay = false,
   });
 
   /// Create a new IntroduceConfig base on [global] values.
@@ -43,6 +49,7 @@ class IntroduceConfig {
     QuadrantAlignment? quadrantAlignment,
     Alignment? alignment,
     bool? applyDarkTheme,
+    bool? useRootOverlay,
   }) {
     return global.copyWith(
       backgroundColor: backgroundColor,
@@ -50,6 +57,7 @@ class IntroduceConfig {
       alignment: alignment,
       quadrantAlignment: quadrantAlignment,
       applyDarkTheme: applyDarkTheme,
+      useRootOverlay: useRootOverlay,
     );
   }
 
@@ -71,6 +79,7 @@ class IntroduceConfig {
     QuadrantAlignment? quadrantAlignment,
     Duration? animationDuration,
     bool? applyDarkTheme,
+    bool? useRootOverlay,
   }) {
     return IntroduceConfig._(
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -78,6 +87,7 @@ class IntroduceConfig {
       alignment: alignment ?? this.alignment,
       quadrantAlignment: quadrantAlignment ?? this.quadrantAlignment,
       applyDarkTheme: applyDarkTheme ?? this.applyDarkTheme,
+      useRootOverlay: useRootOverlay ?? this.useRootOverlay,
     );
   }
 }

@@ -363,7 +363,10 @@ class FeaturesTour extends StatelessWidget {
         ),
       );
     });
-    Overlay.of(_context).insert(overlayEntry);
+    Overlay.of(
+      _context,
+      rootOverlay: introduceConfig.useRootOverlay,
+    ).insert(overlayEntry);
 
     /// Closed by the `barrierDismissible`.
     final result = (await completer.future) ?? IntroduceResult.next;
