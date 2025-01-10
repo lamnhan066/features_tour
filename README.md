@@ -70,6 +70,8 @@ FeaturesTour(
         quadrantAlignment: QuadrantAlignment.bottom,
         // Alignment of the `introduce` widget in the quadrant rectangle
         alignment: Alignment.topCenter,
+        // Show on top all other overlays
+        useRootOverlay: false,
     ),
 
     /// Config for the next button, this button will move to the next widget base on its' index.
