@@ -1,3 +1,8 @@
+## 0.4.10
+
+* [Feat] Add an ability to show on top of all Overlays.
+* [Refactor] Improve comments.
+
 ## 0.4.9
 
 * Fixed the issue that make the package keeps introduce a widget even when `waitForTimeout` is reached.
