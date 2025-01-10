@@ -70,7 +70,7 @@ FeaturesTour(
         quadrantAlignment: QuadrantAlignment.bottom,
         // Alignment of the `introduce` widget in the quadrant rectangle
         alignment: Alignment.topCenter,
-        // Show on top all other overlays
+        // Show the tour above all other overlays
         useRootOverlay: false,
     ),
 
