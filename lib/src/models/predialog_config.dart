@@ -29,76 +29,83 @@ class PredialogConfig {
     this.modifiedDialogResult,
   });
 
-  /// [enabled] to enable or disable the Predialog.
+  /// Controls whether the Predialog is enabled or disabled.
   final bool enabled;
 
-  /// [backgroundColor] is the background color of the dialog.
+  /// Specifies the background color of the dialog.
   final Color backgroundColor;
 
-  /// [textColor] is the color of all the text.
+  /// Defines the color for all the text within the dialog.
   final Color textColor;
 
-  /// [title] is the title of the dialog, default is 'Introduction'.
+  /// The title displayed at the top of the dialog. Defaults to 'Introduction'.
   final String title;
 
-  /// [content] is the content, default is "This page has some new features that you might want to discover.\n\nWould you like to take a tour?".
+  /// The content message shown in the dialog. Defaults to "This page has some
+  /// new features that you might want to discover.\n\nWould you like to take a tour?".
   final String content;
 
-  /// [applyToAllPagesText] is the text for the apply to all pages checkbox. Default is 'Apply to all pages'.
+  /// The text for the checkbox that applies the tour to all pages. Defaults to 'Apply to all pages'.
   final String applyToAllPagesText;
 
-  /// Accept the action.
+  /// The text displayed on the accept button.
   final Text acceptButtonText;
 
-  /// Style of the accept button [ElevatedButton].
+  /// Defines the style for the accept button, which is an [ElevatedButton].
   final ButtonStyle? acceptButtonStyle;
 
-  /// Ask again in the next time.
+  /// The text displayed on the later button for postponing the action.
   final Text laterButtonText;
 
-  /// Style of the later button [TextButton].
+  /// Defines the style for the later button, which is a [TextButton].
   final ButtonStyle? laterButtonStyle;
 
-  /// Don't show the tour even if a new one is added.
+  /// The text displayed on the dismiss button to close the dialog without taking any action.
   final Text dismissButtonText;
 
-  /// Style of the dismiss button [TextButton].
+  /// Defines the style for the dismiss button, which is a [TextButton].
   final ButtonStyle? dismissButtonStyle;
 
-  /// [borderRadius] is the radius of the dialog border.
+  /// The radius of the dialog's corners, giving it rounded edges.
   final double borderRadius;
 
-  /// [modifiedDialogResult] is the value the return from your modified dialog
-  /// If this variable is set, others will be ignored.
+  /// A custom function that provides a result for the modified dialog.
+  /// If set, it overrides the default dialog behavior and other settings are ignored.
   final FutureOr<bool> Function(BuildContext context)? modifiedDialogResult;
 
-  /// Create a new Predialog base on the [global] values.
+  /// Creates a new pre-dialog based on the [global] values.
   ///
-  /// [enabled] to enable or disable the Predialog. Default is `true`.
+  /// [enabled] controls whether the pre-dialog is enabled or disabled.
+  /// Defaults to `true`.
   ///
-  /// [title] is the title of the dialog, default is 'Introduction'.
+  /// [title] sets the title of the dialog. Defaults to 'Introduction'.
   ///
-  /// [content] is the content, default is "This page has some new features that you might want to discover.\n\nWould you like to take a tour?".
+  /// [content] specifies the content of the dialog. Defaults to the message:
+  /// "This page has some new features that you might want to discover.\n\nWould
+  /// you like to take a tour?".
   ///
-  /// [applyToAllPagesText] is the text for the apply to all pages checkbox. Default is 'Apply to all pages'.
+  /// [applyToAllPagesText] defines the text for the "apply to all pages" checkbox.
+  /// Defaults to 'Apply to all pages'.
   ///
-  /// [acceptButtonText] Accept the action.
+  /// [acceptButtonText] sets the text for the accept action button.
   ///
-  /// [acceptButtonStyle] Style of the accept button [ElevatedButton].
+  /// [acceptButtonStyle] specifies the style for the accept button using [ElevatedButton].
   ///
-  /// [laterButtonText] Ask again in the next time.
+  /// [laterButtonText] sets the text for the "ask again later" button.
   ///
-  /// [laterButtonStyle] Style of the later button [TextButton].
+  /// [laterButtonStyle] specifies the style for the later button using [TextButton].
   ///
-  /// [dismissButtonText] Do not show and don't ask again.
+  /// [dismissButtonText] sets the text for the dismiss button, preventing the
+  /// tour from being shown again.
   ///
-  /// [dismissButtonStyle] Style of the dismiss button [TextButton].
+  /// [dismissButtonStyle] specifies the style for the dismiss button using [TextButton].
   ///
-  /// [borderRadius] is the radius of the dialog border. Default is 12.
+  /// [borderRadius] controls the radius of the dialog's border. Defaults to 12.0.
   ///
-  /// [backgroundColor] is the background color of the dialog. Default is Colors.white.
+  /// [backgroundColor] defines the background color of the dialog. Defaults to `Colors.white`.
   ///
-  /// [textColor] is the color of all the text. Default is Colors.black.
+  /// [textColor] specifies the color of the text in the dialog. Defaults to `Colors.black`.
+
   factory PredialogConfig({
     bool? enabled,
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
@@ -133,33 +140,39 @@ class PredialogConfig {
     );
   }
 
-  /// Create a new Predialog base on the [global] values.
+  /// Creates a new pre-dialog based on the [global] values.
   ///
-  /// [enabled] to enable or disable the Predialog. Default is `true`.
+  /// [enabled] controls whether the pre-dialog is enabled or disabled.
+  /// Defaults to `true`.
   ///
-  /// [title] is the title of the dialog, default is 'Introduction'.
+  /// [title] sets the title of the dialog. Defaults to 'Introduction'.
   ///
-  /// [content] is the content, default is "This page has some new features that you might want to discover.\n\nWould you like to take a tour?".
+  /// [content] specifies the content of the dialog. Defaults to the message:
+  /// "This page has some new features that you might want to discover.\n\nWould
+  /// you like to take a tour?".
   ///
-  /// [applyToAllPagesText] is the text for the apply to all pages checkbox. Default is 'Apply to all pages'.
+  /// [applyToAllPagesText] defines the text for the "apply to all pages" checkbox.
+  /// Defaults to 'Apply to all pages'.
   ///
-  /// [acceptButtonText] Accept the action.
+  /// [acceptButtonText] sets the text for the accept action button.
   ///
-  /// [acceptButtonStyle] Style of the accept button [ElevatedButton].
+  /// [acceptButtonStyle] specifies the style for the accept button using [ElevatedButton].
   ///
-  /// [laterButtonText] Ask again in the next time.
+  /// [laterButtonText] sets the text for the "ask again later" button.
   ///
-  /// [laterButtonStyle] Style of the later button [TextButton].
+  /// [laterButtonStyle] specifies the style for the later button using [TextButton].
   ///
-  /// [dismissButtonText] Do not show and don't ask again.
+  /// [dismissButtonText] sets the text for the dismiss button, preventing the
+  /// tour from being shown again.
   ///
-  /// [dismissButtonStyle] Style of the dismiss button [TextButton].
+  /// [dismissButtonStyle] specifies the style for the dismiss button using [TextButton].
   ///
-  /// [borderRadius] is the radius of the dialog border. Default is 12.
+  /// [borderRadius] controls the radius of the dialog's border. Defaults to 12.0.
   ///
-  /// [backgroundColor] is the background color of the dialog. Default is Colors.white.
+  /// [backgroundColor] defines the background color of the dialog. Defaults to `Colors.white`.
   ///
-  /// [textColor] is the color of all the text. Default is Colors.black.
+  /// [textColor] specifies the color of the text in the dialog. Defaults to `Colors.black`.
+
   @Deprecated('Use `PredialogConfig` instead.')
   factory PredialogConfig.copyWith({
     bool? enabled,

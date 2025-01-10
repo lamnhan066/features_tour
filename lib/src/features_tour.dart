@@ -122,46 +122,34 @@ class FeaturesTour extends StatelessWidget {
     return '${_prefix}_${pageName}_${state.index}';
   }
 
-  /// Create a [FeaturesTour] to show the tour for specified widget.
+  /// Creates a [FeaturesTour] to display a guided tour for a specific widget.
   ///
-  /// This widget only requires [controller] is [FeaturesTourController] and
-  /// [child] is your widget. There is [childConfig] to configure the child widget.
+  /// This widget requires a [controller] of type [FeaturesTourController] and a [child] widget to wrap.
+  /// You can use [childConfig] to customize the appearance or behavior of the child widget.
   ///
-  /// The [index] is a unique value and it's very important because it will decide
-  /// which widget to show first due to its ordered, if you want the package to
-  /// maintain it automatically then you just need to let it `null` for
-  /// **all widgets in the same page**, if not you have to set it manually also
-  /// for **all widgets in the same page**. I make this index as `double` because
-  /// you can add new feature to between 2 other features. This number must be
-  /// not changed if you don't want to introduce that feature again.
+  /// The [index] is a unique identifier and determines the order in which widgets are shown.
+  /// It is a `double`, allowing for insertion of new features between existing ones.
+  /// Ensure this value remains unchanged to prevent reintroducing the same feature unnecessarily.
   ///
-  /// You can specify the next index to show with [waitForIndex], the app will
-  /// freeze until the next index is available (users cannot tap any where on the screen).
-  /// It's useful when you want to show the [FeaturesTour] in the dialog that
-  /// will be opened after this feature is shown. So please careful by using
-  /// the [waitForTimeout] to specify the timeout for each action to avoid
-  /// the bad UX, default timeout is 3 seconds. Remember that this index is only
-  /// using in the same [controller].
+  /// Use [waitForIndex] to specify the next index to display.
+  /// The app will pause interaction until the specified index becomes available, making it ideal
+  /// for scenarios like displaying a [FeaturesTour] in a dialog that opens after the current feature.
+  /// To avoid poor user experience, configure a timeout using [waitForTimeout], with a default of 3 seconds.
+  /// Note that [waitForIndex] only applies within the same [controller].
   ///
-  /// You can disable this feature by setting [enabled] to `false`. Especially,
-  /// when you're using the [FeaturesTour] for items of a List, you can
-  /// [enabled] only one of them, so you have to set the [enabled] of other items to `false`.
+  /// You can disable a tour for specific widgets by setting [enabled] to `false`.
+  /// This is particularly useful for lists where only one item should have the tour active;
+  /// set [enabled] to `false` for all other items.
   ///
-  /// [introduce] is a widget that will show the introduce information, you can
-  /// also configure it with [introduceConfig].
+  /// Use [introduce] to display introductory information, which can be customized with [introduceConfig].
   ///
-  /// There are Next button and Skip button that you can configure it with [nextConfig]
-  /// and [skipConfig].
+  /// Configure the Next and Skip buttons using [nextConfig] and [skipConfig].
   ///
-  /// The [onPressed] will be triggered when this widget is pressed. This can be
-  /// a `Future` method, the next introduction will be delayed until this method
-  /// is completed.
+  /// The [onPressed] callback is triggered when this widget is pressed.
+  /// If [onPressed] returns a `Future`, the next tour step will be delayed until the action completes.
   FeaturesTour({
     GlobalKey? key,
     required this.controller,
-
-    /// The tour will sort by this index, and it must be not duplicated. You can
-    /// leave this black if you want to let the package to control it automatically.
     required this.index,
     this.waitForIndex,
     this.waitForTimeout = const Duration(seconds: 3),
@@ -179,58 +167,63 @@ class FeaturesTour extends StatelessWidget {
                 ? (key ?? controller._globalKeys[index] ?? GlobalKey())
                 : null);
 
-  /// Controller of the current page.
+  /// The controller for the current page, responsible for managing the tour.
   final FeaturesTourController controller;
 
-  /// The tour will sort by this index, and it must be not dupplicated. You can
-  /// leave this black if you want to let the package to control it automatically.
+  /// A unique index used to order the tour steps.
+  /// This value must not be duplicated.
   late final double index;
 
-  /// This is the next index that you want to start. The plugin will wait for it
-  /// until it's appeared or [waitForTimeout] is reached. If this value is `null`,
-  /// the order of the [index] will be used.
+  /// Specifies the next [index] to start the tour.
+  /// The plugin will wait for this index to appear or until the [waitForTimeout] is reached.
+  /// If set to `null`, the tour will proceed in the natural order of the [index].
   ///
-  /// Remember that this index is only using in the same [controller].
+  /// Note: This value applies only within the same [controller].
   ///
-  /// Ex: You want to wait for the dialog to appear to show the next introduction.
+  /// Example: Use this to wait for a dialog to appear before displaying the next step.
   final double? waitForIndex;
 
-  /// Timeout when [waitForTimeout] is set. Defaults to 3 seconds.
+  /// The timeout duration for waiting on [waitForIndex]. Defaults to 3 seconds.
   ///
-  /// This value must not be to long to avoid UX issues.
+  /// Ensure this value is not excessively long to maintain a good user experience.
   final Duration waitForTimeout;
 
-  /// Enable or disable the action of this widget.
+  /// Determines whether this widget's actions are enabled.
   final bool enabled;
 
-  /// Child widget.
+  /// The child widget wrapped by the [FeaturesTour].
   final Widget child;
 
-  /// Introduce this feature.
+  /// The widget used to introduce this feature in the tour.
   final Widget introduce;
 
-  /// Introduce widget config. If this value is `null`, the `IntroduceConfig.global` is used.
+  /// Configuration for the [introduce] widget.
+  /// If `null`, the global configuration ([IntroduceConfig.global]) will be used.
   final IntroduceConfig? introduceConfig;
 
-  /// Next button config. If this value is `null`, the `NextConfig.global` is used.
+  /// Configuration for the "Next" button.
+  /// If `null`, the global configuration ([NextConfig.global]) will be used.
   final NextConfig? nextConfig;
 
-  /// Skip button config. If this value is `null`, the `SkipConfig.global` is used.
+  /// Configuration for the "Skip" button.
+  /// If `null`, the global configuration ([SkipConfig.global]) will be used.
   final SkipConfig? skipConfig;
 
-  /// Done button config. If this value is `null`, the `DoneConfig.global` is used.
+  /// Configuration for the "Done" button.
+  /// If `null`, the global configuration ([DoneConfig.global]) will be used.
   final DoneConfig? doneConfig;
 
-  /// Child widget that shows up on the original child widget.  If this value is `null`,
-  /// the `ChildConfig.global` is used.
+  /// Configuration for the overlay widget displayed over the [child].
+  /// If `null`, the global configuration ([ChildConfig.global]) will be used.
   final ChildConfig? childConfig;
 
-  /// Will be triggered when the `introduce` widget is tapped.
+  /// Callback triggered when the [introduce] widget is tapped.
   ///
-  /// Please notice that the widget inside it will not be triggered even it's a button.
-  /// So if you want to trigger that button, you have to add it into both widgets.
+  /// Note: Interactions with widgets inside [introduce], such as buttons,
+  /// will not be triggered. To include button functionality, add the button
+  /// to both [child] and [onPressed].
   ///
-  /// Ex:
+  /// Example:
   /// ```dart
   /// FeaturesTour(
   ///   child: ElevatedButton(onPressed: onPressed, child: Text('Button')),

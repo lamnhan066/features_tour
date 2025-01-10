@@ -15,19 +15,20 @@ class DoneConfig extends BaseConfig {
     super.buttonStyle,
   });
 
-  /// Create a new DoneConfig base on the [global] values.
+  /// Creates a new [DoneConfig] based on the [global] values.
   ///
-  /// [text] of skip button, default is 'SKIP'.
+  /// [text] is the text displayed on the button. Defaults to 'SKIP'.
   ///
-  /// [alignment] is the position of the skip text, default is `Alignment.bottomLeft`.
+  /// [alignment] determines the position of the skip text. Defaults to
+  /// `Alignment.bottomLeft`.
   ///
-  /// [color] is the color of skip text, default is `null`.
+  /// [color] sets the color of the skip text. Defaults to `null`.
   ///
-  /// [enabled] whether the skip button is enabled or not, default is `true`.
+  /// [enabled] determines whether the skip button is enabled. Defaults to `true`.
   ///
-  /// [textStyle] is the [TextStyle] of the button.
+  /// [textStyle] defines the text style for the button.
   ///
-  /// [buttonStyle] is the [ButtonStyle] of the button.
+  /// [buttonStyle] defines the button's style, such as its shape and borders.
   /// Default:
   /// ``` dart
   ///    style: ElevatedButton.styleFrom(

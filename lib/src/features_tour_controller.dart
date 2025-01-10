@@ -4,9 +4,11 @@ class FeaturesTourController {
   /// Internal preferences.
   static SharedPreferences? _prefs;
 
-  /// Create a controller for FeaturesTour with unique [pageName]. This value is
-  /// used to store the state of the current page, so please do not change it
-  /// if you don't want to re-show the instructions.
+  /// Creates a [FeaturesTourController] for the tour with a unique [pageName].
+  /// The [pageName] is used to persist the state of the current page.
+  ///
+  /// **Note:** Avoid changing the [pageName] to prevent re-displaying the instructions
+  /// for this page.
   FeaturesTourController(this.pageName) {
     FeaturesTour._controllers.add(this);
   }
@@ -43,28 +45,28 @@ class FeaturesTourController {
     _introducedIndexes.add(state.index);
   }
 
-  /// Start the tour. This packaga automatically save the state of the widget,
-  /// so it will skip the showed widget.
+  /// Starts the tour. This package automatically saves the state of the tour,
+  /// skipping widgets that have already been shown.
   ///
-  /// All of this parameters will be applied to this controller (this page only)
-  /// if it is set. Otherwise, it will depends on the global configurations.
+  /// All parameters provided will be applied to this controller (specific to this page)
+  /// if set. Otherwise, the global configurations will be used.
   ///
-  /// The [context] will be used to wait for the page transition animation to complete.
-  /// After that, delay for [delay] duration before starting the tour, it makes
-  /// sure that all the widgets are rendered correctly. To enable/disable all the tours,
-  /// just need to set the [force] to `true` or `false`, it will aslo force to show
-  /// all the pre-dialogs, **you have to set this value to `null` before releasing to
-  /// make the [FeaturesTour] works as expected**
+  /// The [context] is required to wait for the page transition animation to complete.
+  /// After the transition, a delay specified by [delay] ensures all widgets are
+  /// rendered correctly before starting the tour. To enable or disable all tours,
+  /// set [force] to `true` or `false`. This will also force all pre-dialogs to appear.
+  /// **Important:** Reset [force] to `null` before releasing the app to ensure the
+  /// [FeaturesTour] behaves as expected.
   ///
-  /// You can set the first index by setting [waitForFirstIndex] with timeout by
-  /// setting [waitForFirstTimeout]. If the timeout is exceeded, the smallest available
-  /// index will be used.
+  /// Set the initial index for the tour using [waitForFirstIndex], with a timeout
+  /// specified by [waitForFirstTimeout]. If the timeout is exceeded, the smallest
+  /// available index will be used.
   ///
-  /// You can also configure the predialog by using [predialogConfig], this dialog
-  /// will show to ask the user want to start the tour or not.
+  /// The pre-dialog can be configured using [predialogConfig]. This dialog prompts
+  /// the user to confirm whether they want to start the tour.
   ///
-  /// Ex:
-  /// ``` dart
+  /// Example:
+  /// ```dart
   /// tourController.start(context: context, force: true);
   /// ```
   Future<void> start(

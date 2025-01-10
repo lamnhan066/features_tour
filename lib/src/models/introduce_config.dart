@@ -5,27 +5,27 @@ class IntroduceConfig {
   /// Global configuration.
   static IntroduceConfig global = const IntroduceConfig._();
 
-  /// Color of the background.
+  /// Color of the background for the `introduce` widget.
   final Color backgroundColor;
 
-  /// Padding of the `introduce` widget.
+  /// Padding around the `introduce` widget.
   final EdgeInsetsGeometry padding;
 
-  /// Quadrant rectangle for `introduce` widget.
+  /// Quadrant rectangle for positioning the `introduce` widget.
   final QuadrantAlignment? quadrantAlignment;
 
-  /// Alignmnent of the `introduce` widget in side `quarantAlignment`.
-  ///
-  /// This value automatically aligns depending on the `quarantAlignment`.
-  /// Make it as close as possible to other.
+  /// Alignment of the `introduce` widget within the specified `quadrantAlignment`.
+  /// This value automatically aligns the widget depending on the chosen
+  /// `quadrantAlignment`. It aims to keep the widget as close as possible to
+  /// the other elements.
   final Alignment? alignment;
 
-  /// Auto apply the dark theme to the `introduce` Widget.
+  /// Automatically applies the dark theme to the `introduce` widget.
   ///
-  /// The `introduce` background color is usually a dark color ([Colors.black87]
-  /// by default), so the foreground widget is usually a light color (like white
-  /// text). So this value will force the foreground widget use the dark theme
-  /// to make it visible on the dark background.
+  /// The `introduce` widget typically uses a dark background color (default is
+  /// [Colors.black87]), so the foreground elements (like text) are usually
+  /// light-colored. When this value is set to `true`, it forces the foreground
+  /// widget to use the dark theme, ensuring visibility on the dark background.
   final bool applyDarkTheme;
 
   const IntroduceConfig._({

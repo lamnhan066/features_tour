@@ -1,43 +1,43 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseConfig {
-  /// Modified widget for the next button. When this Widget is set, you have to
-  /// pass the `onPressed` method to the `onPressed` or `onTap`.
+  /// Custom widget for the button.
+  /// When this widget is set, you must pass the `onPressed` callback to the button's `onPressed` or `onTap` property.
   ///
-  /// Ex:
+  /// Example:
+  /// ```dart
   /// child: (onPressed) => ElevatedButton(
   ///   onPressed: onPressed,
   ///   child: Text('This is a button'),
   /// ),
+  /// ```
   final Widget Function(VoidCallback onPressed)? child;
 
-  /// Base button text.
+  /// The base text displayed on the button.
   final String text;
 
-  /// Position of the button.
+  /// The alignment of the button within its parent widget.
   final Alignment alignment;
 
-  /// Color of the Base text. You can use [textStyle] for more control.
+  /// The color of the button text. For more customization, use [textStyle].
   final Color? color;
 
-  /// Enable or disable the button.
+  /// Determines whether the button is enabled or disabled.
   final bool enabled;
 
-  /// Set the style for the text.
+  /// The text style of the button text. Overrides the default styling.
   final TextStyle? textStyle;
 
-  /// The [ButtonStyle] of the button.
+  /// The [ButtonStyle] applied to the button.
+  ///
   /// Default:
-  /// ``` dart
-  ///    style: TextButton.styleFrom(
-  ///      shape: RoundedRectangleBorder(
-  ///        side: const BorderSide(
-  ///          color: Colors.red,
-  ///        ),
-  ///        borderRadius: BorderRadius.circular(10),
-  ///      ),
-  ///    ),
-  ///  ),
+  /// ```dart
+  /// TextButton.styleFrom(
+  ///   shape: RoundedRectangleBorder(
+  ///     side: BorderSide(color: Colors.red),
+  ///     borderRadius: BorderRadius.circular(10),
+  ///   ),
+  /// ),
   /// ```
   final ButtonStyle? buttonStyle;
 
