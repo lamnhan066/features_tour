@@ -32,7 +32,7 @@ class FeaturesTourController {
           '`$pageName`: register index ${state.index} => total: ${_states.length + 1}');
     }
     _states[state.index] = state;
-    _globalKeys[state.index] = state.key as GlobalKey;
+    _globalKeys[state.index] = state._resolveKey();
   }
 
   /// Unregister the current FeaturesTour state.

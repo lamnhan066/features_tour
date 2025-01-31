@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/dialogs.dart';
+import 'package:features_tour/src/components/unfeatures_tour.dart';
 import 'package:features_tour/src/models/instruction_result.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -147,8 +148,8 @@ class FeaturesTour extends StatelessWidget {
   ///
   /// The [onPressed] callback is triggered when this widget is pressed.
   /// If [onPressed] returns a `Future`, the next tour step will be delayed until the action completes.
-  FeaturesTour({
-    GlobalKey? key,
+  const FeaturesTour({
+    super.key,
     required this.controller,
     required this.index,
     this.waitForIndex,
@@ -162,17 +163,24 @@ class FeaturesTour extends StatelessWidget {
     this.doneConfig,
     this.enabled = true,
     this.onPressed,
-  }) : super(
-            key: enabled
-                ? (key ?? controller._globalKeys[index] ?? GlobalKey())
-                : null);
+  });
+
+  GlobalKey _resolveKey() {
+    final globalKey = controller._globalKeys[index];
+
+    if (globalKey != null) {
+      return globalKey;
+    }
+
+    return GlobalObjectKey('${controller.pageName}-$index');
+  }
 
   /// The controller for the current page, responsible for managing the tour.
   final FeaturesTourController controller;
 
   /// A unique index used to order the tour steps.
   /// This value must not be duplicated.
-  late final double index;
+  final double index;
 
   /// Specifies the next [index] to start the tour.
   /// The plugin will wait for this index to appear or until the [waitForTimeout] is reached.
@@ -233,10 +241,12 @@ class FeaturesTour extends StatelessWidget {
   final FutureOr<void> Function()? onPressed;
 
   /// Get the current context.
-  BuildContext get _context => (key as GlobalKey).currentContext!;
+  BuildContext get _context => _resolveKey().currentContext!;
 
   Future<IntroduceResult> showIntroduce(bool isLastState) async {
-    if (!enabled) return IntroduceResult.disabled;
+    if (!enabled || UnfeaturesTour.isUnfeaturesTour(_context)) {
+      return IntroduceResult.disabled;
+    }
 
     if (!_context.mounted) return IntroduceResult.notMounted;
 
@@ -259,7 +269,7 @@ class FeaturesTour extends StatelessWidget {
         child: Material(
           color: introduceConfig.backgroundColor,
           child: FeaturesChild(
-            globalKey: key as GlobalKey,
+            globalKey: _resolveKey(),
             childConfig: childConfig,
             introduce: introduceConfig.applyDarkTheme
                 ? Theme(
@@ -353,9 +363,11 @@ class FeaturesTour extends StatelessWidget {
                 type: MaterialType.canvas,
                 child: AbsorbPointer(
                   absorbing: true,
-                  child: childConfig.child == null
-                      ? child
-                      : childConfig.child!(child),
+                  child: UnfeaturesTour(
+                    child: childConfig.child == null
+                        ? child
+                        : childConfig.child!(child),
+                  ),
                 ),
               ),
             ),
@@ -399,7 +411,12 @@ class FeaturesTour extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (enabled) controller._register(this);
-    return child;
+    final isUnfeaturesTour = UnfeaturesTour.isUnfeaturesTour(context);
+    if (enabled && !isUnfeaturesTour) controller._register(this);
+
+    return KeyedSubtree(
+      key: isUnfeaturesTour ? null : _resolveKey(),
+      child: child,
+    );
   }
 }
