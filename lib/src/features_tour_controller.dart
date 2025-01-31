@@ -359,8 +359,8 @@ class FeaturesTourController {
   }
 
   /// Wait until the page transition animation is complete.
-  Future<void> _waitForTransition(BuildContext context) async {
-    if (!context.mounted) return;
+  Future<void> _waitForTransition(BuildContext? context) async {
+    if (context == null || !context.mounted) return;
 
     printDebug(() => 'Waiting for the page transition to complete...');
     final modalRoute = ModalRoute.of(context)?.animation;
@@ -417,7 +417,7 @@ class FeaturesTourController {
   bool _shouldShowIntroduction() {
     for (final state in _states.values) {
       final key = FeaturesTour._getPrefKey(pageName, state);
-      if (!_prefs!.containsKey(key) && state._context.mounted) {
+      if (!_prefs!.containsKey(key) && (state._context?.mounted ?? false)) {
         return true;
       }
     }

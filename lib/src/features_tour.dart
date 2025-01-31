@@ -241,14 +241,16 @@ class FeaturesTour extends StatelessWidget {
   final FutureOr<void> Function()? onPressed;
 
   /// Get the current context.
-  BuildContext get _context => _resolveKey().currentContext!;
+  BuildContext? get _context => _resolveKey().currentContext;
 
   Future<IntroduceResult> showIntroduce(bool isLastState) async {
+    if (_context == null || !_context!.mounted) {
+      return IntroduceResult.notMounted;
+    }
+
     if (!enabled || UnfeaturesTour.isUnfeaturesTour(_context)) {
       return IntroduceResult.disabled;
     }
-
-    if (!_context.mounted) return IntroduceResult.notMounted;
 
     final introduceConfig = this.introduceConfig ?? IntroduceConfig.global;
     final childConfig = this.childConfig ?? ChildConfig.global;
@@ -256,14 +258,15 @@ class FeaturesTour extends StatelessWidget {
     final nextConfig = this.nextConfig ?? NextConfig.global;
     final doneConfig = this.doneConfig ?? DoneConfig.global;
 
-    final completer = Completer<IntroduceResult?>();
-    late OverlayEntry overlayEntry;
-    overlayEntry = OverlayEntry(builder: (ctx) {
+    final completer = Completer<IntroduceResult>();
+
+    final overlayEntry = OverlayEntry(builder: (ctx) {
       return GestureDetector(
         onTap: childConfig.barrierDismissible
             ? () {
-                completer.complete(null);
-                overlayEntry.remove();
+                if (!completer.isCompleted) {
+                  completer.complete(IntroduceResult.next);
+                }
               }
             : null,
         child: Material(
@@ -285,13 +288,15 @@ class FeaturesTour extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: skipConfig.child != null
                     ? skipConfig.child!(() {
-                        completer.complete(IntroduceResult.skip);
-                        overlayEntry.remove();
+                        if (!completer.isCompleted) {
+                          completer.complete(IntroduceResult.skip);
+                        }
                       })
                     : ElevatedButton(
                         onPressed: () {
-                          completer.complete(IntroduceResult.skip);
-                          overlayEntry.remove();
+                          if (!completer.isCompleted) {
+                            completer.complete(IntroduceResult.skip);
+                          }
                         },
                         style: skipConfig.buttonStyle,
                         child: Text(
@@ -308,13 +313,15 @@ class FeaturesTour extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: nextConfig.child != null
                     ? nextConfig.child!(() {
-                        completer.complete(IntroduceResult.next);
-                        overlayEntry.remove();
+                        if (!completer.isCompleted) {
+                          completer.complete(IntroduceResult.next);
+                        }
                       })
                     : ElevatedButton(
                         onPressed: () {
-                          completer.complete(IntroduceResult.next);
-                          overlayEntry.remove();
+                          if (!completer.isCompleted) {
+                            completer.complete(IntroduceResult.next);
+                          }
                         },
                         style: nextConfig.buttonStyle,
                         child: Text(
@@ -331,13 +338,15 @@ class FeaturesTour extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: doneConfig.child != null
                     ? doneConfig.child!(() {
-                        completer.complete(IntroduceResult.done);
-                        overlayEntry.remove();
+                        if (!completer.isCompleted) {
+                          completer.complete(IntroduceResult.done);
+                        }
                       })
                     : ElevatedButton(
                         onPressed: () {
-                          completer.complete(IntroduceResult.done);
-                          overlayEntry.remove();
+                          if (!completer.isCompleted) {
+                            completer.complete(IntroduceResult.done);
+                          }
                         },
                         style: doneConfig.buttonStyle,
                         child: Text(
@@ -355,8 +364,9 @@ class FeaturesTour extends StatelessWidget {
             quadrantAlignment: introduceConfig.quadrantAlignment,
             child: GestureDetector(
               onTap: () {
-                completer.complete(IntroduceResult.next);
-                overlayEntry.remove();
+                if (!completer.isCompleted) {
+                  completer.complete(IntroduceResult.next);
+                }
               },
               child: Material(
                 color: Colors.transparent,
@@ -364,9 +374,7 @@ class FeaturesTour extends StatelessWidget {
                 child: AbsorbPointer(
                   absorbing: true,
                   child: UnfeaturesTour(
-                    child: childConfig.child == null
-                        ? child
-                        : childConfig.child!(child),
+                    child: childConfig.child?.call(child) ?? child,
                   ),
                 ),
               ),
@@ -375,34 +383,28 @@ class FeaturesTour extends StatelessWidget {
         ),
       );
     });
+
     Overlay.of(
-      _context,
+      _context!,
       rootOverlay: introduceConfig.useRootOverlay,
     ).insert(overlayEntry);
 
-    /// Closed by the `barrierDismissible`.
-    final result = (await completer.future) ?? IntroduceResult.next;
+    final result = await completer.future;
+
+    if (overlayEntry.mounted) {
+      overlayEntry.remove();
+    }
 
     if (onPressed != null) {
-      Future<void> callOnPressed() async {
-        Completer completer = Completer();
-        completer.complete(onPressed!());
-        await completer.future;
-      }
-
       switch (result) {
-        case IntroduceResult.disabled:
-        case IntroduceResult.notMounted:
-          break;
         case IntroduceResult.skip:
           if (skipConfig.isCallOnPressed) {
-            await callOnPressed();
+            await onPressed!();
           }
-          break;
         case IntroduceResult.next:
         case IntroduceResult.done:
-          await callOnPressed();
-          break;
+          await onPressed!();
+        default:
       }
     }
 
