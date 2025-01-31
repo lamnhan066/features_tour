@@ -232,59 +232,6 @@ void main() {
 
 With these steps, you can easily create a tour to showcase the features of your app.
 
-## Additional
-
-If you want to use `FeaturesTour`s inside a `FeaturesTour`, you need to clone the `Widget`s inside the child `FeaturesTour`s and pass it to the parent `FeaturesTour` in the `childConfig` parameter like below:
-
-```dart
-FeaturesTour(
-    controller: tourController,
-    index: 1,
-    childConfig: ChildConfig(
-        child: (child) => Row(
-            children: [
-                Center(
-                    child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('Button 1'),
-                    ),
-                ),
-                Center(
-                    child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('Button 2'),
-                    ),
-                ),
-            ],
-        ),
-    ),
-    child: Row(
-        children: [
-            FeaturesTour(
-                controller: tourController,
-                index: 2,
-                child: Center(
-                    child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('Button 1'),
-                    ),
-                ),
-            ),
-            FeaturesTour(
-                controller: tourController,
-                index: 3,
-                child: Center(
-                    child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('Button 2'),
-                    ),
-                ),
-            ),
-        ]
-    ),
-)
-```
-
 ## Contributions
 
 Contributions to this project are welcome! If you would like to contribute, please feel free to submit pull requests or open issues. However, please note that this project is in early development and may not have well-defined contribution guidelines yet. We appreciate your patience and understanding as we work to build a strong and inclusive community around this package.
