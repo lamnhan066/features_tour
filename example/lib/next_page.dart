@@ -156,26 +156,6 @@ class _SecondPageState extends State<SecondPage> {
             introduce: const Text(
               'FeaturesTours inside a FeaturesTour',
             ),
-            childConfig: ChildConfig(
-              child: (child) => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Show dialog timeout (4 seconds)'),
-                    ),
-                  ),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Button 4'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
