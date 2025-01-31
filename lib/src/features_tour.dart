@@ -412,10 +412,11 @@ class FeaturesTour extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isUnfeaturesTour = UnfeaturesTour.isUnfeaturesTour(context);
-    if (enabled && !isUnfeaturesTour) controller._register(this);
+    final isEnabled = enabled && !isUnfeaturesTour;
+    if (isEnabled) controller._register(this);
 
     return KeyedSubtree(
-      key: isUnfeaturesTour ? null : _resolveKey(),
+      key: isEnabled ? _resolveKey() : null,
       child: child,
     );
   }
