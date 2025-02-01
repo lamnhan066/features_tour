@@ -1,3 +1,10 @@
+## 0.4.11
+
+* `FeaturesTour` is now a `const`.
+* It's safe to wrap `FeaturesTour`s with a `FeaturesTour` (It had the duplicated `GlobalKey` issue before).
+* Add `onAcceptButtonPressed`, `onLaterButtonPressed` and `onDismissButtonPressed` to the `Predialog` to handle those button pressed callbacks.
+* Refactor internal code.
+
 ## 0.4.10
 
 * [Feat] Add an ability to show on top of all Overlays.
