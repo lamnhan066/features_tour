@@ -128,15 +128,14 @@ class FeaturesTourController {
     // ignore: use_build_context_synchronously
     final result = await _showPredialog(context, force, predialogConfig);
 
-    // User pressed dismiss button.
-    if (result == null) {
-      _removePage(markAsShowed: true);
-      return;
-    }
-
-    // User pressed later button.
-    if (result == false) {
-      return;
+    switch (result) {
+      case ButtonTypes.accept:
+        break;
+      case ButtonTypes.later:
+        return;
+      case ButtonTypes.dismiss:
+        _removePage(markAsShowed: true);
+        return;
     }
 
     // Watching for the `waitForIndex` value.
@@ -285,7 +284,7 @@ class FeaturesTourController {
   }
 
   /// Show the predialog if possible.
-  Future<bool?> _showPredialog(
+  Future<ButtonTypes> _showPredialog(
     BuildContext context,
     bool? force,
     PredialogConfig? config,
@@ -306,12 +305,15 @@ class FeaturesTourController {
       if (config.enabled) {
         printDebug(() => 'Predialog is enabled');
 
-        final bool? predialogResult;
+        final ButtonTypes? predialogResult;
         if (config.modifiedDialogResult != null) {
           Completer<bool> completer = Completer();
           // ignore: use_build_context_synchronously
           completer.complete(config.modifiedDialogResult!(context));
-          predialogResult = await completer.future;
+          predialogResult = switch (await completer.future) {
+            true => ButtonTypes.accept,
+            false => ButtonTypes.later,
+          };
         } else {
           // ignore: use_build_context_synchronously
           predialogResult = await predialog(
@@ -320,15 +322,19 @@ class FeaturesTourController {
           );
         }
 
-        if (predialogResult == null) {
-          printDebug(() => 'User dismissed to show the introduction');
-          return null;
+        switch (predialogResult) {
+          case ButtonTypes.accept:
+            printDebug(() => 'User accepted to show the introduction');
+            config.onAcceptButtonPressed?.call();
+          case ButtonTypes.later:
+            printDebug(() => 'User chose to show the introduction later');
+            config.onLaterButtonPressed?.call();
+          case ButtonTypes.dismiss:
+            printDebug(() => 'User dismissed to show the introduction');
+            config.onDismissButtonPressed?.call();
         }
 
-        if (predialogResult == false) {
-          printDebug(() => 'User cancelled to show the introduction');
-          return false;
-        }
+        return predialogResult;
       } else {
         printDebug(() => 'Predialog is not enabled');
       }
@@ -336,7 +342,7 @@ class FeaturesTourController {
       printDebug(() => 'Should show predialog return false');
     }
 
-    return true;
+    return ButtonTypes.accept;
   }
 
   /// Wait for the next index to be available.
