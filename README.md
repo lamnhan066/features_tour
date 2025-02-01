@@ -110,13 +110,6 @@ FeaturesTour(
         ),
     ),
 
-    /// Config for the pre-dialog, it will show before the tours to ask the permission.
-    predialogConfig: PredialogConfig(
-      enabled: true,
-      // You can add your own dialog here. All others parameters will be ignored when using this method.
-      modifiedDialogResult: (context) => showDialog<bool>(context: context, builder: builder),
-    ),
-
     /// Config for the fake child widget. This fake child is default to original `child`.
     childConfig: ChildConfig(
         child: (child) => TextButton(
@@ -177,8 +170,12 @@ void initState() {
       /// Default is `null` (depends on the global config).
       force: false,
 
-      /// Show specific pre-dialog for this Page
-      predialogConfig: PredialogConfig(),
+      /// Config for the pre-dialog, it will show before the tours to ask the permission.
+      predialogConfig: PredialogConfig(
+        enabled: true,
+        // You can add your own dialog here. All others parameters will be ignored when using this method.
+        modifiedDialogResult: (context) => showDialog<bool>(context: context, builder: builder),
+      ),
     );
 ```
 
