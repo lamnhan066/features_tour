@@ -1,141 +1,143 @@
 import 'dart:async';
 
+import 'package:features_tour/src/models/button_types.dart';
 import 'package:flutter/material.dart';
 
 import '../features_tour.dart';
 import '../models/predialog_config.dart';
 
-/// Save the state of the doNotAskAgain checkbox.
-bool? _applyToAllPages;
+/// Caches the last "Do not ask again" selection.
+ButtonTypes? _applyToAllPages;
 
-/// Show the predialog with specific configuration.
-Future<bool?> predialog(BuildContext context, PredialogConfig config) async {
-  // If `_dontAskAgainResult` is not null, the `doNotAksAgain` is checked
-  // so just return the result.
+/// Displays a pre-dialog with a configurable UI.
+Future<ButtonTypes> predialog(
+  BuildContext context,
+  PredialogConfig config,
+) async {
+  // Return cached selection if "Do not ask again" was checked previously.
   if (_applyToAllPages != null) {
-    printDebug(() =>
-        'Apply to all screens is checked in the previous dialog, return previous result: $_applyToAllPages');
-    return _applyToAllPages;
+    printDebug(() => 'Returning cached result: $_applyToAllPages');
+    return _applyToAllPages!;
   }
 
-  bool checkbox = false;
-  final completer = Completer<bool?>();
-  late OverlayEntry overlayEntry;
-  overlayEntry = OverlayEntry(builder: (context) {
-    return Material(
+  bool isChecked = false;
+  final completer = Completer<ButtonTypes>();
+  final overlayEntry = OverlayEntry(
+    builder: (context) => Material(
       color: Colors.black54,
       child: AlertDialog(
-        title: Text(
-          config.title,
-          style: TextStyle(color: config.textColor),
-        ),
+        title: Text(config.title, style: TextStyle(color: config.textColor)),
         contentPadding:
-            const EdgeInsets.only(bottom: 8, top: 20, left: 24, right: 24),
+            const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              config.content,
-              style: TextStyle(color: config.textColor, fontSize: 13.5),
-            ),
+            Text(config.content,
+                style: TextStyle(color: config.textColor, fontSize: 13.5)),
             const SizedBox(height: 20),
-            FittedBox(
-              alignment: Alignment.centerLeft,
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: Checkbox(
-                          value: checkbox,
-                          side: BorderSide(color: config.textColor, width: 1.5),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() {
-                                checkbox = value;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      GestureDetector(
-                        child: Text(
-                          config.applyToAllPagesText,
-                          style: TextStyle(
-                            color: config.textColor,
-                            fontSize: 12,
-                          ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            checkbox = !checkbox;
-                          });
-                        },
-                      ),
-                    ],
-                  );
-                },
-              ),
+            _CheckboxRow(
+              text: config.applyToAllPagesText,
+              textColor: config.textColor,
+              onChanged: (value) => isChecked = value,
             ),
           ],
         ),
         backgroundColor: config.backgroundColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(config.borderRadius),
-        ),
+            borderRadius: BorderRadius.circular(config.borderRadius)),
         actions: [
           ElevatedButton(
-            onPressed: () {
-              completer.complete(true);
-              overlayEntry.remove();
-            },
+            onPressed: () => completer.complete(ButtonTypes.accept),
             style: config.acceptButtonStyle,
             child: config.acceptButtonText,
           ),
           TextButton(
-            onPressed: () {
-              completer.complete(false);
-              overlayEntry.remove();
-            },
+            onPressed: () => completer.complete(ButtonTypes.later),
             style: config.laterButtonStyle,
             child: config.laterButtonText,
           ),
           TextButton(
-            onPressed: () {
-              completer.complete(null);
-              overlayEntry.remove();
-            },
+            onPressed: () => completer.complete(ButtonTypes.dismiss),
             style: config.dismissButtonStyle,
             child: config.dismissButtonText,
           ),
         ],
       ),
-    );
-  });
-  Overlay.of(context).insert(overlayEntry);
+    ),
+  );
 
-  final result = await completer.future;
+  Overlay.of(context, rootOverlay: true).insert(overlayEntry);
 
-  // If the dontAskAgain checkbox is checked, the global configuration will be
-  // updated.
-  if (checkbox) {
-    printDebug(() =>
-        'applyToAllPages checkbox is checked => Update global predialog configuration');
-    _applyToAllPages = result;
+  try {
+    final result = await completer.future;
 
-    if (result == null) {
-      printDebug(() => 'All pages will be disabled to show introduction');
+    if (isChecked) {
+      printDebug(() => 'Updating global pre-dialog selection');
+      _applyToAllPages = result;
 
-      // TODO: Find another way to dismiss and apply to all. Current: all the FeaturesTour even a new one will be all dismissed.
-      SharedPrefs.setDismissAllTours(true);
+      if (result == ButtonTypes.dismiss) {
+        printDebug(() => 'Disabling all future introduction tours.');
+
+        // TODO: Handle tour-specific dismissals better.
+        SharedPrefs.setDismissAllTours(true);
+      }
     }
+
+    return result;
+  } catch (e, stackTrace) {
+    completer.completeError(e, stackTrace);
+    rethrow;
+  } finally {
+    overlayEntry.remove();
+  }
+}
+
+/// A stateful checkbox row with text for "Apply to all pages".
+class _CheckboxRow extends StatefulWidget {
+  final String text;
+  final Color textColor;
+  final ValueChanged<bool> onChanged;
+
+  const _CheckboxRow({
+    required this.text,
+    required this.textColor,
+    required this.onChanged,
+  });
+
+  @override
+  State<_CheckboxRow> createState() => _CheckboxRowState();
+}
+
+class _CheckboxRowState extends State<_CheckboxRow> {
+  bool isChecked = false;
+
+  void _toggleCheckbox() {
+    setState(() {
+      isChecked = !isChecked;
+    });
+    widget.onChanged(isChecked);
   }
 
-  return result;
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+      alignment: Alignment.centerLeft,
+      child: Row(
+        children: [
+          Checkbox(
+            value: isChecked,
+            side: BorderSide(color: widget.textColor, width: 1.5),
+            onChanged: (_) => _toggleCheckbox(),
+          ),
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: _toggleCheckbox,
+            child: Text(widget.text,
+                style: TextStyle(color: widget.textColor, fontSize: 12)),
+          ),
+        ],
+      ),
+    );
+  }
 }

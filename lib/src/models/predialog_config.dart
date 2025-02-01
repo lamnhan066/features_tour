@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class PredialogConfig {
-  /// Global configuration.
+  /// Global configuration instance.
+  /// This allows for a shared default configuration across the app.
   static PredialogConfig global = PredialogConfig._();
 
-  /// This is the configuration for Predialog.
+  /// Creates a new instance of `PredialogConfig` with customizable options.
   PredialogConfig._({
     this.enabled = true,
     this.title = 'Introduction',
@@ -27,85 +28,63 @@ class PredialogConfig {
     this.backgroundColor = Colors.white,
     this.textColor = Colors.black,
     this.modifiedDialogResult,
+    this.onAcceptButtonPressed,
+    this.onLaterButtonPressed,
+    this.onDismissButtonPressed,
   });
 
-  /// Controls whether the Predialog is enabled or disabled.
+  /// Whether the pre-dialog should be displayed or not.
   final bool enabled;
 
-  /// Specifies the background color of the dialog.
+  /// Background color of the dialog.
   final Color backgroundColor;
 
-  /// Defines the color for all the text within the dialog.
+  /// Text color for the dialog content.
   final Color textColor;
 
-  /// The title displayed at the top of the dialog. Defaults to 'Introduction'.
+  /// Title of the dialog.
   final String title;
 
-  /// The content message shown in the dialog. Defaults to "This page has some
-  /// new features that you might want to discover.\n\nWould you like to take a tour?".
+  /// Message content of the dialog.
   final String content;
 
-  /// The text for the checkbox that applies the tour to all pages. Defaults to 'Apply to all pages'.
+  /// Label for the 'Apply to all pages' checkbox.
   final String applyToAllPagesText;
 
-  /// The text displayed on the accept button.
+  /// Text for the accept button.
   final Text acceptButtonText;
 
-  /// Defines the style for the accept button, which is an [ElevatedButton].
+  /// Styling for the accept button (typically an `ElevatedButton`).
   final ButtonStyle? acceptButtonStyle;
 
-  /// The text displayed on the later button for postponing the action.
+  /// Text for the later button, allowing the user to postpone action.
   final Text laterButtonText;
 
-  /// Defines the style for the later button, which is a [TextButton].
+  /// Styling for the later button (typically a `TextButton`).
   final ButtonStyle? laterButtonStyle;
 
-  /// The text displayed on the dismiss button to close the dialog without taking any action.
+  /// Text for the dismiss button, allowing the user to close the dialog.
   final Text dismissButtonText;
 
-  /// Defines the style for the dismiss button, which is a [TextButton].
+  /// Styling for the dismiss button (typically a `TextButton`).
   final ButtonStyle? dismissButtonStyle;
 
-  /// The radius of the dialog's corners, giving it rounded edges.
+  /// The radius of the dialog's corners, making it rounded.
   final double borderRadius;
 
-  /// A custom function that provides a result for the modified dialog.
-  /// If set, it overrides the default dialog behavior and other settings are ignored.
+  /// Custom function to override the default dialog behavior.
   final FutureOr<bool> Function(BuildContext context)? modifiedDialogResult;
 
-  /// Creates a new pre-dialog based on the [global] values.
-  ///
-  /// [enabled] controls whether the pre-dialog is enabled or disabled.
-  /// Defaults to `true`.
-  ///
-  /// [title] sets the title of the dialog. Defaults to 'Introduction'.
-  ///
-  /// [content] specifies the content of the dialog. Defaults to the message:
-  /// "This page has some new features that you might want to discover.\n\nWould
-  /// you like to take a tour?".
-  ///
-  /// [applyToAllPagesText] defines the text for the "apply to all pages" checkbox.
-  /// Defaults to 'Apply to all pages'.
-  ///
-  /// [acceptButtonText] sets the text for the accept action button.
-  ///
-  /// [acceptButtonStyle] specifies the style for the accept button using [ElevatedButton].
-  ///
-  /// [laterButtonText] sets the text for the "ask again later" button.
-  ///
-  /// [laterButtonStyle] specifies the style for the later button using [TextButton].
-  ///
-  /// [dismissButtonText] sets the text for the dismiss button, preventing the
-  /// tour from being shown again.
-  ///
-  /// [dismissButtonStyle] specifies the style for the dismiss button using [TextButton].
-  ///
-  /// [borderRadius] controls the radius of the dialog's border. Defaults to 12.0.
-  ///
-  /// [backgroundColor] defines the background color of the dialog. Defaults to `Colors.white`.
-  ///
-  /// [textColor] specifies the color of the text in the dialog. Defaults to `Colors.black`.
+  /// Callback triggered when the accept button is pressed.
+  final VoidCallback? onAcceptButtonPressed;
 
+  /// Callback triggered when the later button is pressed.
+  final VoidCallback? onLaterButtonPressed;
+
+  /// Callback triggered when the dismiss button is pressed.
+  final VoidCallback? onDismissButtonPressed;
+
+  /// Creates a new `PredialogConfig` instance with optional overrides.
   factory PredialogConfig({
     bool? enabled,
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
@@ -121,6 +100,9 @@ class PredialogConfig {
     Text? dismissButtonText,
     ButtonStyle? dismissButtonStyle,
     double? borderRadius,
+    VoidCallback? onAcceptButtonPressed,
+    VoidCallback? onLaterButtonPressed,
+    VoidCallback? onDismissButtonPressed,
   }) {
     return global.copyWith(
       enabled: enabled,
@@ -137,62 +119,13 @@ class PredialogConfig {
       dismissButtonText: dismissButtonText,
       dismissButtonStyle: dismissButtonStyle,
       borderRadius: borderRadius,
+      onAcceptButtonPressed: onAcceptButtonPressed,
+      onLaterButtonPressed: onLaterButtonPressed,
+      onDismissButtonPressed: onDismissButtonPressed,
     );
   }
 
-  /// Creates a new pre-dialog based on the [global] values.
-  ///
-  /// [enabled] controls whether the pre-dialog is enabled or disabled.
-  /// Defaults to `true`.
-  ///
-  /// [title] sets the title of the dialog. Defaults to 'Introduction'.
-  ///
-  /// [content] specifies the content of the dialog. Defaults to the message:
-  /// "This page has some new features that you might want to discover.\n\nWould
-  /// you like to take a tour?".
-  ///
-  /// [applyToAllPagesText] defines the text for the "apply to all pages" checkbox.
-  /// Defaults to 'Apply to all pages'.
-  ///
-  /// [acceptButtonText] sets the text for the accept action button.
-  ///
-  /// [acceptButtonStyle] specifies the style for the accept button using [ElevatedButton].
-  ///
-  /// [laterButtonText] sets the text for the "ask again later" button.
-  ///
-  /// [laterButtonStyle] specifies the style for the later button using [TextButton].
-  ///
-  /// [dismissButtonText] sets the text for the dismiss button, preventing the
-  /// tour from being shown again.
-  ///
-  /// [dismissButtonStyle] specifies the style for the dismiss button using [TextButton].
-  ///
-  /// [borderRadius] controls the radius of the dialog's border. Defaults to 12.0.
-  ///
-  /// [backgroundColor] defines the background color of the dialog. Defaults to `Colors.white`.
-  ///
-  /// [textColor] specifies the color of the text in the dialog. Defaults to `Colors.black`.
-
-  @Deprecated('Use `PredialogConfig` instead.')
-  factory PredialogConfig.copyWith({
-    bool? enabled,
-    FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
-    Color? backgroundColor,
-    Color? textColor,
-    String? title,
-    String? applyToAllPagesText,
-    String? content,
-    Text? acceptButtonText,
-    ButtonStyle? acceptButtonStyle,
-    Text? laterButtonText,
-    ButtonStyle? laterButtonStyle,
-    Text? dismissButtonText,
-    ButtonStyle? dismissButtonStyle,
-    double? borderRadius,
-  }) =>
-      PredialogConfig as PredialogConfig;
-
-  /// Create a new Predialog base on this values.
+  /// Creates a new `PredialogConfig` instance based on existing values.
   PredialogConfig copyWith({
     bool? enabled,
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
@@ -208,6 +141,9 @@ class PredialogConfig {
     Text? dismissButtonText,
     ButtonStyle? dismissButtonStyle,
     double? borderRadius,
+    VoidCallback? onAcceptButtonPressed,
+    VoidCallback? onLaterButtonPressed,
+    VoidCallback? onDismissButtonPressed,
   }) {
     return PredialogConfig._(
       enabled: enabled ?? this.enabled,
@@ -224,6 +160,11 @@ class PredialogConfig {
       dismissButtonText: dismissButtonText ?? this.dismissButtonText,
       dismissButtonStyle: dismissButtonStyle ?? this.dismissButtonStyle,
       borderRadius: borderRadius ?? this.borderRadius,
+      onAcceptButtonPressed:
+          onAcceptButtonPressed ?? this.onAcceptButtonPressed,
+      onLaterButtonPressed: onLaterButtonPressed ?? this.onLaterButtonPressed,
+      onDismissButtonPressed:
+          onDismissButtonPressed ?? this.onDismissButtonPressed,
     );
   }
 }
