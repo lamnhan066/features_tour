@@ -262,120 +262,123 @@ class FeaturesTour extends StatelessWidget {
     final completer = Completer<IntroduceResult>();
 
     final overlayEntry = OverlayEntry(builder: (ctx) {
-      return GestureDetector(
-        onTap: childConfig.barrierDismissible
-            ? () {
-                if (!completer.isCompleted) {
-                  completer.complete(IntroduceResult.next);
+      return PopScope(
+        canPop: false,
+        child: GestureDetector(
+          onTap: childConfig.barrierDismissible
+              ? () {
+                  if (!completer.isCompleted) {
+                    completer.complete(IntroduceResult.next);
+                  }
                 }
-              }
-            : null,
-        child: Material(
-          color: introduceConfig.backgroundColor,
-          child: FeaturesChild(
-            globalKey: _resolveKey(),
-            childConfig: childConfig,
-            introduce: introduceConfig.applyDarkTheme
-                ? Theme(
-                    data: ThemeData.dark(),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: introduce,
-                    ),
-                  )
-                : introduce,
-            skip: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: skipConfig.child != null
-                    ? skipConfig.child!(() {
-                        if (!completer.isCompleted) {
-                          completer.complete(IntroduceResult.skip);
-                        }
-                      })
-                    : ElevatedButton(
-                        onPressed: () {
+              : null,
+          child: Material(
+            color: introduceConfig.backgroundColor,
+            child: FeaturesChild(
+              globalKey: _resolveKey(),
+              childConfig: childConfig,
+              introduce: introduceConfig.applyDarkTheme
+                  ? Theme(
+                      data: ThemeData.dark(),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: introduce,
+                      ),
+                    )
+                  : introduce,
+              skip: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: skipConfig.child != null
+                      ? skipConfig.child!(() {
                           if (!completer.isCompleted) {
                             completer.complete(IntroduceResult.skip);
                           }
-                        },
-                        style: skipConfig.buttonStyle,
-                        child: Text(
-                          skipConfig.text,
-                          style: skipConfig.textStyle ??
-                              TextStyle(color: skipConfig.color),
+                        })
+                      : ElevatedButton(
+                          onPressed: () {
+                            if (!completer.isCompleted) {
+                              completer.complete(IntroduceResult.skip);
+                            }
+                          },
+                          style: skipConfig.buttonStyle,
+                          child: Text(
+                            skipConfig.text,
+                            style: skipConfig.textStyle ??
+                                TextStyle(color: skipConfig.color),
+                          ),
                         ),
-                      ),
+                ),
               ),
-            ),
-            skipConfig: skipConfig,
-            next: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: nextConfig.child != null
-                    ? nextConfig.child!(() {
-                        if (!completer.isCompleted) {
-                          completer.complete(IntroduceResult.next);
-                        }
-                      })
-                    : ElevatedButton(
-                        onPressed: () {
+              skipConfig: skipConfig,
+              next: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: nextConfig.child != null
+                      ? nextConfig.child!(() {
                           if (!completer.isCompleted) {
                             completer.complete(IntroduceResult.next);
                           }
-                        },
-                        style: nextConfig.buttonStyle,
-                        child: Text(
-                          nextConfig.text,
-                          style: nextConfig.textStyle ??
-                              TextStyle(color: nextConfig.color),
+                        })
+                      : ElevatedButton(
+                          onPressed: () {
+                            if (!completer.isCompleted) {
+                              completer.complete(IntroduceResult.next);
+                            }
+                          },
+                          style: nextConfig.buttonStyle,
+                          child: Text(
+                            nextConfig.text,
+                            style: nextConfig.textStyle ??
+                                TextStyle(color: nextConfig.color),
+                          ),
                         ),
-                      ),
+                ),
               ),
-            ),
-            doneConfig: doneConfig,
-            done: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: doneConfig.child != null
-                    ? doneConfig.child!(() {
-                        if (!completer.isCompleted) {
-                          completer.complete(IntroduceResult.done);
-                        }
-                      })
-                    : ElevatedButton(
-                        onPressed: () {
+              doneConfig: doneConfig,
+              done: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: doneConfig.child != null
+                      ? doneConfig.child!(() {
                           if (!completer.isCompleted) {
                             completer.complete(IntroduceResult.done);
                           }
-                        },
-                        style: doneConfig.buttonStyle,
-                        child: Text(
-                          doneConfig.text,
-                          style: doneConfig.textStyle ??
-                              TextStyle(color: doneConfig.color),
+                        })
+                      : ElevatedButton(
+                          onPressed: () {
+                            if (!completer.isCompleted) {
+                              completer.complete(IntroduceResult.done);
+                            }
+                          },
+                          style: doneConfig.buttonStyle,
+                          child: Text(
+                            doneConfig.text,
+                            style: doneConfig.textStyle ??
+                                TextStyle(color: doneConfig.color),
+                          ),
                         ),
-                      ),
+                ),
               ),
-            ),
-            isLastState: isLastState,
-            nextConfig: nextConfig,
-            padding: introduceConfig.padding,
-            alignment: introduceConfig.alignment,
-            quadrantAlignment: introduceConfig.quadrantAlignment,
-            child: GestureDetector(
-              onTap: () {
-                if (!completer.isCompleted) {
-                  completer.complete(IntroduceResult.next);
-                }
-              },
-              child: Material(
-                color: Colors.transparent,
-                type: MaterialType.canvas,
-                child: AbsorbPointer(
-                  absorbing: true,
-                  child: UnfeaturesTour(
-                    child: childConfig.child?.call(child) ?? child,
+              isLastState: isLastState,
+              nextConfig: nextConfig,
+              padding: introduceConfig.padding,
+              alignment: introduceConfig.alignment,
+              quadrantAlignment: introduceConfig.quadrantAlignment,
+              child: GestureDetector(
+                onTap: () {
+                  if (!completer.isCompleted) {
+                    completer.complete(IntroduceResult.next);
+                  }
+                },
+                child: Material(
+                  color: Colors.transparent,
+                  type: MaterialType.canvas,
+                  child: AbsorbPointer(
+                    absorbing: true,
+                    child: UnfeaturesTour(
+                      child: childConfig.child?.call(child) ?? child,
+                    ),
                   ),
                 ),
               ),
@@ -418,9 +421,12 @@ class FeaturesTour extends StatelessWidget {
     final isEnabled = enabled && !isUnfeaturesTour;
     if (isEnabled) controller._register(this);
 
-    return KeyedSubtree(
-      key: isEnabled ? _resolveKey() : null,
-      child: child,
+    return PopScope(
+      canPop: false,
+      child: KeyedSubtree(
+        key: isEnabled ? _resolveKey() : null,
+        child: child,
+      ),
     );
   }
 }
