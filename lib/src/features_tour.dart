@@ -161,6 +161,7 @@ class FeaturesTour extends StatelessWidget {
     this.doneConfig,
     this.enabled = true,
     this.onPressed,
+    this.canPop = true,
   });
 
   GlobalKey _resolveKey() {
@@ -196,6 +197,12 @@ class FeaturesTour extends StatelessWidget {
 
   /// Determines whether this widget's actions are enabled.
   final bool enabled;
+
+  /// The [child] will be wrapped with the [PopScope] to control the pop behavior.
+  ///
+  /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
+  /// it blocks the current route from being popped.
+  final bool canPop;
 
   /// The child widget wrapped by the [FeaturesTour].
   final Widget child;
@@ -248,8 +255,9 @@ class FeaturesTour extends StatelessWidget {
     if (isEnabled) controller._register(this);
 
     return PopScope(
+      canPop: canPop,
       onPopInvokedWithResult: (didPop, result) async {
-        await controller._stop();
+        if (canPop) await controller._stop();
       },
       child: KeyedSubtree(
         key: isEnabled ? _resolveKey() : null,
