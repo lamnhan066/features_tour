@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../features_tour.dart';
 
-DialogRoute? _coverDialog;
+OverlayEntry? _coverOverlay;
 
 /// Show the cover to avoid user tapping the screen.
 void showCover(BuildContext context) {
@@ -12,22 +12,17 @@ void showCover(BuildContext context) {
     return;
   }
 
-  _coverDialog = DialogRoute(
-    context: context,
-    barrierDismissible: false,
-    useSafeArea: false,
-    barrierColor: Colors.transparent,
-    builder: (context) {
-      return const PopScope(
+  _coverOverlay = OverlayEntry(builder: (ctx) {
+    return Material(
+      color: Colors.transparent,
+      child: const PopScope(
         canPop: false,
         child: SizedBox.shrink(),
-      );
-    },
-  );
-
-  Navigator.of(context).push(_coverDialog!).then((value) {
-    _coverDialog = null;
+      ),
+    );
   });
+
+  Overlay.of(context, rootOverlay: true).insert(_coverOverlay!);
 }
 
 /// Hide the cover to let the user able to tap the screen.
@@ -37,8 +32,7 @@ void hideCover(BuildContext context) {
         () => 'Cannot hide the cover because the build context is not mounted');
     return;
   }
-  if (_coverDialog != null) {
-    Navigator.of(context).removeRoute(_coverDialog!);
-  }
-  _coverDialog = null;
+
+  _coverOverlay?.remove();
+  _coverOverlay = null;
 }
