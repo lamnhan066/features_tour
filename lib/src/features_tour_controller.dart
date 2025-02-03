@@ -4,13 +4,16 @@ class FeaturesTourController {
   /// Internal preferences.
   static SharedPreferences? _prefs;
 
+  /// Store all available controllers
+  static final Set<FeaturesTourController> _controllers = {};
+
   /// Creates a [FeaturesTourController] for the tour with a unique [pageName].
   /// The [pageName] is used to persist the state of the current page.
   ///
   /// **Note:** Avoid changing the [pageName] to prevent re-displaying the instructions
   /// for this page.
   FeaturesTourController(this.pageName) {
-    FeaturesTour._controllers.add(this);
+    _controllers.add(this);
   }
 
   /// Name of this page.

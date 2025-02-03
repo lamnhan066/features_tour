@@ -23,9 +23,6 @@ class FeaturesTour extends StatelessWidget {
   /// Global force variable.
   static bool? _force;
 
-  /// Store all available controllers
-  static final Set<FeaturesTourController> _controllers = {};
-
   /// Allow printing the debug logs.
   static bool _debugLog = false;
 
@@ -110,7 +107,7 @@ class FeaturesTour extends StatelessWidget {
 
   /// Removes all controllers for all pages.
   static Future<void> removeAll({bool markAsShowed = true}) async {
-    for (final controller in _controllers) {
+    for (final controller in FeaturesTourController._controllers) {
       await controller._removePage(markAsShowed: markAsShowed);
     }
     printDebug(() => 'All pages has been removed');
