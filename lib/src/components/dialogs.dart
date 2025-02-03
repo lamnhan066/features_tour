@@ -38,12 +38,13 @@ Future<ButtonTypes> predialog(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(config.content,
-                style: TextStyle(color: config.textColor, fontSize: 13.5)),
+            Text(
+              config.content,
+              style: TextStyle(color: config.textColor, fontSize: 13.5),
+            ),
             const SizedBox(height: 20),
             _CheckboxRow(
               text: config.applyToAllPagesText,
-              textColor: config.textColor,
               onChanged: (value) => isChecked = value,
             ),
           ],
@@ -101,12 +102,11 @@ Future<ButtonTypes> predialog(
 /// A stateful checkbox row with text for "Apply to all pages".
 class _CheckboxRow extends StatefulWidget {
   final String text;
-  final Color textColor;
+
   final ValueChanged<bool> onChanged;
 
   const _CheckboxRow({
     required this.text,
-    required this.textColor,
     required this.onChanged,
   });
 
@@ -126,20 +126,27 @@ class _CheckboxRowState extends State<_CheckboxRow> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return FittedBox(
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          Checkbox(
-            value: isChecked,
-            side: BorderSide(color: widget.textColor, width: 1.5),
-            onChanged: (_) => _toggleCheckbox(),
+          SizedBox(
+            width: 20,
+            height: 20,
+            child: Checkbox(
+              value: isChecked,
+              side: BorderSide(color: primaryColor, width: 1.5),
+              onChanged: (_) => _toggleCheckbox(),
+            ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: 8),
           GestureDetector(
             onTap: _toggleCheckbox,
-            child: Text(widget.text,
-                style: TextStyle(color: widget.textColor, fontSize: 12)),
+            child: Text(
+              widget.text,
+              style: TextStyle(color: primaryColor),
+            ),
           ),
         ],
       ),
