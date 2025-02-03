@@ -11,7 +11,7 @@ Demo: [pub.lamnhan.dev/features_tour](https://pub.lamnhan.dev/features_tour)
 ### Create a controller
 
 ```dart
-// Use this method to set name for this page. This value will prevent the dupplicated `index` issues.
+// Use this method to set the unique name for the current page.
 final tourController = FeaturesTourController('HomePage');
 ```
 
