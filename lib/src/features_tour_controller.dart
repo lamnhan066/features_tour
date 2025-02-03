@@ -289,108 +289,102 @@ class FeaturesTourController {
     }
 
     final overlayEntry = OverlayEntry(builder: (ctx) {
-      return PopScope(
-        onPopInvokedWithResult: (didPop, result) {
-          complete(IntroduceResult.skip);
-        },
-        child: GestureDetector(
-          onTap: childConfig.barrierDismissible
-              ? () => complete(IntroduceResult.next)
-              : null,
-          child: Material(
-            color: introduceConfig.backgroundColor,
-            child: FeaturesChild(
-              globalKey: state._resolveKey(),
-              childConfig: childConfig,
-              introduce: introduceConfig.applyDarkTheme
-                  ? Theme(
-                      data: ThemeData.dark(),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: state.introduce,
-                      ),
-                    )
-                  : state.introduce,
-              skip: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: skipConfig.child != null
-                      ? skipConfig.child!(() {
-                          complete(IntroduceResult.skip);
-                        })
-                      : ElevatedButton(
-                          onPressed: () {
-                            complete(IntroduceResult.skip);
-                          },
-                          style: skipConfig.buttonStyle,
-                          child: Text(
-                            skipConfig.text,
-                            style: skipConfig.textStyle ??
-                                TextStyle(color: skipConfig.color),
-                          ),
-                        ),
-                ),
-              ),
-              skipConfig: skipConfig,
-              next: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: nextConfig.child != null
-                      ? nextConfig.child!(() {
-                          complete(IntroduceResult.next);
-                        })
-                      : ElevatedButton(
-                          onPressed: () {
-                            complete(IntroduceResult.next);
-                          },
-                          style: nextConfig.buttonStyle,
-                          child: Text(
-                            nextConfig.text,
-                            style: nextConfig.textStyle ??
-                                TextStyle(color: nextConfig.color),
-                          ),
-                        ),
-                ),
-              ),
-              doneConfig: doneConfig,
-              done: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: doneConfig.child != null
-                      ? doneConfig.child!(() {
-                          complete(IntroduceResult.done);
-                        })
-                      : ElevatedButton(
-                          onPressed: () {
-                            complete(IntroduceResult.done);
-                          },
-                          style: doneConfig.buttonStyle,
-                          child: Text(
-                            doneConfig.text,
-                            style: doneConfig.textStyle ??
-                                TextStyle(color: doneConfig.color),
-                          ),
-                        ),
-                ),
-              ),
-              isLastState: isLastState,
-              nextConfig: nextConfig,
-              padding: introduceConfig.padding,
-              alignment: introduceConfig.alignment,
-              quadrantAlignment: introduceConfig.quadrantAlignment,
-              child: GestureDetector(
-                onTap: () {
-                  complete(IntroduceResult.next);
-                },
-                child: Material(
-                  color: Colors.transparent,
-                  type: MaterialType.canvas,
-                  child: AbsorbPointer(
-                    absorbing: true,
-                    child: UnfeaturesTour(
-                      child:
-                          childConfig.child?.call(state.child) ?? state.child,
+      return GestureDetector(
+        onTap: childConfig.barrierDismissible
+            ? () => complete(IntroduceResult.next)
+            : null,
+        child: Material(
+          color: introduceConfig.backgroundColor,
+          child: FeaturesChild(
+            globalKey: state._resolveKey(),
+            childConfig: childConfig,
+            introduce: introduceConfig.applyDarkTheme
+                ? Theme(
+                    data: ThemeData.dark(),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: state.introduce,
                     ),
+                  )
+                : state.introduce,
+            skip: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: skipConfig.child != null
+                    ? skipConfig.child!(() {
+                        complete(IntroduceResult.skip);
+                      })
+                    : ElevatedButton(
+                        onPressed: () {
+                          complete(IntroduceResult.skip);
+                        },
+                        style: skipConfig.buttonStyle,
+                        child: Text(
+                          skipConfig.text,
+                          style: skipConfig.textStyle ??
+                              TextStyle(color: skipConfig.color),
+                        ),
+                      ),
+              ),
+            ),
+            skipConfig: skipConfig,
+            next: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: nextConfig.child != null
+                    ? nextConfig.child!(() {
+                        complete(IntroduceResult.next);
+                      })
+                    : ElevatedButton(
+                        onPressed: () {
+                          complete(IntroduceResult.next);
+                        },
+                        style: nextConfig.buttonStyle,
+                        child: Text(
+                          nextConfig.text,
+                          style: nextConfig.textStyle ??
+                              TextStyle(color: nextConfig.color),
+                        ),
+                      ),
+              ),
+            ),
+            doneConfig: doneConfig,
+            done: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: doneConfig.child != null
+                    ? doneConfig.child!(() {
+                        complete(IntroduceResult.done);
+                      })
+                    : ElevatedButton(
+                        onPressed: () {
+                          complete(IntroduceResult.done);
+                        },
+                        style: doneConfig.buttonStyle,
+                        child: Text(
+                          doneConfig.text,
+                          style: doneConfig.textStyle ??
+                              TextStyle(color: doneConfig.color),
+                        ),
+                      ),
+              ),
+            ),
+            isLastState: isLastState,
+            nextConfig: nextConfig,
+            padding: introduceConfig.padding,
+            alignment: introduceConfig.alignment,
+            quadrantAlignment: introduceConfig.quadrantAlignment,
+            child: GestureDetector(
+              onTap: () {
+                complete(IntroduceResult.next);
+              },
+              child: Material(
+                color: Colors.transparent,
+                type: MaterialType.canvas,
+                child: AbsorbPointer(
+                  absorbing: true,
+                  child: UnfeaturesTour(
+                    child: childConfig.child?.call(state.child) ?? state.child,
                   ),
                 ),
               ),
