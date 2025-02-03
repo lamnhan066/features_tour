@@ -35,9 +35,9 @@ class SkipConfig extends BaseConfig {
   /// [textStyle] defines the [TextStyle] of the skip button text.
   ///
   /// [buttonStyle] defines the [ButtonStyle] of the button.
-  /// Defaults to:
+  /// Example:
   /// ```dart
-  ///    style: ElevatedButton.styleFrom(
+  ///    buttonStyle: ElevatedButton.styleFrom(
   ///      shape: RoundedRectangleBorder(
   ///        side: const BorderSide(
   ///          color: Colors.red,

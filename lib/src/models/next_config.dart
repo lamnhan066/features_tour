@@ -31,9 +31,10 @@ class NextConfig extends BaseConfig {
   ///
   /// [textStyle] defines the [TextStyle] for the button text.
   ///
-  /// [buttonStyle] specifies the [ButtonStyle] of the button. Default:
+  /// [buttonStyle] specifies the [ButtonStyle] of the button.
+  /// Example:
   /// ```dart
-  ///    style: ElevatedButton.styleFrom(
+  ///    buttonStyle: ElevatedButton.styleFrom(
   ///      shape: RoundedRectangleBorder(
   ///        side: const BorderSide(
   ///          color: Colors.red,

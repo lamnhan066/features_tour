@@ -49,13 +49,13 @@ class FeaturesTour extends StatelessWidget {
   /// Ex:
   /// ``` dart
   /// setGlobalConfig(
-  ///   childConfig: ChildConfig.global.copyWith(
+  ///   childConfig: ChildConfig(
   ///      backgroundColor : Colors.white,
   ///   ),
-  ///   skipConfig: SkipConfig.global.copyWith(
+  ///   skipConfig: SkipConfig(
   ///     text: 'SKIP >>>',
   ///   ),
-  ///   introduceConfig: IntroduceConfig.global.copyWith(
+  ///   introduceConfig: IntroduceConfig(
   ///     backgroundColor = Colors.black,
   ///   ),
   /// );

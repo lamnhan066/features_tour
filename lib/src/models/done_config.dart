@@ -29,9 +29,9 @@ class DoneConfig extends BaseConfig {
   /// [textStyle] defines the text style for the button.
   ///
   /// [buttonStyle] defines the button's style, such as its shape and borders.
-  /// Default:
+  /// Example:
   /// ``` dart
-  ///    style: ElevatedButton.styleFrom(
+  ///    buttonStyle: ElevatedButton.styleFrom(
   ///      shape: RoundedRectangleBorder(
   ///        side: const BorderSide(
   ///          color: Colors.red,

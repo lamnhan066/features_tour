@@ -30,9 +30,9 @@ abstract class BaseConfig {
 
   /// The [ButtonStyle] applied to the button.
   ///
-  /// Default:
+  /// Example:
   /// ```dart
-  /// TextButton.styleFrom(
+  /// buttonStyle: TextButton.styleFrom(
   ///   shape: RoundedRectangleBorder(
   ///     side: BorderSide(color: Colors.red),
   ///     borderRadius: BorderRadius.circular(10),
