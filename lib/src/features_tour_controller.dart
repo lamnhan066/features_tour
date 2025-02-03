@@ -199,10 +199,15 @@ class FeaturesTourController {
       // ignore: use_build_context_synchronously
       await _waitForTransition(state._context);
 
+      if (!context.mounted) {
+        printDebug(() => '   -> The parent widget was unmounted');
+        break;
+      }
+
       // If there is no state in queue and no index to wait for then it's
       // the last state.
       final isLastState = _states.isEmpty && waitForIndex == null;
-      final result = await state.showIntroduce(isLastState);
+      final result = await _showIntroduce(context, state, isLastState);
 
       switch (result) {
         case IntroduceResult.disabled:
@@ -256,6 +261,170 @@ class FeaturesTourController {
     }
 
     printDebug(() => 'This tour has been completed');
+  }
+
+  Future<IntroduceResult> _showIntroduce(
+    BuildContext context,
+    FeaturesTour state,
+    bool isLastState,
+  ) async {
+    if (!context.mounted) {
+      return IntroduceResult.notMounted;
+    }
+
+    if (!state.enabled || UnfeaturesTour.isUnfeaturesTour(context)) {
+      return IntroduceResult.disabled;
+    }
+
+    final introduceConfig = state.introduceConfig ?? IntroduceConfig.global;
+    final childConfig = state.childConfig ?? ChildConfig.global;
+    final skipConfig = state.skipConfig ?? SkipConfig.global;
+    final nextConfig = state.nextConfig ?? NextConfig.global;
+    final doneConfig = state.doneConfig ?? DoneConfig.global;
+
+    final completer = Completer<IntroduceResult>();
+
+    void complete(IntroduceResult result) {
+      if (!completer.isCompleted) completer.complete(result);
+    }
+
+    final overlayEntry = OverlayEntry(builder: (ctx) {
+      return PopScope(
+        onPopInvokedWithResult: (didPop, result) {
+          complete(IntroduceResult.skip);
+        },
+        child: GestureDetector(
+          onTap: childConfig.barrierDismissible
+              ? () => complete(IntroduceResult.next)
+              : null,
+          child: Material(
+            color: introduceConfig.backgroundColor,
+            child: FeaturesChild(
+              globalKey: state._resolveKey(),
+              childConfig: childConfig,
+              introduce: introduceConfig.applyDarkTheme
+                  ? Theme(
+                      data: ThemeData.dark(),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: state.introduce,
+                      ),
+                    )
+                  : state.introduce,
+              skip: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: skipConfig.child != null
+                      ? skipConfig.child!(() {
+                          complete(IntroduceResult.skip);
+                        })
+                      : ElevatedButton(
+                          onPressed: () {
+                            complete(IntroduceResult.skip);
+                          },
+                          style: skipConfig.buttonStyle,
+                          child: Text(
+                            skipConfig.text,
+                            style: skipConfig.textStyle ??
+                                TextStyle(color: skipConfig.color),
+                          ),
+                        ),
+                ),
+              ),
+              skipConfig: skipConfig,
+              next: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: nextConfig.child != null
+                      ? nextConfig.child!(() {
+                          complete(IntroduceResult.next);
+                        })
+                      : ElevatedButton(
+                          onPressed: () {
+                            complete(IntroduceResult.next);
+                          },
+                          style: nextConfig.buttonStyle,
+                          child: Text(
+                            nextConfig.text,
+                            style: nextConfig.textStyle ??
+                                TextStyle(color: nextConfig.color),
+                          ),
+                        ),
+                ),
+              ),
+              doneConfig: doneConfig,
+              done: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: doneConfig.child != null
+                      ? doneConfig.child!(() {
+                          complete(IntroduceResult.done);
+                        })
+                      : ElevatedButton(
+                          onPressed: () {
+                            complete(IntroduceResult.done);
+                          },
+                          style: doneConfig.buttonStyle,
+                          child: Text(
+                            doneConfig.text,
+                            style: doneConfig.textStyle ??
+                                TextStyle(color: doneConfig.color),
+                          ),
+                        ),
+                ),
+              ),
+              isLastState: isLastState,
+              nextConfig: nextConfig,
+              padding: introduceConfig.padding,
+              alignment: introduceConfig.alignment,
+              quadrantAlignment: introduceConfig.quadrantAlignment,
+              child: GestureDetector(
+                onTap: () {
+                  complete(IntroduceResult.next);
+                },
+                child: Material(
+                  color: Colors.transparent,
+                  type: MaterialType.canvas,
+                  child: AbsorbPointer(
+                    absorbing: true,
+                    child: UnfeaturesTour(
+                      child:
+                          childConfig.child?.call(state.child) ?? state.child,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+
+    Overlay.of(
+      context,
+      rootOverlay: introduceConfig.useRootOverlay,
+    ).insert(overlayEntry);
+
+    final result = await completer.future;
+
+    if (overlayEntry.mounted) {
+      overlayEntry.remove();
+    }
+
+    if (state.onPressed != null) {
+      switch (result) {
+        case IntroduceResult.skip:
+          if (skipConfig.isCallOnPressed) {
+            await state.onPressed!();
+          }
+        case IntroduceResult.next:
+        case IntroduceResult.done:
+          await state.onPressed!();
+        default:
+      }
+    }
+
+    return result;
   }
 
   Future<void> _removedAllShownIntroductions(bool? force) async {
