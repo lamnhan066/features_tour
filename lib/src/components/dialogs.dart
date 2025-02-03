@@ -22,6 +22,11 @@ Future<ButtonTypes> predialog(
 
   bool isChecked = false;
   final completer = Completer<ButtonTypes>();
+
+  void complete(ButtonTypes type) {
+    if (!completer.isCompleted) completer.complete(type);
+  }
+
   final overlayEntry = OverlayEntry(
     builder: (context) => Material(
       color: Colors.black54,
@@ -48,17 +53,17 @@ Future<ButtonTypes> predialog(
             borderRadius: BorderRadius.circular(config.borderRadius)),
         actions: [
           ElevatedButton(
-            onPressed: () => completer.complete(ButtonTypes.accept),
+            onPressed: () => complete(ButtonTypes.accept),
             style: config.acceptButtonStyle,
             child: config.acceptButtonText,
           ),
           TextButton(
-            onPressed: () => completer.complete(ButtonTypes.later),
+            onPressed: () => complete(ButtonTypes.later),
             style: config.laterButtonStyle,
             child: config.laterButtonText,
           ),
           TextButton(
-            onPressed: () => completer.complete(ButtonTypes.dismiss),
+            onPressed: () => complete(ButtonTypes.dismiss),
             style: config.dismissButtonStyle,
             child: config.dismissButtonText,
           ),
