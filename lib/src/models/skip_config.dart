@@ -1,7 +1,7 @@
-import 'package:features_tour/src/models/base_config.dart';
+import 'package:features_tour/src/models/base_button_config.dart';
 import 'package:flutter/material.dart';
 
-class SkipConfig extends BaseConfig {
+class SkipConfig extends BaseButtonConfig {
   /// Global configuration.
   static SkipConfig global = const SkipConfig._();
 
@@ -86,9 +86,9 @@ class SkipConfig extends BaseConfig {
   /// [textStyle] defines the [TextStyle] of the skip button text.
   ///
   /// [buttonStyle] defines the [ButtonStyle] of the button.
-  /// Defaults to:
+  /// Example:
   /// ```dart
-  ///    style: ElevatedButton.styleFrom(
+  ///    buttonStyle: ElevatedButton.styleFrom(
   ///      shape: RoundedRectangleBorder(
   ///        side: const BorderSide(
   ///          color: Colors.red,

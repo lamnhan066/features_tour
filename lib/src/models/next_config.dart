@@ -1,7 +1,7 @@
-import 'package:features_tour/src/models/base_config.dart';
+import 'package:features_tour/src/models/base_button_config.dart';
 import 'package:flutter/material.dart';
 
-class NextConfig extends BaseConfig {
+class NextConfig extends BaseButtonConfig {
   /// Global configuration.
   static NextConfig global = const NextConfig._();
 
@@ -80,9 +80,9 @@ class NextConfig extends BaseConfig {
   /// [textStyle] is the [TextStyle] of the button.
   ///
   /// [buttonStyle] is the [ButtonStyle] of the button.
-  /// Default:
+  /// Example:
   /// ``` dart
-  ///    style: ElevatedButton.styleFrom(
+  ///    buttonStyle: ElevatedButton.styleFrom(
   ///      shape: RoundedRectangleBorder(
   ///        side: const BorderSide(
   ///          color: Colors.red,

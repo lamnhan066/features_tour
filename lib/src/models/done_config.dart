@@ -1,7 +1,7 @@
-import 'package:features_tour/src/models/base_config.dart';
+import 'package:features_tour/src/models/base_button_config.dart';
 import 'package:flutter/material.dart';
 
-class DoneConfig extends BaseConfig {
+class DoneConfig extends BaseButtonConfig {
   /// Global configuration.
   static DoneConfig global = DoneConfig._();
 
@@ -73,9 +73,9 @@ class DoneConfig extends BaseConfig {
   /// [textStyle] is the [TextStyle] of the button.
   ///
   /// [buttonStyle] is the [ButtonStyle] of the button.
-  /// Default:
+  /// Example:
   /// ``` dart
-  ///    style: ElevatedButton.styleFrom(
+  ///    buttonStyle: ElevatedButton.styleFrom(
   ///      shape: RoundedRectangleBorder(
   ///        side: const BorderSide(
   ///          color: Colors.red,
