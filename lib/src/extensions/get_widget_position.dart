@@ -15,17 +15,4 @@ extension GlobalKeyExtension on GlobalKey {
       return null;
     }
   }
-
-  // Rect? get getRectFromKey {
-  //   var object = currentContext?.findRenderObject();
-  //   var translation = object?.getTransformTo(null).getTranslation();
-  //   var size = object?.semanticBounds.size;
-
-  //   if (translation != null && size != null) {
-  //     return Rect.fromLTWH(
-  //         translation.x, translation.y, size.width, size.height);
-  //   } else {
-  //     return null;
-  //   }
-  // }
 }
