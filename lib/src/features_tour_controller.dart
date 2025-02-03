@@ -25,6 +25,8 @@ class FeaturesTourController {
   /// The internal list of the introduced states.
   final Set<double> _introducedIndexes = {};
 
+  Completer? _introduceCompleter;
+
   /// Register the current FeaturesTour state.
   void _register(FeaturesTour state) {
     if (!_states.containsKey(state.index)) {
@@ -263,6 +265,14 @@ class FeaturesTourController {
     printDebug(() => 'This tour has been completed');
   }
 
+  /// Stops the current tour by sending a skip signal, equivalent to pressing
+  /// the SKIP button.
+  Future<void> _stop() async {
+    if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
+      _introduceCompleter?.complete(IntroduceResult.skip);
+    }
+  }
+
   Future<IntroduceResult> _showIntroduce(
     BuildContext context,
     FeaturesTour state,
@@ -282,10 +292,12 @@ class FeaturesTourController {
     final nextConfig = state.nextConfig ?? NextConfig.global;
     final doneConfig = state.doneConfig ?? DoneConfig.global;
 
-    final completer = Completer<IntroduceResult>();
+    _introduceCompleter = Completer<IntroduceResult>();
 
     void complete(IntroduceResult result) {
-      if (!completer.isCompleted) completer.complete(result);
+      if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
+        _introduceCompleter?.complete(result);
+      }
     }
 
     final overlayEntry = OverlayEntry(builder: (ctx) {
@@ -399,7 +411,8 @@ class FeaturesTourController {
       rootOverlay: introduceConfig.useRootOverlay,
     ).insert(overlayEntry);
 
-    final result = await completer.future;
+    final result = await _introduceCompleter!.future;
+    _introduceCompleter = null;
 
     if (overlayEntry.mounted) {
       overlayEntry.remove();

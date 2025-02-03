@@ -251,7 +251,9 @@ class FeaturesTour extends StatelessWidget {
     if (isEnabled) controller._register(this);
 
     return PopScope(
-      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        await controller._stop();
+      },
       child: KeyedSubtree(
         key: isEnabled ? _resolveKey() : null,
         child: child,
