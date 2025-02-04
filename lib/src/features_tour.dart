@@ -130,6 +130,9 @@ class FeaturesTour extends StatelessWidget {
   /// It is a `double`, allowing for insertion of new features between existing ones.
   /// Ensure this value remains unchanged to prevent reintroducing the same feature unnecessarily.
   ///
+  /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
+  /// it blocks the current route from being popped.
+  ///
   /// Use [waitForIndex] to specify the next index to display.
   /// The app will pause interaction until the specified index becomes available, making it ideal
   /// for scenarios like displaying a [FeaturesTour] in a dialog that opens after the current feature.
@@ -150,6 +153,7 @@ class FeaturesTour extends StatelessWidget {
     super.key,
     required this.controller,
     required this.index,
+    this.canPop = true,
     this.waitForIndex,
     this.waitForTimeout = const Duration(seconds: 3),
     required this.child,
@@ -161,7 +165,6 @@ class FeaturesTour extends StatelessWidget {
     this.doneConfig,
     this.enabled = true,
     this.onPressed,
-    this.canPop = true,
   });
 
   GlobalKey _resolveKey() {
