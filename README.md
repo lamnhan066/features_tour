@@ -50,6 +50,10 @@ FeaturesTour(
     /// Index of this widget in the tour. It must be unique in the same page.
     index: 0,
 
+    /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
+    /// it blocks the current route from being popped.
+    canPop: true,
+
     /// [Optional] The app will be freezed until this index is appeared, so careful when using this feature.
     waitForIndex: 1,
 
