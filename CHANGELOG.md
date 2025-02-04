@@ -1,3 +1,9 @@
+## 0.4.12
+
+* Add `canPop` parameter to the `FeaturesTour` to control the `PopScope`.
+* Add `applyToAllPagesTextColor` parameter to PredialogConfig to set the color for the `Apply to all pages` text.
+* Improve the style of the pre-dialog checkbox and label.
+
 ## 0.4.11
 
 * `FeaturesTour` is now a `const`.
