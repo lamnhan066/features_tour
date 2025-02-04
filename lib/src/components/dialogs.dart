@@ -45,6 +45,8 @@ Future<ButtonTypes> predialog(
             const SizedBox(height: 20),
             _CheckboxRow(
               text: config.applyToAllPagesText,
+              baseTextColor: config.textColor,
+              checkboxTextColor: config.applyToAllPagesTextColor,
               onChanged: (value) => isChecked = value,
             ),
           ],
@@ -102,11 +104,14 @@ Future<ButtonTypes> predialog(
 /// A stateful checkbox row with text for "Apply to all pages".
 class _CheckboxRow extends StatefulWidget {
   final String text;
-
+  final Color? baseTextColor;
+  final Color? checkboxTextColor;
   final ValueChanged<bool> onChanged;
 
   const _CheckboxRow({
     required this.text,
+    required this.baseTextColor,
+    required this.checkboxTextColor,
     required this.onChanged,
   });
 
@@ -126,17 +131,20 @@ class _CheckboxRowState extends State<_CheckboxRow> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).primaryColor;
+    final color = widget.checkboxTextColor ??
+        widget.baseTextColor ??
+        Theme.of(context).primaryColor;
     return FittedBox(
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
           SizedBox(
-            width: 20,
-            height: 20,
+            width: Checkbox.width,
+            height: Checkbox.width,
             child: Checkbox(
               value: isChecked,
-              side: BorderSide(color: primaryColor, width: 1.5),
+              activeColor: color,
+              side: BorderSide(color: color, width: 1.5),
               onChanged: (_) => _toggleCheckbox(),
             ),
           ),
@@ -145,7 +153,7 @@ class _CheckboxRowState extends State<_CheckboxRow> {
             onTap: _toggleCheckbox,
             child: Text(
               widget.text,
-              style: TextStyle(color: primaryColor),
+              style: TextStyle(color: color, fontSize: 13.5),
             ),
           ),
         ],

@@ -15,6 +15,7 @@ class PredialogConfig {
         'This page has some new features that you might want to discover.\n\n'
             'Would you like to take a tour?',
     this.applyToAllPagesText = 'Apply to all pages',
+    this.applyToAllPagesTextColor,
     this.acceptButtonText = const Text('Okay'),
     this.acceptButtonStyle,
     this.laterButtonText = const Text('Later'),
@@ -50,6 +51,11 @@ class PredialogConfig {
 
   /// Label for the 'Apply to all pages' checkbox.
   final String applyToAllPagesText;
+
+  /// Color of the 'Apply to all pages' label text, also applied to the checkbox.
+  ///
+  /// Defaults to [textColor], otherwise falls back to the primary color.
+  final Color? applyToAllPagesTextColor;
 
   /// Text for the accept button.
   final Text acceptButtonText;
@@ -92,6 +98,7 @@ class PredialogConfig {
     Color? textColor,
     String? title,
     String? applyToAllPagesText,
+    Color? applyToAllPagesTextColor,
     String? content,
     Text? acceptButtonText,
     ButtonStyle? acceptButtonStyle,
@@ -111,6 +118,7 @@ class PredialogConfig {
       textColor: textColor,
       title: title,
       applyToAllPagesText: applyToAllPagesText,
+      applyToAllPagesTextColor: applyToAllPagesTextColor,
       content: content,
       acceptButtonText: acceptButtonText,
       acceptButtonStyle: acceptButtonStyle,
@@ -134,6 +142,7 @@ class PredialogConfig {
     String? title,
     String? content,
     String? applyToAllPagesText,
+    Color? applyToAllPagesTextColor,
     Text? acceptButtonText,
     ButtonStyle? acceptButtonStyle,
     Text? laterButtonText,
@@ -153,6 +162,8 @@ class PredialogConfig {
       title: title ?? this.title,
       content: content ?? this.content,
       applyToAllPagesText: applyToAllPagesText ?? this.applyToAllPagesText,
+      applyToAllPagesTextColor:
+          applyToAllPagesTextColor ?? this.applyToAllPagesTextColor,
       acceptButtonText: acceptButtonText ?? this.acceptButtonText,
       acceptButtonStyle: acceptButtonStyle ?? this.acceptButtonStyle,
       laterButtonText: laterButtonText ?? this.laterButtonText,
