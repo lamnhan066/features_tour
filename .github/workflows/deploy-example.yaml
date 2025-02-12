@@ -32,4 +32,4 @@ jobs:
           server: ftp.lamnhan.dev
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: example/build/web
+          local-dir: example/build/web/
