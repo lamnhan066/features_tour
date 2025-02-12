@@ -1,0 +1,32 @@
+name: 🚀 Deploy Flutter Web Example on Push
+
+on: push
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy Flutter Web Example
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "stable"
+
+      - name: Install Dependencies for Example
+        working-directory: example
+        run: flutter pub get
+
+      - name: Build Flutter Web for Example
+        working-directory: example
+        run: flutter build web --release --base-href="/features_tour/"
+
+      - name: 📂 Deploy to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftp.lamnhan.dev
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: example/build/web
