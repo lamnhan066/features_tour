@@ -1,6 +1,9 @@
 name: 🚀 Deploy Flutter Web Example on Push
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   web-deploy:
