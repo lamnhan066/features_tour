@@ -107,6 +107,8 @@ class _FeaturesChildState extends State<FeaturesChild>
       rect = tempRect;
     }
 
+    if (rect == null) return false;
+
     _autoSetQuadrantAlignment(rect!);
 
     var size = MediaQuery.maybeOf(context)?.size;
