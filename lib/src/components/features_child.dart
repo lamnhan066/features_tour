@@ -277,7 +277,6 @@ class _FeaturesChildState extends State<FeaturesChild>
         : Scaffold(
             resizeToAvoidBottomInset: true,
             backgroundColor: Colors.transparent,
-            extendBodyBehindAppBar: true,
             body: Stack(
               children: [
                 // Border widget
