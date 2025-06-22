@@ -81,9 +81,15 @@ class FeaturesTourController {
     Duration delay = const Duration(milliseconds: 500),
     bool? force,
     PredialogConfig? predialogConfig,
+    bool? debugLog,
   }) async {
     // Wait until the next frame of the application's UI has been drawn.
     await null;
+
+    bool cachedDebugLog = FeaturesTour._debugLog;
+    if (debugLog != null) {
+      FeaturesTour._debugLog = debugLog;
+    }
 
     final addBlank = ' $pageName ';
     printDebug(() => ''.padLeft(50, '='));
@@ -265,6 +271,7 @@ class FeaturesTourController {
       }
     }
 
+    FeaturesTour._debugLog = cachedDebugLog;
     printDebug(() => 'This tour has been completed');
   }
 
