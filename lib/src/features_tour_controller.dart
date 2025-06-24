@@ -30,6 +30,8 @@ class FeaturesTourController {
 
   Completer? _introduceCompleter;
 
+  bool _isIntroducing = false;
+
   /// Register the current FeaturesTour state.
   void _register(FeaturesTour state) {
     if (!_states.containsKey(state.index)) {
@@ -83,6 +85,12 @@ class FeaturesTourController {
     PredialogConfig? predialogConfig,
     bool? debugLog,
   }) async {
+    if (_isIntroducing) {
+      printDebug(() => 'The tour is already in progress');
+      return;
+    }
+    _isIntroducing = true;
+
     // Wait until the next frame of the application's UI has been drawn.
     await null;
 
@@ -98,9 +106,16 @@ class FeaturesTourController {
             '${''.padRight(25 - (addBlank.length / 2).round(), '=')}');
     printDebug(() => ''.padLeft(50, '='));
 
+    void end() {
+      _isIntroducing = false;
+      FeaturesTour._debugLog = cachedDebugLog;
+      printDebug(() => 'End of the tour for $pageName');
+    }
+
     // ignore: use_build_context_synchronously
     if (!context.mounted) {
       printDebug(() => 'The page $pageName context is not mounted');
+      end();
       return;
     }
 
@@ -114,6 +129,7 @@ class FeaturesTourController {
 
     if (_states.isEmpty && waitForFirstIndex == null) {
       printDebug(() => 'The page $pageName has no state');
+      end();
       return;
     }
 
@@ -124,6 +140,7 @@ class FeaturesTourController {
     if (force == null && await SharedPrefs.getDismissAllTours() == true) {
       printDebug(() => 'All tours have been dismissed');
       _removePage(markAsShowed: true);
+      end();
       return;
     }
 
@@ -133,6 +150,7 @@ class FeaturesTourController {
 
     if (!_shouldShowIntroduction() && force != true) {
       printDebug(() => 'There is no new `FeaturesTour` -> Completed');
+      end();
       return;
     }
 
@@ -143,9 +161,12 @@ class FeaturesTourController {
       case ButtonTypes.accept:
         break;
       case ButtonTypes.later:
+        printDebug(() => 'User chose to show the introduction later');
+        end();
         return;
       case ButtonTypes.dismiss:
         _removePage(markAsShowed: true);
+        end();
         return;
     }
 
@@ -270,11 +291,7 @@ class FeaturesTourController {
       }
     }
 
-    // Remove the cover if it exists.
-    if (context.mounted) hideCover(context);
-
-    // Restore the debug log state.
-    FeaturesTour._debugLog = cachedDebugLog;
+    end();
     printDebug(() => 'This tour has been completed');
   }
 
