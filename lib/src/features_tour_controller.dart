@@ -107,8 +107,9 @@ class FeaturesTourController {
     printDebug(() => ''.padLeft(50, '='));
 
     void cleanup() {
-      _isIntroducing = false;
+      hideCover(context);
       FeaturesTour._debugLog = cachedDebugLog;
+      _isIntroducing = false;
     }
 
     if (!context.mounted) {
