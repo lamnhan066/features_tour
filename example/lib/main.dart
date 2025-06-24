@@ -67,7 +67,7 @@ class _AppState extends State<App> {
           controller: tourController,
           index: MainTourIndex.drawer,
           waitForIndex: MainTourIndex.buttonOnDrawer,
-          introduce: const Text('This is the leading icon'),
+          introduce: const Text('Tap here to open the drawer'),
           onPressed: () {
             scaffoldKey.currentState?.openDrawer();
           },
@@ -82,6 +82,7 @@ class _AppState extends State<App> {
           FeaturesTour(
             controller: tourController,
             index: MainTourIndex.settingAction,
+            introduce: const Text('Tap here to open the settings'),
             child: IconButton(
               icon: const Icon(Icons.settings),
               onPressed: () {},
@@ -94,7 +95,7 @@ class _AppState extends State<App> {
           child: FeaturesTour(
             controller: tourController,
             index: MainTourIndex.buttonOnDrawer,
-            introduce: const Text('This text will be shown on the Drawer'),
+            introduce: const Text('Tap here to close the drawer'),
             childConfig: ChildConfig(
               isAnimateChild: true,
             ),
@@ -159,7 +160,7 @@ class _AppState extends State<App> {
       floatingActionButton: FeaturesTour(
         controller: tourController,
         index: MainTourIndex.floatingButton,
-        introduce: const Text('This is the floating action button'),
+        introduce: const Text('Tap here to add a new item'),
         doneConfig: DoneConfig(alignment: Alignment.bottomLeft),
         child: FloatingActionButton(
           onPressed: () {},
