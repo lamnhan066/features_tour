@@ -274,94 +274,98 @@ class _FeaturesChildState extends State<FeaturesChild>
     final colorScheme = theme.colorScheme;
     return rect == null
         ? const Center(child: CircularProgressIndicator())
-        : Scaffold(
-            resizeToAvoidBottomInset: true,
-            backgroundColor: Colors.transparent,
-            body: Stack(
-              children: [
-                // Border widget
+        : Stack(
+            children: [
+              // Border widget
+              Positioned.fromRect(
+                rect: rect!.inflate(widget.childConfig.borderSizeInflate),
+                child: AnimatedScale(
+                  scale: scale,
+                  curve: widget.childConfig.curve,
+                  duration: widget.childConfig.animationDuration,
+                  child: Material(
+                    color: widget.childConfig.backgroundColor,
+                    shape: widget.childConfig.shapeBorder ??
+                        RoundedRectangleBorder(
+                          // ignore: deprecated_member_use_from_same_package
+                          borderRadius: widget.childConfig.borderRadius,
+                          side: BorderSide(
+                            color: colorScheme.onSurface,
+                            width: 2,
+                          ),
+                        ),
+                  ),
+                ),
+              ),
+
+              // Child widget.
+              if (widget.childConfig.isAnimateChild)
                 Positioned.fromRect(
-                  rect: rect!.inflate(widget.childConfig.borderSizeInflate),
+                  rect: rect!,
                   child: AnimatedScale(
                     scale: scale,
                     curve: widget.childConfig.curve,
                     duration: widget.childConfig.animationDuration,
-                    child: Material(
-                      color: widget.childConfig.backgroundColor,
-                      shape: widget.childConfig.shapeBorder ??
-                          RoundedRectangleBorder(
-                            // ignore: deprecated_member_use_from_same_package
-                            borderRadius: widget.childConfig.borderRadius,
-                            side: BorderSide(
-                              color: colorScheme.onSurface,
-                              width: 2,
-                            ),
-                          ),
-                    ),
-                  ),
-                ),
-
-                // Child widget.
-                if (widget.childConfig.isAnimateChild)
-                  Positioned.fromRect(
-                    rect: rect!,
-                    child: AnimatedScale(
-                      scale: scale,
-                      curve: widget.childConfig.curve,
-                      duration: widget.childConfig.animationDuration,
-                      child: widget.child,
-                    ),
-                  )
-                else
-                  Positioned.fromRect(
-                    rect: rect!,
                     child: widget.child,
                   ),
-
-                // Introduction widget.
+                )
+              else
                 Positioned.fromRect(
-                  rect: introduceRect,
-                  child: IgnorePointer(
-                    child: Padding(
-                      padding: widget.padding,
-                      child: Align(
-                        alignment: alignment,
-                        child: widget.introduce,
-                      ),
+                  rect: rect!,
+                  child: widget.child,
+                ),
+
+              // Introduction widget.
+              Positioned.fromRect(
+                rect: introduceRect,
+                child: IgnorePointer(
+                  child: Padding(
+                    padding: widget.padding,
+                    child: Align(
+                      alignment: alignment,
+                      child: widget.introduce,
                     ),
                   ),
                 ),
+              ),
 
-                // Skip text widget.
-                if (!(widget.isLastState && widget.doneConfig.enabled) &&
-                    widget.skipConfig.enabled)
-                  Positioned.fill(
-                    child: Align(
-                      alignment: widget.skipConfig.alignment,
-                      child: widget.skip,
-                    ),
-                  ),
+              Scaffold(
+                resizeToAvoidBottomInset: true,
+                backgroundColor: Colors.transparent,
+                body: Stack(
+                  children: [
+                    // Skip text widget.
+                    if (!(widget.isLastState && widget.doneConfig.enabled) &&
+                        widget.skipConfig.enabled)
+                      Positioned.fill(
+                        child: Align(
+                          alignment: widget.skipConfig.alignment,
+                          child: widget.skip,
+                        ),
+                      ),
 
-                // Next text widget.
-                if (!(widget.isLastState && widget.doneConfig.enabled) &&
-                    widget.nextConfig.enabled)
-                  Positioned.fill(
-                    child: Align(
-                      alignment: widget.nextConfig.alignment,
-                      child: widget.next,
-                    ),
-                  ),
+                    // Next text widget.
+                    if (!(widget.isLastState && widget.doneConfig.enabled) &&
+                        widget.nextConfig.enabled)
+                      Positioned.fill(
+                        child: Align(
+                          alignment: widget.nextConfig.alignment,
+                          child: widget.next,
+                        ),
+                      ),
 
-                // Done text widget.
-                if (widget.isLastState && widget.doneConfig.enabled)
-                  Positioned.fill(
-                    child: Align(
-                      alignment: widget.doneConfig.alignment,
-                      child: widget.done,
-                    ),
-                  ),
-              ],
-            ),
+                    // Done text widget.
+                    if (widget.isLastState && widget.doneConfig.enabled)
+                      Positioned.fill(
+                        child: Align(
+                          alignment: widget.doneConfig.alignment,
+                          child: widget.done,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           );
   }
 }
