@@ -106,16 +106,15 @@ class FeaturesTourController {
             '${''.padRight(25 - (addBlank.length / 2).round(), '=')}');
     printDebug(() => ''.padLeft(50, '='));
 
-    void end() {
+    void cleanup() {
       _isIntroducing = false;
       FeaturesTour._debugLog = cachedDebugLog;
-      printDebug(() => 'End of the tour for $pageName');
     }
 
     // ignore: use_build_context_synchronously
     if (!context.mounted) {
       printDebug(() => 'The page $pageName context is not mounted');
-      end();
+      cleanup();
       return;
     }
 
@@ -129,7 +128,7 @@ class FeaturesTourController {
 
     if (_states.isEmpty && waitForFirstIndex == null) {
       printDebug(() => 'The page $pageName has no state');
-      end();
+      cleanup();
       return;
     }
 
@@ -140,7 +139,7 @@ class FeaturesTourController {
     if (force == null && await SharedPrefs.getDismissAllTours() == true) {
       printDebug(() => 'All tours have been dismissed');
       _removePage(markAsShowed: true);
-      end();
+      cleanup();
       return;
     }
 
@@ -150,7 +149,7 @@ class FeaturesTourController {
 
     if (!_shouldShowIntroduction() && force != true) {
       printDebug(() => 'There is no new `FeaturesTour` -> Completed');
-      end();
+      cleanup();
       return;
     }
 
@@ -162,11 +161,12 @@ class FeaturesTourController {
         break;
       case ButtonTypes.later:
         printDebug(() => 'User chose to show the introduction later');
-        end();
+        cleanup();
         return;
       case ButtonTypes.dismiss:
+        printDebug(() => 'User dismissed to show the introduction');
         _removePage(markAsShowed: true);
-        end();
+        cleanup();
         return;
     }
 
@@ -291,7 +291,7 @@ class FeaturesTourController {
       }
     }
 
-    end();
+    cleanup();
     printDebug(() => 'This tour has been completed');
   }
 
