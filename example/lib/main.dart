@@ -1,5 +1,4 @@
 import 'package:features_tour/features_tour.dart';
-import 'package:features_tour_example/main_tour_index.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,6 +15,15 @@ void main() {
     home: const App(),
     theme: ThemeData.light(),
   ));
+}
+
+abstract class MainTourIndex {
+  static const drawer = 0.0;
+  static const buttonOnDrawer = 1.0;
+  static const settingAction = 2.0;
+  static const firstItem = 3.0;
+  static const item90 = 4.0;
+  static const floatingButton = 5.0;
 }
 
 class App extends StatefulWidget {
@@ -45,8 +53,8 @@ class _AppState extends State<App> {
         title: const Text('App'),
         leading: FeaturesTour(
           controller: tourController,
-          index: MainTourIndex.drawer.tourIndex,
-          waitForIndex: MainTourIndex.buttonOnDrawer.tourIndex,
+          index: MainTourIndex.drawer,
+          waitForIndex: MainTourIndex.buttonOnDrawer,
           introduce: const Text('This is the leading icon'),
           onPressed: () {
             scaffoldKey.currentState?.openDrawer();
@@ -61,7 +69,7 @@ class _AppState extends State<App> {
         actions: [
           FeaturesTour(
             controller: tourController,
-            index: MainTourIndex.settingAction.tourIndex,
+            index: MainTourIndex.settingAction,
             child: IconButton(
               icon: const Icon(Icons.settings),
               onPressed: () {},
@@ -73,7 +81,7 @@ class _AppState extends State<App> {
         child: Center(
           child: FeaturesTour(
             controller: tourController,
-            index: MainTourIndex.buttonOnDrawer.tourIndex,
+            index: MainTourIndex.buttonOnDrawer,
             introduce: const Text('This text will be shown on the Drawer'),
             childConfig: ChildConfig(
               isAnimateChild: true,
@@ -98,8 +106,8 @@ class _AppState extends State<App> {
           children: [
             FeaturesTour(
               controller: tourController,
-              index: MainTourIndex.firstItem.tourIndex,
-              waitForIndex: MainTourIndex.item90.tourIndex,
+              index: MainTourIndex.firstItem,
+              waitForIndex: MainTourIndex.item90,
               introduce: const Text('This is item 0'),
               onPressed: () async {
                 // Scroll to the last item when the first item is tapped
@@ -118,7 +126,7 @@ class _AppState extends State<App> {
               FeaturesTour(
                 enabled: i == 90,
                 controller: tourController,
-                index: MainTourIndex.item90.tourIndex,
+                index: MainTourIndex.item90,
                 introduce: const Text('This is item 90'),
                 onPressed: () async {
                   // Scroll to the first item when item 90 is tapped
@@ -138,7 +146,7 @@ class _AppState extends State<App> {
       ),
       floatingActionButton: FeaturesTour(
         controller: tourController,
-        index: MainTourIndex.floatingButton.tourIndex,
+        index: MainTourIndex.floatingButton,
         introduce: const Text('This is the floating action button'),
         doneConfig: DoneConfig(alignment: Alignment.bottomLeft),
         child: FloatingActionButton(
