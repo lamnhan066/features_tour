@@ -215,6 +215,13 @@ class FeaturesTourController {
         break;
       }
 
+      // Close the previous cover if it exists.
+      hideCover(context);
+
+      // Show the cover to avoid user tapping the screen.
+      final introduceConfig = state.introduceConfig ?? IntroduceConfig.global;
+      showCover(context, introduceConfig.backgroundColor);
+
       // If there is no state in queue and no index to wait for then it's
       // the last state.
       final isLastState = _states.isEmpty && waitForIndex == null;
@@ -246,15 +253,7 @@ class FeaturesTourController {
         printDebug(() =>
             'The `waitForIndex` is non-null => Waiting for the next index: $waitForIndex ...');
 
-        // Show the cover to avoid user tapping the screen.
-        // ignore: use_build_context_synchronously
-        showCover(context);
-
         waitForIndexState = await _waitForIndex(waitForIndex, waitForTimeout);
-
-        // Hide the cover.
-        // ignore: use_build_context_synchronously
-        hideCover(context);
 
         if (waitForIndexState == null) {
           printDebug(() =>
@@ -271,6 +270,10 @@ class FeaturesTourController {
       }
     }
 
+    // Remove the cover if it exists.
+    if (context.mounted) hideCover(context);
+
+    // Restore the debug log state.
     FeaturesTour._debugLog = cachedDebugLog;
     printDebug(() => 'This tour has been completed');
   }
@@ -316,7 +319,7 @@ class FeaturesTourController {
             ? () => complete(IntroduceResult.next)
             : null,
         child: Material(
-          color: introduceConfig.backgroundColor,
+          color: Colors.transparent,
           child: FeaturesChild(
             globalKey: state._resolveKey(),
             childConfig: childConfig,
