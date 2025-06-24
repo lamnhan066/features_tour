@@ -1,3 +1,10 @@
+## 0.4.13
+
+* Add `debugLog` parameter to the `tourController.start` method to enable or disable debug logging.
+* Prevent screen flashing during the transition between two `FeaturesTour` instances by maintaining the background color.
+* Fix the issue that makes the buttons (`Next`, `Skip` and `Done`) appear under the keyboard.
+* Update the introduction video.
+
 ## 0.4.12
 
 * Add `canPop` parameter to the `FeaturesTour` to control the `PopScope`.
