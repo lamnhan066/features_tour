@@ -1,4 +1,5 @@
 import 'package:features_tour/features_tour.dart';
+import 'package:features_tour_example/main_tour_index.dart';
 import 'package:flutter/material.dart';
 
 class MainDrawer extends StatefulWidget {
@@ -26,14 +27,19 @@ class _MainDrawerState extends State<MainDrawer> {
       child: Center(
         child: FeaturesTour(
           controller: tourController,
-          index: 0,
+          index: MainTourIndex.buttonOnDrawer.tourIndex,
           introduce: const Text('This text will be shown on the Drawer'),
           childConfig: ChildConfig(
             isAnimateChild: true,
           ),
+          onPressed: () {
+            Scaffold.of(context).closeDrawer();
+          },
           child: ElevatedButton(
-            child: const Text('On the Drawer'),
-            onPressed: () {},
+            child: const Text('Close Drawer'),
+            onPressed: () {
+              Scaffold.of(context).closeDrawer();
+            },
           ),
         ),
       ),

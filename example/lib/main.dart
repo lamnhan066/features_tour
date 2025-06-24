@@ -1,7 +1,6 @@
 import 'package:features_tour/features_tour.dart';
+import 'package:features_tour_example/main_tour_index.dart';
 import 'package:flutter/material.dart';
-
-import 'next_page.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
@@ -28,6 +27,8 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   final tourController = FeaturesTourController('App');
+  final scrollController = ScrollController();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -39,83 +40,110 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: const Text('App'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        leading: FeaturesTour(
+          controller: tourController,
+          index: MainTourIndex.drawer.tourIndex,
+          waitForIndex: MainTourIndex.buttonOnDrawer.tourIndex,
+          introduce: const Text('This is the leading icon'),
+          onPressed: () {
+            scaffoldKey.currentState?.openDrawer();
+          },
+          child: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              scaffoldKey.currentState?.openDrawer();
+            },
+          ),
+        ),
+        actions: [
           FeaturesTour(
             controller: tourController,
-            index: 0,
-            introduce: const Text(
-              'This is TextButton 1\nWith enableAnimation = false',
+            index: MainTourIndex.settingAction.tourIndex,
+            child: IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () {},
             ),
-            nextConfig: NextConfig(
-              child: (onPressed) {
-                return ElevatedButton(
-                  onPressed: onPressed,
-                  child: const Text('Modified Next'),
-                );
+          )
+        ],
+      ),
+      drawer: Drawer(
+        child: Center(
+          child: FeaturesTour(
+            controller: tourController,
+            index: MainTourIndex.buttonOnDrawer.tourIndex,
+            introduce: const Text('This text will be shown on the Drawer'),
+            childConfig: ChildConfig(
+              isAnimateChild: true,
+            ),
+            onPressed: () {
+              scaffoldKey.currentState?.closeDrawer();
+            },
+            child: ElevatedButton(
+              child: const Text('Close Drawer'),
+              onPressed: () {
+                scaffoldKey.currentState?.closeDrawer();
               },
             ),
-            childConfig: ChildConfig(
-              enableAnimation: false,
-            ),
-            child: TextButton(
-              onPressed: () {},
-              child: const Text('TextButton 1'),
-            ),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: FeaturesTour(
+        ),
+      ),
+      body: SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FeaturesTour(
               controller: tourController,
-              index: 1,
-              introduce: const Text('This is TextButton 2'),
-              child: TextButton(
-                onPressed: () {},
-                child: const Text('TextButton 2'),
+              index: MainTourIndex.firstItem.tourIndex,
+              waitForIndex: MainTourIndex.item90.tourIndex,
+              introduce: const Text('This is item 0'),
+              onPressed: () async {
+                // Scroll to the last item when the first item is tapped
+                await scrollController.animateTo(
+                  scrollController.position.maxScrollExtent,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Item 0'),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FeaturesTour(
-              controller: tourController,
-              index: 2,
-              introduce: const Text('This is TextButton 3'),
-              child: TextButton(
-                onPressed: () {},
-                child: const Text('TextButton 3'),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: FeaturesTour(
+            for (int i = 1; i <= 100; i++)
+              FeaturesTour(
+                enabled: i == 90,
                 controller: tourController,
-                index: 3,
-                introduce: const Text(
-                  'Go to the Second Page (A more complicated tour)',
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const SecondPage()));
+                index: MainTourIndex.item90.tourIndex,
+                onPressed: () async {
+                  // Scroll to the first item when item 90 is tapped
+                  await scrollController.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
                 },
-                doneConfig: DoneConfig(text: 'Second Page'),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const SecondPage()));
-                  },
-                  child: const Text('Second Page'),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Item $i'),
                 ),
               ),
-            ),
-          ),
-        ],
+          ],
+        ),
+      ),
+      floatingActionButton: FeaturesTour(
+        controller: tourController,
+        index: MainTourIndex.floatingButton.tourIndex,
+        introduce: const Text('This is the floating action button'),
+        doneConfig: DoneConfig(alignment: Alignment.bottomLeft),
+        child: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
