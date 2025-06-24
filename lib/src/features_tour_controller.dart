@@ -111,7 +111,6 @@ class FeaturesTourController {
       FeaturesTour._debugLog = cachedDebugLog;
     }
 
-    // ignore: use_build_context_synchronously
     if (!context.mounted) {
       printDebug(() => 'The page $pageName context is not mounted');
       cleanup();
@@ -120,7 +119,12 @@ class FeaturesTourController {
 
     _prefs ??= await SharedPreferences.getInstance();
 
-    // ignore: use_build_context_synchronously
+    if (!context.mounted) {
+      printDebug(() => 'The page $pageName context is not mounted');
+      cleanup();
+      return;
+    }
+
     await _waitForTransition(context); // Main page transition
 
     // Wait for `delay` duration before starting the tours.
@@ -153,7 +157,12 @@ class FeaturesTourController {
       return;
     }
 
-    // ignore: use_build_context_synchronously
+    if (!context.mounted) {
+      printDebug(() => 'The page $pageName context is not mounted');
+      cleanup();
+      return;
+    }
+
     final result = await _showPredialog(context, force, predialogConfig);
 
     switch (result) {
@@ -198,7 +207,6 @@ class FeaturesTourController {
       final key = FeaturesTour._getPrefKey(pageName, state);
       printDebug(() => 'Start widget with key $key:');
 
-      // ignore: use_build_context_synchronously
       if (!context.mounted) {
         printDebug(() => '   -> The parent widget was unmounted');
         break;
@@ -228,7 +236,6 @@ class FeaturesTourController {
       }
 
       // Wait for the child widget transition to complete.
-      // ignore: use_build_context_synchronously
       await _waitForTransition(state._context);
 
       if (!context.mounted) {
@@ -514,14 +521,12 @@ class FeaturesTourController {
         final ButtonTypes? predialogResult;
         if (config.modifiedDialogResult != null) {
           Completer<bool> completer = Completer();
-          // ignore: use_build_context_synchronously
           completer.complete(config.modifiedDialogResult!(context));
           predialogResult = switch (await completer.future) {
             true => ButtonTypes.accept,
             false => ButtonTypes.later,
           };
         } else {
-          // ignore: use_build_context_synchronously
           predialogResult = await predialog(
             context,
             config,
