@@ -21,6 +21,16 @@ class SkipConfig extends BaseButtonConfig {
 
   /// Creates a new `SkipConfig` based on the provided [global] values.
   ///
+  /// [child] is a custom widget for the skip button. When this is set,
+  /// you must pass the `onPressed` method.
+  /// Example:
+  /// ```dart
+  /// child: (onPressed) => FilledButton(
+  ///   onPressed: onPressed,
+  ///   child: const Text('SKIP'),
+  /// ),
+  /// ```
+  ///
   /// [text] defines the label for the skip button. Defaults to 'SKIP'.
   ///
   /// [alignment] specifies the position of the skip text. Defaults to `Alignment.bottomLeft`.

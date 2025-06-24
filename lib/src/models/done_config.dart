@@ -17,6 +17,16 @@ class DoneConfig extends BaseButtonConfig {
 
   /// Creates a new [DoneConfig] based on the [global] values.
   ///
+  /// [child] is a custom widget for the done button. When this is set,
+  /// you must pass the `onPressed` method.
+  /// Example:
+  /// ```dart
+  /// child: (onPressed) => FilledButton(
+  ///   onPressed: onPressed,
+  ///   child: const Text('DONE'),
+  /// ),
+  /// ```
+  ///
   /// [text] is the text displayed on the button. Defaults to 'SKIP'.
   ///
   /// [alignment] determines the position of the skip text. Defaults to

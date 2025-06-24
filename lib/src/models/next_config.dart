@@ -19,6 +19,13 @@ class NextConfig extends BaseButtonConfig {
   ///
   /// [child] is a custom widget for the next button. When this is set,
   /// you must pass the `onPressed` method.
+  /// Example:
+  /// ```dart
+  /// child: (onPressed) => FilledButton(
+  ///   onPressed: onPressed,
+  ///   child: const Text('NEXT'),
+  /// ),
+  /// ```
   ///
   /// [text] defines the text on the next button. Defaults to "NEXT".
   ///
