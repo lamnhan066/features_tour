@@ -119,6 +119,7 @@ class _AppState extends State<App> {
                 enabled: i == 90,
                 controller: tourController,
                 index: MainTourIndex.item90.tourIndex,
+                introduce: const Text('This is item 90'),
                 onPressed: () async {
                   // Scroll to the first item when item 90 is tapped
                   await scrollController.animateTo(
