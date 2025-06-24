@@ -33,9 +33,10 @@ abstract class MainTourIndex {
   static const drawer = 0.0;
   static const buttonOnDrawer = 1.0;
   static const settingAction = 2.0;
-  static const firstItem = 3.0;
-  static const item90 = 4.0;
-  static const floatingButton = 5.0;
+  static const list = 3.0;
+  static const firstItem = 4.0;
+  static const item90 = 5.0;
+  static const floatingButton = 6.0;
 }
 
 class App extends StatefulWidget {
@@ -111,50 +112,69 @@ class _AppState extends State<App> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        controller: scrollController,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FeaturesTour(
-              controller: tourController,
-              index: MainTourIndex.firstItem,
-              waitForIndex: MainTourIndex.item90,
-              introduce: const Text('This is item 0'),
-              onPressed: () async {
-                // Scroll to the last item when the first item is tapped
-                await scrollController.animateTo(
-                  scrollController.position.maxScrollExtent,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Item 0'),
-              ),
-            ),
-            for (int i = 1; i <= 100; i++)
-              FeaturesTour(
-                enabled: i == 90,
-                controller: tourController,
-                index: MainTourIndex.item90,
-                introduce: const Text('This is item 90'),
-                onPressed: () async {
-                  // Scroll to the first item when item 90 is tapped
-                  await scrollController.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Item $i'),
+      body: FeaturesTour(
+        controller: tourController,
+        index: MainTourIndex.list,
+        introduce: Text(
+          'This is a list of items',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        introduceConfig: IntroduceConfig(
+          quadrantAlignment: QuadrantAlignment.inside,
+        ),
+        childConfig: ChildConfig(
+          enableAnimation: false,
+        ),
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: SizedBox(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FeaturesTour(
+                  controller: tourController,
+                  index: MainTourIndex.firstItem,
+                  waitForIndex: MainTourIndex.item90,
+                  introduce: const Text('This is item 0'),
+                  onPressed: () async {
+                    // Scroll to the last item when the first item is tapped
+                    await scrollController.animateTo(
+                      scrollController.position.maxScrollExtent,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text('Item 0'),
+                  ),
                 ),
-              ),
-          ],
+                for (var index = 1; index <= 100; index++)
+                  FeaturesTour(
+                    enabled: index == 90,
+                    controller: tourController,
+                    index: MainTourIndex.item90,
+                    introduce: Text('This is item $index'),
+                    onPressed: () async {
+                      // Scroll to the first item when item 90 is tapped
+                      await scrollController.animateTo(
+                        0,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text('Item $index'),
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
       floatingActionButton: FeaturesTour(
