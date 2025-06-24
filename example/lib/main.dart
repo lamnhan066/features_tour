@@ -8,6 +8,18 @@ void main() {
       enabled: true,
     ),
     childConfig: ChildConfig(isAnimateChild: false),
+    nextConfig: NextConfig(
+      child: (onPressed) => FilledButton(
+        onPressed: onPressed,
+        child: const Text('NEXT'),
+      ),
+    ),
+    doneConfig: DoneConfig(
+      child: (onPressed) => FilledButton(
+        onPressed: onPressed,
+        child: const Text('DONE'),
+      ),
+    ),
     debugLog: true,
   );
 
