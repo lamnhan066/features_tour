@@ -270,8 +270,6 @@ class _FeaturesChildState extends State<FeaturesChild>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     return rect == null
         ? const Center(child: CircularProgressIndicator())
         : Stack(
@@ -289,10 +287,6 @@ class _FeaturesChildState extends State<FeaturesChild>
                         RoundedRectangleBorder(
                           // ignore: deprecated_member_use_from_same_package
                           borderRadius: widget.childConfig.borderRadius,
-                          side: BorderSide(
-                            color: colorScheme.onSurface,
-                            width: 2,
-                          ),
                         ),
                   ),
                 ),
