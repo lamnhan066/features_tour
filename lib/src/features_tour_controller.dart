@@ -599,6 +599,15 @@ class FeaturesTourController {
       });
       await completer.future;
     }
+
+    // Wait for the drawer to close if it is open.
+    if (context.mounted) {
+      final drawer = DrawerController.maybeOf(context);
+      if (drawer != null && drawer.isDrawerOpen) {
+        // 246 milliseconds is the default duration for the drawer transition.
+        await Future.delayed(const Duration(milliseconds: 246));
+      }
+    }
     printDebug(() => 'The page transition completed');
   }
 
