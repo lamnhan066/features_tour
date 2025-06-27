@@ -36,6 +36,7 @@ abstract class MainTourIndex {
   static const list = 3.0;
   static const firstItem = 4.0;
   static const item90 = 5.0;
+  static const dialogButton = 5.5;
   static const floatingButton = 6.0;
 }
 
@@ -69,7 +70,7 @@ class _AppState extends State<App> {
           index: MainTourIndex.drawer,
           waitForIndex: MainTourIndex.buttonOnDrawer,
           introduce: const Text('Tap here to open the drawer'),
-          onPressed: () {
+          onPressed: () async {
             scaffoldKey.currentState?.openDrawer();
           },
           child: IconButton(
@@ -97,9 +98,6 @@ class _AppState extends State<App> {
             controller: tourController,
             index: MainTourIndex.buttonOnDrawer,
             introduce: const Text('Tap here to close the drawer'),
-            childConfig: ChildConfig(
-              isAnimateChild: true,
-            ),
             onPressed: () {
               scaffoldKey.currentState?.closeDrawer();
             },
@@ -158,6 +156,7 @@ class _AppState extends State<App> {
                     enabled: index == 90,
                     controller: tourController,
                     index: MainTourIndex.item90,
+                    waitForIndex: MainTourIndex.dialogButton,
                     introduce: Text('This is item $index'),
                     onPressed: () async {
                       // Scroll to the first item when item 90 is tapped
@@ -166,6 +165,36 @@ class _AppState extends State<App> {
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
                       );
+
+                      // Show a dialog after item 90 is tapped
+                      if (context.mounted) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('A Dialog'),
+                              actions: [
+                                FeaturesTour(
+                                  controller: tourController,
+                                  index: MainTourIndex.dialogButton,
+                                  introduce: const Text(
+                                    'Tap here to close the dialog',
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Ok'),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
