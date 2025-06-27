@@ -138,14 +138,6 @@ class _AppState extends State<App> {
                   index: MainTourIndex.firstItem,
                   waitForIndex: MainTourIndex.item90,
                   introduce: const Text('This is item 0'),
-                  onPressed: () async {
-                    // Scroll to the last item when the first item is tapped
-                    await scrollController.animateTo(
-                      scrollController.position.maxScrollExtent,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Text('Item 0'),
@@ -158,7 +150,20 @@ class _AppState extends State<App> {
                     index: MainTourIndex.item90,
                     waitForIndex: MainTourIndex.dialogButton,
                     introduce: Text('This is item $index'),
-                    onPressed: () async {
+                    onBeforeIntroduce: () async {
+                      // Scroll to the last item when the first item is tapped
+                      await scrollController.animateTo(
+                        scrollController.position.maxScrollExtent,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    onAfterIntroduce: (introduceResult) async {
+                      if (introduceResult != IntroduceResult.next &&
+                          introduceResult != IntroduceResult.done) {
+                        return;
+                      }
+
                       // Scroll to the first item when item 90 is tapped
                       await scrollController.animateTo(
                         0,
