@@ -282,6 +282,9 @@ class FeaturesTourController {
           break;
       }
 
+      // Do not continue if the tour is ended.
+      if (result != IntroduceResult.next) break;
+
       // Wait for the next state to appear if `waitForIndex` is non-null.
       if (waitForIndex != null) {
         printDebug(() =>
