@@ -58,7 +58,6 @@ class SkipConfig extends BaseButtonConfig {
   ///    ),
   ///  ),
   /// ```
-
   factory SkipConfig({
     Widget Function(VoidCallback onPressed)? child,
     String? text,
