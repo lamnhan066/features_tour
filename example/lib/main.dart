@@ -23,10 +23,7 @@ void main() {
     debugLog: true,
   );
 
-  runApp(MaterialApp(
-    home: const App(),
-    theme: ThemeData.light(),
-  ));
+  runApp(const ChangeableThemeMaterialApp());
 }
 
 abstract class MainTourIndex {
@@ -38,6 +35,36 @@ abstract class MainTourIndex {
   static const item90 = 5.0;
   static const dialogButton = 5.5;
   static const floatingButton = 6.0;
+}
+
+class ChangeableThemeMaterialApp extends StatefulWidget {
+  const ChangeableThemeMaterialApp({super.key});
+
+  @override
+  State<ChangeableThemeMaterialApp> createState() =>
+      _ChangeableThemeMaterialAppState();
+}
+
+class _ChangeableThemeMaterialAppState
+    extends State<ChangeableThemeMaterialApp> {
+  bool isDark = false;
+
+  void toggleTheme() {
+    setState(() {
+      isDark = !isDark;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Features Tour Example',
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+      home: const App(),
+    );
+  }
 }
 
 class App extends StatefulWidget {
@@ -61,6 +88,8 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    final changeableState =
+        context.findAncestorStateOfType<_ChangeableThemeMaterialAppState>()!;
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -84,10 +113,16 @@ class _AppState extends State<App> {
           FeaturesTour(
             controller: tourController,
             index: MainTourIndex.settingAction,
-            introduce: const Text('Tap here to open the settings'),
+            introduce: const Text(
+                'Tap here to change the brightness and reset the tour'),
             child: IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {},
+              icon: changeableState.isDark
+                  ? const Icon(Icons.dark_mode)
+                  : const Icon(Icons.light_mode),
+              onPressed: () async {
+                changeableState.toggleTheme();
+                tourController.start(context);
+              },
             ),
           )
         ],
