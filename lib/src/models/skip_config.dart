@@ -6,6 +6,7 @@ class SkipConfig extends BaseButtonConfig {
   static SkipConfig global = const SkipConfig._();
 
   /// Call the `onPressed` action when the skip button is pressed. Default is `false`.
+  @Deprecated('Use `FeaturesTour.onAfterIntroduce` instead.')
   final bool isCallOnPressed;
 
   const SkipConfig._({
@@ -139,6 +140,7 @@ class SkipConfig extends BaseButtonConfig {
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,
       enabled: enabled ?? this.enabled,
+      // ignore: deprecated_member_use_from_same_package
       isCallOnPressed: isCallOnPressed ?? this.isCallOnPressed,
       textStyle: textStyle ?? this.textStyle,
       buttonStyle: buttonStyle ?? this.buttonStyle,

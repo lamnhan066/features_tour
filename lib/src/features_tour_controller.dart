@@ -287,6 +287,7 @@ class FeaturesTourController {
           await _removeState(state, true);
           await _removePage(markAsShowed: true);
           final skipConfig = state.skipConfig ?? SkipConfig.global;
+          // ignore: deprecated_member_use_from_same_package
           if (skipConfig.isCallOnPressed &&
               // ignore: deprecated_member_use_from_same_package
               state.onPressed != null &&
