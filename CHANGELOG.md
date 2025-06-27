@@ -1,3 +1,21 @@
+## 0.4.14
+
+* **Features**:
+  * Automatically adapts to the app's dark/light theme.
+  * Waits for the drawer animation to finish before proceeding.
+  * Introduced `onBeforeIntroduce` and `onAfterIntroduce` parameters for enhanced control.
+
+* **Fixes**:
+  * Resolved the issue where `waitForIndex` would still activate even after users tapped the `SKIP` button.
+
+* **Deprecations**:
+  * Deprecated the `onPressed` parameter in `FeaturesTour` in favor of `onAfterIntroduce`.
+  * Deprecated the `isCallOnPressed` parameter in `SkipConfig` in favor of `onAfterIntroduce(IntroduceResult)`.
+
+* **Updates**:
+  * Enhanced the example for better clarity.
+  * Updated the README to reflect the latest changes.
+
 ## 0.4.13
 
 * Add `debugLog` parameter to the `tourController.start` method to enable or disable debug logging.
