@@ -17,111 +17,25 @@ final tourController = FeaturesTourController('HomePage');
 
 ### Create a tour widget
 
-To create a tour step, you need to create a FeaturesTour widget. This widget takes several configuration options, such as the index of the step, the introduction widget, the child widget, and the position and style of the introduction. Here is an example:
-
 ```dart
 FeaturesTour(
     /// Add the controller
     controller: tourController,
 
-    /// Index of this widget in the tour. It must be unique at the same page.
-    index: 0,
+    /// Index of this widget in the tour. It must be unique at the same page 
+    /// (using the same `tourController`).
+    index: 0.0,
 
     /// Introduction of this widget (Known as the description of the feature)
     introduce: const Text('This is TextButton 1'),
-
-    /// This is the real widget
-    child: TextButton(
-        onPressed: () {},
-        child: const Text('TextButton 1'),
-    ),
-),
-```
-
-<details>
-
-<summary>Full parameters</summary>
-
-``` dart
-FeaturesTour(
-    /// Add the controller
-    controller: tourController,
-
-    /// Index of this widget in the tour. It must be unique in the same page.
-    index: 0,
-
-    /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
-    /// it blocks the current route from being popped.
-    canPop: true,
-
-    /// [Optional] The app will be freezed until this index is appeared, so careful when using this feature.
-    waitForIndex: 1,
-
-    /// Timeout for the [waitForIndex] action.
-    waitForTimeout: Duration(seconds: 3),
-
-    /// On this widget pressed. This can be a `Future` method, the next introduction will be delayed until this method is completed.
-    onPressed: () async {
-        // Handle the press event
+    
+    onBeforeIntroduce: () async {
+        // Do something before introducing the current widget
     },
 
-    /// Introduction of this widget (Known as the description of the feature)
-    introduce: const Text('This is TextButton 1'),
-
-    /// Where to place the `introduce` widget.
-    introduceConfig: IntroduceConfig(
-        // Select the rectangle of the quadrant on the screen
-        quadrantAlignment: QuadrantAlignment.bottom,
-        // Alignment of the `introduce` widget in the quadrant rectangle
-        alignment: Alignment.topCenter,
-        // Show the tour above all other overlays
-        useRootOverlay: false,
-    ),
-
-    /// Config for the next button, this button will move to the next widget base on its' index.
-    nextConfig: NextConfig(
-        // Use the default `Elevated` button with this text.
-        text: 'NEXT',
-
-        // Create your own button.
-        child: (onPressed) => ElevatedButton(
-            onPressed: onPressed,
-            child: Text('NEXT'),
-        ),
-    ),
-
-    /// Config for the skip button. This button will skip the current tour.
-    skipConfig: SkipConfig(
-        // Use the default `Elevated` button with this text.
-        text: 'SKIP',
-
-        // Create your own button.
-        child: (onPressed) => ElevatedButton(
-            onPressed: onPressed,
-            child: Text('SKIP'),
-        ),
-    ),
-
-    /// Config for the done button. This button will be shown on the last introduction.
-    doneConfig: DoneConfig(
-        // Use the default `Elevated` button with this text.
-        text: 'DONE',
-
-        // Create your own button.
-        child: (onPressed) => ElevatedButton(
-            onPressed: onPressed,
-            child: Text('DONE'),
-        ),
-    ),
-
-    /// Config for the fake child widget. This fake child is default to original `child`.
-    childConfig: ChildConfig(
-        child: (child) => TextButton(
-            onPressed: () {},
-            child: const Text('A fake button 1'),
-        ),
-        backgroundColor: Colors.white,
-    ),
+    onAfterIntroduce: (introduceResult) async {
+        // Do something after introducing the current widget
+    }
 
     /// This is the real widget
     child: TextButton(
@@ -131,59 +45,15 @@ FeaturesTour(
 ),
 ```
 
-</details>
-
 ### Start a tour
-
-To create a tour, you need to create a FeaturesTourController instance for each page that you want to add tours to. You can then use the controller to start the tour, set the current step, and control the flow of the tour. Here is an example:
 
 ``` dart
 @override
 void initState() {
-    // Use this method to start all the available features tour.
-    // The `context` will be used to wait for the page transition
-    // animation to complete before starting the tour.
     tourController.start(context);
     super.initState();
 }
 ```
-
-<details>
-
-<summary>Full parameters</summary>
-
-``` dart
-    // Use this method to start all the available features tour.
-    // The `context` will be used to wait for the page transition
-    // animation to complete before starting the tour.
-    tourController.start(
-      /// Context of the current Page
-      context,
-
-      /// You can set the first index by setting [waitForFirstIndex] with timeout by
-      /// setting [waitForFirstTimeout]. If the timeout is exceeded, the smallest available
-      /// index will be used.
-      waitForFirstIndex: 1.0,
-      waitForFirstTimeout: const Duration(seconds: 3),
-
-      /// Delay before starting the tour
-      delay: Duration.zero,
-
-      /// If `true`, it will force to start the tour even already shown.
-      /// If `false,` it will force not to start the tour.
-      /// Default is `null` (depends on the global config).
-      force: false,
-
-      /// Config for the pre-dialog, it will show before the tours to ask the permission.
-      predialogConfig: PredialogConfig(
-        enabled: true,
-        // You can add your own dialog here. All others parameters will be ignored when using this method.
-        modifiedDialogResult: (context) => showDialog<bool>(context: context, builder: builder),
-      ),
-    );
-```
-
-</details>
 
 ### Set default configuration
 
@@ -235,7 +105,7 @@ With these steps, you can easily create a tour to showcase the features of your 
 
 ## Contributions
 
-Contributions to this project are welcome! If you would like to contribute, please feel free to submit pull requests or open issues. However, please note that this project is in early development and may not have well-defined contribution guidelines yet. We appreciate your patience and understanding as we work to build a strong and inclusive community around this package.
+Contributions to this project are welcome! If you would like to contribute, please feel free to submit pull requests or open issues.
 
 ## Donations
 
@@ -244,5 +114,3 @@ If you find this project helpful and would like to support its development, you 
 **PayPal:** [Donate](https://www.paypal.com/donate?hosted_button_id=lamnhan066)
 
 <p align='center'><a href="https://www.buymeacoffee.com/lamnhan066"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=lamnhan066&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" width="200"></a></p>
-
-Your donation will be used to cover the cost of maintaining and improving this project. Thank you for your support!
