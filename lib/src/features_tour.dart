@@ -5,7 +5,6 @@ import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/dialogs.dart';
 import 'package:features_tour/src/components/unfeatures_tour.dart';
 import 'package:features_tour/src/models/button_types.dart';
-import 'package:features_tour/src/models/instruction_result.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -149,6 +148,11 @@ class FeaturesTour extends StatelessWidget {
   ///
   /// The [onPressed] callback is triggered when this widget is pressed.
   /// If [onPressed] returns a `Future`, the next tour step will be delayed until the action completes.
+  ///
+  /// To perform actions before or after the introduction, use [onBeforeIntroduce] and [onAfterIntroduce].
+  /// In the [onAfterIntroduce] callback, you can access the [IntroduceResult] to determine
+  /// whether the user pressed the Next or Skip button, or if they tapped outside the introduction
+  /// to dismiss it. This allows you to control the flow of the tour based on user interactions.
   const FeaturesTour({
     super.key,
     required this.controller,
@@ -165,7 +169,10 @@ class FeaturesTour extends StatelessWidget {
     this.doneConfig,
     this.enabled = true,
     this.onPressed,
-  });
+    this.onBeforeIntroduce,
+    this.onAfterIntroduce,
+  }) : assert(onPressed == null || onAfterIntroduce == null,
+            'Use `onAfterIntroduce` instead of `onPressed` to avoid confusion.');
 
   GlobalKey _resolveKey() {
     final globalKey = controller._globalKeys[index];
@@ -246,7 +253,22 @@ class FeaturesTour extends StatelessWidget {
   ///   onPressed: onPressed,
   /// )
   /// ```
+  @Deprecated('Use `onAfterIntroduce` instead.')
   final FutureOr<void> Function()? onPressed;
+
+  /// Callback triggered before the [introduce] widget is shown.
+  ///
+  /// This can be used to perform actions or preparations right before the introduction step appears.
+  /// If the callback returns a [Future], the tour will wait for it to complete before proceeding.
+  final FutureOr<void> Function()? onBeforeIntroduce;
+
+  /// Callback triggered after the [introduce] widget is shown.
+  ///
+  /// This can be used to perform actions or preparations right after the introduction step appears.
+  /// If the callback returns a [Future], the tour will wait for it to complete before
+  /// proceeding to the next step.
+  final FutureOr<void> Function(IntroduceResult introduceResult)?
+      onAfterIntroduce;
 
   /// Get the current context.
   BuildContext? get _context => _resolveKey().currentContext;

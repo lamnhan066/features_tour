@@ -256,6 +256,13 @@ class FeaturesTourController {
           introduceConfig.backgroundColor ?? defaultIntroduceBackgroundColor;
       showCover(context, introduceBackgroundColor);
 
+      await state.onBeforeIntroduce?.call();
+
+      if (!context.mounted) {
+        printDebug(() => '   -> The parent widget was unmounted');
+        break;
+      }
+
       // If there is no state in queue and no index to wait for then it's
       // the last state.
       final isLastState = _states.isEmpty && waitForIndex == null;
@@ -264,23 +271,47 @@ class FeaturesTourController {
       switch (result) {
         case IntroduceResult.disabled:
         case IntroduceResult.notMounted:
-          printDebug(
-            () =>
-                '   -> This widget has been cancelled with result: ${result.name}',
-          );
           await _removeState(state, false);
           break;
         case IntroduceResult.done:
         case IntroduceResult.next:
-          printDebug(() => '   -> Move to the next widget');
           await _removeState(state, true);
+          // ignore: deprecated_member_use_from_same_package
+          if (state.onPressed != null && state.onAfterIntroduce == null) {
+            printDebug(() => '   -> Call `onPressed`');
+            // ignore: deprecated_member_use_from_same_package
+            await state.onPressed!();
+          }
           break;
         case IntroduceResult.skip:
-          printDebug(() => '   -> Skip this tour');
           await _removeState(state, true);
           await _removePage(markAsShowed: true);
+          final skipConfig = state.skipConfig ?? SkipConfig.global;
+          if (skipConfig.isCallOnPressed &&
+              // ignore: deprecated_member_use_from_same_package
+              state.onPressed != null &&
+              state.onAfterIntroduce == null) {
+            printDebug(() => '   -> Call `onPressed`');
+            // ignore: deprecated_member_use_from_same_package
+            await state.onPressed!();
+          }
           break;
       }
+
+      if (state.onAfterIntroduce != null) {
+        printDebug(() => '   -> Call `onAfterIntroduce`');
+        await state.onAfterIntroduce!(result);
+      }
+
+      final status = switch (result) {
+        IntroduceResult.disabled ||
+        IntroduceResult.notMounted =>
+          'This widget has been cancelled with result: ${result.name}',
+        IntroduceResult.next => 'Move to the next widget',
+        IntroduceResult.skip => 'Skip this tour',
+        IntroduceResult.done => 'The Tour has been completed',
+      };
+      printDebug(() => '   -> $status');
 
       // Do not continue if the tour is ended.
       if (result != IntroduceResult.next) break;
@@ -444,6 +475,8 @@ class FeaturesTourController {
       );
     });
 
+    if (!context.mounted) return IntroduceResult.notMounted;
+
     Overlay.of(
       context,
       rootOverlay: introduceConfig.useRootOverlay,
@@ -454,19 +487,6 @@ class FeaturesTourController {
 
     if (overlayEntry.mounted) {
       overlayEntry.remove();
-    }
-
-    if (state.onPressed != null) {
-      switch (result) {
-        case IntroduceResult.skip:
-          if (skipConfig.isCallOnPressed) {
-            await state.onPressed!();
-          }
-        case IntroduceResult.next:
-        case IntroduceResult.done:
-          await state.onPressed!();
-        default:
-      }
     }
 
     return result;
