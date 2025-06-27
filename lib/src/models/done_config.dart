@@ -70,42 +70,6 @@ class DoneConfig extends BaseButtonConfig {
         buttonStyle: buttonStyle,
       );
 
-  /// Create a new DoneConfig base on the [global] values.
-  ///
-  /// [text] of skip button, default is 'SKIP'.
-  ///
-  /// [alignment] is the position of the skip text, default is `Alignment.bottomLeft`.
-  ///
-  /// [color] is the color of skip text, default is `null`.
-  ///
-  /// [enabled] whether the skip button is enabled or not, default is `true`.
-  ///
-  /// [textStyle] is the [TextStyle] of the button.
-  ///
-  /// [buttonStyle] is the [ButtonStyle] of the button.
-  /// Example:
-  /// ``` dart
-  ///    buttonStyle: ElevatedButton.styleFrom(
-  ///      shape: RoundedRectangleBorder(
-  ///        side: const BorderSide(
-  ///          color: Colors.red,
-  ///        ),
-  ///        borderRadius: BorderRadius.circular(10),
-  ///      ),
-  ///    ),
-  ///  ),
-  /// ```
-  @Deprecated('Use `DoneConfig` instead.')
-  factory DoneConfig.copyWith({
-    Widget Function(VoidCallback onPressed)? child,
-    String? text,
-    Alignment? alignment,
-    Color? color,
-    bool? enabled,
-    TextStyle? textStyle,
-    ButtonStyle? buttonStyle,
-  }) = DoneConfig;
-
   /// Create a new DoneConfig base on this values.
   @override
   DoneConfig copyWith({

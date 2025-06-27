@@ -100,22 +100,6 @@ class ChildConfig {
     );
   }
 
-  /// Apply new settings to the `child` widget base on [global] settings.
-  @Deprecated('Use `ChildConfig` instead.')
-  factory ChildConfig.copyWith({
-    Widget Function(Widget child)? child,
-    bool? isAnimateChild,
-    double? borderSizeInflate,
-    Color? backgroundColor,
-    bool? barrierDismissible,
-    ShapeBorder? shapeBorder,
-    @Deprecated('Use `shapeBorder` instead') BorderRadiusGeometry? borderRadius,
-    double? zoomScale,
-    Curve? curve,
-    Duration? animationDuration,
-    bool? enableAnimation,
-  }) = ChildConfig;
-
   /// Apply new settings to the current settings.
   ChildConfig copyWith({
     Widget Function(Widget child)? child,

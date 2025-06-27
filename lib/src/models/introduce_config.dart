@@ -53,18 +53,6 @@ class IntroduceConfig {
     );
   }
 
-  /// Create a new IntroduceConfig base on [global] values.
-  @Deprecated('Use `IntroduceConfig` instead.')
-  factory IntroduceConfig.copyWith({
-    Color? backgroundColor,
-    EdgeInsetsGeometry? padding,
-    QuadrantAlignment? quadrantAlignment,
-    Alignment? alignment,
-    @Deprecated(
-        'Dark/light themes are automatically applied. So this value is no longer needed.')
-    bool? applyDarkTheme,
-  }) = IntroduceConfig;
-
   /// Create a new IntroduceConfig base on this values.
   IntroduceConfig copyWith({
     Color? backgroundColor,
