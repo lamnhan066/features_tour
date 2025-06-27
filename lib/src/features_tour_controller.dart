@@ -164,6 +164,9 @@ class FeaturesTourController {
       return;
     }
 
+    // Put this here so we don't have to check the context again.
+    final defaultIntroduceBackgroundColor = _getOnSurfaceDefaultColor(context);
+
     final result = await _showPredialog(context, force, predialogConfig);
 
     switch (result) {
@@ -249,7 +252,9 @@ class FeaturesTourController {
 
       // Show the cover to avoid user tapping the screen.
       final introduceConfig = state.introduceConfig ?? IntroduceConfig.global;
-      showCover(context, introduceConfig.backgroundColor);
+      final introduceBackgroundColor =
+          introduceConfig.backgroundColor ?? defaultIntroduceBackgroundColor;
+      showCover(context, introduceBackgroundColor);
 
       // If there is no state in queue and no index to wait for then it's
       // the last state.
@@ -348,15 +353,7 @@ class FeaturesTourController {
           child: FeaturesChild(
             globalKey: state._resolveKey(),
             childConfig: childConfig,
-            introduce: introduceConfig.applyDarkTheme
-                ? Theme(
-                    data: ThemeData.dark(),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: state.introduce,
-                    ),
-                  )
-                : state.introduce,
+            introduce: state.introduce,
             skip: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -650,5 +647,10 @@ class FeaturesTourController {
     }
 
     return false;
+  }
+
+  Color _getOnSurfaceDefaultColor(BuildContext context) {
+    final onSurface = ColorScheme.of(context).onSurface;
+    return onSurface.withValues(alpha: 0.82);
   }
 }

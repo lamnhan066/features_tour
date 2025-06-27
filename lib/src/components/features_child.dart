@@ -270,6 +270,8 @@ class _FeaturesChildState extends State<FeaturesChild>
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.brightnessOf(context);
+
     return rect == null
         ? const Center(child: CircularProgressIndicator())
         : Stack(
@@ -317,7 +319,14 @@ class _FeaturesChildState extends State<FeaturesChild>
                     padding: widget.padding,
                     child: Align(
                       alignment: alignment,
-                      child: widget.introduce,
+                      child: DefaultTextStyle(
+                        style: TextStyle(
+                          color: brightness == Brightness.dark
+                              ? Colors.black
+                              : Colors.white,
+                        ),
+                        child: widget.introduce,
+                      ),
                     ),
                   ),
                 ),

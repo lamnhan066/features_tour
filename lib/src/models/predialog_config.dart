@@ -26,8 +26,8 @@ class PredialogConfig {
     ),
     this.dismissButtonStyle,
     this.borderRadius = 12,
-    this.backgroundColor = Colors.white,
-    this.textColor = Colors.black,
+    this.backgroundColor,
+    this.textColor,
     this.modifiedDialogResult,
     this.onAcceptButtonPressed,
     this.onLaterButtonPressed,
@@ -38,10 +38,10 @@ class PredialogConfig {
   final bool enabled;
 
   /// Background color of the dialog.
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// Text color for the dialog content.
-  final Color textColor;
+  final Color? textColor;
 
   /// Title of the dialog.
   final String title;

@@ -6,7 +6,7 @@ class IntroduceConfig {
   static IntroduceConfig global = const IntroduceConfig._();
 
   /// Color of the background for the `introduce` widget.
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// Padding around the `introduce` widget.
   final EdgeInsetsGeometry padding;
@@ -20,25 +20,16 @@ class IntroduceConfig {
   /// the other elements.
   final Alignment? alignment;
 
-  /// Automatically applies the dark theme to the `introduce` widget.
-  ///
-  /// The `introduce` widget typically uses a dark background color (default is
-  /// [Colors.black87]), so the foreground elements (like text) are usually
-  /// light-colored. When this value is set to `true`, it forces the foreground
-  /// widget to use the dark theme, ensuring visibility on the dark background.
-  final bool applyDarkTheme;
-
   /// If `useRootOverlay` is set to true, the tour will show above all other [Overlay]s.
   ///
   /// This method can be expensive (it walks the element tree).
   final bool useRootOverlay;
 
   const IntroduceConfig._({
-    this.backgroundColor = Colors.black87,
+    this.backgroundColor,
     this.padding = const EdgeInsets.all(20.0),
     this.quadrantAlignment,
     this.alignment,
-    this.applyDarkTheme = true,
     this.useRootOverlay = false,
   });
 
@@ -48,6 +39,8 @@ class IntroduceConfig {
     EdgeInsetsGeometry? padding,
     QuadrantAlignment? quadrantAlignment,
     Alignment? alignment,
+    @Deprecated(
+        'Dark/light themes are automatically applied. So this value is no longer needed.')
     bool? applyDarkTheme,
     bool? useRootOverlay,
   }) {
@@ -56,7 +49,6 @@ class IntroduceConfig {
       padding: padding,
       alignment: alignment,
       quadrantAlignment: quadrantAlignment,
-      applyDarkTheme: applyDarkTheme,
       useRootOverlay: useRootOverlay,
     );
   }
@@ -68,6 +60,8 @@ class IntroduceConfig {
     EdgeInsetsGeometry? padding,
     QuadrantAlignment? quadrantAlignment,
     Alignment? alignment,
+    @Deprecated(
+        'Dark/light themes are automatically applied. So this value is no longer needed.')
     bool? applyDarkTheme,
   }) = IntroduceConfig;
 
@@ -78,6 +72,8 @@ class IntroduceConfig {
     Alignment? alignment,
     QuadrantAlignment? quadrantAlignment,
     Duration? animationDuration,
+    @Deprecated(
+        'Dark/light themes are automatically applied. So this value is no longer needed.')
     bool? applyDarkTheme,
     bool? useRootOverlay,
   }) {
@@ -86,7 +82,6 @@ class IntroduceConfig {
       padding: padding ?? this.padding,
       alignment: alignment ?? this.alignment,
       quadrantAlignment: quadrantAlignment ?? this.quadrantAlignment,
-      applyDarkTheme: applyDarkTheme ?? this.applyDarkTheme,
       useRootOverlay: useRootOverlay ?? this.useRootOverlay,
     );
   }

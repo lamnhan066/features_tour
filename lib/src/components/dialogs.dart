@@ -131,9 +131,7 @@ class _CheckboxRowState extends State<_CheckboxRow> {
 
   @override
   Widget build(BuildContext context) {
-    final color = widget.checkboxTextColor ??
-        widget.baseTextColor ??
-        Theme.of(context).primaryColor;
+    final color = widget.checkboxTextColor ?? widget.baseTextColor;
     return FittedBox(
       alignment: Alignment.centerLeft,
       child: Row(
@@ -144,7 +142,7 @@ class _CheckboxRowState extends State<_CheckboxRow> {
             child: Checkbox(
               value: isChecked,
               activeColor: color,
-              side: BorderSide(color: color, width: 1.5),
+              side: color != null ? BorderSide(color: color, width: 1.5) : null,
               onChanged: (_) => _toggleCheckbox(),
             ),
           ),
