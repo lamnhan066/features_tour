@@ -27,15 +27,8 @@ class ChildConfig {
 
   /// Specifies the shape of the background's border. By default, it is a
   /// `RoundedRectangleBorder()`. You can set this to shapes like
-  // ignore: deprecated_member_use_from_same_package
-  /// `RoundedRectangleBorder()` or `CircleBorder()`. If specified, the [borderRadius]
-  /// will be ignored.
-  final ShapeBorder? shapeBorder;
-
-  /// Defines the border radius of the background around the child widget. The default
-  /// is `BorderRadius.all(12)`. This value will be ignored if [shapeBorder] is specified.
-  @Deprecated('Use `shapeBorder` instead')
-  final BorderRadiusGeometry borderRadius;
+  /// `RoundedRectangleBorder()` or `CircleBorder()`.
+  final ShapeBorder shapeBorder;
 
   /// Specifies the zoom scale of the `child` widget when it is shown during the
   /// introduction. A larger value will make the child appear zoomed in.
@@ -61,8 +54,9 @@ class ChildConfig {
     this.borderSizeInflate = 3,
     this.backgroundColor,
     this.barrierDismissible = false,
-    this.shapeBorder,
-    this.borderRadius = const BorderRadius.all(Radius.circular(12)),
+    this.shapeBorder = const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+    ),
     this.zoomScale = 1.2,
     this.curve = Curves.decelerate,
     this.animationDuration = const Duration(milliseconds: 600),
@@ -78,7 +72,6 @@ class ChildConfig {
     bool? barrierDismissible,
     ShapeBorder? shapeBorder,
     BorderRadiusGeometry? borderRadius,
-    @Deprecated('Use `shapeBorder` instead') Color? borderColor,
     double? zoomScale,
     Curve? curve,
     Duration? animationDuration,
@@ -91,8 +84,6 @@ class ChildConfig {
       backgroundColor: backgroundColor,
       barrierDismissible: barrierDismissible,
       shapeBorder: shapeBorder,
-      // ignore: deprecated_member_use_from_same_package
-      borderRadius: borderRadius,
       zoomScale: zoomScale,
       curve: curve,
       animationDuration: animationDuration,
@@ -108,7 +99,6 @@ class ChildConfig {
     Color? backgroundColor,
     bool? barrierDismissible,
     ShapeBorder? shapeBorder,
-    @Deprecated('Use `shapeBorder` instead') BorderRadiusGeometry? borderRadius,
     double? zoomScale,
     Curve? curve,
     Duration? animationDuration,
@@ -121,8 +111,6 @@ class ChildConfig {
       backgroundColor: backgroundColor ?? this.backgroundColor,
       barrierDismissible: barrierDismissible ?? this.barrierDismissible,
       shapeBorder: shapeBorder ?? this.shapeBorder,
-      // ignore: deprecated_member_use_from_same_package
-      borderRadius: borderRadius ?? this.borderRadius,
       zoomScale: zoomScale ?? this.zoomScale,
       curve: curve ?? this.curve,
       animationDuration: animationDuration ?? this.animationDuration,

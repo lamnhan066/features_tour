@@ -285,11 +285,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                   duration: widget.childConfig.animationDuration,
                   child: Material(
                     color: widget.childConfig.backgroundColor,
-                    shape: widget.childConfig.shapeBorder ??
-                        RoundedRectangleBorder(
-                          // ignore: deprecated_member_use_from_same_package
-                          borderRadius: widget.childConfig.borderRadius,
-                        ),
+                    shape: widget.childConfig.shapeBorder,
                   ),
                 ),
               ),
