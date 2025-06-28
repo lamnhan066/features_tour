@@ -1,7 +1,7 @@
-## 0.4.14
+## 0.5.0-rc.1
 
 * **Features**:
-  * Automatically adapts to the app's dark/light theme.
+  * **BREAKING CHANGE:** Automatically adapts to the app's dark/light theme.
   * Waits for the drawer animation to finish before proceeding.
   * Introduced `onBeforeIntroduce` and `onAfterIntroduce` parameters for enhanced control.
 
@@ -9,8 +9,30 @@
   * Resolved the issue where `waitForIndex` would still activate even after users tapped the `SKIP` button.
 
 * **Deprecations**:
+  * Remove all old deprecated methods.
   * Deprecated the `onPressed` parameter in `FeaturesTour` in favor of `onAfterIntroduce`.
-  * Deprecated the `isCallOnPressed` parameter in `SkipConfig` in favor of `onAfterIntroduce(IntroduceResult)`.
+  * Deprecated the `isCallOnPressed` parameter in `SkipConfig` in favor of `onAfterIntroduce(IntroduceResult)`:
+
+    ```dart
+    // This code
+    FeaturesTour(
+      skipConfig: SkipConfig(
+        // We don't want to `doSomething` when users press the SKIP button
+        isCallOnPressed: false,
+      ),
+      onPressed: () => doSomething(),
+    )
+
+    // Will become
+    FeaturesTour(
+      onAfterIntroduce: (result) {
+        // We only want to `doSomething` when users press the NEXT or DONE buttons
+        if (result == IntroduceResult.next || result == IntroduceResult.done) {
+          doSomething();
+        }
+      }
+    )
+    ```
 
 * **Updates**:
   * Enhanced the example for better clarity.
