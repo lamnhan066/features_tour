@@ -250,6 +250,10 @@ class _AppState extends State<App> {
         controller: tourController,
         index: MainTourIndex.floatingButton,
         introduce: const Text('Tap here to add a new item'),
+        childConfig: ChildConfig(
+          shapeBorder: const CircleBorder(),
+          borderSizeInflate: 10.0,
+        ),
         doneConfig: DoneConfig(alignment: Alignment.bottomLeft),
         child: FloatingActionButton(
           onPressed: () {},
