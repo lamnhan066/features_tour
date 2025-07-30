@@ -98,10 +98,15 @@ class _AppState extends State<App> {
           controller: tourController,
           index: MainTourIndex.drawer,
           waitForIndex: MainTourIndex.buttonOnDrawer,
-          introduce: const Text('Tap here to open the drawer'),
-          onPressed: () async {
+          onAfterIntroduce: (result) {
+            if (result != IntroduceResult.next &&
+                result != IntroduceResult.done) {
+              return;
+            }
+
             scaffoldKey.currentState?.openDrawer();
           },
+          introduce: const Text('Tap here to open the drawer'),
           child: IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
@@ -133,7 +138,12 @@ class _AppState extends State<App> {
             controller: tourController,
             index: MainTourIndex.buttonOnDrawer,
             introduce: const Text('Tap here to close the drawer'),
-            onPressed: () {
+            onAfterIntroduce: (result) {
+              if (result != IntroduceResult.next &&
+                  result != IntroduceResult.done) {
+                return;
+              }
+
               scaffoldKey.currentState?.closeDrawer();
             },
             child: ElevatedButton(
@@ -220,7 +230,14 @@ class _AppState extends State<App> {
                                   introduce: const Text(
                                     'Tap here to close the dialog',
                                   ),
-                                  onPressed: () {
+                                  onAfterIntroduce: (result) {
+                                    if (introduceResult !=
+                                            IntroduceResult.next &&
+                                        introduceResult !=
+                                            IntroduceResult.done) {
+                                      return;
+                                    }
+
                                     Navigator.of(context).pop();
                                   },
                                   child: TextButton(
