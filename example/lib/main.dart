@@ -139,12 +139,9 @@ class _AppState extends State<App> {
             index: MainTourIndex.buttonOnDrawer,
             introduce: const Text('Tap here to close the drawer'),
             onAfterIntroduce: (result) {
-              if (result != IntroduceResult.next &&
-                  result != IntroduceResult.done) {
-                return;
+              if (result case IntroduceResult.next || IntroduceResult.done) {
+                scaffoldKey.currentState?.closeDrawer();
               }
-
-              scaffoldKey.currentState?.closeDrawer();
             },
             child: ElevatedButton(
               child: const Text('Close Drawer'),
@@ -204,53 +201,51 @@ class _AppState extends State<App> {
                       );
                     },
                     onAfterIntroduce: (introduceResult) async {
-                      if (introduceResult != IntroduceResult.next &&
-                          introduceResult != IntroduceResult.done) {
-                        return;
-                      }
+                      if (introduceResult
+                          case IntroduceResult.next || IntroduceResult.done) {
+                        // Scroll to the first item when item 90 is tapped
+                        await scrollController.animateTo(
+                          0,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
 
-                      // Scroll to the first item when item 90 is tapped
-                      await scrollController.animateTo(
-                        0,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
+                        // Show a dialog after item 90 is tapped
+                        if (context.mounted) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('A Dialog'),
+                                actions: [
+                                  FeaturesTour(
+                                    controller: tourController,
+                                    index: MainTourIndex.dialogButton,
+                                    introduce: const Text(
+                                      'Tap here to close the dialog',
+                                    ),
+                                    onAfterIntroduce: (result) {
+                                      if (introduceResult !=
+                                              IntroduceResult.next &&
+                                          introduceResult !=
+                                              IntroduceResult.done) {
+                                        return;
+                                      }
 
-                      // Show a dialog after item 90 is tapped
-                      if (context.mounted) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('A Dialog'),
-                              actions: [
-                                FeaturesTour(
-                                  controller: tourController,
-                                  index: MainTourIndex.dialogButton,
-                                  introduce: const Text(
-                                    'Tap here to close the dialog',
-                                  ),
-                                  onAfterIntroduce: (result) {
-                                    if (introduceResult !=
-                                            IntroduceResult.next &&
-                                        introduceResult !=
-                                            IntroduceResult.done) {
-                                      return;
-                                    }
-
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: TextButton(
-                                    onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: const Text('Ok'),
+                                    child: TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Ok'),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                                ],
+                              );
+                            },
+                          );
+                        }
                       }
                     },
                     child: Padding(
