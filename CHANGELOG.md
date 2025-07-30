@@ -1,3 +1,12 @@
+## 0.5.0-rc.2
+
+* **Deprecations**:
+  * Remove all old deprecated parameters (`FeaturesTour.onPressed` and `SkipConfig.isCallOnPressed`).
+
+* **Updates**:
+  * Enhanced the example.
+  * Enhanced the README.
+
 ## 0.5.0-rc.1
 
 * **Features**:
