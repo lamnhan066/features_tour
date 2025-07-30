@@ -168,11 +168,9 @@ class FeaturesTour extends StatelessWidget {
     this.skipConfig,
     this.doneConfig,
     this.enabled = true,
-    this.onPressed,
     this.onBeforeIntroduce,
     this.onAfterIntroduce,
-  }) : assert(onPressed == null || onAfterIntroduce == null,
-            'Use `onAfterIntroduce` instead of `onPressed` to avoid confusion.');
+  });
 
   GlobalKey _resolveKey() {
     final globalKey = controller._globalKeys[index];
@@ -239,22 +237,6 @@ class FeaturesTour extends StatelessWidget {
   /// Configuration for the overlay widget displayed over the [child].
   /// If `null`, the global configuration ([ChildConfig.global]) will be used.
   final ChildConfig? childConfig;
-
-  /// Callback triggered when the [introduce] widget is tapped.
-  ///
-  /// Note: Interactions with widgets inside [introduce], such as buttons,
-  /// will not be triggered. To include button functionality, add the button
-  /// to both [child] and [onPressed].
-  ///
-  /// Example:
-  /// ```dart
-  /// FeaturesTour(
-  ///   child: ElevatedButton(onPressed: onPressed, child: Text('Button')),
-  ///   onPressed: onPressed,
-  /// )
-  /// ```
-  @Deprecated('Use `onAfterIntroduce` instead.')
-  final FutureOr<void> Function()? onPressed;
 
   /// Callback triggered before the [introduce] widget is shown.
   ///

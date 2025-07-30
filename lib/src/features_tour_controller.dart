@@ -276,26 +276,10 @@ class FeaturesTourController {
         case IntroduceResult.done:
         case IntroduceResult.next:
           await _removeState(state, true);
-          // ignore: deprecated_member_use_from_same_package
-          if (state.onPressed != null && state.onAfterIntroduce == null) {
-            printDebug(() => '   -> Call `onPressed`');
-            // ignore: deprecated_member_use_from_same_package
-            await state.onPressed!();
-          }
           break;
         case IntroduceResult.skip:
           await _removeState(state, true);
           await _removePage(markAsShowed: true);
-          final skipConfig = state.skipConfig ?? SkipConfig.global;
-          // ignore: deprecated_member_use_from_same_package
-          if (skipConfig.isCallOnPressed &&
-              // ignore: deprecated_member_use_from_same_package
-              state.onPressed != null &&
-              state.onAfterIntroduce == null) {
-            printDebug(() => '   -> Call `onPressed`');
-            // ignore: deprecated_member_use_from_same_package
-            await state.onPressed!();
-          }
           break;
       }
 

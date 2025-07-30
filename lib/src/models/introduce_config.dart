@@ -39,9 +39,6 @@ class IntroduceConfig {
     EdgeInsetsGeometry? padding,
     QuadrantAlignment? quadrantAlignment,
     Alignment? alignment,
-    @Deprecated(
-        'Dark/light themes are automatically applied. So this value is no longer needed.')
-    bool? applyDarkTheme,
     bool? useRootOverlay,
   }) {
     return global.copyWith(
@@ -60,9 +57,6 @@ class IntroduceConfig {
     Alignment? alignment,
     QuadrantAlignment? quadrantAlignment,
     Duration? animationDuration,
-    @Deprecated(
-        'Dark/light themes are automatically applied. So this value is no longer needed.')
-    bool? applyDarkTheme,
     bool? useRootOverlay,
   }) {
     return IntroduceConfig._(

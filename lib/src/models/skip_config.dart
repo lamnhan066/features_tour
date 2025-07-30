@@ -5,17 +5,12 @@ class SkipConfig extends BaseButtonConfig {
   /// Global configuration.
   static SkipConfig global = const SkipConfig._();
 
-  /// Call the `onPressed` action when the skip button is pressed. Default is `false`.
-  @Deprecated('Use `FeaturesTour.onAfterIntroduce` instead.')
-  final bool isCallOnPressed;
-
   const SkipConfig._({
     super.child,
     super.text = 'SKIP',
     super.alignment = Alignment.bottomLeft,
     super.color,
     super.enabled = true,
-    this.isCallOnPressed = false,
     super.textStyle,
     super.buttonStyle,
   });
@@ -40,9 +35,6 @@ class SkipConfig extends BaseButtonConfig {
   ///
   /// [enabled] indicates whether the skip button is enabled. Defaults to `true`.
   ///
-  /// [isCallOnPressed] controls whether the tour calls `onPressed` when the skip button is clicked.
-  /// Defaults to `false`, meaning it does not call `onPressed` by default.
-  ///
   /// [textStyle] defines the [TextStyle] of the skip button text.
   ///
   /// [buttonStyle] defines the [ButtonStyle] of the button.
@@ -64,7 +56,6 @@ class SkipConfig extends BaseButtonConfig {
     Alignment? alignment,
     Color? color,
     bool? enabled,
-    bool? isCallOnPressed,
     TextStyle? textStyle,
     ButtonStyle? buttonStyle,
   }) {
@@ -74,7 +65,6 @@ class SkipConfig extends BaseButtonConfig {
       alignment: alignment,
       color: color,
       enabled: enabled,
-      isCallOnPressed: isCallOnPressed,
       textStyle: textStyle,
       buttonStyle: buttonStyle,
     );
@@ -88,7 +78,6 @@ class SkipConfig extends BaseButtonConfig {
     Alignment? alignment,
     Color? color,
     bool? enabled,
-    bool? isCallOnPressed,
     TextStyle? textStyle,
     ButtonStyle? buttonStyle,
   }) {
@@ -98,8 +87,6 @@ class SkipConfig extends BaseButtonConfig {
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,
       enabled: enabled ?? this.enabled,
-      // ignore: deprecated_member_use_from_same_package
-      isCallOnPressed: isCallOnPressed ?? this.isCallOnPressed,
       textStyle: textStyle ?? this.textStyle,
       buttonStyle: buttonStyle ?? this.buttonStyle,
     );
