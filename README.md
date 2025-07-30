@@ -34,7 +34,10 @@ FeaturesTour(
     },
 
     onAfterIntroduce: (introduceResult) async {
-        // Do something after introducing the current widget
+        if (introduceResult case IntroduceResult.next || IntroduceResult.done) {
+            // Do something after introducing the current widget
+            // and the user press the next or done button.
+        }
     }
 
     /// This is the real widget
