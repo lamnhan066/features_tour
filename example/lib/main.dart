@@ -97,7 +97,7 @@ class _AppState extends State<App> {
         leading: FeaturesTour(
           controller: tourController,
           index: MainTourIndex.drawer,
-          waitForIndex: MainTourIndex.buttonOnDrawer,
+          nextIndex: MainTourIndex.buttonOnDrawer,
           onAfterIntroduce: (result) {
             if (result != IntroduceResult.next &&
                 result != IntroduceResult.done) {
@@ -178,7 +178,7 @@ class _AppState extends State<App> {
                 FeaturesTour(
                   controller: tourController,
                   index: MainTourIndex.firstItem,
-                  waitForIndex: MainTourIndex.item90,
+                  nextIndex: MainTourIndex.item90,
                   introduce: const Text('This is item 0'),
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
@@ -190,7 +190,7 @@ class _AppState extends State<App> {
                     enabled: index == 90,
                     controller: tourController,
                     index: MainTourIndex.item90,
-                    waitForIndex: MainTourIndex.dialogButton,
+                    nextIndex: MainTourIndex.dialogButton,
                     introduce: Text('This is item $index'),
                     onBeforeIntroduce: () async {
                       // Scroll to the last item when the first item is tapped
