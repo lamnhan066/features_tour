@@ -1,3 +1,15 @@
+## 0.5.0-rc.3
+
+* **Deprecations**:
+  * Deprecated the `waitForFirstIndex` parameter in `FeaturesTourController`. Use `firstIndex` instead for improved clarity and consistency.
+  * Deprecated the `waitForFirstTimeout` parameter in `FeaturesTourController`. Use `firstIndexTimeout` for better alignment with naming conventions.
+  * Deprecated the `waitForIndex` parameter in `FeaturesTour`. Replaced with `nextIndex` for a more intuitive understanding.
+  * Deprecated the `waitForTimeout` parameter in `FeaturesTour`. Use `nextIndexTimeout` for a clearer and more descriptive alternative.
+
+* **Updates**:
+  * Added a new "Flow" section to the README to provide a comprehensive overview of the FeaturesTour workflow, making it easier for users to understand and implement.
+  * Enhanced the example.
+
 ## 0.5.0-rc.2
 
 * **Deprecations**:
