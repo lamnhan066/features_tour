@@ -132,11 +132,11 @@ class FeaturesTour extends StatelessWidget {
   /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
   /// it blocks the current route from being popped.
   ///
-  /// Use [waitForIndex] to specify the next index to display.
+  /// Use [nextIndex] to specify the next index to display.
   /// The app will pause interaction until the specified index becomes available, making it ideal
   /// for scenarios like displaying a [FeaturesTour] in a dialog that opens after the current feature.
-  /// To avoid poor user experience, configure a timeout using [waitForTimeout], with a default of 3 seconds.
-  /// Note that [waitForIndex] only applies within the same [controller].
+  /// To avoid poor user experience, configure a timeout using [nextIndexTimeout], with a default of 3 seconds.
+  /// Note that [nextIndex] only applies within the same [controller].
   ///
   /// You can disable a tour for specific widgets by setting [enabled] to `false`.
   /// This is particularly useful for lists where only one item should have the tour active;
@@ -158,8 +158,17 @@ class FeaturesTour extends StatelessWidget {
     required this.controller,
     required this.index,
     this.canPop = true,
-    this.waitForIndex,
-    this.waitForTimeout = const Duration(seconds: 3),
+    @Deprecated(
+      'Use `nextIndex` instead. This will be removed in the next major version.',
+    )
+    double? waitForIndex,
+    @Deprecated(
+      'Use `nextIndexTimeout` instead. This will be removed in the next major version.',
+    )
+    Duration waitForTimeout = const Duration(seconds: 3),
+    double? nextIndex,
+    // TODO: Set `nextIndexTimeout` to `Duration(seconds: 3)` in the next release candidate.
+    Duration? nextIndexTimeout,
     required this.child,
     this.childConfig,
     this.introduce = const SizedBox.shrink(),
@@ -170,7 +179,8 @@ class FeaturesTour extends StatelessWidget {
     this.enabled = true,
     this.onBeforeIntroduce,
     this.onAfterIntroduce,
-  });
+  })  : nextIndex = nextIndex ?? waitForIndex,
+        nextIndexTimeout = nextIndexTimeout ?? waitForTimeout;
 
   GlobalKey _resolveKey() {
     final globalKey = controller._globalKeys[index];
@@ -190,18 +200,18 @@ class FeaturesTour extends StatelessWidget {
   final double index;
 
   /// Specifies the next [index] to start the tour.
-  /// The plugin will wait for this index to appear or until the [waitForTimeout] is reached.
+  /// The plugin will wait for this index to appear or until the [nextIndexTimeout] is reached.
   /// If set to `null`, the tour will proceed in the natural order of the [index].
   ///
   /// Note: This value applies only within the same [controller].
   ///
   /// Example: Use this to wait for a dialog to appear before displaying the next step.
-  final double? waitForIndex;
+  final double? nextIndex;
 
-  /// The timeout duration for waiting on [waitForIndex]. Defaults to 3 seconds.
+  /// The timeout duration for waiting on [nextIndex]. Defaults to 3 seconds.
   ///
   /// Ensure this value is not excessively long to maintain a good user experience.
-  final Duration waitForTimeout;
+  final Duration nextIndexTimeout;
 
   /// Determines whether this widget's actions are enabled.
   final bool enabled;

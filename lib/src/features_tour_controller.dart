@@ -65,8 +65,8 @@ class FeaturesTourController {
   /// **Important:** Reset [force] to `null` before releasing the app to ensure the
   /// [FeaturesTour] behaves as expected.
   ///
-  /// Set the initial index for the tour using [waitForFirstIndex], with a timeout
-  /// specified by [waitForFirstTimeout]. If the timeout is exceeded, the smallest
+  /// Set the initial index for the tour using [firstIndex], with a timeout
+  /// specified by [firstIndexTimeout]. If the timeout is exceeded, the smallest
   /// available index will be used.
   ///
   /// The pre-dialog can be configured using [predialogConfig]. This dialog prompts
@@ -78,13 +78,25 @@ class FeaturesTourController {
   /// ```
   Future<void> start(
     BuildContext context, {
+    @Deprecated(
+      'Use `firstIndex` instead. This will be removed in the next release candidate.',
+    )
     double? waitForFirstIndex,
+    @Deprecated(
+      'Use `firstIndexTimeout` instead. This will be removed in the next release candidate.',
+    )
     Duration waitForFirstTimeout = const Duration(seconds: 3),
+    double? firstIndex,
+    // TODO: Set `firstIndexTimeout` to `Duration(seconds: 3)` in the next release candidate.
+    Duration? firstIndexTimeout,
     Duration delay = const Duration(milliseconds: 500),
     bool? force,
     PredialogConfig? predialogConfig,
     bool? debugLog,
   }) async {
+    firstIndex ??= waitForFirstIndex;
+    firstIndexTimeout ??= waitForFirstTimeout;
+
     if (_isIntroducing) {
       printDebug(() => 'The tour is already in progress');
       return;
@@ -131,7 +143,7 @@ class FeaturesTourController {
     // Wait for `delay` duration before starting the tours.
     await Future.delayed(delay);
 
-    if (_states.isEmpty && waitForFirstIndex == null) {
+    if (_states.isEmpty && firstIndex == null) {
       printDebug(() => 'The page $pageName has no state');
       cleanup();
       return;
@@ -183,13 +195,12 @@ class FeaturesTourController {
         return;
     }
 
-    // Watching for the `waitForIndex` value.
-    FeaturesTour? waitForIndexState;
+    // Watching for the [FeaturesTour.nextIndex] value.
+    FeaturesTour? nextState;
 
     // Waiting for the first index.
-    if (waitForFirstIndex != null) {
-      waitForIndexState =
-          await _waitForIndex(waitForFirstIndex, waitForFirstTimeout);
+    if (firstIndex != null) {
+      nextState = await _nextIndex(firstIndex, firstIndexTimeout);
     }
 
     printDebug(() => 'Start the tour');
@@ -199,15 +210,15 @@ class FeaturesTourController {
 
       final FeaturesTour state;
 
-      if (waitForIndexState == null) {
+      if (nextState == null) {
         state = _states.remove(_states.firstKey())!;
       } else {
-        state = waitForIndexState;
-        _states.remove(waitForIndexState.index);
+        state = nextState;
+        _states.remove(nextState.index);
       }
 
-      final waitForIndex = state.waitForIndex;
-      final waitForTimeout = state.waitForTimeout;
+      final nextIndex = state.nextIndex;
+      final nextIndexTimeout = state.nextIndexTimeout;
       final key = FeaturesTour._getPrefKey(pageName, state);
       printDebug(() => 'Start widget with key $key:');
 
@@ -265,7 +276,7 @@ class FeaturesTourController {
 
       // If there is no state in queue and no index to wait for then it's
       // the last state.
-      final isLastState = _states.isEmpty && waitForIndex == null;
+      final isLastState = _states.isEmpty && nextIndex == null;
       final result = await _showIntroduce(context, state, isLastState);
 
       switch (result) {
@@ -301,25 +312,25 @@ class FeaturesTourController {
       // Do not continue if the tour is ended.
       if (result != IntroduceResult.next) break;
 
-      // Wait for the next state to appear if `waitForIndex` is non-null.
-      if (waitForIndex != null) {
+      // Wait for the next state to appear if `nextIndex` is non-null.
+      if (nextIndex != null) {
         printDebug(() =>
-            'The `waitForIndex` is non-null => Waiting for the next index: $waitForIndex ...');
+            'The `nextIndex` is non-null => Waiting for the next index: $nextIndex ...');
 
-        waitForIndexState = await _waitForIndex(waitForIndex, waitForTimeout);
+        nextState = await _nextIndex(nextIndex, nextIndexTimeout);
 
-        if (waitForIndexState == null) {
+        if (nextState == null) {
           printDebug(() =>
-              '   -> Cannot not wait for the next index $waitForIndex because timeout is reached. Use the next ordered value instead.');
+              '   -> Cannot not wait for the next index $nextIndex because timeout is reached. Use the next ordered value instead.');
 
           // Add the timeout state index to the introduced list so I will not
           // be introduced even when it's shown.
-          _introducedIndexes.add(waitForIndex);
+          _introducedIndexes.add(nextIndex);
         } else {
           printDebug(() => '   -> Next index is available with state: $state');
         }
       } else {
-        waitForIndexState = null;
+        nextState = null;
       }
     }
 
@@ -563,7 +574,7 @@ class FeaturesTourController {
   }
 
   /// Wait for the next index to be available.
-  Future<FeaturesTour?> _waitForIndex(
+  Future<FeaturesTour?> _nextIndex(
     double index,
     Duration timeout,
   ) async {
