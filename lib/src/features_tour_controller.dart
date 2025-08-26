@@ -679,13 +679,6 @@ class FeaturesTourController {
   }
 
   Color _getOnSurfaceDefaultColor(BuildContext context) {
-    final onSurface = ColorScheme.of(context).onSurface;
-    final brightness = Theme.brightnessOf(context);
-    if (brightness == Brightness.dark) {
-      // TODO: Make this configurable.
-      return onSurface.withValues(alpha: 0.74);
-    }
-    // TODO: Make this configurable.
-    return onSurface.withValues(alpha: 0.82);
+    return ColorScheme.of(context).onSurface.withValues(alpha: 0.82);
   }
 }
