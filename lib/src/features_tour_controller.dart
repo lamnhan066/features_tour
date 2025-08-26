@@ -602,39 +602,41 @@ class FeaturesTourController {
     }
   }
 
-  /// Wait until the page transition animation is complete.
+  /// Wait until the page transition (and optional drawer animation) is complete.
   Future<void> _waitForTransition(BuildContext? context) async {
     if (context == null || !context.mounted) return;
 
-    printDebug(() => 'Waiting for the page transition to complete...');
-    final modalRoute = ModalRoute.of(context)?.animation;
+    printDebug(() => '⏳ Waiting for the page transition...');
 
-    if (modalRoute != null &&
-        !modalRoute.isCompleted &&
-        !modalRoute.isDismissed) {
-      Completer completer = Completer();
-      modalRoute.addStatusListener((status) {
-        switch (status) {
-          case AnimationStatus.forward:
-          case AnimationStatus.reverse:
-            break;
-          case AnimationStatus.dismissed:
-          case AnimationStatus.completed:
-            if (!completer.isCompleted) completer.complete();
+    final routeAnimation = ModalRoute.of(context)?.animation;
+    if (routeAnimation != null &&
+        !routeAnimation.isCompleted &&
+        !routeAnimation.isDismissed) {
+      final completer = Completer<void>();
+
+      void listener(AnimationStatus status) {
+        if (status == AnimationStatus.completed ||
+            status == AnimationStatus.dismissed) {
+          routeAnimation.removeStatusListener(listener);
+          if (!completer.isCompleted) completer.complete();
         }
-      });
+      }
+
+      routeAnimation.addStatusListener(listener);
       await completer.future;
     }
 
-    // Wait for the drawer to close if it is open.
+    // Handle drawer transitions if necessary
     if (context.mounted) {
       final drawer = DrawerController.maybeOf(context);
-      if (drawer != null && drawer.isDrawerOpen) {
+      if (drawer?.isDrawerOpen == true) {
         // 246 milliseconds is the default duration for the drawer transition.
-        await Future.delayed(const Duration(milliseconds: 246));
+        final duration = const Duration(milliseconds: 246);
+        await Future.delayed(duration);
       }
     }
-    printDebug(() => 'The page transition completed');
+
+    printDebug(() => '✅ Page transition completed');
   }
 
   /// Removes all controllers for specific `pageName`.
