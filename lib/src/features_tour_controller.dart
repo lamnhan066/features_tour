@@ -626,16 +626,6 @@ class FeaturesTourController {
       await completer.future;
     }
 
-    // Handle drawer transitions if necessary
-    if (context.mounted) {
-      final drawer = DrawerController.maybeOf(context);
-      if (drawer?.isDrawerOpen == true) {
-        // 246 milliseconds is the default duration for the drawer transition.
-        final duration = const Duration(milliseconds: 246);
-        await Future.delayed(duration);
-      }
-    }
-
     printDebug(() => '✅ Page transition completed');
   }
 
