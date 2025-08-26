@@ -93,7 +93,6 @@ class _FeaturesChildState extends State<FeaturesChild>
       final updated = _updateState();
       if (!updated && times >= 10) return;
       times++;
-      print(times);
 
       // Keep listening every frame while mounted
       WidgetsBinding.instance.addPostFrameCallback(frameCallback);
