@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/extensions/get_widget_position.dart';
 import 'package:flutter/material.dart';
@@ -85,15 +83,24 @@ class _FeaturesChildState extends State<FeaturesChild>
   late final AnimationController _scaleController;
   late final Animation<double> _scaleAnimation;
 
-  /// Render longside with the transition, such as the Drawer.
-  Future<void> _autoUpdate() async {
+  /// Continuously updates the rect while the widget is mounted.
+  /// Stops automatically when disposed.
+  void _autoUpdate() {
     int times = 0;
-    while (mounted && times < 10) {
+    void frameCallback(Duration _) {
+      if (!mounted) return;
+
       final updated = _updateState();
-      if (!updated && times >= 10) break;
+      if (!updated && times >= 10) return;
       times++;
-      await Future.delayed(const Duration(milliseconds: 10));
+      print(times);
+
+      // Keep listening every frame while mounted
+      WidgetsBinding.instance.addPostFrameCallback(frameCallback);
     }
+
+    // Start listening
+    WidgetsBinding.instance.addPostFrameCallback(frameCallback);
   }
 
   /// Update the current state.
@@ -101,7 +108,11 @@ class _FeaturesChildState extends State<FeaturesChild>
     if (!mounted) return false;
 
     final tempRect = (widget.globalKey).globalPaintBounds;
-    if (tempRect != null && tempRect != rect) {
+    if (tempRect != null) {
+      if (tempRect == rect) {
+        return false;
+      }
+
       rect = tempRect;
     }
 
