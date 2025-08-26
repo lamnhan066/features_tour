@@ -1,3 +1,9 @@
+## 0.5.0-rc.4
+
+* Used the `AnimationController` instead of `Timer.perodic`.
+* Improved the way to handle the `nextIndex`.
+* Improved the way to handle the transition state.
+
 ## 0.5.0-rc.3
 
 * **Deprecations**:
