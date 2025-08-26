@@ -2,6 +2,12 @@ part of '../features_tour.dart';
 
 class SharedPrefs {
   static const String _dismissAllTours = 'DismissAllTours';
+  static SharedPreferences? _instance;
+
+  static Future<SharedPreferences> _getPrefsInstance() async {
+    _instance ??= await SharedPreferences.getInstance();
+    return _instance!;
+  }
 
   static Future<void> setDismissAllTours(bool value) =>
       _setPrefSetting(_dismissAllTours, value);
@@ -13,7 +19,7 @@ class SharedPrefs {
 
   static Future<void> _setPrefSetting(String key, Object value) async {
     key = '${FeaturesTour._prefix}_$key';
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _getPrefsInstance();
     if (value is bool) {
       prefs.setBool(key, value);
     } else if (value is String) {
@@ -29,7 +35,7 @@ class SharedPrefs {
 
   static Future<Object?> _getPrefSetting(String key) async {
     key = '${FeaturesTour._prefix}_$key';
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _getPrefsInstance();
     return prefs.get(key);
   }
 }
