@@ -24,6 +24,7 @@ class FeaturesTourController {
       SplayTreeMap.from({}, (a, b) => a.compareTo(b));
 
   final _globalKeys = <double, GlobalKey>{};
+  final Map<double, Completer<FeaturesTour>> _pendingIndexes = {};
 
   /// The internal list of the introduced states.
   final Set<double> _introducedIndexes = {};
@@ -40,6 +41,12 @@ class FeaturesTourController {
     }
     _states[state.index] = state;
     _globalKeys[state.index] = state._resolveKey();
+
+    // Complete any pending completers for this index
+    if (_pendingIndexes.containsKey(state.index)) {
+      _pendingIndexes[state.index]!.complete(state);
+      _pendingIndexes.remove(state.index);
+    }
   }
 
   /// Unregister the current FeaturesTour state.
@@ -578,17 +585,20 @@ class FeaturesTourController {
     double index,
     Duration timeout,
   ) async {
-    Stopwatch stopwatch = Stopwatch()..start();
-    while (true) {
-      for (final MapEntry(key: i, value: state) in _states.entries) {
-        if (i == index) return state;
-      }
+    // Check if the state is already available
+    if (_states.containsKey(index)) {
+      return _states[index];
+    }
 
-      // Timeout is reached.
-      if (stopwatch.elapsed >= timeout) return null;
+    // Create a completer if not already pending
+    _pendingIndexes.putIfAbsent(index, () => Completer<FeaturesTour>());
 
-      // Delay for 100 milliseconds.
-      await Future.delayed(const Duration(milliseconds: 100));
+    try {
+      return await _pendingIndexes[index]!.future.timeout(timeout);
+    } on TimeoutException {
+      printDebug(() => 'Timeout waiting for index $index');
+      _pendingIndexes.remove(index); // Clean up the completer
+      return null;
     }
   }
 
