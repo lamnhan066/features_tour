@@ -77,22 +77,23 @@ class FeaturesChild extends StatefulWidget {
 }
 
 class _FeaturesChildState extends State<FeaturesChild>
-    with WidgetsBindingObserver {
-  double scale = 1;
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   Rect? rect;
   late Rect introduceRect;
   late Alignment alignment;
   QuadrantAlignment? _quadrantAlignment;
+  late final AnimationController _scaleController;
+  late final Animation<double> _scaleAnimation;
 
   /// Render longside with the transition, such as the Drawer.
-  void _autoUpdate() {
+  Future<void> _autoUpdate() async {
     int times = 0;
-    Timer.periodic(const Duration(milliseconds: 10), (timer) {
-      if (!_updateState() && times >= 10) {
-        timer.cancel();
-      }
+    while (mounted && times < 10) {
+      final updated = _updateState();
+      if (!updated && times >= 10) break;
       times++;
-    });
+      await Future.delayed(const Duration(milliseconds: 10));
+    }
   }
 
   /// Update the current state.
@@ -100,10 +101,7 @@ class _FeaturesChildState extends State<FeaturesChild>
     if (!mounted) return false;
 
     final tempRect = (widget.globalKey).globalPaintBounds;
-    if (tempRect != null) {
-      if (tempRect == rect) {
-        return false;
-      }
+    if (tempRect != null && tempRect != rect) {
       rect = tempRect;
     }
 
@@ -111,8 +109,9 @@ class _FeaturesChildState extends State<FeaturesChild>
 
     _autoSetQuadrantAlignment(rect!);
 
-    var size = MediaQuery.maybeOf(context)?.size;
-    size ??= MediaQueryData.fromView(View.of(context)).size;
+    var size = MediaQuery.maybeOf(context)?.size ??
+        MediaQueryData.fromView(View.of(context)).size;
+
     switch (_quadrantAlignment!) {
       case QuadrantAlignment.top:
         introduceRect = Rect.fromLTRB(0, 0, size.width, rect!.top);
@@ -146,7 +145,6 @@ class _FeaturesChildState extends State<FeaturesChild>
         }
       case QuadrantAlignment.right:
         introduceRect = Rect.fromLTRB(rect!.right, 0, size.width, size.height);
-        alignment = widget.alignment ?? Alignment.centerLeft;
         if (widget.alignment != null) {
           alignment = widget.alignment!;
         } else {
@@ -221,32 +219,21 @@ class _FeaturesChildState extends State<FeaturesChild>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: widget.childConfig.animationDuration,
+    )..repeat(reverse: true);
+
+    _scaleAnimation = Tween<double>(
+      begin: 1,
+      end: widget.childConfig.zoomScale,
+    ).animate(CurvedAnimation(
+      parent: _scaleController,
+      curve: widget.childConfig.curve,
+    ));
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _autoUpdate();
-
-      // Control the animation of the `introduce` widget.
-      if (widget.childConfig.enableAnimation) {
-        setState(() {
-          scale = widget.childConfig.zoomScale;
-        });
-
-        Timer.periodic(widget.childConfig.animationDuration, (timer) {
-          if (!mounted) {
-            timer.cancel();
-            return;
-          }
-
-          if (scale == 1) {
-            setState(() {
-              scale = widget.childConfig.zoomScale;
-            });
-          } else if (scale == widget.childConfig.zoomScale) {
-            setState(() {
-              scale = 1;
-            });
-          }
-        });
-      }
     });
   }
 
@@ -259,6 +246,7 @@ class _FeaturesChildState extends State<FeaturesChild>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _scaleController.dispose();
     super.dispose();
   }
 
@@ -279,14 +267,17 @@ class _FeaturesChildState extends State<FeaturesChild>
               // Border widget
               Positioned.fromRect(
                 rect: rect!.inflate(widget.childConfig.borderSizeInflate),
-                child: AnimatedScale(
-                  scale: scale,
-                  curve: widget.childConfig.curve,
-                  duration: widget.childConfig.animationDuration,
-                  child: Material(
-                    color: widget.childConfig.backgroundColor,
-                    shape: widget.childConfig.shapeBorder,
-                  ),
+                child: AnimatedBuilder(
+                  animation: _scaleAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _scaleAnimation.value,
+                      child: Material(
+                        color: widget.childConfig.backgroundColor,
+                        shape: widget.childConfig.shapeBorder,
+                      ),
+                    );
+                  },
                 ),
               ),
 
@@ -294,11 +285,14 @@ class _FeaturesChildState extends State<FeaturesChild>
               if (widget.childConfig.isAnimateChild)
                 Positioned.fromRect(
                   rect: rect!,
-                  child: AnimatedScale(
-                    scale: scale,
-                    curve: widget.childConfig.curve,
-                    duration: widget.childConfig.animationDuration,
-                    child: widget.child,
+                  child: AnimatedBuilder(
+                    animation: _scaleAnimation,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: _scaleAnimation.value,
+                        child: widget.child,
+                      );
+                    },
                   ),
                 )
               else
