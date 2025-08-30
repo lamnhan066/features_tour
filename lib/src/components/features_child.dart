@@ -232,7 +232,7 @@ class _FeaturesChildState extends State<FeaturesChild>
     _scaleController = AnimationController(
       vsync: this,
       duration: widget.childConfig.animationDuration,
-    )..repeat(reverse: true);
+    );
 
     _scaleAnimation = Tween<double>(
       begin: 1,
@@ -241,6 +241,13 @@ class _FeaturesChildState extends State<FeaturesChild>
       parent: _scaleController,
       curve: widget.childConfig.curve,
     ));
+
+    if (widget.childConfig.enableAnimation) {
+      _scaleController.repeat(reverse: true);
+    } else {
+      _scaleController.value = 1;
+      _scaleController.stop();
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _autoUpdate();
