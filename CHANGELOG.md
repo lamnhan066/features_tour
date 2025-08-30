@@ -1,3 +1,8 @@
+## 0.5.0-rc.5
+
+* Fix the issue that the `enableAnimation` is not applied correctly
+* Fix the issue that makes the child scale even when the animation is disabled.
+
 ## 0.5.0-rc.4
 
 * Used the `AnimationController` instead of `Timer.perodic`.
