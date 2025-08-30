@@ -235,8 +235,8 @@ class _FeaturesChildState extends State<FeaturesChild>
     );
 
     _scaleAnimation = Tween<double>(
-      begin: 1,
-      end: widget.childConfig.zoomScale,
+      begin: widget.childConfig.zoomScale,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _scaleController,
       curve: widget.childConfig.curve,
@@ -299,7 +299,8 @@ class _FeaturesChildState extends State<FeaturesChild>
               ),
 
               // Child widget.
-              if (widget.childConfig.isAnimateChild)
+              if (widget.childConfig.enableAnimation &&
+                  widget.childConfig.isAnimateChild)
                 Positioned.fromRect(
                   rect: rect!,
                   child: AnimatedBuilder(
