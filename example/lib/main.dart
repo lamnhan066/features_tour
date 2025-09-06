@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
-    force: true,
     predialogConfig: PredialogConfig(
       enabled: true,
     ),
@@ -35,6 +34,7 @@ abstract class MainTourIndex {
   static const item90 = 5.0;
   static const dialogButton = 5.5;
   static const floatingButton = 6.0;
+  static const restartTourButton = 7.0;
 }
 
 class ChangeableThemeMaterialApp extends StatefulWidget {
@@ -126,7 +126,7 @@ class _AppState extends State<App> {
                   : const Icon(Icons.light_mode),
               onPressed: () async {
                 changeableState.toggleTheme();
-                tourController.start(context);
+                tourController.start(context, force: true);
               },
             ),
           )
@@ -232,9 +232,7 @@ class _AppState extends State<App> {
                                         return;
                                       }
 
-                                      if (context.mounted) {
-                                        Navigator.of(context).pop();
-                                      }
+                                      Navigator.of(context).pop();
                                     },
                                     child: TextButton(
                                       onPressed: () {
@@ -260,19 +258,45 @@ class _AppState extends State<App> {
           ),
         ),
       ),
-      floatingActionButton: FeaturesTour(
-        controller: tourController,
-        index: MainTourIndex.floatingButton,
-        introduce: const Text('Tap here to add a new item'),
-        childConfig: ChildConfig(
-          shapeBorder: const CircleBorder(),
-          borderSizeInflate: 10.0,
-        ),
-        doneConfig: DoneConfig(alignment: Alignment.bottomLeft),
-        child: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FeaturesTour(
+            controller: tourController,
+            index: MainTourIndex.floatingButton,
+            introduce: const Text('Tap here to add a new item'),
+            childConfig: ChildConfig(
+              shapeBorder: const CircleBorder(),
+              borderSizeInflate: 10.0,
+            ),
+            doneConfig: DoneConfig(alignment: Alignment.bottomLeft),
+            child: FloatingActionButton(
+              onPressed: () {},
+              child: const Icon(Icons.add),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          FeaturesTour(
+            controller: tourController,
+            index: MainTourIndex.restartTourButton,
+            introduce: const Text('Tap here to run the tour again'),
+            childConfig: ChildConfig(
+              shapeBorder: const CircleBorder(),
+              borderSizeInflate: 10.0,
+            ),
+            doneConfig: DoneConfig(alignment: Alignment.bottomLeft),
+            child: FloatingActionButton(
+              onPressed: () {
+                tourController.start(
+                  context,
+                  force: true,
+                  predialogConfig: PredialogConfig(enabled: false),
+                );
+              },
+              child: const Icon(Icons.restart_alt_rounded),
+            ),
+          ),
+        ],
       ),
     );
   }
