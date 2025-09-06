@@ -295,6 +295,11 @@ class FeaturesTourController {
       final isLastState = _states.isEmpty && nextIndex == null;
       final result = await _showIntroduce(context, state, isLastState);
 
+      if (state.onAfterIntroduce != null) {
+        printDebug(() => '   -> Call `onAfterIntroduce`');
+        await state.onAfterIntroduce!(result);
+      }
+
       switch (result) {
         case IntroduceResult.disabled:
         case IntroduceResult.notMounted:
@@ -310,20 +315,18 @@ class FeaturesTourController {
           break;
       }
 
-      if (state.onAfterIntroduce != null) {
-        printDebug(() => '   -> Call `onAfterIntroduce`');
-        await state.onAfterIntroduce!(result);
+      String status() {
+        return switch (result) {
+          IntroduceResult.disabled ||
+          IntroduceResult.notMounted =>
+            'This widget has been cancelled with result: ${result.name}',
+          IntroduceResult.next => 'Move to the next widget',
+          IntroduceResult.skip => 'Skip this tour',
+          IntroduceResult.done => 'The Tour has been completed',
+        };
       }
 
-      final status = switch (result) {
-        IntroduceResult.disabled ||
-        IntroduceResult.notMounted =>
-          'This widget has been cancelled with result: ${result.name}',
-        IntroduceResult.next => 'Move to the next widget',
-        IntroduceResult.skip => 'Skip this tour',
-        IntroduceResult.done => 'The Tour has been completed',
-      };
-      printDebug(() => '   -> $status');
+      printDebug(() => '   -> ${status()}');
 
       // Do not continue if the tour is ended.
       if (result != IntroduceResult.next) break;
