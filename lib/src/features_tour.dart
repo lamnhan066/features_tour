@@ -15,7 +15,7 @@ part 'features_tour_controller.dart';
 part 'utils/print_debug.dart';
 part 'utils/shared_prefs.dart';
 
-class FeaturesTour extends StatelessWidget {
+class FeaturesTour extends StatefulWidget {
   /// Prefix of this package.
   static String _prefix = 'FeaturesTour';
 
@@ -263,20 +263,35 @@ class FeaturesTour extends StatelessWidget {
   BuildContext? get _context => _resolveKey().currentContext;
 
   @override
-  Widget build(BuildContext context) {
-    final isUnfeaturesTour = UnfeaturesTour.isUnfeaturesTour(context);
-    final isEnabled = enabled && !isUnfeaturesTour;
-    if (isEnabled) controller._register(this);
+  State<FeaturesTour> createState() => _FeaturesTourState();
+}
 
+class _FeaturesTourState extends State<FeaturesTour> {
+  late bool isEnabled;
+
+  @override
+  void dispose() {
+    if (isEnabled) widget.controller._unregister(widget);
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    final isUnfeaturesTour = UnfeaturesTour.isUnfeaturesTour(context);
+    isEnabled = widget.enabled && !isUnfeaturesTour;
+    if (isEnabled) widget.controller._register(widget);
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return PopScope(
-      canPop: canPop,
+      key: isEnabled ? widget._resolveKey() : null,
+      canPop: widget.canPop,
       onPopInvokedWithResult: (didPop, result) async {
-        if (canPop) await controller._stop();
+        if (widget.canPop) await widget.controller._stop();
       },
-      child: KeyedSubtree(
-        key: isEnabled ? _resolveKey() : null,
-        child: child,
-      ),
+      child: widget.child,
     );
   }
 }
