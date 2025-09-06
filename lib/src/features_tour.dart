@@ -146,9 +146,6 @@ class FeaturesTour extends StatelessWidget {
   ///
   /// Configure the Next and Skip buttons using [nextConfig] and [skipConfig].
   ///
-  /// The [onPressed] callback is triggered when this widget is pressed.
-  /// If [onPressed] returns a `Future`, the next tour step will be delayed until the action completes.
-  ///
   /// To perform actions before or after the introduction, use [onBeforeIntroduce] and [onAfterIntroduce].
   /// In the [onAfterIntroduce] callback, you can access the [IntroduceResult] to determine
   /// whether the user pressed the Next or Skip button, or if they tapped outside the introduction
