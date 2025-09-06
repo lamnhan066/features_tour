@@ -120,7 +120,7 @@ The following steps outline the flow of a Features Tour:
 2. **Wait for the First Widget**  
     The tour waits for the first widget to be displayed. This is determined using `FeaturesTourController.firstIndex`. If no specific index is set, the widget with the smallest index will be used as the starting point.
 
-3. **Execute Pre-Introduction Logic**  
+3. **Execute Before-Introduction Logic**  
     Before introducing a widget, the `FeaturesTour.onBeforeIntroduce` callback is executed. This allows you to perform any necessary actions before the introduction begins.
 
 4. **Show the Introduction**  
@@ -129,7 +129,7 @@ The following steps outline the flow of a Features Tour:
     * **Skip**: Allows the user to skip the tour.
     * **Done**: Shown if the current widget is the last in the tour.
 
-5. **Execute Post-Introduction Logic**  
+5. **Execute After-Introduction Logic**  
     After the user interacts with the introduction (e.g., presses `Next`, `Done`, or `Skip`), the `FeaturesTour.onAfterIntroduce` callback is executed. This callback provides information about the user's action, enabling you to handle it accordingly.
 
 6. **Wait for the Next Widget**  
