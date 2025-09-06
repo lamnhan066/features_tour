@@ -104,7 +104,9 @@ class _FeaturesChildState extends State<FeaturesChild>
 
   /// Update the current state.
   bool _updateState() {
-    if (!mounted) return false;
+    if (!mounted || widget.globalKey.currentContext?.mounted != true) {
+      return false;
+    }
 
     final tempRect = (widget.globalKey).globalPaintBounds;
     if (tempRect != null) {
