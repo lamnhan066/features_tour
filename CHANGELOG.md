@@ -1,3 +1,10 @@
+## 0.5.0-rc.6
+
+* Enhance state update logic to check if the globalKey context is mounted in `FeaturesChild`.
+* Refactor `FeaturesTourController` to manage cached states and improve state registration/unregistration logic.
+* Refactor `FeaturesTour` to convert from `StatelessWidget` to `StatefulWidget` and manage registration/unregistration of the controller.
+* Add a restart tour button to the example.
+
 ## 0.5.0-rc.5
 
 * Fix the issue that the `enableAnimation` is not applied correctly
