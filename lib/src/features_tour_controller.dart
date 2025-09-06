@@ -203,11 +203,9 @@ class FeaturesTourController {
       case ButtonTypes.accept:
         break;
       case ButtonTypes.later:
-        printDebug(() => 'User chose to show the introduction later');
         cleanup();
         return;
       case ButtonTypes.dismiss:
-        printDebug(() => 'User dismissed to show the introduction');
         _removePage(markAsShowed: true);
         cleanup();
         return;
