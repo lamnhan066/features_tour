@@ -1,6 +1,6 @@
 {
-    "name": "example",
-    "short_name": "example",
+    "name": "features_tour_example",
+    "short_name": "features_tour_example",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

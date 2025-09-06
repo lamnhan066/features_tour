@@ -232,7 +232,9 @@ class _AppState extends State<App> {
                                         return;
                                       }
 
-                                      Navigator.of(context).pop();
+                                      if (context.mounted) {
+                                        Navigator.of(context).pop();
+                                      }
                                     },
                                     child: TextButton(
                                       onPressed: () {
