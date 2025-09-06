@@ -23,6 +23,10 @@ class FeaturesTourController {
   final SplayTreeMap<double, FeaturesTour> _states =
       SplayTreeMap.from({}, (a, b) => a.compareTo(b));
 
+  /// The internal cached states that have been unregistered.
+  final _cachedStates =
+      SplayTreeMap<double, FeaturesTour>.from({}, (a, b) => a.compareTo(b));
+
   final _globalKeys = <double, GlobalKey>{};
   final Map<double, Completer<FeaturesTour>> _pendingIndexes = {};
 
@@ -35,11 +39,12 @@ class FeaturesTourController {
 
   /// Register the current FeaturesTour state.
   void _register(FeaturesTour state) {
-    if (!_states.containsKey(state.index)) {
+    if (!_cachedStates.containsKey(state.index)) {
       printDebug(() =>
-          '`$pageName`: register index ${state.index} => total: ${_states.length + 1}');
+          '`$pageName`: register index ${state.index} => total: ${_cachedStates.length + 1}');
     }
     _states[state.index] = state;
+    _cachedStates[state.index] = state;
     _globalKeys[state.index] = state._resolveKey();
 
     // Complete any pending completers for this index
@@ -51,11 +56,12 @@ class FeaturesTourController {
 
   /// Unregister the current FeaturesTour state.
   void _unregister(FeaturesTour state) {
-    if (_states.containsKey(state.index)) {
+    if (_cachedStates.containsKey(state.index)) {
       printDebug(() =>
-          '`$pageName`: unregister index ${state.index} => total: ${_states.length - 1}');
+          '`$pageName`: unregister index ${state.index} => total: ${_cachedStates.length - 1}');
     }
     _states.remove(state.index);
+    _cachedStates.remove(state.index);
     _introducedIndexes.add(state.index);
   }
 
@@ -150,14 +156,19 @@ class FeaturesTourController {
     // Wait for `delay` duration before starting the tours.
     await Future.delayed(delay);
 
+    // Get default value from global `force`.
+    force ??= FeaturesTour._force;
+
+    if (force == true) {
+      _states.clear();
+      _states.addAll(_cachedStates);
+    }
+
     if (_states.isEmpty && firstIndex == null) {
       printDebug(() => 'The page $pageName has no state');
       cleanup();
       return;
     }
-
-    // Get default value from global `force`.
-    force ??= FeaturesTour._force;
 
     // Ignore all the tours
     if (force == null && await SharedPrefs.getDismissAllTours() == true) {
@@ -334,7 +345,8 @@ class FeaturesTourController {
           // be introduced even when it's shown.
           _introducedIndexes.add(nextIndex);
         } else {
-          printDebug(() => '   -> Next index is available with state: $state');
+          printDebug(
+              () => '   -> Next index is available with state: $nextState');
         }
       } else {
         nextState = null;
@@ -655,7 +667,8 @@ class FeaturesTourController {
       final key = FeaturesTour._getPrefKey(pageName, state);
       await _prefs!.setBool(key, true);
     }
-    _unregister(state);
+    _states.remove(state.index);
+    _introducedIndexes.add(state.index);
   }
 
   /// Checks whether there is any new features available to show predialog.
