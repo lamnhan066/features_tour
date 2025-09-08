@@ -39,7 +39,7 @@ class FeaturesTourController {
 
   /// Register the current FeaturesTour state.
   void _register(FeaturesTour state) {
-    if (!_cachedStates.containsKey(state.index)) {
+    if (FeaturesTour._debugLog && !_cachedStates.containsKey(state.index)) {
       printDebug(() =>
           '`$pageName`: register index ${state.index} => total: ${_cachedStates.length + 1}');
     }
@@ -56,7 +56,7 @@ class FeaturesTourController {
 
   /// Unregister the current FeaturesTour state.
   void _unregister(FeaturesTour state) {
-    if (_cachedStates.containsKey(state.index)) {
+    if (FeaturesTour._debugLog && _cachedStates.containsKey(state.index)) {
       printDebug(() =>
           '`$pageName`: unregister index ${state.index} => total: ${_cachedStates.length - 1}');
     }
