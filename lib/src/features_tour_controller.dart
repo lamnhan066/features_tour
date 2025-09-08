@@ -334,7 +334,7 @@ class FeaturesTourController {
       // the last state.
       final isLastState = _states.isEmpty && nextIndex == null;
       final result =
-          await _showIntroduce(context, state.widget, isLastState, () async {
+          await _showIntroduce(context, state, isLastState, () async {
         printDebug(() => '   -> Introduction is shown');
         await onState?.call(TourIntroducing(index: state.widget.index));
       });
@@ -416,7 +416,7 @@ class FeaturesTourController {
 
   Future<IntroduceResult> _showIntroduce(
     BuildContext context,
-    FeaturesTour state,
+    _FeaturesTourState state,
     bool isLastState,
     FutureOr<void> Function() onShownIntroduction,
   ) async {
@@ -424,15 +424,16 @@ class FeaturesTourController {
       return IntroduceResult.notMounted;
     }
 
-    if (!state.enabled || UnfeaturesTour.isUnfeaturesTour(context)) {
+    if (!state.widget.enabled || UnfeaturesTour.isUnfeaturesTour(context)) {
       return IntroduceResult.disabled;
     }
 
-    final introduceConfig = state.introduceConfig ?? IntroduceConfig.global;
-    final childConfig = state.childConfig ?? ChildConfig.global;
-    final skipConfig = state.skipConfig ?? SkipConfig.global;
-    final nextConfig = state.nextConfig ?? NextConfig.global;
-    final doneConfig = state.doneConfig ?? DoneConfig.global;
+    final introduceConfig =
+        state.widget.introduceConfig ?? IntroduceConfig.global;
+    final childConfig = state.widget.childConfig ?? ChildConfig.global;
+    final skipConfig = state.widget.skipConfig ?? SkipConfig.global;
+    final nextConfig = state.widget.nextConfig ?? NextConfig.global;
+    final doneConfig = state.widget.doneConfig ?? DoneConfig.global;
 
     _introduceCompleter = Completer<IntroduceResult>();
 
@@ -450,9 +451,9 @@ class FeaturesTourController {
         child: Material(
           color: Colors.transparent,
           child: FeaturesChild(
-            globalKey: _globalKeys[state.index]!,
+            globalKey: _globalKeys[state.widget.index]!,
             childConfig: childConfig,
-            introduce: state.introduce,
+            introduce: state.widget.introduce,
             skip: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -530,7 +531,8 @@ class FeaturesTourController {
                 child: AbsorbPointer(
                   absorbing: true,
                   child: UnfeaturesTour(
-                    child: childConfig.child?.call(state.child) ?? state.child,
+                    child: childConfig.child?.call(state.widget.child) ??
+                        state.widget.child,
                   ),
                 ),
               ),
