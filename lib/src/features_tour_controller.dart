@@ -20,15 +20,15 @@ class FeaturesTourController {
   final String pageName;
 
   /// The internal list of the states.
-  final SplayTreeMap<double, FeaturesTour> _states =
+  final SplayTreeMap<double, _FeaturesTourState> _states =
       SplayTreeMap.from({}, (a, b) => a.compareTo(b));
 
   /// The internal cached states that have been unregistered.
-  final _cachedStates =
-      SplayTreeMap<double, FeaturesTour>.from({}, (a, b) => a.compareTo(b));
+  final _cachedStates = SplayTreeMap<double, _FeaturesTourState>.from(
+      {}, (a, b) => a.compareTo(b));
 
   final _globalKeys = <double, GlobalKey>{};
-  final Map<double, Completer<FeaturesTour>> _pendingIndexes = {};
+  final Map<double, Completer<_FeaturesTourState>> _pendingIndexes = {};
 
   /// The internal list of the introduced states.
   final Set<double> _introducedIndexes = {};
@@ -38,31 +38,34 @@ class FeaturesTourController {
   bool _isIntroducing = false;
 
   /// Register the current FeaturesTour state.
-  void _register(FeaturesTour state) {
-    if (FeaturesTour._debugLog && !_cachedStates.containsKey(state.index)) {
+  void _register(_FeaturesTourState state) {
+    if (FeaturesTour._debugLog &&
+        !_cachedStates.containsKey(state.widget.index)) {
       printDebug(() =>
-          '`$pageName`: register index ${state.index} => total: ${_cachedStates.length + 1}');
+          '`$pageName`: register index ${state.widget.index} => total: ${_cachedStates.length + 1}');
     }
-    _states[state.index] = state;
-    _cachedStates[state.index] = state;
-    _globalKeys[state.index] = state._resolveKey();
+    _states[state.widget.index] = state;
+    _cachedStates[state.widget.index] = state;
+    _globalKeys[state.widget.index] ??=
+        GlobalObjectKey('$pageName-${state.widget.index}');
 
     // Complete any pending completers for this index
-    if (_pendingIndexes.containsKey(state.index)) {
-      _pendingIndexes[state.index]!.complete(state);
-      _pendingIndexes.remove(state.index);
+    if (_pendingIndexes.containsKey(state.widget.index)) {
+      _pendingIndexes[state.widget.index]!.complete(state);
+      _pendingIndexes.remove(state.widget.index);
     }
   }
 
   /// Unregister the current FeaturesTour state.
-  void _unregister(FeaturesTour state) {
-    if (FeaturesTour._debugLog && _cachedStates.containsKey(state.index)) {
+  void _unregister(_FeaturesTourState state) {
+    if (FeaturesTour._debugLog &&
+        _cachedStates.containsKey(state.widget.index)) {
       printDebug(() =>
-          '`$pageName`: unregister index ${state.index} => total: ${_cachedStates.length - 1}');
+          '`$pageName`: unregister index ${state.widget.index} => total: ${_cachedStates.length - 1}');
     }
-    _states.remove(state.index);
-    _cachedStates.remove(state.index);
-    _introducedIndexes.add(state.index);
+    _states.remove(state.widget.index);
+    _cachedStates.remove(state.widget.index);
+    _introducedIndexes.add(state.widget.index);
   }
 
   /// Starts the tour. This package automatically saves the state of the tour,
@@ -235,7 +238,7 @@ class FeaturesTourController {
     }
 
     // Watching for the [FeaturesTour.nextIndex] value.
-    FeaturesTour? nextState;
+    _FeaturesTourState? nextState;
 
     // Waiting for the first index.
     if (firstIndex != null) {
@@ -251,18 +254,18 @@ class FeaturesTourController {
         break;
       }
 
-      final FeaturesTour state;
+      final _FeaturesTourState state;
 
       if (nextState == null) {
         state = _states.remove(_states.firstKey())!;
       } else {
         state = nextState;
-        _states.remove(nextState.index);
+        _states.remove(nextState.widget.index);
       }
 
-      final nextIndex = state.nextIndex;
-      final nextIndexTimeout = state.nextIndexTimeout;
-      final key = FeaturesTour._getPrefKey(pageName, state);
+      final nextIndex = state.widget.nextIndex;
+      final nextIndexTimeout = state.widget.nextIndexTimeout;
+      final key = _getPrefKey(state);
       printDebug(() => 'Start widget with key $key:');
 
       if (!context.mounted) {
@@ -283,7 +286,7 @@ class FeaturesTourController {
         shouldShowIntroduce = isShown != true;
       }
 
-      if (_introducedIndexes.contains(state.index)) {
+      if (_introducedIndexes.contains(state.widget.index)) {
         shouldShowIntroduce = false;
       }
 
@@ -291,12 +294,13 @@ class FeaturesTourController {
         printDebug(() =>
             '   -> This widget has been introduced -> move to the next widget.');
         await _removeState(state, false);
-        await onState?.call(TourShouldNotShowIntroduction(index: state.index));
+        await onState
+            ?.call(TourShouldNotShowIntroduction(index: state.widget.index));
         continue;
       }
 
       // Wait for the child widget transition to complete.
-      await _waitForTransition(state._context);
+      await _waitForTransition(context);
 
       if (!context.mounted) {
         printDebug(() => '   -> The parent widget was unmounted');
@@ -308,14 +312,15 @@ class FeaturesTourController {
       hideCover(context);
 
       // Show the cover to avoid user tapping the screen.
-      final introduceConfig = state.introduceConfig ?? IntroduceConfig.global;
+      final introduceConfig =
+          state.widget.introduceConfig ?? IntroduceConfig.global;
       final introduceBackgroundColor =
           introduceConfig.backgroundColor ?? defaultIntroduceBackgroundColor;
       showCover(context, introduceBackgroundColor);
 
-      if (state.onBeforeIntroduce != null) {
+      if (state.widget.onBeforeIntroduce != null) {
         printDebug(() => '   -> Call `onBeforeIntroduce`');
-        await state.onBeforeIntroduce!();
+        await state.widget.onBeforeIntroduce!();
         await onState?.call(TourBeforeIntroduceCalled());
       }
 
@@ -329,14 +334,14 @@ class FeaturesTourController {
       // the last state.
       final isLastState = _states.isEmpty && nextIndex == null;
       final result =
-          await _showIntroduce(context, state, isLastState, () async {
+          await _showIntroduce(context, state.widget, isLastState, () async {
         printDebug(() => '   -> Introduction is shown');
-        await onState?.call(TourIntroducing(index: state.index));
+        await onState?.call(TourIntroducing(index: state.widget.index));
       });
 
-      if (state.onAfterIntroduce != null) {
+      if (state.widget.onAfterIntroduce != null) {
         printDebug(() => '   -> Call `onAfterIntroduce`');
-        await state.onAfterIntroduce!(result);
+        await state.widget.onAfterIntroduce!(result);
         await onState?.call(TourAfterIntroduceCalled());
       }
 
@@ -445,7 +450,7 @@ class FeaturesTourController {
         child: Material(
           color: Colors.transparent,
           child: FeaturesChild(
-            globalKey: state._resolveKey(),
+            globalKey: _globalKeys[state.index]!,
             childConfig: childConfig,
             introduce: state.introduce,
             skip: SafeArea(
@@ -566,7 +571,7 @@ class FeaturesTourController {
       if (_introducedIndexes.contains(state.key)) {
         removedIndexes.add(state.key);
       } else {
-        final key = FeaturesTour._getPrefKey(pageName, tour);
+        final key = _getPrefKey(tour);
         final isShown = _prefs!.getBool(key);
         if (isShown == true) {
           removedIndexes.add(state.key);
@@ -642,7 +647,7 @@ class FeaturesTourController {
   }
 
   /// Wait for the next index to be available.
-  Future<FeaturesTour?> _nextIndex(
+  Future<_FeaturesTourState?> _nextIndex(
     double index,
     Duration timeout,
   ) async {
@@ -652,7 +657,7 @@ class FeaturesTourController {
     }
 
     // Create a completer if not already pending
-    _pendingIndexes.putIfAbsent(index, () => Completer<FeaturesTour>());
+    _pendingIndexes.putIfAbsent(index, () => Completer<_FeaturesTourState>());
 
     try {
       return await _pendingIndexes[index]!.future.timeout(timeout);
@@ -709,22 +714,22 @@ class FeaturesTourController {
 
   /// Removes specific state of this page.
   Future<void> _removeState(
-    FeaturesTour state,
+    _FeaturesTourState state,
     bool markAsIntroduced,
   ) async {
     if (markAsIntroduced) {
-      final key = FeaturesTour._getPrefKey(pageName, state);
+      final key = _getPrefKey(state);
       await _prefs!.setBool(key, true);
     }
-    _states.remove(state.index);
-    _introducedIndexes.add(state.index);
+    _states.remove(state.widget.index);
+    _introducedIndexes.add(state.widget.index);
   }
 
   /// Checks whether there is any new features available to show predialog.
   bool _shouldShowIntroduction() {
     for (final state in _states.values) {
-      final key = FeaturesTour._getPrefKey(pageName, state);
-      if (!_prefs!.containsKey(key) && (state._context?.mounted ?? false)) {
+      final key = _getPrefKey(state);
+      if (!_prefs!.containsKey(key) && state.context.mounted) {
         return true;
       }
     }
@@ -734,5 +739,10 @@ class FeaturesTourController {
 
   Color _getOnSurfaceDefaultColor(BuildContext context) {
     return ColorScheme.of(context).onSurface.withValues(alpha: 0.82);
+  }
+
+  /// Get key for shared preferences.
+  String _getPrefKey(_FeaturesTourState state) {
+    return '${FeaturesTour._prefix}_${pageName}_${state.widget.index}';
   }
 }

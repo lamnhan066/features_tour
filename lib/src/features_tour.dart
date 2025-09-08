@@ -112,14 +112,6 @@ class FeaturesTour extends StatefulWidget {
     printDebug(() => 'All pages has been removed');
   }
 
-  /// Get key for shared preferences.
-  static String _getPrefKey(
-    String? pageName,
-    FeaturesTour state,
-  ) {
-    return '${_prefix}_${pageName}_${state.index}';
-  }
-
   /// Creates a [FeaturesTour] to display a guided tour for a specific widget.
   ///
   /// This widget requires a [controller] of type [FeaturesTourController] and a [child] widget to wrap.
@@ -178,16 +170,6 @@ class FeaturesTour extends StatefulWidget {
     this.onAfterIntroduce,
   })  : nextIndex = nextIndex ?? waitForIndex,
         nextIndexTimeout = nextIndexTimeout ?? waitForTimeout;
-
-  GlobalKey _resolveKey() {
-    final globalKey = controller._globalKeys[index];
-
-    if (globalKey != null) {
-      return globalKey;
-    }
-
-    return GlobalObjectKey('${controller.pageName}-$index');
-  }
 
   /// The controller for the current page, responsible for managing the tour.
   final FeaturesTourController controller;
@@ -259,9 +241,6 @@ class FeaturesTour extends StatefulWidget {
   final FutureOr<void> Function(IntroduceResult introduceResult)?
       onAfterIntroduce;
 
-  /// Get the current context.
-  BuildContext? get _context => _resolveKey().currentContext;
-
   @override
   State<FeaturesTour> createState() => _FeaturesTourState();
 }
@@ -271,7 +250,7 @@ class _FeaturesTourState extends State<FeaturesTour> {
 
   @override
   void dispose() {
-    if (isEnabled) widget.controller._unregister(widget);
+    if (isEnabled) widget.controller._unregister(this);
     super.dispose();
   }
 
@@ -279,14 +258,14 @@ class _FeaturesTourState extends State<FeaturesTour> {
   void didChangeDependencies() {
     final isUnfeaturesTour = UnfeaturesTour.isUnfeaturesTour(context);
     isEnabled = widget.enabled && !isUnfeaturesTour;
-    if (isEnabled) widget.controller._register(widget);
+    if (isEnabled) widget.controller._register(this);
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      key: isEnabled ? widget._resolveKey() : null,
+      key: isEnabled ? widget.controller._globalKeys[widget.index] : null,
       canPop: widget.canPop,
       onPopInvokedWithResult: (didPop, result) async {
         if (widget.canPop) await widget.controller._stop();
