@@ -85,6 +85,10 @@ class FeaturesTourController {
   /// The pre-dialog can be configured using [predialogConfig]. This dialog prompts
   /// the user to confirm whether they want to start the tour.
   ///
+  /// The [stateCallback] is an optional callback function that gets invoked
+  /// with the current state of the tour. This allows you to monitor the tour's
+  /// progress and respond to different states as they occur.
+  ///
   /// Example:
   /// ```dart
   /// tourController.start(context: context, force: true);
