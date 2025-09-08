@@ -6,3 +6,4 @@ export 'introduce_config.dart';
 export 'next_config.dart';
 export 'predialog_config.dart';
 export 'skip_config.dart';
+export 'tour_state.dart';

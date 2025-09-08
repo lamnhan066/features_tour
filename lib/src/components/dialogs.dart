@@ -13,6 +13,7 @@ ButtonTypes? _applyToAllPages;
 Future<ButtonTypes> predialog(
   BuildContext context,
   PredialogConfig config,
+  FutureOr<void> Function() onShownPreDialog,
 ) async {
   // Return cached selection if "Do not ask again" was checked previously.
   if (_applyToAllPages != null) {
@@ -76,6 +77,8 @@ Future<ButtonTypes> predialog(
   );
 
   Overlay.of(context, rootOverlay: true).insert(overlayEntry);
+
+  await onShownPreDialog();
 
   try {
     final result = await completer.future;

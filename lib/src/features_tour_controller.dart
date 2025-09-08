@@ -106,12 +106,14 @@ class FeaturesTourController {
     bool? force,
     PredialogConfig? predialogConfig,
     bool? debugLog,
+    FutureOr<void> Function(TourState state)? stateCallback,
   }) async {
     firstIndex ??= waitForFirstIndex;
     firstIndexTimeout ??= waitForFirstTimeout;
 
     if (_isIntroducing) {
       printDebug(() => 'The tour is already in progress');
+      await stateCallback?.call(TourInProgress());
       return;
     }
     _isIntroducing = true;
@@ -140,6 +142,7 @@ class FeaturesTourController {
     if (!context.mounted) {
       printDebug(() => 'The page $pageName context is not mounted');
       cleanup();
+      await stateCallback?.call(TourNotMounted());
       return;
     }
 
@@ -148,6 +151,7 @@ class FeaturesTourController {
     if (!context.mounted) {
       printDebug(() => 'The page $pageName context is not mounted');
       cleanup();
+      await stateCallback?.call(TourNotMounted());
       return;
     }
 
@@ -167,6 +171,7 @@ class FeaturesTourController {
     if (_states.isEmpty && firstIndex == null) {
       printDebug(() => 'The page $pageName has no state');
       cleanup();
+      await stateCallback?.call(TourEmptyStates());
       return;
     }
 
@@ -175,6 +180,7 @@ class FeaturesTourController {
       printDebug(() => 'All tours have been dismissed');
       _removePage(markAsShowed: true);
       cleanup();
+      await stateCallback?.call(TourAllTourDismissedByUser());
       return;
     }
 
@@ -185,29 +191,42 @@ class FeaturesTourController {
     if (!_shouldShowIntroduction() && force != true) {
       printDebug(() => 'There is no new `FeaturesTour` -> Completed');
       cleanup();
+      await stateCallback?.call(TourEmptyStates());
       return;
     }
 
     if (!context.mounted) {
       printDebug(() => 'The page $pageName context is not mounted');
       cleanup();
+      await stateCallback?.call(TourNotMounted());
       return;
     }
 
     // Put this here so we don't have to check the context again.
     final defaultIntroduceBackgroundColor = _getOnSurfaceDefaultColor(context);
 
-    final result = await _showPredialog(context, force, predialogConfig);
+    final result = await _showPredialog(
+      context,
+      force,
+      predialogConfig,
+      () async {
+        printDebug(() => 'Pre-dialog is shown');
+        await stateCallback?.call(TourPreDialogIsShown());
+      },
+    );
 
     switch (result) {
       case ButtonTypes.accept:
+        await stateCallback?.call(TourPreDialogAcceptButtonPressed());
         break;
       case ButtonTypes.later:
         cleanup();
+        await stateCallback?.call(TourPreDialogLaterButtonPressed());
         return;
       case ButtonTypes.dismiss:
         _removePage(markAsShowed: true);
         cleanup();
+        await stateCallback?.call(TourPreDialogDismissButtonPressed());
         return;
     }
 
@@ -222,7 +241,11 @@ class FeaturesTourController {
     printDebug(() => 'Start the tour');
     while (_states.isNotEmpty) {
       await _removedAllShownIntroductions(force);
-      if (_states.isEmpty) break;
+      if (_states.isEmpty) {
+        printDebug(() => 'No more states to introduce');
+        await stateCallback?.call(TourEmptyStates());
+        break;
+      }
 
       final FeaturesTour state;
 
@@ -240,6 +263,7 @@ class FeaturesTourController {
 
       if (!context.mounted) {
         printDebug(() => '   -> The parent widget was unmounted');
+        await stateCallback?.call(TourNotMounted());
         break;
       }
 
@@ -263,6 +287,8 @@ class FeaturesTourController {
         printDebug(() =>
             '   -> This widget has been introduced -> move to the next widget.');
         await _removeState(state, false);
+        await stateCallback
+            ?.call(TourShouldNotShowIntroduction(index: state.index));
         continue;
       }
 
@@ -271,6 +297,7 @@ class FeaturesTourController {
 
       if (!context.mounted) {
         printDebug(() => '   -> The parent widget was unmounted');
+        await stateCallback?.call(TourNotMounted());
         break;
       }
 
@@ -283,21 +310,31 @@ class FeaturesTourController {
           introduceConfig.backgroundColor ?? defaultIntroduceBackgroundColor;
       showCover(context, introduceBackgroundColor);
 
-      await state.onBeforeIntroduce?.call();
+      if (state.onBeforeIntroduce != null) {
+        printDebug(() => '   -> Call `onBeforeIntroduce`');
+        await state.onBeforeIntroduce!();
+        await stateCallback?.call(TourBeforeIntroduceCalled());
+      }
 
       if (!context.mounted) {
         printDebug(() => '   -> The parent widget was unmounted');
+        await stateCallback?.call(TourNotMounted());
         break;
       }
 
       // If there is no state in queue and no index to wait for then it's
       // the last state.
       final isLastState = _states.isEmpty && nextIndex == null;
-      final result = await _showIntroduce(context, state, isLastState);
+      final result =
+          await _showIntroduce(context, state, isLastState, () async {
+        printDebug(() => '   -> Introduction is shown');
+        await stateCallback?.call(TourIntroducing(index: state.index));
+      });
 
       if (state.onAfterIntroduce != null) {
         printDebug(() => '   -> Call `onAfterIntroduce`');
         await state.onAfterIntroduce!(result);
+        await stateCallback?.call(TourAfterIntroduceCalled());
       }
 
       switch (result) {
@@ -314,6 +351,8 @@ class FeaturesTourController {
           await _removePage(markAsShowed: true);
           break;
       }
+
+      await stateCallback?.call(TourIntroduceResultEmitted(result: result));
 
       String status() {
         return switch (result) {
@@ -356,6 +395,7 @@ class FeaturesTourController {
 
     cleanup();
     printDebug(() => 'This tour has been completed');
+    await stateCallback?.call(TourCompleted());
   }
 
   /// Stops the current tour by sending a skip signal, equivalent to pressing
@@ -370,6 +410,7 @@ class FeaturesTourController {
     BuildContext context,
     FeaturesTour state,
     bool isLastState,
+    FutureOr<void> Function() onShownIntroduction,
   ) async {
     if (!context.mounted) {
       return IntroduceResult.notMounted;
@@ -498,6 +539,8 @@ class FeaturesTourController {
       rootOverlay: introduceConfig.useRootOverlay,
     ).insert(overlayEntry);
 
+    await onShownIntroduction();
+
     final result = await _introduceCompleter!.future;
     _introduceCompleter = null;
 
@@ -538,6 +581,7 @@ class FeaturesTourController {
     BuildContext context,
     bool? force,
     PredialogConfig? config,
+    FutureOr<void> Function() onShownPreDialog,
   ) async {
     // Should show the predialog or not.
     bool shouldShowPredialog = true;
@@ -567,6 +611,7 @@ class FeaturesTourController {
           predialogResult = await predialog(
             context,
             config,
+            onShownPreDialog,
           );
         }
 
