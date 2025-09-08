@@ -140,6 +140,21 @@ The following steps outline the flow of a Features Tour:
 
 By following this flow, you can create an engaging and seamless tour experience for your app's users.
 
+You can also know to the current state of the tour by using `onState` callback:
+
+```dart
+tourController.start(
+    context,
+    onState: (state) {
+        switch (state) {
+            case TourIntroducing(index: final index):
+                print('Introducing: $index');
+            default:
+        }
+    }
+);
+```
+
 ### Handling `Drawer` or `Dialog` in the Tour
 
 When your tour involves introducing widgets inside a `Drawer` or a `Dialog`, you can handle it as follows:
