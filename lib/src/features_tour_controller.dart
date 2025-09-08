@@ -85,8 +85,8 @@ class FeaturesTourController {
   /// The pre-dialog can be configured using [predialogConfig]. This dialog prompts
   /// the user to confirm whether they want to start the tour.
   ///
-  /// The [stateCallback] is an optional callback function that gets invoked
-  /// with the current state of the tour. This allows you to monitor the tour's
+  /// The [onState] callback is an optional callback function that gets invoked
+  /// with the current [TourState] of the tour. This allows you to monitor the tour's
   /// progress and respond to different states as they occur.
   ///
   /// Example:
@@ -110,14 +110,14 @@ class FeaturesTourController {
     bool? force,
     PredialogConfig? predialogConfig,
     bool? debugLog,
-    FutureOr<void> Function(TourState state)? stateCallback,
+    FutureOr<void> Function(TourState state)? onState,
   }) async {
     firstIndex ??= waitForFirstIndex;
     firstIndexTimeout ??= waitForFirstTimeout;
 
     if (_isIntroducing) {
       printDebug(() => 'The tour is already in progress');
-      await stateCallback?.call(TourInProgress());
+      await onState?.call(TourInProgress());
       return;
     }
     _isIntroducing = true;
@@ -146,7 +146,7 @@ class FeaturesTourController {
     if (!context.mounted) {
       printDebug(() => 'The page $pageName context is not mounted');
       cleanup();
-      await stateCallback?.call(TourNotMounted());
+      await onState?.call(TourNotMounted());
       return;
     }
 
@@ -155,7 +155,7 @@ class FeaturesTourController {
     if (!context.mounted) {
       printDebug(() => 'The page $pageName context is not mounted');
       cleanup();
-      await stateCallback?.call(TourNotMounted());
+      await onState?.call(TourNotMounted());
       return;
     }
 
@@ -175,7 +175,7 @@ class FeaturesTourController {
     if (_states.isEmpty && firstIndex == null) {
       printDebug(() => 'The page $pageName has no state');
       cleanup();
-      await stateCallback?.call(TourEmptyStates());
+      await onState?.call(TourEmptyStates());
       return;
     }
 
@@ -184,7 +184,7 @@ class FeaturesTourController {
       printDebug(() => 'All tours have been dismissed');
       _removePage(markAsShowed: true);
       cleanup();
-      await stateCallback?.call(TourAllTourDismissedByUser());
+      await onState?.call(TourAllTourDismissedByUser());
       return;
     }
 
@@ -195,14 +195,14 @@ class FeaturesTourController {
     if (!_shouldShowIntroduction() && force != true) {
       printDebug(() => 'There is no new `FeaturesTour` -> Completed');
       cleanup();
-      await stateCallback?.call(TourEmptyStates());
+      await onState?.call(TourEmptyStates());
       return;
     }
 
     if (!context.mounted) {
       printDebug(() => 'The page $pageName context is not mounted');
       cleanup();
-      await stateCallback?.call(TourNotMounted());
+      await onState?.call(TourNotMounted());
       return;
     }
 
@@ -215,22 +215,22 @@ class FeaturesTourController {
       predialogConfig,
       () async {
         printDebug(() => 'Pre-dialog is shown');
-        await stateCallback?.call(TourPreDialogIsShown());
+        await onState?.call(TourPreDialogIsShown());
       },
     );
 
     switch (result) {
       case ButtonTypes.accept:
-        await stateCallback?.call(TourPreDialogAcceptButtonPressed());
+        await onState?.call(TourPreDialogAcceptButtonPressed());
         break;
       case ButtonTypes.later:
         cleanup();
-        await stateCallback?.call(TourPreDialogLaterButtonPressed());
+        await onState?.call(TourPreDialogLaterButtonPressed());
         return;
       case ButtonTypes.dismiss:
         _removePage(markAsShowed: true);
         cleanup();
-        await stateCallback?.call(TourPreDialogDismissButtonPressed());
+        await onState?.call(TourPreDialogDismissButtonPressed());
         return;
     }
 
@@ -247,7 +247,7 @@ class FeaturesTourController {
       await _removedAllShownIntroductions(force);
       if (_states.isEmpty) {
         printDebug(() => 'No more states to introduce');
-        await stateCallback?.call(TourEmptyStates());
+        await onState?.call(TourEmptyStates());
         break;
       }
 
@@ -267,7 +267,7 @@ class FeaturesTourController {
 
       if (!context.mounted) {
         printDebug(() => '   -> The parent widget was unmounted');
-        await stateCallback?.call(TourNotMounted());
+        await onState?.call(TourNotMounted());
         break;
       }
 
@@ -291,8 +291,7 @@ class FeaturesTourController {
         printDebug(() =>
             '   -> This widget has been introduced -> move to the next widget.');
         await _removeState(state, false);
-        await stateCallback
-            ?.call(TourShouldNotShowIntroduction(index: state.index));
+        await onState?.call(TourShouldNotShowIntroduction(index: state.index));
         continue;
       }
 
@@ -301,7 +300,7 @@ class FeaturesTourController {
 
       if (!context.mounted) {
         printDebug(() => '   -> The parent widget was unmounted');
-        await stateCallback?.call(TourNotMounted());
+        await onState?.call(TourNotMounted());
         break;
       }
 
@@ -317,12 +316,12 @@ class FeaturesTourController {
       if (state.onBeforeIntroduce != null) {
         printDebug(() => '   -> Call `onBeforeIntroduce`');
         await state.onBeforeIntroduce!();
-        await stateCallback?.call(TourBeforeIntroduceCalled());
+        await onState?.call(TourBeforeIntroduceCalled());
       }
 
       if (!context.mounted) {
         printDebug(() => '   -> The parent widget was unmounted');
-        await stateCallback?.call(TourNotMounted());
+        await onState?.call(TourNotMounted());
         break;
       }
 
@@ -332,13 +331,13 @@ class FeaturesTourController {
       final result =
           await _showIntroduce(context, state, isLastState, () async {
         printDebug(() => '   -> Introduction is shown');
-        await stateCallback?.call(TourIntroducing(index: state.index));
+        await onState?.call(TourIntroducing(index: state.index));
       });
 
       if (state.onAfterIntroduce != null) {
         printDebug(() => '   -> Call `onAfterIntroduce`');
         await state.onAfterIntroduce!(result);
-        await stateCallback?.call(TourAfterIntroduceCalled());
+        await onState?.call(TourAfterIntroduceCalled());
       }
 
       switch (result) {
@@ -356,7 +355,7 @@ class FeaturesTourController {
           break;
       }
 
-      await stateCallback?.call(TourIntroduceResultEmitted(result: result));
+      await onState?.call(TourIntroduceResultEmitted(result: result));
 
       String status() {
         return switch (result) {
@@ -399,7 +398,7 @@ class FeaturesTourController {
 
     cleanup();
     printDebug(() => 'This tour has been completed');
-    await stateCallback?.call(TourCompleted());
+    await onState?.call(TourCompleted());
   }
 
   /// Stops the current tour by sending a skip signal, equivalent to pressing

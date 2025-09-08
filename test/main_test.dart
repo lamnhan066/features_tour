@@ -53,7 +53,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          stateCallback: (tourState) async {
+          onState: (tourState) async {
             collectedStates.add(tourState);
 
             if (tourState case TourIntroducing(index: final index)) {
@@ -108,7 +108,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          stateCallback: (tourState) async {
+          onState: (tourState) async {
             collectedStates.add(tourState);
 
             if (tourState case TourIntroducing(index: final index)) {
@@ -162,7 +162,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          stateCallback: (tourState) async {
+          onState: (tourState) async {
             collectedStates.add(tourState);
 
             if (tourState case TourIntroducing(index: 1)) {
@@ -212,7 +212,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          stateCallback: (tourState) async {
+          onState: (tourState) async {
             collectedStates.add(tourState);
 
             if (tourState case TourIntroducing(index: final index)) {
@@ -273,7 +273,7 @@ void main() {
         await controller.start(
           context,
           delay: Duration.zero,
-          stateCallback: (progress) {
+          onState: (progress) {
             collectedStates.add(progress);
           },
         );
@@ -325,7 +325,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          stateCallback: (progress) async {
+          onState: (progress) async {
             collectedStates.add(progress);
 
             if (progress case TourIntroducing(index: final index)) {
@@ -390,7 +390,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          stateCallback: (progress) async {
+          onState: (progress) async {
             collectedStates.add(progress);
 
             if (progress is TourIntroducing) {
@@ -441,7 +441,7 @@ void main() {
             title: 'Introduction',
             acceptButtonText: Text('Okay'),
           ),
-          stateCallback: (progress) async {
+          onState: (progress) async {
             collectedStates.add(progress);
 
             if (progress is TourPreDialogIsShown) {
@@ -497,7 +497,7 @@ void main() {
             title: 'Introduction',
             laterButtonText: Text('Later'),
           ),
-          stateCallback: (progress) async {
+          onState: (progress) async {
             collectedStates.add(progress);
 
             if (progress is TourPreDialogIsShown) {
@@ -550,7 +550,7 @@ void main() {
             dismissButtonText: Text('Dismiss'),
             applyToAllPagesText: 'Apply to all',
           ),
-          stateCallback: (progress) async {
+          onState: (progress) async {
             collectedStates.add(progress);
 
             if (progress is TourPreDialogIsShown) {
