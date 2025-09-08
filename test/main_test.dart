@@ -53,10 +53,10 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (tourState) async {
-            collectedStates.add(tourState);
+          onState: (state) async {
+            collectedStates.add(state);
 
-            if (tourState case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(index: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -108,10 +108,10 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (tourState) async {
-            collectedStates.add(tourState);
+          onState: (state) async {
+            collectedStates.add(state);
 
-            if (tourState case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(index: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -162,10 +162,10 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (tourState) async {
-            collectedStates.add(tourState);
+          onState: (state) async {
+            collectedStates.add(state);
 
-            if (tourState case TourIntroducing(index: 1)) {
+            if (state case TourIntroducing(index: 1)) {
               await tester.pump();
               expect(find.text('a.intro'), findsOneWidget);
               await tester.tap(find.text('SKIP'));
@@ -212,10 +212,10 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (tourState) async {
-            collectedStates.add(tourState);
+          onState: (state) async {
+            collectedStates.add(state);
 
-            if (tourState case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(index: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -273,8 +273,8 @@ void main() {
         await controller.start(
           context,
           delay: Duration.zero,
-          onState: (progress) {
-            collectedStates.add(progress);
+          onState: (state) {
+            collectedStates.add(state);
           },
         );
       });
@@ -325,10 +325,10 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (progress) async {
-            collectedStates.add(progress);
+          onState: (state) async {
+            collectedStates.add(state);
 
-            if (progress case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(index: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -343,7 +343,7 @@ void main() {
               }
             }
 
-            if (progress is TourAfterIntroduceCalled) {
+            if (state is TourAfterIntroduceCalled) {
               await tester.pump();
               expect(showSecond.value, isTrue);
               await tester.pump();
@@ -390,10 +390,10 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (progress) async {
-            collectedStates.add(progress);
+          onState: (state) async {
+            collectedStates.add(state);
 
-            if (progress is TourIntroducing) {
+            if (state is TourIntroducing) {
               await tester.pump();
               expect(find.text('a.intro'), findsOneWidget);
               await tester.tap(find.text('DONE'));
@@ -441,16 +441,16 @@ void main() {
             title: 'Introduction',
             acceptButtonText: Text('Okay'),
           ),
-          onState: (progress) async {
-            collectedStates.add(progress);
+          onState: (state) async {
+            collectedStates.add(state);
 
-            if (progress is TourPreDialogIsShown) {
+            if (state is TourPreDialogIsShown) {
               await tester.pump();
               expect(find.text('Introduction'), findsOneWidget);
               await tester.tap(find.text('Okay'));
             }
 
-            if (progress case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(index: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -497,10 +497,10 @@ void main() {
             title: 'Introduction',
             laterButtonText: Text('Later'),
           ),
-          onState: (progress) async {
-            collectedStates.add(progress);
+          onState: (state) async {
+            collectedStates.add(state);
 
-            if (progress is TourPreDialogIsShown) {
+            if (state is TourPreDialogIsShown) {
               await tester.pump();
               expect(find.text('Introduction'), findsOneWidget);
               await tester.tap(find.text('Later'));
@@ -550,10 +550,10 @@ void main() {
             dismissButtonText: Text('Dismiss'),
             applyToAllPagesText: 'Apply to all',
           ),
-          onState: (progress) async {
-            collectedStates.add(progress);
+          onState: (state) async {
+            collectedStates.add(state);
 
-            if (progress is TourPreDialogIsShown) {
+            if (state is TourPreDialogIsShown) {
               await tester.pump();
               expect(find.text('Introduction'), findsOneWidget);
               expect(find.text('Apply to all'), findsOneWidget);
