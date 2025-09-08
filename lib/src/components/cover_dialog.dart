@@ -12,6 +12,11 @@ void showCover(BuildContext context, Color color) {
     return;
   }
 
+  if (_coverOverlay != null) {
+    printDebug(() => 'The cover is already shown');
+    return;
+  }
+
   _coverOverlay = OverlayEntry(builder: (ctx) {
     return Material(
       color: color,
