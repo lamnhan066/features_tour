@@ -1,4 +1,6 @@
 import 'package:features_tour/features_tour.dart';
+import 'package:features_tour/src/components/dialogs.dart';
+import 'package:features_tour/src/components/unfeatures_tour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,9 +11,11 @@ void main() {
   var collectedStates = <TourState>[];
 
   setUp(() {
+    resetPredialog();
     SharedPreferences.setMockInitialValues({});
     collectedStates = [];
 
+    // Reset the global state for predialogs between tests
     FeaturesTour.setGlobalConfig(
       predialogConfig: PredialogConfig(enabled: false),
       nextConfig: NextConfig(text: 'NEXT'),
@@ -506,6 +510,65 @@ void main() {
         ]),
       );
     });
+
+    testWidgets('Tour skips features with enabled: false', (tester) async {
+      final controller = FeaturesTourController('App');
+
+      await tester.pumpWidget(MaterialApp(
+        home: App(
+          tours: [
+            FeaturesTour(
+              index: 1,
+              enabled: false,
+              controller: controller,
+              introduce: const Text('a.intro'),
+              child: const Text('a'),
+            ),
+            FeaturesTour(
+              index: 2,
+              controller: controller,
+              introduce: const Text('b.intro'),
+              child: const Text('b'),
+            ),
+          ],
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state case TourIntroducing(index: final index)) {
+              // It should go directly to index 2
+              expect(index, 2);
+              await tester.pump();
+              expect(find.text('a.intro'), findsNothing);
+              expect(find.text('b.intro'), findsOneWidget);
+              await tester.tap(find.text('DONE'));
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 2),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
   });
 
   group('Callbacks', () {
@@ -557,7 +620,67 @@ void main() {
         collectedStates,
         containsAllInOrder([
           isA<TourPreDialogNotShown>(),
+          isA<TourBeforeIntroduceCalled>(),
           isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+
+    testWidgets('onAfterIntroduce is called after showing the intro',
+        (tester) async {
+      final controller = FeaturesTourController('App');
+      var called = false;
+      IntroduceResult? receivedResult;
+
+      await tester.pumpWidget(MaterialApp(
+        home: App(
+          tours: [
+            FeaturesTour(
+              index: 1,
+              controller: controller,
+              introduce: const Text('a.intro'),
+              child: const Text('a'),
+              onAfterIntroduce: (result) {
+                called = true;
+                receivedResult = result;
+              },
+            ),
+          ],
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state is TourIntroducing) {
+              await tester.pump();
+              expect(find.text('a.intro'), findsOneWidget);
+              await tester.tap(find.text('DONE'));
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      expect(called, isTrue);
+      expect(receivedResult, IntroduceResult.done);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>(),
+          isA<TourAfterIntroduceCalled>(),
           isA<TourIntroduceResultEmitted>(),
           isA<TourCompleted>(),
         ]),
@@ -621,7 +744,11 @@ void main() {
           collectedStates,
           containsAllInOrder([
             isA<TourPreDialogIsShown>(),
-            isA<TourPreDialogAcceptButtonPressed>(),
+            isA<TourPreDialogButtonPressed>().having(
+              (s) => s.buttonType,
+              'buttonType',
+              PredialogButtonType.accept,
+            ),
             isA<TourIntroducing>(),
             isA<TourIntroduceResultEmitted>(),
             isA<TourCompleted>(),
@@ -674,7 +801,12 @@ void main() {
         collectedStates,
         containsAllInOrder([
           isA<TourPreDialogIsShown>(),
-          isA<TourPreDialogLaterButtonPressed>(),
+          isA<TourPreDialogButtonPressed>().having(
+            (s) => s.buttonType,
+            'buttonType',
+            PredialogButtonType.later,
+          ),
+          isA<TourCompleted>(),
         ]),
       );
     });
@@ -730,6 +862,275 @@ void main() {
 
       final prefs = await SharedPreferences.getInstance();
       expect(prefs.getBool('FeaturesTour_DismissAllTours'), isTrue);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogIsShown>(),
+          isA<TourPreDialogButtonPressed>().having(
+            (s) => s.buttonType,
+            'buttonType',
+            PredialogButtonType.dismiss,
+          ),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+
+    testWidgets(
+        'Tapping "Okay" with "Apply to all" accepts for all subsequent tours',
+        (tester) async {
+      final controller1 = FeaturesTourController('Page1');
+      final controller2 = FeaturesTourController('Page2');
+
+      // Start with page 1
+      await tester.pumpWidget(MaterialApp(
+        home: App(
+          key: const Key('Page1'),
+          tours: [
+            FeaturesTour(
+              index: 1,
+              controller: controller1,
+              introduce: const Text('page1.intro'),
+              child: const Text('page1'),
+            ),
+          ],
+        ),
+      ));
+      await tester.pumpAndSettle();
+      final context1 = tester.element(find.byKey(const Key('Page1')));
+
+      // Show predialog for page 1, check "apply to all" and accept
+      await tester.runAsync(() async {
+        await controller1.start(
+          context1,
+          force: true,
+          delay: Duration.zero,
+          predialogConfig: PredialogConfig(
+            enabled: true,
+            title: 'Introduction',
+            acceptButtonText: const Text('Okay'),
+            applyToAllPagesText: 'Apply to all',
+          ),
+          onState: (state) async {
+            collectedStates.add(state);
+            if (state is TourPreDialogIsShown) {
+              await tester.pump();
+              expect(find.text('Introduction'), findsOneWidget);
+              final checkbox = find.byType(Checkbox);
+              await tester.tap(checkbox);
+              await tester.pump();
+              await tester.tap(find.text('Okay'));
+            }
+            if (state is TourIntroducing) {
+              await tester.pump();
+              await tester.tap(find.text('DONE'));
+            }
+          },
+        );
+      });
+      await tester.pumpAndSettle();
+
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogIsShown>(),
+          isA<TourPreDialogButtonPressed>().having(
+            (s) => s.buttonType,
+            'buttonType',
+            PredialogButtonType.accept,
+          ),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
+
+      // Now switch to page 2
+      collectedStates.clear();
+      await tester.pumpWidget(MaterialApp(
+        home: App(
+          key: const Key('Page2'),
+          tours: [
+            FeaturesTour(
+              index: 1,
+              controller: controller2,
+              introduce: const Text('page2.intro'),
+              child: const Text('page2'),
+            ),
+          ],
+        ),
+      ));
+      await tester.pumpAndSettle();
+      final context2 = tester.element(find.byKey(const Key('Page2')));
+
+      // Start tour for page 2, predialog should be skipped
+      await tester.runAsync(() async {
+        await controller2.start(
+          context2,
+          force: true,
+          delay: Duration.zero,
+          predialogConfig: PredialogConfig(enabled: true),
+          onState: (state) async {
+            collectedStates.add(state);
+            if (state is TourIntroducing) {
+              await tester.pump();
+              expect(find.text('page2.intro'), findsOneWidget);
+              await tester.tap(find.text('DONE'));
+            }
+          },
+        );
+      });
+      await tester.pumpAndSettle();
+
+      // Verify predialog was not shown for the second tour
+      expect(collectedStates.whereType<TourPreDialogIsShown>(), isEmpty);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNowShownByAppliedToAllPages>().having(
+            (s) => s.buttonType,
+            'buttonType',
+            PredialogButtonType.accept,
+          ),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+  });
+
+  group('Advanced Scenarios', () {
+    testWidgets('nextIndex times out and proceeds to next available feature',
+        (tester) async {
+      final controller = FeaturesTourController('App');
+
+      await tester.pumpWidget(MaterialApp(
+        home: App(
+          tours: [
+            FeaturesTour(
+              index: 1,
+              controller: controller,
+              introduce: const Text('a.intro'),
+              nextIndex: 99, // This index will never appear
+              nextIndexTimeout: const Duration(milliseconds: 100),
+              child: const Text('a'),
+            ),
+            FeaturesTour(
+              index: 3,
+              controller: controller,
+              introduce: const Text('c.intro'),
+              child: const Text('c'),
+            ),
+          ],
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state case TourIntroducing(index: final index)) {
+              if (index == 1) {
+                await tester.pump();
+                expect(find.text('a.intro'), findsOneWidget);
+                await tester.tap(find.text('NEXT'));
+                // Wait for timeout
+                await tester.pump(const Duration(milliseconds: 150));
+              } else if (index == 3) {
+                await tester.pump();
+                expect(find.text('a.intro'), findsNothing);
+                expect(find.text('c.intro'), findsOneWidget);
+                await tester.tap(find.text('DONE'));
+              }
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      // The tour should have proceeded to index 3 after timeout
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 3),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+
+    testWidgets('UnfeaturesTour widget prevents tour for descendants',
+        (tester) async {
+      final controller = FeaturesTourController('App');
+
+      await tester.pumpWidget(MaterialApp(
+        home: App(
+          tours: [
+            FeaturesTour(
+              index: 1,
+              controller: controller,
+              introduce: const Text('a.intro'),
+              child: const Text('a'),
+            ),
+            UnfeaturesTour(
+              child: FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+              ),
+            ),
+          ],
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state case TourIntroducing(index: final index)) {
+              // It should only show index 1
+              expect(index, 1);
+              await tester.pump();
+              expect(find.text('a.intro'), findsOneWidget);
+              // Since it's the last available one, it shows DONE
+              await tester.tap(find.text('DONE'));
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('b.intro'), findsNothing);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
   });
 }

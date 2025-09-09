@@ -1,10 +1,9 @@
-import 'package:features_tour/src/features_tour.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
   const App({required this.tours, super.key});
 
-  final List<FeaturesTour> tours;
+  final List<Widget> tours;
 
   @override
   Widget build(BuildContext context) {
