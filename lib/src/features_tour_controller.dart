@@ -48,7 +48,7 @@ class FeaturesTourController {
   void _register(_FeaturesTourState state) {
     if (_debugLog && !_cachedStates.containsKey(state.widget.index)) {
       _printDebug(() =>
-          '`$pageName`: register index ${state.widget.index} => total: ${_cachedStates.length + 1}');
+          'Register index ${state.widget.index} => Total states: ${_cachedStates.length + 1}');
     }
     _states[state.widget.index] = state;
     _cachedStates[state.widget.index] = state;
@@ -66,7 +66,7 @@ class FeaturesTourController {
   void _unregister(_FeaturesTourState state) {
     if (_debugLog && _cachedStates.containsKey(state.widget.index)) {
       _printDebug(() =>
-          '`$pageName`: unregister index ${state.widget.index} => total: ${_cachedStates.length - 1}');
+          'Unregister index ${state.widget.index} => Total states: ${_cachedStates.length - 1}');
     }
     _states.remove(state.widget.index);
     _cachedStates.remove(state.widget.index);
@@ -136,13 +136,6 @@ class FeaturesTourController {
     // Wait until the next frame of the application's UI has been drawn.
     await null;
 
-    final addBlank = ' $pageName ';
-    _printDebug(() => ''.padLeft(50, '='));
-    _printDebug(
-        () => '${addBlank.padLeft(25 + (addBlank.length / 2).round(), '=')}'
-            '${''.padRight(25 - (addBlank.length / 2).round(), '=')}');
-    _printDebug(() => ''.padLeft(50, '='));
-
     try {
       if (!context.mounted) {
         _printDebug(() => 'The page $pageName context is not mounted');
@@ -160,7 +153,9 @@ class FeaturesTourController {
         return;
       }
 
+      _printDebug(() => 'Waiting for the page transition...');
       await _waitForTransition(context); // Main page transition
+      _printDebug(() => 'Page transition completed');
 
       // Wait for `delay` duration before starting the tours.
       await Future<void>.delayed(delay);
@@ -277,7 +272,7 @@ class FeaturesTourController {
         final nextIndex = state.widget.nextIndex;
         final nextIndexTimeout = state.widget.nextIndexTimeout;
         final key = _getPrefKey(state);
-        _printDebug(() => 'Start widget with key $key:');
+        _printDebug(() => 'Start introducing $key:');
 
         if (!context.mounted) {
           _printDebug(() => '   -> The parent widget was unmounted');
@@ -287,12 +282,12 @@ class FeaturesTourController {
 
         bool shouldShowIntroduce;
         if (force != null) {
-          _printDebug(
-              () => '`force` is $force, so the introduction must respect it.');
+          _printDebug(() =>
+              '   -> `force` is $force, so the introduction must respect it.');
           shouldShowIntroduce = force;
         } else {
-          _printDebug(
-              () => '`force` is null, so the introduce will act like normal.');
+          _printDebug(() =>
+              '   -> `force` is null, so the introduce will act like normal.');
           final isShown = _prefs!.getBool(key);
           shouldShowIntroduce = isShown != true;
         }
@@ -310,8 +305,9 @@ class FeaturesTourController {
           continue;
         }
 
-        // Wait for the child widget transition to complete.
-        await _waitForTransition(context);
+        _printDebug(() => '   -> Waiting for the page transition...');
+        await _waitForTransition(context); // Main page transition
+        _printDebug(() => '   -> Page transition completed');
 
         if (!context.mounted) {
           _printDebug(() => '   -> The parent widget was unmounted');
@@ -320,7 +316,7 @@ class FeaturesTourController {
         }
 
         // Close the previous cover if it exists.
-        hideCover(_debugLog ? (log) => _printDebug(() => log) : null);
+        hideCover(_debugLog ? (log) => _printDebug(() => '   -> $log') : null);
 
         // Show the cover to avoid user tapping the screen.
         final introduceConfig =
@@ -330,7 +326,7 @@ class FeaturesTourController {
         showCover(
           context,
           introduceBackgroundColor,
-          _debugLog ? (log) => _printDebug(() => log) : null,
+          _debugLog ? (log) => _printDebug(() => '   -> $log') : null,
         );
 
         if (state.widget.onBeforeIntroduce != null) {
@@ -403,14 +399,13 @@ class FeaturesTourController {
 
           if (nextState == null) {
             _printDebug(() =>
-                '   -> Cannot not wait for the next index $nextIndex because timeout is reached. Use the next ordered value instead.');
+                'Cannot not wait for the next index $nextIndex because timeout is reached. Use the next ordered value instead.');
 
             // Add the timeout state index to the introduced list so I will not
             // be introduced even when it's shown.
             _introducedIndexes.add(nextIndex);
           } else {
-            _printDebug(
-                () => '   -> Next index is available with state: $nextState');
+            _printDebug(() => 'Next index is available with state: $nextState');
           }
         } else {
           nextState = null;
@@ -704,7 +699,7 @@ class FeaturesTourController {
     try {
       return await _pendingIndexes[index]!.future.timeout(timeout);
     } on TimeoutException {
-      _printDebug(() => 'Timeout waiting for index $index');
+      _printDebug(() => '   -> Timeout waiting for index $index');
       _pendingIndexes.remove(index); // Clean up the completer
       return null;
     }
@@ -713,8 +708,6 @@ class FeaturesTourController {
   /// Wait until the page transition (and optional drawer animation) is complete.
   Future<void> _waitForTransition(BuildContext? context) async {
     if (context == null || !context.mounted) return;
-
-    _printDebug(() => '⏳ Waiting for the page transition...');
 
     final routeAnimation = ModalRoute.of(context)?.animation;
     if (routeAnimation != null &&
@@ -733,14 +726,12 @@ class FeaturesTourController {
       routeAnimation.addStatusListener(listener);
       await completer.future;
     }
-
-    _printDebug(() => '✅ Page transition completed');
   }
 
   /// Removes all controllers for specific `pageName`.
   Future<void> _removePage({bool markAsShowed = true}) async {
     if (_states.isEmpty) {
-      _printDebug(() => 'Page $pageName has already been removed');
+      _printDebug(() => '   -> Page $pageName has already been removed');
       return;
     }
 
@@ -751,7 +742,7 @@ class FeaturesTourController {
       await _removeState(state, markAsShowed);
     }
 
-    _printDebug(() => 'Remove page: $pageName');
+    _printDebug(() => '   -> Remove page: $pageName');
   }
 
   /// Removes specific state of this page.
