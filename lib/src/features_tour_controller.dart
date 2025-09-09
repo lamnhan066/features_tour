@@ -217,6 +217,10 @@ class FeaturesTourController {
           _printDebug(() => 'Applied to all pages');
           await onState?.call(TourPreDialogNowShownByAppliedToAllPages(type));
         },
+        () async {
+          _printDebug(() => 'Custom dialog is shown for pre-dialog');
+          await onState?.call(const TourPreDialogIsShownWithCustomDialog());
+        },
       );
 
       switch (result) {
@@ -597,6 +601,7 @@ class FeaturesTourController {
     PredialogConfig? config,
     FutureOr<void> Function() onShownPreDialog,
     FutureOr<void> Function(PredialogButtonType type) onAppliedToAllPages,
+    FutureOr<void> Function()? onShownCustomDialog,
   ) async {
     // Should show the predialog or not.
     var shouldShowPredialog = true;
@@ -615,10 +620,20 @@ class FeaturesTourController {
         _printDebug(() => 'Predialog is enabled');
 
         final PredialogButtonType? predialogResult;
-        if (effectiveConfig.modifiedDialogResult != null) {
-          final completer = Completer<bool>()
-            ..complete(effectiveConfig.modifiedDialogResult!(context));
-          predialogResult = switch (await completer.future) {
+        if (effectiveConfig.customDialog != null) {
+          _printDebug(() => 'Using custom dialog for predialog');
+          onShownCustomDialog?.call();
+          predialogResult = await effectiveConfig.customDialog!(context);
+        }
+        // TODO(lamnhan066): Remove deprecated field in the next major release
+        // ignore: deprecated_member_use_from_same_package
+        else if (effectiveConfig.modifiedDialogResult != null) {
+          _printDebug(() => 'Using modified dialog result for predialog');
+          onShownCustomDialog?.call();
+          // TODO(lamnhan066): Remove deprecated field in the next major release
+          // ignore: deprecated_member_use_from_same_package
+          final result = await effectiveConfig.modifiedDialogResult!(context);
+          predialogResult = switch (result) {
             true => PredialogButtonType.accept,
             false => PredialogButtonType.later,
           };

@@ -52,6 +52,12 @@ class TourPreDialogIsShown extends TourState {
   const TourPreDialogIsShown();
 }
 
+/// Indicates that the pre-dialog for the feature tour is currently being shown
+class TourPreDialogIsShownWithCustomDialog extends TourState {
+  /// Creates a new instance of [TourPreDialogIsShownWithCustomDialog].
+  const TourPreDialogIsShownWithCustomDialog();
+}
+
 /// Indicates that a button in the pre-dialog has been pressed.
 class TourPreDialogButtonPressed extends TourState {
   /// Creates a new instance of [TourPreDialogButtonPressed].

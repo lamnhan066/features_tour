@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:features_tour/features_tour.dart';
 import 'package:flutter/material.dart';
 
 /// Configuration for the pre-dialog shown before starting a features tour.
@@ -8,6 +9,7 @@ class PredialogConfig {
   factory PredialogConfig({
     bool? enabled,
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
+    FutureOr<PredialogButtonType> Function(BuildContext context)? customDialog,
     Color? backgroundColor,
     Color? textColor,
     String? title,
@@ -27,7 +29,10 @@ class PredialogConfig {
   }) {
     return global.copyWith(
       enabled: enabled,
+      // TODO(lamnhan066): Remove deprecated field in the next major release
+      // ignore: deprecated_member_use_from_same_package
       modifiedDialogResult: modifiedDialogResult,
+      customDialog: customDialog,
       backgroundColor: backgroundColor,
       textColor: textColor,
       title: title,
@@ -68,7 +73,10 @@ class PredialogConfig {
     this.borderRadius = 12,
     this.backgroundColor,
     this.textColor,
+    // TODO(lamnhan066): Remove deprecated field in the next major release
+    // ignore: deprecated_consistency
     this.modifiedDialogResult,
+    this.customDialog,
     this.onAcceptButtonPressed,
     this.onLaterButtonPressed,
     this.onDismissButtonPressed,
@@ -123,7 +131,13 @@ class PredialogConfig {
   final double borderRadius;
 
   /// Custom function to override the default dialog behavior.
+  @Deprecated('Use customDialog instead')
   final FutureOr<bool> Function(BuildContext context)? modifiedDialogResult;
+
+  /// Custom dialog builder function. If provided, this will be used instead of
+  /// the default dialog UI.
+  final FutureOr<PredialogButtonType> Function(BuildContext context)?
+      customDialog;
 
   /// Callback triggered when the accept button is pressed.
   final VoidCallback? onAcceptButtonPressed;
@@ -137,7 +151,9 @@ class PredialogConfig {
   /// Creates a new `PredialogConfig` instance based on existing values.
   PredialogConfig copyWith({
     bool? enabled,
+    @Deprecated('Use customDialog instead')
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
+    FutureOr<PredialogButtonType> Function(BuildContext context)? customDialog,
     Color? backgroundColor,
     Color? textColor,
     String? title,
@@ -157,7 +173,10 @@ class PredialogConfig {
   }) {
     return PredialogConfig._(
       enabled: enabled ?? this.enabled,
+      // TODO(lamnhan066): Remove deprecated field in the next major release
+      // ignore: deprecated_member_use_from_same_package
       modifiedDialogResult: modifiedDialogResult ?? this.modifiedDialogResult,
+      customDialog: customDialog ?? this.customDialog,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       textColor: textColor ?? this.textColor,
       title: title ?? this.title,
