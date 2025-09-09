@@ -1,8 +1,8 @@
 import 'package:features_tour/src/models/base_button_config.dart';
 import 'package:flutter/material.dart';
 
+/// Configuration for the "Skip" button in the Features Tour.
 class SkipConfig extends BaseButtonConfig {
-
   /// Creates a new `SkipConfig` based on the provided [global] values.
   ///
   /// [child] is a custom widget for the skip button. When this is set,
@@ -67,6 +67,7 @@ class SkipConfig extends BaseButtonConfig {
     super.textStyle,
     super.buttonStyle,
   });
+
   /// Global configuration.
   static SkipConfig global = const SkipConfig._();
 

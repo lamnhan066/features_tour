@@ -13,8 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'features_tour_controller.dart';
 part 'utils/shared_prefs.dart';
 
+/// The main widget to display a guided tour for a specific widget.
 class FeaturesTour extends StatefulWidget {
-
   /// Creates a [FeaturesTour] to display a guided tour for a specific widget.
   ///
   /// This widget requires a [controller] of type [FeaturesTourController] and a [child] widget to wrap.
@@ -46,7 +46,10 @@ class FeaturesTour extends StatefulWidget {
   /// whether the user pressed the Next or Skip button, or if they tapped outside the introduction
   /// to dismiss it. This allows you to control the flow of the tour based on user interactions.
   const FeaturesTour({
-    required this.controller, required this.index, required this.child, super.key,
+    required this.controller,
+    required this.index,
+    required this.child,
+    super.key,
     this.canPop = true,
     @Deprecated(
       'Use `nextIndex` instead. This will be removed in the next major version.',
@@ -70,6 +73,7 @@ class FeaturesTour extends StatefulWidget {
     this.onAfterIntroduce,
   })  : nextIndex = nextIndex ?? waitForIndex,
         nextIndexTimeout = nextIndexTimeout ?? waitForTimeout;
+
   /// Prefix of this package.
   static String _prefix = 'FeaturesTour';
 

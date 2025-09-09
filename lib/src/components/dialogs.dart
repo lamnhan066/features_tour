@@ -91,7 +91,7 @@ Future<ButtonTypes> predialog(
         printDebug?.call('Disabling all future introduction tours.');
 
         // TODO: Handle tour-specific dismissals better.
-        SharedPrefs.setDismissAllTours(true);
+        await SharedPrefs.setDismissAllTours(true);
       }
     }
 
@@ -106,7 +106,6 @@ Future<ButtonTypes> predialog(
 
 /// A stateful checkbox row with text for "Apply to all pages".
 class _CheckboxRow extends StatefulWidget {
-
   const _CheckboxRow({
     required this.text,
     required this.baseTextColor,

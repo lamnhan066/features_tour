@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Configuration for the `child` widget.
 class ChildConfig {
-
   /// Apply new settings to the `child` widget base on [global] settings.
   factory ChildConfig({
     Widget Function(Widget child)? child,
@@ -44,6 +44,7 @@ class ChildConfig {
     this.animationDuration = const Duration(milliseconds: 600),
     this.enableAnimation = true,
   });
+
   /// Global configuration.
   static ChildConfig global = const ChildConfig._();
 

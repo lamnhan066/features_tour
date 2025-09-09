@@ -1,5 +1,6 @@
 part of '../features_tour.dart';
 
+/// Utility class for managing shared preferences related to the Features Tour.
 class SharedPrefs {
   static const String _dismissAllTours = 'DismissAllTours';
   static SharedPreferences? _instance;
@@ -9,30 +10,34 @@ class SharedPrefs {
     return _instance!;
   }
 
+  /// Sets whether all tours should be dismissed.
   static Future<void> setDismissAllTours(bool value) =>
       _setPrefSetting(_dismissAllTours, value);
 
-  static Future<bool?> getDismissAllTours() async {
+  /// Gets whether all tours have been dismissed.
+  static Future<bool> getDismissAllTours() async {
     final result = await _getPrefSetting(_dismissAllTours);
-    return result as bool?;
+    return result as bool? ?? false;
   }
 
+  /// Sets a preference setting.
   static Future<void> _setPrefSetting(String key, Object value) async {
     key = '${FeaturesTour._prefix}_$key';
     final prefs = await _getPrefsInstance();
     if (value is bool) {
-      prefs.setBool(key, value);
+      await prefs.setBool(key, value);
     } else if (value is String) {
-      prefs.setString(key, value);
+      await prefs.setString(key, value);
     } else if (value is int) {
-      prefs.setInt(key, value);
+      await prefs.setInt(key, value);
     } else if (value is double) {
-      prefs.setDouble(key, value);
+      await prefs.setDouble(key, value);
     } else {
       throw UnsupportedError('This is unsupported type: ${value.runtimeType}');
     }
   }
 
+  /// Gets a preference setting.
   static Future<Object?> _getPrefSetting(String key) async {
     key = '${FeaturesTour._prefix}_$key';
     final prefs = await _getPrefsInstance();

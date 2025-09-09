@@ -1,8 +1,8 @@
 import 'package:features_tour/src/models/base_button_config.dart';
 import 'package:flutter/material.dart';
 
+/// Configuration for the "Next" button in the Features Tour.
 class NextConfig extends BaseButtonConfig {
-
   /// Creates a new [NextConfig] based on the [global] values.
   ///
   /// [child] is a custom widget for the next button. When this is set,
@@ -68,6 +68,7 @@ class NextConfig extends BaseButtonConfig {
     super.textStyle,
     super.buttonStyle,
   });
+
   /// Global configuration.
   static NextConfig global = const NextConfig._();
 

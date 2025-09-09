@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// The base configuration for buttons used in the Features Tour.
 abstract class BaseButtonConfig {
-
+  /// Creates a [BaseButtonConfig] instance.
   const BaseButtonConfig({
     this.child,
     this.text = '',
@@ -11,6 +12,7 @@ abstract class BaseButtonConfig {
     this.textStyle,
     this.buttonStyle,
   });
+
   /// Custom widget for the button.
   /// When this widget is set, you must pass the `onPressed` callback to the button's `onPressed` or `onTap` property.
   ///

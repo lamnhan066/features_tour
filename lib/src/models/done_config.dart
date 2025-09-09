@@ -1,8 +1,8 @@
 import 'package:features_tour/src/models/base_button_config.dart';
 import 'package:flutter/material.dart';
 
+/// Configuration for the "Done" button in the Features Tour.
 class DoneConfig extends BaseButtonConfig {
-
   /// Creates a new [DoneConfig] based on the [global] values.
   ///
   /// [child] is a custom widget for the done button. When this is set,
@@ -67,6 +67,7 @@ class DoneConfig extends BaseButtonConfig {
     super.textStyle,
     super.buttonStyle,
   });
+
   /// Global configuration.
   static DoneConfig global = DoneConfig._();
 

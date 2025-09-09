@@ -1,8 +1,8 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:flutter/material.dart';
 
+/// Configuration for the `introduce` widget in the Features Tour.
 class IntroduceConfig {
-
   /// Create a new IntroduceConfig base on [global] values.
   factory IntroduceConfig({
     Color? backgroundColor,
@@ -27,6 +27,7 @@ class IntroduceConfig {
     this.alignment,
     this.useRootOverlay = false,
   });
+
   /// Global configuration.
   static IntroduceConfig global = const IntroduceConfig._();
 

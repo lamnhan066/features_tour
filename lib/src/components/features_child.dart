@@ -2,10 +2,23 @@ import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/extensions/get_widget_position.dart';
 import 'package:flutter/material.dart';
 
+/// Internal widget to show all the needed widgets in Stack.
 class FeaturesChild extends StatefulWidget {
   /// Internal widget to show all the needed widgets in Stack.
   const FeaturesChild({
-    required this.globalKey, required this.child, required this.childConfig, required this.skip, required this.skipConfig, required this.next, required this.nextConfig, required this.done, required this.doneConfig, required this.isLastState, required this.introduce, required this.padding, super.key,
+    required this.globalKey,
+    required this.child,
+    required this.childConfig,
+    required this.skip,
+    required this.skipConfig,
+    required this.next,
+    required this.nextConfig,
+    required this.done,
+    required this.doneConfig,
+    required this.isLastState,
+    required this.introduce,
+    required this.padding,
+    super.key,
     this.alignment,
     this.quadrantAlignment,
   });
@@ -118,7 +131,7 @@ class _FeaturesChildState extends State<FeaturesChild>
         if (widget.alignment != null) {
           alignment = widget.alignment!;
         } else {
-          final dialogWidth = size.width.clamp(280, 400);
+          final dialogWidth = size.width.clamp(280, 400).toDouble();
           var left = rect!.topCenter.dx - dialogWidth / 2;
           if (left < 0) {
             alignment = Alignment.bottomLeft;
@@ -159,7 +172,7 @@ class _FeaturesChildState extends State<FeaturesChild>
         if (widget.alignment != null) {
           alignment = widget.alignment!;
         } else {
-          final dialogWidth = size.width.clamp(280, 400);
+          final dialogWidth = size.width.clamp(280, 400).toDouble();
           var left = rect!.topCenter.dx - dialogWidth / 2;
           if (left < 0) {
             alignment = Alignment.topLeft;

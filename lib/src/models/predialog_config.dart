@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+/// Configuration for the pre-dialog shown before starting a features tour.
 class PredialogConfig {
-
   /// Creates a new `PredialogConfig` instance with optional overrides.
   factory PredialogConfig({
     bool? enabled,
@@ -73,6 +73,7 @@ class PredialogConfig {
     this.onLaterButtonPressed,
     this.onDismissButtonPressed,
   });
+
   /// Global configuration instance.
   /// This allows for a shared default configuration across the app.
   static PredialogConfig global = PredialogConfig._();
