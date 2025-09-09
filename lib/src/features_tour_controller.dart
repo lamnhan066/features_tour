@@ -111,7 +111,7 @@ class FeaturesTourController {
     )
     Duration waitForFirstTimeout = const Duration(seconds: 3),
     double? firstIndex,
-    // TODO: Set `firstIndexTimeout` to `Duration(seconds: 3)` in the next release candidate.
+    // TODO(lamnhan066): Set `firstIndexTimeout` to `Duration(seconds: 3)` in the next release candidate.
     Duration? firstIndexTimeout,
     Duration delay = const Duration(milliseconds: 500),
     bool? force,
@@ -600,15 +600,15 @@ class FeaturesTourController {
 
     if (shouldShowPredialog) {
       _printDebug(() => 'Should show predialog return true');
-      config ??= PredialogConfig.global;
+      final effectiveConfig = config ?? PredialogConfig.global;
 
-      if (config.enabled) {
+      if (effectiveConfig.enabled) {
         _printDebug(() => 'Predialog is enabled');
 
         final ButtonTypes? predialogResult;
-        if (config.modifiedDialogResult != null) {
+        if (effectiveConfig.modifiedDialogResult != null) {
           final completer = Completer<bool>()
-            ..complete(config.modifiedDialogResult!(context));
+            ..complete(effectiveConfig.modifiedDialogResult!(context));
           predialogResult = switch (await completer.future) {
             true => ButtonTypes.accept,
             false => ButtonTypes.later,
@@ -616,7 +616,7 @@ class FeaturesTourController {
         } else {
           predialogResult = await predialog(
             context,
-            config,
+            effectiveConfig,
             onShownPreDialog,
             _debugLog ? (log) => _printDebug(() => log) : null,
           );
@@ -625,13 +625,13 @@ class FeaturesTourController {
         switch (predialogResult) {
           case ButtonTypes.accept:
             _printDebug(() => 'User accepted to show the introduction');
-            config.onAcceptButtonPressed?.call();
+            effectiveConfig.onAcceptButtonPressed?.call();
           case ButtonTypes.later:
             _printDebug(() => 'User chose to show the introduction later');
-            config.onLaterButtonPressed?.call();
+            effectiveConfig.onLaterButtonPressed?.call();
           case ButtonTypes.dismiss:
             _printDebug(() => 'User dismissed to show the introduction');
-            config.onDismissButtonPressed?.call();
+            effectiveConfig.onDismissButtonPressed?.call();
         }
 
         return predialogResult;

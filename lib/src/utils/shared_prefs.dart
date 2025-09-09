@@ -22,16 +22,16 @@ class SharedPrefs {
 
   /// Sets a preference setting.
   static Future<void> _setPrefSetting(String key, Object value) async {
-    key = '${FeaturesTour._prefix}_$key';
+    final effectiveKey = '${FeaturesTour._prefix}_$key';
     final prefs = await _getPrefsInstance();
     if (value is bool) {
-      await prefs.setBool(key, value);
+      await prefs.setBool(effectiveKey, value);
     } else if (value is String) {
-      await prefs.setString(key, value);
+      await prefs.setString(effectiveKey, value);
     } else if (value is int) {
-      await prefs.setInt(key, value);
+      await prefs.setInt(effectiveKey, value);
     } else if (value is double) {
-      await prefs.setDouble(key, value);
+      await prefs.setDouble(effectiveKey, value);
     } else {
       throw UnsupportedError('This is unsupported type: ${value.runtimeType}');
     }
@@ -39,8 +39,8 @@ class SharedPrefs {
 
   /// Gets a preference setting.
   static Future<Object?> _getPrefSetting(String key) async {
-    key = '${FeaturesTour._prefix}_$key';
+    final effectiveKey = '${FeaturesTour._prefix}_$key';
     final prefs = await _getPrefsInstance();
-    return prefs.get(key);
+    return prefs.get(effectiveKey);
   }
 }

@@ -60,7 +60,7 @@ class FeaturesTour extends StatefulWidget {
     )
     Duration waitForTimeout = const Duration(seconds: 3),
     double? nextIndex,
-    // TODO: Set `nextIndexTimeout` to `Duration(seconds: 3)` in the next release candidate.
+    // TODO(lamnhan066): Set `nextIndexTimeout` to `Duration(seconds: 3)` in the next release candidate.
     Duration? nextIndexTimeout,
     this.childConfig,
     this.introduce = const SizedBox.shrink(),

@@ -90,7 +90,7 @@ Future<ButtonTypes> predialog(
       if (result == ButtonTypes.dismiss) {
         printDebug?.call('Disabling all future introduction tours.');
 
-        // TODO: Handle tour-specific dismissals better.
+        // TODO(lamnhan066): Handle tour-specific dismissals better.
         await SharedPrefs.setDismissAllTours(true);
       }
     }
