@@ -36,7 +36,7 @@ class FeaturesTourController {
   Completer? _introduceCompleter;
 
   bool _isIntroducing = false;
-  final bool _debugLog = FeaturesTour._debugLog;
+  bool _debugLog = FeaturesTour._debugLog;
 
   /// Register the current FeaturesTour state.
   void _register(_FeaturesTourState state) {
@@ -114,6 +114,7 @@ class FeaturesTourController {
     bool? debugLog,
     FutureOr<void> Function(TourState state)? onState,
   }) async {
+    _debugLog = debugLog ?? FeaturesTour._debugLog;
     firstIndex ??= waitForFirstIndex;
     firstIndexTimeout ??= waitForFirstTimeout;
 
@@ -127,7 +128,6 @@ class FeaturesTourController {
     // Wait until the next frame of the application's UI has been drawn.
     await null;
 
-    bool cachedDebugLog = FeaturesTour._debugLog;
     if (debugLog != null) {
       FeaturesTour._debugLog = debugLog;
     }
@@ -141,7 +141,7 @@ class FeaturesTourController {
 
     void cleanup() {
       hideCover(context, _debugLog ? (log) => printDebug(() => log) : null);
-      FeaturesTour._debugLog = cachedDebugLog;
+      _debugLog = FeaturesTour._debugLog;
       _isIntroducing = false;
     }
 
