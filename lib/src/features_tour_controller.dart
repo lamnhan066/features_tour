@@ -298,7 +298,7 @@ class FeaturesTourController {
         }
 
         // Close the previous cover if it exists.
-        hideCover(context, _debugLog ? (log) => printDebug(() => log) : null);
+        hideCover(_debugLog ? (log) => printDebug(() => log) : null);
 
         // Show the cover to avoid user tapping the screen.
         final introduceConfig =
@@ -394,7 +394,7 @@ class FeaturesTourController {
         }
       }
     } finally {
-      hideCover(context, _debugLog ? (log) => printDebug(() => log) : null);
+      hideCover(_debugLog ? (log) => printDebug(() => log) : null);
       _debugLog = FeaturesTour._debugLog;
       await onState?.call(TourCompleted());
       printDebug(() => 'This tour has been completed');

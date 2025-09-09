@@ -19,6 +19,8 @@ void showCover(
     return;
   }
 
+  printDebug?.call('Showing the cover');
+
   _coverOverlay = OverlayEntry(builder: (ctx) {
     return Material(
       color: color,
@@ -33,13 +35,12 @@ void showCover(
 }
 
 /// Hide the cover to let the user able to tap the screen.
-void hideCover(BuildContext context, void Function(String log)? printDebug) {
-  if (!context.mounted) {
-    printDebug?.call(
-      'Cannot hide the cover because the build context is not mounted',
-    );
+void hideCover(void Function(String log)? printDebug) {
+  if (_coverOverlay == null) {
+    printDebug?.call('The cover is already hidden');
     return;
   }
+  printDebug?.call('Hiding the cover');
 
   _coverOverlay?.remove();
   _coverOverlay = null;
