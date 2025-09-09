@@ -1,1 +1,5 @@
 include: package:very_good_analysis/analysis_options.yaml
+analyzer:
+  errors:
+    lines_longer_than_80_chars: ignore
+    avoid_positional_boolean_parameters: ignore
