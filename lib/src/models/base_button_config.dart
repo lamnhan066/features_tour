@@ -13,7 +13,7 @@ abstract class BaseButtonConfig {
     this.buttonStyle,
   });
 
-  /// Custom widget for the button.
+  /// A custom widget for the button.
   /// When this widget is set, you must pass the `onPressed` callback to the button's `onPressed` or `onTap` property.
   ///
   /// Example:
@@ -37,7 +37,7 @@ abstract class BaseButtonConfig {
   /// Determines whether the button is enabled or disabled.
   final bool enabled;
 
-  /// The text style of the button text. Overrides the default styling.
+  /// The text style of the button text. This overrides the default styling.
   final TextStyle? textStyle;
 
   /// The [ButtonStyle] applied to the button.
@@ -53,7 +53,7 @@ abstract class BaseButtonConfig {
   /// ```
   final ButtonStyle? buttonStyle;
 
-  /// Create a new BaseConfig base on this values.
+  /// Creates a new BaseConfig based on these values.
   BaseButtonConfig copyWith({
     Widget Function(VoidCallback onPressed)? child,
     String? text,

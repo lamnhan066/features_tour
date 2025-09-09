@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'features_tour_controller.dart';
 part 'utils/shared_prefs.dart';
 
-/// The main widget to display a guided tour for a specific widget.
+/// The main widget for displaying a guided tour for a specific widget.
 class FeaturesTour extends StatefulWidget {
   /// Creates a [FeaturesTour] to display a guided tour for a specific widget.
   ///
@@ -20,21 +20,21 @@ class FeaturesTour extends StatefulWidget {
   /// You can use [childConfig] to customize the appearance or behavior of the child widget.
   ///
   /// The [index] is a unique identifier and determines the order in which widgets are shown.
-  /// It is a `double`, allowing for insertion of new features between existing ones.
-  /// Ensure this value remains unchanged to prevent reintroducing the same feature unnecessarily.
+  /// It is a `double`, which allows for the insertion of new features between existing ones.
+  /// Ensure this value remains unchanged to prevent re-introducing the same feature unnecessarily.
   ///
   /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
   /// it blocks the current route from being popped.
   ///
   /// Use [nextIndex] to specify the next index to display.
-  /// The app will pause interaction until the specified index becomes available, making it ideal
+  /// The app will pause user interaction until the specified index becomes available, making it ideal
   /// for scenarios like displaying a [FeaturesTour] in a dialog that opens after the current feature.
-  /// To avoid poor user experience, configure a timeout using [nextIndexTimeout], with a default of 3 seconds.
+  /// To avoid a poor user experience, configure a timeout using [nextIndexTimeout], with a default of 3 seconds.
   /// Note that [nextIndex] only applies within the same [controller].
   ///
   /// You can disable a tour for specific widgets by setting [enabled] to `false`.
-  /// This is particularly useful for lists where only one item should have the tour active;
-  /// set [enabled] to `false` for all other items.
+  /// This is particularly useful for lists where only one item should have the tour active.
+  /// Set [enabled] to `false` for all other items.
   ///
   /// Use [introduce] to display introductory information, which can be customized with [introduceConfig].
   ///
@@ -42,7 +42,7 @@ class FeaturesTour extends StatefulWidget {
   ///
   /// To perform actions before or after the introduction, use [onBeforeIntroduce] and [onAfterIntroduce].
   /// In the [onAfterIntroduce] callback, you can access the [IntroduceResult] to determine
-  /// whether the user pressed the Next or Skip button, or if they tapped outside the introduction
+  /// whether the user pressed the Next or Skip button or if they tapped outside the introduction
   /// to dismiss it. This allows you to control the flow of the tour based on user interactions.
   const FeaturesTour({
     required this.controller,
@@ -74,31 +74,31 @@ class FeaturesTour extends StatefulWidget {
   })  : nextIndex = nextIndex ?? waitForIndex,
         nextIndexTimeout = nextIndexTimeout ?? waitForTimeout;
 
-  /// Prefix of this package.
+  /// The prefix of this package.
   static String _prefix = 'FeaturesTour';
 
-  /// Global force variable.
+  /// The global force variable.
   static bool? _force;
 
-  /// Allow printing the debug logs.
+  /// Allows printing the debug logs.
   static bool _debugLog = false;
 
-  /// Set the global configs.
+  /// Sets the global configs.
   ///
-  /// [force] to show all or hide all the instructions, including predialogs.
-  /// Default is `null`, means it depends on it's own `start` configuration.
+  /// [force] to show or hide all the instructions, including pre-dialogs.
+  /// The default is `null`, which means it depends on its own `start` configuration.
   ///
-  /// [preferencePrefix] if the prefix of the shared preferences.
+  /// [preferencePrefix] is the prefix for the shared preferences.
   ///
-  /// [childConfig] to configure child widget.
+  /// [childConfig] to configure the child widget.
   ///
-  /// [introduceConfig] to configure introduce widget.
+  /// [introduceConfig] to configure the introduce widget.
   ///
-  /// [predialogConfig] to configure predialog widget.
+  /// [predialogConfig] to configure the pre-dialog widget.
   ///
-  /// [skipConfig] and [nextConfig] to configure Skip and Next buttons.
+  /// [skipConfig] and [nextConfig] to configure the Skip and Next buttons.
   ///
-  /// [debugLog] allow printing the debug logs. Default is `kDebugMode`.
+  /// [debugLog] allows printing the debug logs. The default is `kDebugMode`.
   ///
   /// Ex:
   /// ``` dart
@@ -115,40 +115,40 @@ class FeaturesTour extends StatefulWidget {
   /// );
   /// ```
   static void setGlobalConfig({
-    /// Force to show all the [FeaturesTour] if this value is `true` and force
-    /// not to show it if this value is `false`. Default is `null`, only show
+    /// Forces all [FeaturesTour] to be shown if this value is `true`, and not
+    /// shown if this value is `false`. The default is `null`, which only shows
     /// if there are new [FeaturesTour]s.
     ///
-    /// **You have to set this value to `null` before releasing to make the package
-    /// works as expected**
+    /// **You have to set this value to `null` before release to make the package
+    /// work as expected.**
     bool? force,
 
-    /// Prefix of local database name to save the widget showing state
-    /// Default is 'FeaturesTour'.
+    /// The prefix of the local database name to save the widget's showing state.
+    /// The default is 'FeaturesTour'.
     String? preferencePrefix,
 
-    /// Configuration of the fake [child] widget. Default is [ChildConfig.global].
+    /// The configuration of the fake [child] widget. The default is [ChildConfig.global].
     ChildConfig? childConfig,
 
-    /// Configuration of the [introduce] widget. Default is [IntroduceConfig.global].
+    /// The configuration of the [introduce] widget. The default is [IntroduceConfig.global].
     IntroduceConfig? introduceConfig,
 
-    /// Configuration of the predialog widget. Default is [PredialogConfig.global].
+    /// The configuration of the pre-dialog widget. The default is [PredialogConfig.global].
     PredialogConfig? predialogConfig,
 
-    /// Configuration of the skip button. Default is [SkipConfig.global].
+    /// The configuration of the skip button. The default is [SkipConfig.global].
     SkipConfig? skipConfig,
 
-    /// Configuration of the next button. Default is [NextConfig.global].
+    /// The configuration of the next button. The default is [NextConfig.global].
     NextConfig? nextConfig,
 
-    /// Configuration of the done button. Default is [DoneConfig.global].
+    /// The configuration of the done button. The default is [DoneConfig.global].
     ///
-    /// This button only shows when the current introduction is the last and
+    /// This button is only shown when the current introduction is the last and
     /// `doneConfig.enabled` is `true`.
     DoneConfig? doneConfig,
 
-    /// Allow printing the debug logs. Default is `kDebugMode`.
+    /// Allows printing the debug logs. The default is `kDebugMode`.
     bool? debugLog,
   }) {
     if (force != null) _force = force;
@@ -169,11 +169,11 @@ class FeaturesTour extends StatefulWidget {
     }
     FeaturesTourController._controllers.clear();
     if (_debugLog) {
-      debugPrint('All pages has been removed');
+      debugPrint('All pages have been removed.');
     }
   }
 
-  /// The controller for the current page, responsible for managing the tour.
+  /// The controller for the current page, which is responsible for managing the tour.
   final FeaturesTourController controller;
 
   /// A unique index used to order the tour steps.
@@ -181,7 +181,7 @@ class FeaturesTour extends StatefulWidget {
   final double index;
 
   /// Specifies the next [index] to start the tour.
-  /// The plugin will wait for this index to appear or until the [nextIndexTimeout] is reached.
+  /// The plugin will wait for this index to appear or until [nextIndexTimeout] is reached.
   /// If set to `null`, the tour will proceed in the natural order of the [index].
   ///
   /// Note: This value applies only within the same [controller].
@@ -189,7 +189,7 @@ class FeaturesTour extends StatefulWidget {
   /// Example: Use this to wait for a dialog to appear before displaying the next step.
   final double? nextIndex;
 
-  /// The timeout duration for waiting on [nextIndex]. Defaults to 3 seconds.
+  /// The timeout duration for waiting on [nextIndex]. The default is 3 seconds.
   ///
   /// Ensure this value is not excessively long to maintain a good user experience.
   final Duration nextIndexTimeout;
@@ -197,46 +197,46 @@ class FeaturesTour extends StatefulWidget {
   /// Determines whether this widget's actions are enabled.
   final bool enabled;
 
-  /// The [child] will be wrapped with the [PopScope] to control the pop behavior.
+  /// The [child] will be wrapped with [PopScope] to control the pop behavior.
   ///
   /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
   /// it blocks the current route from being popped.
   @Deprecated('Use `FeaturesTourController.start(popToSkip: true)` instead.')
   final bool canPop;
 
-  /// The child widget wrapped by the [FeaturesTour].
+  /// The child widget wrapped by [FeaturesTour].
   final Widget child;
 
   /// The widget used to introduce this feature in the tour.
   final Widget introduce;
 
-  /// Configuration for the [introduce] widget.
+  /// The configuration for the [introduce] widget.
   /// If `null`, the global configuration ([IntroduceConfig.global]) will be used.
   final IntroduceConfig? introduceConfig;
 
-  /// Configuration for the "Next" button.
+  /// The configuration for the "Next" button.
   /// If `null`, the global configuration ([NextConfig.global]) will be used.
   final NextConfig? nextConfig;
 
-  /// Configuration for the "Skip" button.
+  /// The configuration for the "Skip" button.
   /// If `null`, the global configuration ([SkipConfig.global]) will be used.
   final SkipConfig? skipConfig;
 
-  /// Configuration for the "Done" button.
+  /// The configuration for the "Done" button.
   /// If `null`, the global configuration ([DoneConfig.global]) will be used.
   final DoneConfig? doneConfig;
 
-  /// Configuration for the overlay widget displayed over the [child].
+  /// The configuration for the overlay widget displayed over the [child].
   /// If `null`, the global configuration ([ChildConfig.global]) will be used.
   final ChildConfig? childConfig;
 
-  /// Callback triggered before the [introduce] widget is shown.
+  /// A callback that is triggered before the [introduce] widget is shown.
   ///
   /// This can be used to perform actions or preparations right before the introduction step appears.
   /// If the callback returns a [Future], the tour will wait for it to complete before proceeding.
   final FutureOr<void> Function()? onBeforeIntroduce;
 
-  /// Callback triggered after the [introduce] widget is shown.
+  /// A callback that is triggered after the [introduce] widget is shown.
   ///
   /// This can be used to perform actions or preparations right after the introduction step appears.
   /// If the callback returns a [Future], the tour will wait for it to complete before

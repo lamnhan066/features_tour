@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// Configuration for the `introduce` widget in the Features Tour.
 class IntroduceConfig {
-  /// Create a new IntroduceConfig base on [global] values.
+  /// Creates a new IntroduceConfig based on [global] values.
   factory IntroduceConfig({
     Color? backgroundColor,
     EdgeInsetsGeometry? padding,
@@ -31,27 +31,27 @@ class IntroduceConfig {
   /// Global configuration.
   static IntroduceConfig global = const IntroduceConfig._();
 
-  /// Color of the background for the `introduce` widget.
+  /// The color of the background for the `introduce` widget.
   final Color? backgroundColor;
 
-  /// Padding around the `introduce` widget.
+  /// The padding around the `introduce` widget.
   final EdgeInsetsGeometry padding;
 
-  /// Quadrant rectangle for positioning the `introduce` widget.
+  /// The quadrant rectangle for positioning the `introduce` widget.
   final QuadrantAlignment? quadrantAlignment;
 
-  /// Alignment of the `introduce` widget within the specified `quadrantAlignment`.
+  /// The alignment of the `introduce` widget within the specified `quadrantAlignment`.
   /// This value automatically aligns the widget depending on the chosen
   /// `quadrantAlignment`. It aims to keep the widget as close as possible to
   /// the other elements.
   final Alignment? alignment;
 
-  /// If `useRootOverlay` is set to true, the tour will show above all other [Overlay]s.
+  /// If `useRootOverlay` is set to true, the tour will be shown above all other [Overlay]s.
   ///
-  /// This method can be expensive (it walks the element tree).
+  /// This method can be expensive as it walks the element tree.
   final bool useRootOverlay;
 
-  /// Create a new IntroduceConfig base on this values.
+  /// Creates a new IntroduceConfig based on these values.
   IntroduceConfig copyWith({
     Color? backgroundColor,
     EdgeInsetsGeometry? padding,

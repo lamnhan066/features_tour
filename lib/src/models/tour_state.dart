@@ -1,6 +1,6 @@
 import 'package:features_tour/features_tour.dart';
 
-/// Base class for all states of the feature tour.
+/// The base class for all states of the feature tour.
 sealed class TourState {
   /// Creates a new instance of [TourState].
   const TourState();
@@ -52,7 +52,7 @@ class TourPreDialogIsShown extends TourState {
   const TourPreDialogIsShown();
 }
 
-/// Indicates that the pre-dialog for the feature tour is currently being shown
+/// Indicates that a custom pre-dialog for the feature tour is currently being shown.
 class TourPreDialogIsShownWithCustomDialog extends TourState {
   /// Creates a new instance of [TourPreDialogIsShownWithCustomDialog].
   const TourPreDialogIsShownWithCustomDialog();
@@ -91,13 +91,13 @@ class TourBeforeIntroduceCalled extends TourState {
   const TourBeforeIntroduceCalled();
 }
 
-/// Indicates that the `introduce` method has been called and the introduction has finished.
+/// Indicates that the `introduce` method has been called, and the introduction has finished.
 class TourAfterIntroduceCalled extends TourState {
   /// Creates a new instance of [TourAfterIntroduceCalled].
   const TourAfterIntroduceCalled();
 }
 
-/// Indicates that an introduction has been completed and a result has been emitted.
+/// Indicates that an introduction has been completed, and a result has been emitted.
 class TourIntroduceResultEmitted extends TourState {
   /// Creates a new instance of [TourIntroduceResultEmitted].
   const TourIntroduceResultEmitted({required this.result});

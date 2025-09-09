@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// An inherited widget to indicate that the current context is within an
+/// An inherited widget that indicates that the current context is within an
 /// unfeatured tour.
 class UnfeaturesTour extends InheritedWidget {
   /// Creates an [UnfeaturesTour] widget.

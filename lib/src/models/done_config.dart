@@ -15,14 +15,14 @@ class DoneConfig extends BaseButtonConfig {
   /// ),
   /// ```
   ///
-  /// [text] is the text displayed on the button. Defaults to 'SKIP'.
+  /// [text] is the text displayed on the button. The default is 'SKIP'.
   ///
-  /// [alignment] determines the position of the skip text. Defaults to
+  /// [alignment] determines the position of the skip text. The default is
   /// `Alignment.bottomLeft`.
   ///
-  /// [color] sets the color of the skip text. Defaults to `null`.
+  /// [color] sets the color of the skip text. The default is `null`.
   ///
-  /// [enabled] determines whether the skip button is enabled. Defaults to `true`.
+  /// [enabled] determines whether the skip button is enabled. The default is `true`.
   ///
   /// [textStyle] defines the text style for the button.
   ///
@@ -71,7 +71,7 @@ class DoneConfig extends BaseButtonConfig {
   /// Global configuration.
   static DoneConfig global = DoneConfig._();
 
-  /// Create a new DoneConfig base on this values.
+  /// Creates a new DoneConfig based on these values.
   @override
   DoneConfig copyWith({
     Widget Function(VoidCallback onPressed)? child,

@@ -82,73 +82,73 @@ class PredialogConfig {
     this.onDismissButtonPressed,
   });
 
-  /// Global configuration instance.
+  /// The global configuration instance.
   /// This allows for a shared default configuration across the app.
   static PredialogConfig global = PredialogConfig._();
 
-  /// Whether the pre-dialog should be displayed or not.
+  /// Whether the pre-dialog should be displayed.
   final bool enabled;
 
-  /// Background color of the dialog.
+  /// The background color of the dialog.
   final Color? backgroundColor;
 
-  /// Text color for the dialog content.
+  /// The text color for the dialog content.
   final Color? textColor;
 
-  /// Title of the dialog.
+  /// The title of the dialog.
   final String title;
 
-  /// Message content of the dialog.
+  /// The message content of the dialog.
   final String content;
 
-  /// Label for the 'Apply to all pages' checkbox.
+  /// The label for the 'Apply to all pages' checkbox.
   final String applyToAllPagesText;
 
-  /// Color of the 'Apply to all pages' label text, also applied to the checkbox.
+  /// The color of the 'Apply to all pages' label text, which is also applied to the checkbox.
   ///
-  /// Defaults to [textColor], otherwise falls back to the primary color.
+  /// The default is [textColor]; otherwise, it falls back to the primary color.
   final Color? applyToAllPagesTextColor;
 
-  /// Text for the accept button.
+  /// The text for the accept button.
   final Text acceptButtonText;
 
-  /// Styling for the accept button (typically an `ElevatedButton`).
+  /// The styling for the accept button (typically an `ElevatedButton`).
   final ButtonStyle? acceptButtonStyle;
 
-  /// Text for the later button, allowing the user to postpone action.
+  /// The text for the later button, which allows the user to postpone an action.
   final Text laterButtonText;
 
-  /// Styling for the later button (typically a `TextButton`).
+  /// The styling for the later button (typically a `TextButton`).
   final ButtonStyle? laterButtonStyle;
 
-  /// Text for the dismiss button, allowing the user to close the dialog.
+  /// The text for the dismiss button, which allows the user to close the dialog.
   final Text dismissButtonText;
 
-  /// Styling for the dismiss button (typically a `TextButton`).
+  /// The styling for the dismiss button (typically a `TextButton`).
   final ButtonStyle? dismissButtonStyle;
 
-  /// The radius of the dialog's corners, making it rounded.
+  /// The radius of the dialog's corners, which makes it rounded.
   final double borderRadius;
 
-  /// Custom function to override the default dialog behavior.
+  /// A custom function to override the default dialog behavior.
   @Deprecated('Use customDialog instead')
   final FutureOr<bool> Function(BuildContext context)? modifiedDialogResult;
 
-  /// Custom dialog builder function. If provided, this will be used instead of
+  /// A custom dialog builder function. If provided, this will be used instead of
   /// the default dialog UI.
   final FutureOr<PredialogButtonType> Function(BuildContext context)?
       customDialog;
 
-  /// Callback triggered when the accept button is pressed.
+  /// A callback that is triggered when the accept button is pressed.
   final VoidCallback? onAcceptButtonPressed;
 
-  /// Callback triggered when the later button is pressed.
+  /// A callback that is triggered when the later button is pressed.
   final VoidCallback? onLaterButtonPressed;
 
-  /// Callback triggered when the dismiss button is pressed.
+  /// A callback that is triggered when the dismiss button is pressed.
   final VoidCallback? onDismissButtonPressed;
 
-  /// Creates a new `PredialogConfig` instance based on existing values.
+  /// Creates a new `PredialogConfig` instance based on the existing values.
   PredialogConfig copyWith({
     bool? enabled,
     @Deprecated('Use customDialog instead')

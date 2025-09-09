@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Configuration for the `child` widget.
 class ChildConfig {
-  /// Apply new settings to the `child` widget base on [global] settings.
+  /// Applies new settings to the `child` widget based on [global] settings.
   factory ChildConfig({
     Widget Function(Widget child)? child,
     bool? isAnimateChild,
@@ -29,7 +29,7 @@ class ChildConfig {
     );
   }
 
-  /// Default value of the `child` widget.
+  /// The default value of the `child` widget.
   const ChildConfig._({
     this.child,
     this.isAnimateChild = true,
@@ -66,7 +66,7 @@ class ChildConfig {
   final Color? backgroundColor;
 
   /// If set to `true`, tapping anywhere on the background will dismiss the
-  /// current introduction. Defaults to `false`.
+  /// current introduction. The default is `false`.
   final bool barrierDismissible;
 
   /// Specifies the shape of the background's border. By default, it is a
@@ -88,10 +88,10 @@ class ChildConfig {
 
   /// If set to `false`, no animation will be applied to the current child widget
   /// during the introduction. When set to `true`, the [zoomScale], [curve], and
-  /// [animationDuration] are used. Defaults to `true`.
+  /// [animationDuration] are used. The default is `true`.
   final bool enableAnimation;
 
-  /// Apply new settings to the current settings.
+  /// Applies new settings to the current settings.
   ChildConfig copyWith({
     Widget Function(Widget child)? child,
     bool? isAnimateChild,

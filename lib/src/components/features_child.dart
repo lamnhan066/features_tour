@@ -2,9 +2,9 @@ import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/extensions/get_widget_position.dart';
 import 'package:flutter/material.dart';
 
-/// Internal widget to show all the needed widgets in Stack.
+/// An internal widget that displays all the necessary widgets in a Stack.
 class FeaturesChild extends StatefulWidget {
-  /// Internal widget to show all the needed widgets in Stack.
+  /// An internal widget that displays all the necessary widgets in a Stack.
   const FeaturesChild({
     required this.globalKey,
     required this.child,
@@ -23,52 +23,52 @@ class FeaturesChild extends StatefulWidget {
     this.quadrantAlignment,
   });
 
-  /// Add a `GlobalKey()` to control this widget.
+  /// A `GlobalKey()` to control this widget.
   final GlobalKey globalKey;
 
-  /// Child widget.
+  /// The child widget.
   final Widget child;
 
-  /// Child configuration.
+  /// The child's configuration.
   final ChildConfig childConfig;
 
-  /// Skip Button widget.
+  /// The skip button widget.
   final Widget skip;
 
-  /// Skip all the steps.
+  /// Skips all the steps.
   final SkipConfig skipConfig;
 
-  /// Next button widget.
+  /// The next button widget.
   final Widget next;
 
-  /// Skip all the steps.
+  /// Moves to the next step.
   final NextConfig nextConfig;
 
-  /// Done button.
+  /// The done button.
   final Widget done;
 
-  /// Done button.
+  /// The done button's configuration.
   final DoneConfig doneConfig;
 
-  /// Is this the final steps.
+  /// Indicates if this is the final step.
   final bool isLastState;
 
-  /// Feature introduction widget, normally `Text`.
+  /// The feature introduction widget, typically a `Text` widget.
   final Widget introduce;
 
-  /// Padding of the `introduce` widget.
+  /// The padding of the `introduce` widget.
   final EdgeInsetsGeometry padding;
 
-  /// Alignmnent of the `introduce` widget in side `quarantAlignment`.
+  /// The alignment of the `introduce` widget inside the `quadrantAlignment`.
   ///
-  /// This value automatically aligns depending on the `quarantAlignment`.
-  /// Make it as close as possible to other.
+  /// This value automatically aligns depending on the `quadrantAlignment`.
+  /// It is positioned as close as possible to other elements.
   final Alignment? alignment;
 
-  /// Quadrant rectangle for `introduce` widget.
+  /// The quadrant rectangle for the `introduce` widget.
   ///
   /// If this value is `null`, the `top` and `bottom` will be automatically
-  /// caculated to get the larger side.
+  /// calculated to get the larger side.
   final QuadrantAlignment? quadrantAlignment;
 
   @override
@@ -85,7 +85,7 @@ class _FeaturesChildState extends State<FeaturesChild>
   late final Animation<double> _scaleAnimation;
 
   /// Continuously updates the rect while the widget is mounted.
-  /// Stops automatically when disposed.
+  /// It stops automatically when disposed.
   void _autoUpdate() {
     var times = 0;
     void frameCallback(Duration _) {
@@ -95,15 +95,15 @@ class _FeaturesChildState extends State<FeaturesChild>
       if (!updated && times >= 10) return;
       times++;
 
-      // Keep listening every frame while mounted
+      // Keeps listening for every frame while mounted.
       WidgetsBinding.instance.addPostFrameCallback(frameCallback);
     }
 
-    // Start listening
+    // Starts listening.
     WidgetsBinding.instance.addPostFrameCallback(frameCallback);
   }
 
-  /// Update the current state.
+  /// Updates the current state.
   bool _updateState() {
     if (!mounted || widget.globalKey.currentContext?.mounted != true) {
       return false;
@@ -195,8 +195,8 @@ class _FeaturesChildState extends State<FeaturesChild>
     return true;
   }
 
-  /// Find the larger height between the top and bottom rectangle to set the
-  /// quadrantAlignment
+  /// Finds the larger height between the top and bottom rectangles to set the
+  /// quadrantAlignment.
   void _autoSetQuadrantAlignment(Rect rect) {
     if (_quadrantAlignment != null) return;
 
@@ -214,9 +214,9 @@ class _FeaturesChildState extends State<FeaturesChild>
     }
   }
 
-  /// Calculate to get the prefer alignment for the `introduce` widget.
+  /// Calculates the preferred alignment for the `introduce` widget.
   ///
-  /// For the `left` and `right` quadrant alignment.
+  /// This is for the `left` and `right` quadrant alignments.
   Alignment _calculateAlignmentVertical(Rect rect, Size size) {
     if (rect.top > size.height / 2) {
       return Alignment.bottomCenter;

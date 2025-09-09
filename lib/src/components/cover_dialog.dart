@@ -31,7 +31,7 @@ void showCover(
   Overlay.of(context, rootOverlay: true).insert(_coverOverlay!);
 }
 
-/// Hide the cover to let the user able to tap the screen.
+/// Hides the cover to allow the user to tap the screen.
 void hideCover(void Function(String log)? printDebug) {
   if (_coverOverlay == null) {
     printDebug?.call('The cover is already hidden');

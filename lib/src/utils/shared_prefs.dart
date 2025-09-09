@@ -1,6 +1,6 @@
 part of '../features_tour.dart';
 
-/// Utility class for managing shared preferences related to the Features Tour.
+/// A utility class for managing shared preferences related to the Features Tour.
 class DismissAllTourStorage {
   static const String _dismissAllTours = 'DismissAllTours';
   static SharedPreferences? _instance;

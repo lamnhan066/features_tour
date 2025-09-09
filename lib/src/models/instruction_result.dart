@@ -1,4 +1,4 @@
-/// Result of the `introduce` method.
+/// The result of the `introduce` method.
 enum IntroduceResult {
   /// [disabled] is returned when the current widget is disabled.
   disabled,

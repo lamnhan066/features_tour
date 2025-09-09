@@ -15,13 +15,13 @@ class SkipConfig extends BaseButtonConfig {
   /// ),
   /// ```
   ///
-  /// [text] defines the label for the skip button. Defaults to 'SKIP'.
+  /// [text] defines the label for the skip button. The default is 'SKIP'.
   ///
-  /// [alignment] specifies the position of the skip text. Defaults to `Alignment.bottomLeft`.
+  /// [alignment] specifies the position of the skip text. The default is `Alignment.bottomLeft`.
   ///
-  /// [color] determines the color of the skip text. Defaults to `null`.
+  /// [color] determines the color of the skip text. The default is `null`.
   ///
-  /// [enabled] indicates whether the skip button is enabled. Defaults to `true`.
+  /// [enabled] indicates whether the skip button is enabled. The default is `true`.
   ///
   /// [textStyle] defines the [TextStyle] of the skip button text.
   ///
@@ -71,7 +71,7 @@ class SkipConfig extends BaseButtonConfig {
   /// Global configuration.
   static SkipConfig global = const SkipConfig._();
 
-  /// Create a new SkipConfig base on this values.
+  /// Creates a new SkipConfig based on these values.
   @override
   SkipConfig copyWith({
     Widget Function(VoidCallback onPressed)? child,

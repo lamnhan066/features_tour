@@ -22,9 +22,9 @@ Future<PredialogButtonType> predialog(
   FutureOr<void> Function(PredialogButtonType type) onAppliedToAllPages,
   void Function(String log)? printDebug,
 ) async {
-  // Return cached selection if "Do not ask again" was checked previously.
+  // Returns the cached selection if "Do not ask again" was checked previously.
   if (_applyToAllPages != null) {
-    printDebug?.call('Returning cached result: $_applyToAllPages');
+    printDebug?.call('Returning cached result: $_applyToAllPages.');
     await onAppliedToAllPages(_applyToAllPages!);
     return _applyToAllPages!;
   }
@@ -92,7 +92,7 @@ Future<PredialogButtonType> predialog(
     final result = await completer.future;
 
     if (isChecked) {
-      printDebug?.call('Updating global pre-dialog selection');
+      printDebug?.call('Updating global pre-dialog selection.');
       _applyToAllPages = result;
 
       if (result == PredialogButtonType.dismiss) {

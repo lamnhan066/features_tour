@@ -15,13 +15,13 @@ class FeaturesTourController {
     _controllers.add(this);
   }
 
-  /// Internal preferences.
+  /// The internal preferences.
   static SharedPreferences? _prefs;
 
-  /// Store all available controllers
+  /// Stores all available controllers.
   static final Set<FeaturesTourController> _controllers = {};
 
-  /// Name of this page.
+  /// The name of this page.
   final String pageName;
 
   /// The internal list of the states.
@@ -44,29 +44,29 @@ class FeaturesTourController {
   bool _debugLog = FeaturesTour._debugLog;
   bool _popToSkip = true;
 
-  /// Register the current FeaturesTour state.
+  /// Registers the current FeaturesTour state.
   void _register(_FeaturesTourState state) {
     if (_debugLog && !_cachedStates.containsKey(state.widget.index)) {
       _printDebug(() =>
-          'Register index ${state.widget.index} => Total states: ${_cachedStates.length + 1}');
+          'Registering index ${state.widget.index}. Total states: ${_cachedStates.length + 1}');
     }
     _states[state.widget.index] = state;
     _cachedStates[state.widget.index] = state;
     _globalKeys[state.widget.index] ??=
         GlobalObjectKey('$pageName-${state.widget.index}');
 
-    // Complete any pending completers for this index
+    // Completes any pending completers for this index.
     if (_pendingIndexes.containsKey(state.widget.index)) {
       _pendingIndexes[state.widget.index]!.complete(state);
       _pendingIndexes.remove(state.widget.index);
     }
   }
 
-  /// Unregister the current FeaturesTour state.
+  /// Unregisters the current FeaturesTour state.
   void _unregister(_FeaturesTourState state) {
     if (_debugLog && _cachedStates.containsKey(state.widget.index)) {
       _printDebug(() =>
-          'Unregister index ${state.widget.index} => Total states: ${_cachedStates.length - 1}');
+          'Unregistering index ${state.widget.index}. Total states: ${_cachedStates.length - 1}');
     }
     _states.remove(state.widget.index);
     _cachedStates.remove(state.widget.index);
@@ -93,7 +93,7 @@ class FeaturesTourController {
   /// The pre-dialog can be configured using [predialogConfig]. This dialog prompts
   /// the user to confirm whether they want to start the tour.
   ///
-  /// The [onState] callback is an optional callback function that gets invoked
+  /// The [onState] callback is an optional callback function that is invoked
   /// with the current [TourState] of the tour. This allows you to monitor the tour's
   /// progress and respond to different states as they occur.
   ///
@@ -127,7 +127,7 @@ class FeaturesTourController {
     firstIndexTimeout ??= waitForFirstTimeout;
 
     if (_isIntroducing) {
-      _printDebug(() => 'The tour is already in progress');
+      _printDebug(() => 'The tour is already in progress.');
       await onState?.call(const TourInProgress());
       return;
     }
@@ -138,7 +138,7 @@ class FeaturesTourController {
 
     try {
       if (!context.mounted) {
-        _printDebug(() => 'The page $pageName context is not mounted');
+        _printDebug(() => 'The page $pageName context is not mounted.');
 
         await onState?.call(const TourNotMounted());
         return;
@@ -147,7 +147,7 @@ class FeaturesTourController {
       _prefs ??= await SharedPreferences.getInstance();
 
       if (!context.mounted) {
-        _printDebug(() => 'The page $pageName context is not mounted');
+        _printDebug(() => 'The page $pageName context is not mounted.');
 
         await onState?.call(const TourNotMounted());
         return;
@@ -155,12 +155,12 @@ class FeaturesTourController {
 
       _printDebug(() => 'Waiting for the page transition...');
       await _waitForTransition(context); // Main page transition
-      _printDebug(() => 'Page transition completed');
+      _printDebug(() => 'Page transition completed.');
 
       // Wait for `delay` duration before starting the tours.
       await Future<void>.delayed(delay);
 
-      // Get default value from global `force`.
+      // Gets the default value from the global `force`.
       force ??= FeaturesTour._force;
 
       if (force ?? false) {
@@ -170,14 +170,14 @@ class FeaturesTourController {
       }
 
       if (_states.isEmpty && firstIndex == null) {
-        _printDebug(() => 'The page $pageName has no state');
+        _printDebug(() => 'The page $pageName has no state.');
         await onState?.call(const TourEmptyStates());
         return;
       }
 
       // Ignore all the tours
       if (force == null && await DismissAllTourStorage.getDismissAllTours()) {
-        _printDebug(() => 'All tours have been dismissed');
+        _printDebug(() => 'All tours have been dismissed.');
         await _removePage();
         await onState?.call(const TourAllTourDismissedByUser());
         return;
@@ -188,18 +188,18 @@ class FeaturesTourController {
       _introducedIndexes.clear();
 
       if (!_shouldShowIntroduction() && force != true) {
-        _printDebug(() => 'There is no new `FeaturesTour` -> Completed');
+        _printDebug(() => 'There are no new `FeaturesTour`s. Tour completed.');
         await onState?.call(const TourEmptyStates());
         return;
       }
 
       if (!context.mounted) {
-        _printDebug(() => 'The page $pageName context is not mounted');
+        _printDebug(() => 'The page $pageName context is not mounted.');
         await onState?.call(const TourNotMounted());
         return;
       }
 
-      // Put this here so we don't have to check the context again.
+      // We put this here so we don't have to check the context again.
       final defaultIntroduceBackgroundColor =
           _getOnSurfaceDefaultColor(context);
 
@@ -208,15 +208,15 @@ class FeaturesTourController {
         force,
         predialogConfig,
         () async {
-          _printDebug(() => 'Pre-dialog is shown');
+          _printDebug(() => 'The pre-dialog is shown.');
           await onState?.call(const TourPreDialogIsShown());
         },
         (type) async {
-          _printDebug(() => 'Applied to all pages');
+          _printDebug(() => 'This has been applied to all pages.');
           await onState?.call(TourPreDialogNowShownByAppliedToAllPages(type));
         },
         () async {
-          _printDebug(() => 'Custom dialog is shown for pre-dialog');
+          _printDebug(() => 'A custom dialog is shown for the pre-dialog.');
           await onState?.call(const TourPreDialogIsShownWithCustomDialog());
         },
       );
@@ -241,19 +241,19 @@ class FeaturesTourController {
           return;
       }
 
-      // Watching for the [FeaturesTour.nextIndex] value.
+      // Watches for the [FeaturesTour.nextIndex] value.
       _FeaturesTourState? nextState;
 
-      // Waiting for the first index.
+      // Waits for the first index.
       if (firstIndex != null) {
         nextState = await _nextIndex(firstIndex, firstIndexTimeout);
       }
 
-      _printDebug(() => 'Start the tour');
+      _printDebug(() => 'Starting the tour.');
       while (_states.isNotEmpty) {
         await _removedAllShownIntroductions(force);
         if (_states.isEmpty) {
-          _printDebug(() => 'No more states to introduce');
+          _printDebug(() => 'No more states to introduce.');
           await onState?.call(const TourEmptyStates());
           break;
         }
@@ -275,7 +275,7 @@ class FeaturesTourController {
         _printDebug(() => 'Start introducing $key:');
 
         if (!context.mounted) {
-          _printDebug(() => '   -> The parent widget was unmounted');
+          _printDebug(() => '   -> The parent widget was unmounted.');
           await onState?.call(const TourNotMounted());
           break;
         }
@@ -287,7 +287,7 @@ class FeaturesTourController {
           shouldShowIntroduce = force;
         } else {
           _printDebug(() =>
-              '   -> `force` is null, so the introduce will act like normal.');
+              '   -> `force` is null, so the introduction will act like normal.');
           final isShown = _prefs!.getBool(key);
           shouldShowIntroduce = isShown != true;
         }
@@ -298,7 +298,7 @@ class FeaturesTourController {
 
         if (!shouldShowIntroduce) {
           _printDebug(() =>
-              '   -> This widget has been introduced -> move to the next widget.');
+              '   -> This widget has been introduced. Moving to the next widget.');
           await _removeState(state, false);
           await onState
               ?.call(TourShouldNotShowIntroduction(index: state.widget.index));
@@ -307,7 +307,7 @@ class FeaturesTourController {
 
         _printDebug(() => '   -> Waiting for the page transition...');
         await _waitForTransition(context); // Main page transition
-        _printDebug(() => '   -> Page transition completed');
+        _printDebug(() => '   -> Page transition completed.');
 
         if (!context.mounted) {
           _printDebug(() => '   -> The parent widget was unmounted');
@@ -315,10 +315,10 @@ class FeaturesTourController {
           break;
         }
 
-        // Close the previous cover if it exists.
+        // Closes the previous cover if it exists.
         hideCover(_debugLog ? (log) => _printDebug(() => '   -> $log') : null);
 
-        // Show the cover to avoid user tapping the screen.
+        // Shows the cover to prevent the user from tapping the screen.
         final introduceConfig =
             state.widget.introduceConfig ?? IntroduceConfig.global;
         final introduceBackgroundColor =
@@ -330,18 +330,18 @@ class FeaturesTourController {
         );
 
         if (state.widget.onBeforeIntroduce != null) {
-          _printDebug(() => '   -> Call `onBeforeIntroduce`');
+          _printDebug(() => '   -> Calling `onBeforeIntroduce`.');
           await state.widget.onBeforeIntroduce!();
           await onState?.call(const TourBeforeIntroduceCalled());
         }
 
         if (!context.mounted) {
-          _printDebug(() => '   -> The parent widget was unmounted');
+          _printDebug(() => '   -> The parent widget was unmounted.');
           await onState?.call(const TourNotMounted());
           break;
         }
 
-        // If there is no state in queue and no index to wait for then it's
+        // If there is no state in the queue and no index to wait for, then it's
         // the last state.
         final isLastState = _states.isEmpty && nextIndex == null;
         final result = await _showIntroduce(
@@ -349,13 +349,13 @@ class FeaturesTourController {
           state,
           isLastState,
           () async {
-            _printDebug(() => '   -> Introduction is shown');
+            _printDebug(() => '   -> The introduction is shown.');
             await onState?.call(TourIntroducing(index: state.widget.index));
           },
         );
 
         if (state.widget.onAfterIntroduce != null) {
-          _printDebug(() => '   -> Call `onAfterIntroduce`');
+          _printDebug(() => '   -> Calling `onAfterIntroduce`.');
           await state.widget.onAfterIntroduce!(result);
           await onState?.call(const TourAfterIntroduceCalled());
         }
@@ -378,34 +378,34 @@ class FeaturesTourController {
           return switch (result) {
             IntroduceResult.disabled ||
             IntroduceResult.notMounted =>
-              'This widget has been cancelled with result: ${result.name}',
-            IntroduceResult.next => 'Move to the next widget',
-            IntroduceResult.skip => 'Skip this tour',
-            IntroduceResult.done => 'The Tour has been completed',
+              'This widget has been canceled with result: ${result.name}.',
+            IntroduceResult.next => 'Moving to the next widget.',
+            IntroduceResult.skip => 'Skipping this tour.',
+            IntroduceResult.done => 'The tour has been completed.',
           };
         }
 
         _printDebug(() => '   -> ${status()}');
 
-        // Do not continue if the tour is ended.
+        // Does not continue if the tour has ended.
         if (result != IntroduceResult.next) break;
 
-        // Wait for the next state to appear if `nextIndex` is non-null.
+        // Waits for the next state to appear if `nextIndex` is non-null.
         if (nextIndex != null) {
           _printDebug(() =>
-              'The `nextIndex` is non-null => Waiting for the next index: $nextIndex ...');
+              'The `nextIndex` is non-null. Waiting for the next index: $nextIndex...');
 
           nextState = await _nextIndex(nextIndex, nextIndexTimeout);
 
           if (nextState == null) {
             _printDebug(() =>
-                'Cannot not wait for the next index $nextIndex because timeout is reached. Use the next ordered value instead.');
+                'Cannot wait for the next index $nextIndex because the timeout was reached. Using the next ordered value instead.');
 
-            // Add the timeout state index to the introduced list so I will not
+            // Adds the timeout state index to the introduced list so it will not
             // be introduced even when it's shown.
             _introducedIndexes.add(nextIndex);
           } else {
-            _printDebug(() => 'Next index is available with state: $nextState');
+            _printDebug(() => 'The next index is available with state: $nextState.');
           }
         } else {
           nextState = null;
@@ -418,7 +418,7 @@ class FeaturesTourController {
       hideCover(_debugLog ? (log) => _printDebug(() => log) : null);
       _debugLog = FeaturesTour._debugLog;
       await onState?.call(const TourCompleted());
-      _printDebug(() => 'This tour has been completed');
+      _printDebug(() => 'This tour has been completed.');
       _isIntroducing = false;
     }
   }
@@ -570,7 +570,7 @@ class FeaturesTourController {
 
   void _handlePopScope() {
     if (!_popToSkip) {
-      _printDebug(() => 'Pop to skip is disabled');
+      _printDebug(() => 'Pop to skip is disabled.');
       return;
     }
 
@@ -579,7 +579,7 @@ class FeaturesTourController {
     }
 
     _introduceCompleter?.complete(IntroduceResult.skip);
-    _printDebug(() => 'Pop to skip is enabled, skips the tour');
+    _printDebug(() => 'Pop to skip is enabled. Skipping the tour.');
   }
 
   Future<void> _removedAllShownIntroductions(bool? force) async {
@@ -607,7 +607,7 @@ class FeaturesTourController {
     }
   }
 
-  /// Show the predialog if possible.
+  /// Shows the pre-dialog if possible.
   Future<PredialogButtonType?> _showPredialog(
     BuildContext context,
     bool? force,
@@ -616,32 +616,32 @@ class FeaturesTourController {
     FutureOr<void> Function(PredialogButtonType type) onAppliedToAllPages,
     FutureOr<void> Function()? onShownCustomDialog,
   ) async {
-    // Should show the predialog or not.
+    // Determines whether to show the pre-dialog.
     var shouldShowPredialog = true;
 
-    // Respect `force`.
+    // Respects `force`.
     if (force != null) {
       _printDebug(() => '`force` is $force, so the dialog must respect it.');
       shouldShowPredialog = force;
     }
 
     if (shouldShowPredialog) {
-      _printDebug(() => 'Should show predialog return true');
+      _printDebug(() => 'Should show pre-dialog returned true.');
       final effectiveConfig = config ?? PredialogConfig.global;
 
       if (effectiveConfig.enabled) {
-        _printDebug(() => 'Predialog is enabled');
+        _printDebug(() => 'The pre-dialog is enabled.');
 
         final PredialogButtonType? predialogResult;
         if (effectiveConfig.customDialog != null) {
-          _printDebug(() => 'Using custom dialog for predialog');
+          _printDebug(() => 'Using a custom dialog for the pre-dialog.');
           onShownCustomDialog?.call();
           predialogResult = await effectiveConfig.customDialog!(context);
         }
         // TODO(lamnhan066): Remove deprecated field in the next major release
         // ignore: deprecated_member_use_from_same_package
         else if (effectiveConfig.modifiedDialogResult != null) {
-          _printDebug(() => 'Using modified dialog result for predialog');
+          _printDebug(() => 'Using a modified dialog result for the pre-dialog.');
           onShownCustomDialog?.call();
           // TODO(lamnhan066): Remove deprecated field in the next major release
           // ignore: deprecated_member_use_from_same_package
@@ -662,50 +662,50 @@ class FeaturesTourController {
 
         switch (predialogResult) {
           case PredialogButtonType.accept:
-            _printDebug(() => 'User accepted to show the introduction');
+            _printDebug(() => 'The user accepted to show the introduction.');
             effectiveConfig.onAcceptButtonPressed?.call();
           case PredialogButtonType.later:
-            _printDebug(() => 'User chose to show the introduction later');
+            _printDebug(() => 'The user chose to show the introduction later.');
             effectiveConfig.onLaterButtonPressed?.call();
           case PredialogButtonType.dismiss:
-            _printDebug(() => 'User dismissed to show the introduction');
+            _printDebug(() => 'The user dismissed the introduction.');
             effectiveConfig.onDismissButtonPressed?.call();
         }
 
         return predialogResult;
       } else {
-        _printDebug(() => 'Predialog is not enabled');
+        _printDebug(() => 'The pre-dialog is not enabled.');
       }
     } else {
-      _printDebug(() => 'Should show predialog return false');
+      _printDebug(() => 'Should show pre-dialog returned false.');
     }
 
     return null;
   }
 
-  /// Wait for the next index to be available.
+  /// Waits for the next index to be available.
   Future<_FeaturesTourState?> _nextIndex(
     double index,
     Duration timeout,
   ) async {
-    // Check if the state is already available
+    // Checks if the state is already available.
     if (_states.containsKey(index)) {
       return _states[index];
     }
 
-    // Create a completer if not already pending
+    // Creates a completer if not already pending.
     _pendingIndexes.putIfAbsent(index, Completer<_FeaturesTourState>.new);
 
     try {
       return await _pendingIndexes[index]!.future.timeout(timeout);
     } on TimeoutException {
-      _printDebug(() => '   -> Timeout waiting for index $index');
-      _pendingIndexes.remove(index); // Clean up the completer
+      _printDebug(() => '   -> Timeout waiting for index $index.');
+      _pendingIndexes.remove(index); // Cleans up the completer.
       return null;
     }
   }
 
-  /// Wait until the page transition (and optional drawer animation) is complete.
+  /// Waits until the page transition (and optional drawer animation) is complete.
   Future<void> _waitForTransition(BuildContext? context) async {
     if (context == null || !context.mounted) return;
 
@@ -728,10 +728,10 @@ class FeaturesTourController {
     }
   }
 
-  /// Removes all controllers for specific `pageName`.
+  /// Removes all controllers for a specific `pageName`.
   Future<void> _removePage({bool markAsShowed = true}) async {
     if (_states.isEmpty) {
-      _printDebug(() => '   -> Page $pageName has already been removed');
+      _printDebug(() => '   -> Page $pageName has already been removed.');
       return;
     }
 
@@ -742,10 +742,10 @@ class FeaturesTourController {
       await _removeState(state, markAsShowed);
     }
 
-    _printDebug(() => '   -> Remove page: $pageName');
+    _printDebug(() => '   -> Removing page: $pageName.');
   }
 
-  /// Removes specific state of this page.
+  /// Removes a specific state of this page.
   Future<void> _removeState(
     _FeaturesTourState state,
     bool markAsIntroduced,
@@ -758,7 +758,7 @@ class FeaturesTourController {
     _introducedIndexes.add(state.widget.index);
   }
 
-  /// Checks whether there is any new features available to show predialog.
+  /// Checks whether there are any new features available to show the pre-dialog.
   bool _shouldShowIntroduction() {
     for (final state in _states.values) {
       final key = _getPrefKey(state);
@@ -774,12 +774,12 @@ class FeaturesTourController {
     return ColorScheme.of(context).onSurface.withValues(alpha: 0.82);
   }
 
-  /// Get key for shared preferences.
+  /// Gets the key for shared preferences.
   String _getPrefKey(_FeaturesTourState state) {
     return '${FeaturesTour._prefix}_${pageName}_${state.widget.index}';
   }
 
-  /// Print debug message if debug is enabled.
+  /// Prints a debug message if debugging is enabled.
   void _printDebug(String Function() message) {
     if (_debugLog) {
       debugPrint('[FeaturesTour][$pageName] ${message()}');

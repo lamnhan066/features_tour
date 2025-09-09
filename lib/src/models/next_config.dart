@@ -15,14 +15,14 @@ class NextConfig extends BaseButtonConfig {
   /// ),
   /// ```
   ///
-  /// [text] defines the text on the next button. Defaults to "NEXT".
+  /// [text] defines the text on the next button. The default is "NEXT".
   ///
-  /// [alignment] specifies the alignment of the next button. Defaults to
+  /// [alignment] specifies the alignment of the next button. The default is
   /// `Alignment.bottomRight`.
   ///
-  /// [color] sets the color of the next button text. Defaults to `null`.
+  /// [color] sets the color of the next button text. The default is `null`.
   ///
-  /// [enabled] indicates whether the next button is enabled. Defaults to `true`.
+  /// [enabled] indicates whether the next button is enabled. The default is `true`.
   ///
   /// [textStyle] defines the [TextStyle] for the button text.
   ///
@@ -72,7 +72,7 @@ class NextConfig extends BaseButtonConfig {
   /// Global configuration.
   static NextConfig global = const NextConfig._();
 
-  /// Create a new NextConfig base on this values.
+  /// Creates a new NextConfig based on these values.
   @override
   NextConfig copyWith({
     Widget Function(VoidCallback onPressed)? child,

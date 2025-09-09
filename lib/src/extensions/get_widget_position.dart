@@ -1,9 +1,9 @@
 // https://stackoverflow.com/questions/50316219/how-to-get-widgets-absolute-coordinates-on-a-screen-in-flutter
 import 'package:flutter/material.dart';
 
-/// Extension on [GlobalKey] to get the global position of a widget.
+/// An extension on [GlobalKey] to get the global position of a widget.
 extension GlobalKeyExtension on GlobalKey {
-  /// Get global paint bounds.
+  /// Gets the global paint bounds.
   ///
   /// Source: https://stackoverflow.com/a/71568630/16589995
   Rect? get globalPaintBounds {
