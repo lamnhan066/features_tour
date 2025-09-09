@@ -178,7 +178,7 @@ class FeaturesTourController {
       }
 
       // Ignore all the tours
-      if (force == null && await SharedPrefs.getDismissAllTours()) {
+      if (force == null && await DismissAllTourStorage.getDismissAllTours()) {
         _printDebug(() => 'All tours have been dismissed');
         await _removePage();
         await onState?.call(const TourAllTourDismissedByUser());
