@@ -49,6 +49,7 @@ class FeaturesTour extends StatefulWidget {
     required this.index,
     required this.child,
     super.key,
+    @Deprecated('Use `FeaturesTourController.start(popToSkip: true)` instead.')
     this.canPop = true,
     @Deprecated(
       'Use `nextIndex` instead. This will be removed in the next major version.',
@@ -200,6 +201,7 @@ class FeaturesTour extends StatefulWidget {
   ///
   /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
   /// it blocks the current route from being popped.
+  @Deprecated('Use `FeaturesTourController.start(popToSkip: true)` instead.')
   final bool canPop;
 
   /// The child widget wrapped by the [FeaturesTour].
@@ -267,9 +269,9 @@ class _FeaturesTourState extends State<FeaturesTour> {
   Widget build(BuildContext context) {
     return PopScope(
       key: isEnabled ? widget.controller._globalKeys[widget.index] : null,
-      canPop: widget.canPop,
+      canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
-        if (widget.canPop) await widget.controller._stop();
+        widget.controller._handlePopScope();
       },
       child: widget.child,
     );

@@ -42,6 +42,7 @@ class FeaturesTourController {
 
   bool _isIntroducing = false;
   bool _debugLog = FeaturesTour._debugLog;
+  bool _popToSkip = true;
 
   /// Register the current FeaturesTour state.
   void _register(_FeaturesTourState state) {
@@ -118,7 +119,9 @@ class FeaturesTourController {
     PredialogConfig? predialogConfig,
     bool? debugLog,
     FutureOr<void> Function(TourState state)? onState,
+    bool popToSkip = true,
   }) async {
+    _popToSkip = popToSkip;
     _debugLog = debugLog ?? FeaturesTour._debugLog;
     firstIndex ??= waitForFirstIndex;
     firstIndexTimeout ??= waitForFirstTimeout;
@@ -420,14 +423,6 @@ class FeaturesTourController {
     }
   }
 
-  /// Stops the current tour by sending a skip signal, equivalent to pressing
-  /// the SKIP button.
-  void _stop() {
-    if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
-      _introduceCompleter?.complete(IntroduceResult.skip);
-    }
-  }
-
   Future<IntroduceResult> _showIntroduce(
     BuildContext context,
     _FeaturesTourState state,
@@ -571,6 +566,20 @@ class FeaturesTourController {
     }
 
     return result;
+  }
+
+  void _handlePopScope() {
+    if (!_popToSkip) {
+      _printDebug(() => 'Pop to skip is disabled');
+      return;
+    }
+
+    if (_introduceCompleter == null || _introduceCompleter!.isCompleted) {
+      return;
+    }
+
+    _introduceCompleter?.complete(IntroduceResult.skip);
+    _printDebug(() => 'Pop to skip is enabled, skips the tour');
   }
 
   Future<void> _removedAllShownIntroductions(bool? force) async {
