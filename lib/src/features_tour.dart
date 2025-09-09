@@ -2,19 +2,74 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:features_tour/features_tour.dart';
+import 'package:features_tour/src/components/cover_dialog.dart';
 import 'package:features_tour/src/components/dialogs.dart';
+import 'package:features_tour/src/components/features_child.dart';
 import 'package:features_tour/src/components/unfeatures_tour.dart';
 import 'package:features_tour/src/models/button_types.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'components/cover_dialog.dart';
-import 'components/features_child.dart';
-
 part 'features_tour_controller.dart';
 part 'utils/shared_prefs.dart';
 
 class FeaturesTour extends StatefulWidget {
+
+  /// Creates a [FeaturesTour] to display a guided tour for a specific widget.
+  ///
+  /// This widget requires a [controller] of type [FeaturesTourController] and a [child] widget to wrap.
+  /// You can use [childConfig] to customize the appearance or behavior of the child widget.
+  ///
+  /// The [index] is a unique identifier and determines the order in which widgets are shown.
+  /// It is a `double`, allowing for insertion of new features between existing ones.
+  /// Ensure this value remains unchanged to prevent reintroducing the same feature unnecessarily.
+  ///
+  /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
+  /// it blocks the current route from being popped.
+  ///
+  /// Use [nextIndex] to specify the next index to display.
+  /// The app will pause interaction until the specified index becomes available, making it ideal
+  /// for scenarios like displaying a [FeaturesTour] in a dialog that opens after the current feature.
+  /// To avoid poor user experience, configure a timeout using [nextIndexTimeout], with a default of 3 seconds.
+  /// Note that [nextIndex] only applies within the same [controller].
+  ///
+  /// You can disable a tour for specific widgets by setting [enabled] to `false`.
+  /// This is particularly useful for lists where only one item should have the tour active;
+  /// set [enabled] to `false` for all other items.
+  ///
+  /// Use [introduce] to display introductory information, which can be customized with [introduceConfig].
+  ///
+  /// Configure the Next and Skip buttons using [nextConfig] and [skipConfig].
+  ///
+  /// To perform actions before or after the introduction, use [onBeforeIntroduce] and [onAfterIntroduce].
+  /// In the [onAfterIntroduce] callback, you can access the [IntroduceResult] to determine
+  /// whether the user pressed the Next or Skip button, or if they tapped outside the introduction
+  /// to dismiss it. This allows you to control the flow of the tour based on user interactions.
+  const FeaturesTour({
+    required this.controller, required this.index, required this.child, super.key,
+    this.canPop = true,
+    @Deprecated(
+      'Use `nextIndex` instead. This will be removed in the next major version.',
+    )
+    double? waitForIndex,
+    @Deprecated(
+      'Use `nextIndexTimeout` instead. This will be removed in the next major version.',
+    )
+    Duration waitForTimeout = const Duration(seconds: 3),
+    double? nextIndex,
+    // TODO: Set `nextIndexTimeout` to `Duration(seconds: 3)` in the next release candidate.
+    Duration? nextIndexTimeout,
+    this.childConfig,
+    this.introduce = const SizedBox.shrink(),
+    this.introduceConfig,
+    this.nextConfig,
+    this.skipConfig,
+    this.doneConfig,
+    this.enabled = true,
+    this.onBeforeIntroduce,
+    this.onAfterIntroduce,
+  })  : nextIndex = nextIndex ?? waitForIndex,
+        nextIndexTimeout = nextIndexTimeout ?? waitForTimeout;
   /// Prefix of this package.
   static String _prefix = 'FeaturesTour';
 
@@ -112,65 +167,6 @@ class FeaturesTour extends StatefulWidget {
       debugPrint('All pages has been removed');
     }
   }
-
-  /// Creates a [FeaturesTour] to display a guided tour for a specific widget.
-  ///
-  /// This widget requires a [controller] of type [FeaturesTourController] and a [child] widget to wrap.
-  /// You can use [childConfig] to customize the appearance or behavior of the child widget.
-  ///
-  /// The [index] is a unique identifier and determines the order in which widgets are shown.
-  /// It is a `double`, allowing for insertion of new features between existing ones.
-  /// Ensure this value remains unchanged to prevent reintroducing the same feature unnecessarily.
-  ///
-  /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
-  /// it blocks the current route from being popped.
-  ///
-  /// Use [nextIndex] to specify the next index to display.
-  /// The app will pause interaction until the specified index becomes available, making it ideal
-  /// for scenarios like displaying a [FeaturesTour] in a dialog that opens after the current feature.
-  /// To avoid poor user experience, configure a timeout using [nextIndexTimeout], with a default of 3 seconds.
-  /// Note that [nextIndex] only applies within the same [controller].
-  ///
-  /// You can disable a tour for specific widgets by setting [enabled] to `false`.
-  /// This is particularly useful for lists where only one item should have the tour active;
-  /// set [enabled] to `false` for all other items.
-  ///
-  /// Use [introduce] to display introductory information, which can be customized with [introduceConfig].
-  ///
-  /// Configure the Next and Skip buttons using [nextConfig] and [skipConfig].
-  ///
-  /// To perform actions before or after the introduction, use [onBeforeIntroduce] and [onAfterIntroduce].
-  /// In the [onAfterIntroduce] callback, you can access the [IntroduceResult] to determine
-  /// whether the user pressed the Next or Skip button, or if they tapped outside the introduction
-  /// to dismiss it. This allows you to control the flow of the tour based on user interactions.
-  const FeaturesTour({
-    super.key,
-    required this.controller,
-    required this.index,
-    this.canPop = true,
-    @Deprecated(
-      'Use `nextIndex` instead. This will be removed in the next major version.',
-    )
-    double? waitForIndex,
-    @Deprecated(
-      'Use `nextIndexTimeout` instead. This will be removed in the next major version.',
-    )
-    Duration waitForTimeout = const Duration(seconds: 3),
-    double? nextIndex,
-    // TODO: Set `nextIndexTimeout` to `Duration(seconds: 3)` in the next release candidate.
-    Duration? nextIndexTimeout,
-    required this.child,
-    this.childConfig,
-    this.introduce = const SizedBox.shrink(),
-    this.introduceConfig,
-    this.nextConfig,
-    this.skipConfig,
-    this.doneConfig,
-    this.enabled = true,
-    this.onBeforeIntroduce,
-    this.onAfterIntroduce,
-  })  : nextIndex = nextIndex ?? waitForIndex,
-        nextIndexTimeout = nextIndexTimeout ?? waitForTimeout;
 
   /// The controller for the current page, responsible for managing the tour.
   final FeaturesTourController controller;

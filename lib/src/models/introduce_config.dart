@@ -2,6 +2,31 @@ import 'package:features_tour/features_tour.dart';
 import 'package:flutter/material.dart';
 
 class IntroduceConfig {
+
+  /// Create a new IntroduceConfig base on [global] values.
+  factory IntroduceConfig({
+    Color? backgroundColor,
+    EdgeInsetsGeometry? padding,
+    QuadrantAlignment? quadrantAlignment,
+    Alignment? alignment,
+    bool? useRootOverlay,
+  }) {
+    return global.copyWith(
+      backgroundColor: backgroundColor,
+      padding: padding,
+      alignment: alignment,
+      quadrantAlignment: quadrantAlignment,
+      useRootOverlay: useRootOverlay,
+    );
+  }
+
+  const IntroduceConfig._({
+    this.backgroundColor,
+    this.padding = const EdgeInsets.all(20),
+    this.quadrantAlignment,
+    this.alignment,
+    this.useRootOverlay = false,
+  });
   /// Global configuration.
   static IntroduceConfig global = const IntroduceConfig._();
 
@@ -24,31 +49,6 @@ class IntroduceConfig {
   ///
   /// This method can be expensive (it walks the element tree).
   final bool useRootOverlay;
-
-  const IntroduceConfig._({
-    this.backgroundColor,
-    this.padding = const EdgeInsets.all(20.0),
-    this.quadrantAlignment,
-    this.alignment,
-    this.useRootOverlay = false,
-  });
-
-  /// Create a new IntroduceConfig base on [global] values.
-  factory IntroduceConfig({
-    Color? backgroundColor,
-    EdgeInsetsGeometry? padding,
-    QuadrantAlignment? quadrantAlignment,
-    Alignment? alignment,
-    bool? useRootOverlay,
-  }) {
-    return global.copyWith(
-      backgroundColor: backgroundColor,
-      padding: padding,
-      alignment: alignment,
-      quadrantAlignment: quadrantAlignment,
-      useRootOverlay: useRootOverlay,
-    );
-  }
 
   /// Create a new IntroduceConfig base on this values.
   IntroduceConfig copyWith({

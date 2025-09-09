@@ -1,6 +1,49 @@
 import 'package:flutter/material.dart';
 
 class ChildConfig {
+
+  /// Apply new settings to the `child` widget base on [global] settings.
+  factory ChildConfig({
+    Widget Function(Widget child)? child,
+    bool? isAnimateChild,
+    double? borderSizeInflate,
+    Color? backgroundColor,
+    bool? barrierDismissible,
+    ShapeBorder? shapeBorder,
+    double? zoomScale,
+    Curve? curve,
+    Duration? animationDuration,
+    bool? enableAnimation,
+  }) {
+    return global.copyWith(
+      child: child,
+      isAnimateChild: isAnimateChild,
+      borderSizeInflate: borderSizeInflate,
+      backgroundColor: backgroundColor,
+      barrierDismissible: barrierDismissible,
+      shapeBorder: shapeBorder,
+      zoomScale: zoomScale,
+      curve: curve,
+      animationDuration: animationDuration,
+      enableAnimation: enableAnimation,
+    );
+  }
+
+  /// Default value of the `child` widget.
+  const ChildConfig._({
+    this.child,
+    this.isAnimateChild = true,
+    this.borderSizeInflate = 3,
+    this.backgroundColor,
+    this.barrierDismissible = false,
+    this.shapeBorder = const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+    ),
+    this.zoomScale = 1.2,
+    this.curve = Curves.decelerate,
+    this.animationDuration = const Duration(milliseconds: 600),
+    this.enableAnimation = true,
+  });
   /// Global configuration.
   static ChildConfig global = const ChildConfig._();
 
@@ -46,50 +89,6 @@ class ChildConfig {
   /// during the introduction. When set to `true`, the [zoomScale], [curve], and
   /// [animationDuration] are used. Defaults to `true`.
   final bool enableAnimation;
-
-  /// Default value of the `child` widget.
-  const ChildConfig._({
-    this.child,
-    this.isAnimateChild = true,
-    this.borderSizeInflate = 3,
-    this.backgroundColor,
-    this.barrierDismissible = false,
-    this.shapeBorder = const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(12)),
-    ),
-    this.zoomScale = 1.2,
-    this.curve = Curves.decelerate,
-    this.animationDuration = const Duration(milliseconds: 600),
-    this.enableAnimation = true,
-  });
-
-  /// Apply new settings to the `child` widget base on [global] settings.
-  factory ChildConfig({
-    Widget Function(Widget child)? child,
-    bool? isAnimateChild,
-    double? borderSizeInflate,
-    Color? backgroundColor,
-    bool? barrierDismissible,
-    ShapeBorder? shapeBorder,
-    BorderRadiusGeometry? borderRadius,
-    double? zoomScale,
-    Curve? curve,
-    Duration? animationDuration,
-    bool? enableAnimation,
-  }) {
-    return global.copyWith(
-      child: child,
-      isAnimateChild: isAnimateChild,
-      borderSizeInflate: borderSizeInflate,
-      backgroundColor: backgroundColor,
-      barrierDismissible: barrierDismissible,
-      shapeBorder: shapeBorder,
-      zoomScale: zoomScale,
-      curve: curve,
-      animationDuration: animationDuration,
-      enableAnimation: enableAnimation,
-    );
-  }
 
   /// Apply new settings to the current settings.
   ChildConfig copyWith({

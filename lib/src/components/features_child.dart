@@ -5,19 +5,7 @@ import 'package:flutter/material.dart';
 class FeaturesChild extends StatefulWidget {
   /// Internal widget to show all the needed widgets in Stack.
   const FeaturesChild({
-    super.key,
-    required this.globalKey,
-    required this.child,
-    required this.childConfig,
-    required this.skip,
-    required this.skipConfig,
-    required this.next,
-    required this.nextConfig,
-    required this.done,
-    required this.doneConfig,
-    required this.isLastState,
-    required this.introduce,
-    required this.padding,
+    required this.globalKey, required this.child, required this.childConfig, required this.skip, required this.skipConfig, required this.next, required this.nextConfig, required this.done, required this.doneConfig, required this.isLastState, required this.introduce, required this.padding, super.key,
     this.alignment,
     this.quadrantAlignment,
   });
@@ -86,7 +74,7 @@ class _FeaturesChildState extends State<FeaturesChild>
   /// Continuously updates the rect while the widget is mounted.
   /// Stops automatically when disposed.
   void _autoUpdate() {
-    int times = 0;
+    var times = 0;
     void frameCallback(Duration _) {
       if (!mounted) return;
 
@@ -108,7 +96,7 @@ class _FeaturesChildState extends State<FeaturesChild>
       return false;
     }
 
-    final tempRect = (widget.globalKey).globalPaintBounds;
+    final tempRect = widget.globalKey.globalPaintBounds;
     if (tempRect != null) {
       if (tempRect == rect) {
         return false;
@@ -121,7 +109,7 @@ class _FeaturesChildState extends State<FeaturesChild>
 
     _autoSetQuadrantAlignment(rect!);
 
-    var size = MediaQuery.maybeOf(context)?.size ??
+    final size = MediaQuery.maybeOf(context)?.size ??
         MediaQueryData.fromView(View.of(context)).size;
 
     switch (_quadrantAlignment!) {
@@ -130,8 +118,8 @@ class _FeaturesChildState extends State<FeaturesChild>
         if (widget.alignment != null) {
           alignment = widget.alignment!;
         } else {
-          double dialogWidth = size.width.clamp(280, 400);
-          double left = rect!.topCenter.dx - dialogWidth / 2;
+          final dialogWidth = size.width.clamp(280, 400);
+          var left = rect!.topCenter.dx - dialogWidth / 2;
           if (left < 0) {
             alignment = Alignment.bottomLeft;
             left = 0;
@@ -171,8 +159,8 @@ class _FeaturesChildState extends State<FeaturesChild>
         if (widget.alignment != null) {
           alignment = widget.alignment!;
         } else {
-          double dialogWidth = size.width.clamp(280, 400);
-          double left = rect!.topCenter.dx - dialogWidth / 2;
+          final dialogWidth = size.width.clamp(280, 400);
+          var left = rect!.topCenter.dx - dialogWidth / 2;
           if (left < 0) {
             alignment = Alignment.topLeft;
             left = 0;
@@ -200,7 +188,7 @@ class _FeaturesChildState extends State<FeaturesChild>
     if (_quadrantAlignment != null) return;
 
     if (widget.quadrantAlignment != null) {
-      _quadrantAlignment = widget.quadrantAlignment!;
+      _quadrantAlignment = widget.quadrantAlignment;
     } else {
       final size = MediaQuery.of(context).size;
       final topRect = Rect.fromLTRB(0, 0, size.width, rect.top);

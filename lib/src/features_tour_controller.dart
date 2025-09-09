@@ -1,11 +1,6 @@
 part of 'features_tour.dart';
 
 class FeaturesTourController {
-  /// Internal preferences.
-  static SharedPreferences? _prefs;
-
-  /// Store all available controllers
-  static final Set<FeaturesTourController> _controllers = {};
 
   /// Creates a [FeaturesTourController] for the tour with a unique [pageName].
   /// The [pageName] is used to persist the state of the current page.
@@ -15,6 +10,11 @@ class FeaturesTourController {
   FeaturesTourController(this.pageName) {
     _controllers.add(this);
   }
+  /// Internal preferences.
+  static SharedPreferences? _prefs;
+
+  /// Store all available controllers
+  static final Set<FeaturesTourController> _controllers = {};
 
   /// Name of this page.
   final String pageName;
@@ -120,7 +120,7 @@ class FeaturesTourController {
 
     if (_isIntroducing) {
       printDebug(() => 'The tour is already in progress');
-      await onState?.call(TourInProgress());
+      await onState?.call(const TourInProgress());
       return;
     }
     _isIntroducing = true;
@@ -143,7 +143,7 @@ class FeaturesTourController {
       if (!context.mounted) {
         printDebug(() => 'The page $pageName context is not mounted');
 
-        await onState?.call(TourNotMounted());
+        await onState?.call(const TourNotMounted());
         return;
       }
 
@@ -152,7 +152,7 @@ class FeaturesTourController {
       if (!context.mounted) {
         printDebug(() => 'The page $pageName context is not mounted');
 
-        await onState?.call(TourNotMounted());
+        await onState?.call(const TourNotMounted());
         return;
       }
 
@@ -164,22 +164,22 @@ class FeaturesTourController {
       // Get default value from global `force`.
       force ??= FeaturesTour._force;
 
-      if (force == true) {
+      if (force ?? false) {
         _states.clear();
         _states.addAll(_cachedStates);
       }
 
       if (_states.isEmpty && firstIndex == null) {
         printDebug(() => 'The page $pageName has no state');
-        await onState?.call(TourEmptyStates());
+        await onState?.call(const TourEmptyStates());
         return;
       }
 
       // Ignore all the tours
-      if (force == null && await SharedPrefs.getDismissAllTours() == true) {
+      if (force == null && await SharedPrefs.getDismissAllTours() ?? false) {
         printDebug(() => 'All tours have been dismissed');
-        await _removePage(markAsShowed: true);
-        await onState?.call(TourAllTourDismissedByUser());
+        await _removePage();
+        await onState?.call(const TourAllTourDismissedByUser());
         return;
       }
 
@@ -189,13 +189,13 @@ class FeaturesTourController {
 
       if (!_shouldShowIntroduction() && force != true) {
         printDebug(() => 'There is no new `FeaturesTour` -> Completed');
-        await onState?.call(TourEmptyStates());
+        await onState?.call(const TourEmptyStates());
         return;
       }
 
       if (!context.mounted) {
         printDebug(() => 'The page $pageName context is not mounted');
-        await onState?.call(TourNotMounted());
+        await onState?.call(const TourNotMounted());
         return;
       }
 
@@ -209,20 +209,19 @@ class FeaturesTourController {
         predialogConfig,
         () async {
           printDebug(() => 'Pre-dialog is shown');
-          await onState?.call(TourPreDialogIsShown());
+          await onState?.call(const TourPreDialogIsShown());
         },
       );
 
       switch (result) {
         case ButtonTypes.accept:
-          await onState?.call(TourPreDialogAcceptButtonPressed());
-          break;
+          await onState?.call(const TourPreDialogAcceptButtonPressed());
         case ButtonTypes.later:
-          await onState?.call(TourPreDialogLaterButtonPressed());
+          await onState?.call(const TourPreDialogLaterButtonPressed());
           return;
         case ButtonTypes.dismiss:
-          await _removePage(markAsShowed: true);
-          await onState?.call(TourPreDialogDismissButtonPressed());
+          await _removePage();
+          await onState?.call(const TourPreDialogDismissButtonPressed());
           return;
       }
 
@@ -239,7 +238,7 @@ class FeaturesTourController {
         await _removedAllShownIntroductions(force);
         if (_states.isEmpty) {
           printDebug(() => 'No more states to introduce');
-          await onState?.call(TourEmptyStates());
+          await onState?.call(const TourEmptyStates());
           break;
         }
 
@@ -259,7 +258,7 @@ class FeaturesTourController {
 
         if (!context.mounted) {
           printDebug(() => '   -> The parent widget was unmounted');
-          await onState?.call(TourNotMounted());
+          await onState?.call(const TourNotMounted());
           break;
         }
 
@@ -293,7 +292,7 @@ class FeaturesTourController {
 
         if (!context.mounted) {
           printDebug(() => '   -> The parent widget was unmounted');
-          await onState?.call(TourNotMounted());
+          await onState?.call(const TourNotMounted());
           break;
         }
 
@@ -314,12 +313,12 @@ class FeaturesTourController {
         if (state.widget.onBeforeIntroduce != null) {
           printDebug(() => '   -> Call `onBeforeIntroduce`');
           await state.widget.onBeforeIntroduce!();
-          await onState?.call(TourBeforeIntroduceCalled());
+          await onState?.call(const TourBeforeIntroduceCalled());
         }
 
         if (!context.mounted) {
           printDebug(() => '   -> The parent widget was unmounted');
-          await onState?.call(TourNotMounted());
+          await onState?.call(const TourNotMounted());
           break;
         }
 
@@ -335,22 +334,19 @@ class FeaturesTourController {
         if (state.widget.onAfterIntroduce != null) {
           printDebug(() => '   -> Call `onAfterIntroduce`');
           await state.widget.onAfterIntroduce!(result);
-          await onState?.call(TourAfterIntroduceCalled());
+          await onState?.call(const TourAfterIntroduceCalled());
         }
 
         switch (result) {
           case IntroduceResult.disabled:
           case IntroduceResult.notMounted:
             await _removeState(state, false);
-            break;
           case IntroduceResult.done:
           case IntroduceResult.next:
             await _removeState(state, true);
-            break;
           case IntroduceResult.skip:
             await _removeState(state, true);
-            await _removePage(markAsShowed: true);
-            break;
+            await _removePage();
         }
 
         await onState?.call(TourIntroduceResultEmitted(result: result));
@@ -396,7 +392,7 @@ class FeaturesTourController {
     } finally {
       hideCover(_debugLog ? (log) => printDebug(() => log) : null);
       _debugLog = FeaturesTour._debugLog;
-      await onState?.call(TourCompleted());
+      await onState?.call(const TourCompleted());
       printDebug(() => 'This tour has been completed');
       _isIntroducing = false;
     }
@@ -452,7 +448,7 @@ class FeaturesTourController {
             introduce: state.widget.introduce,
             skip: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(12),
                 child: skipConfig.child != null
                     ? skipConfig.child!(() {
                         complete(IntroduceResult.skip);
@@ -473,7 +469,7 @@ class FeaturesTourController {
             skipConfig: skipConfig,
             next: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(12),
                 child: nextConfig.child != null
                     ? nextConfig.child!(() {
                         complete(IntroduceResult.next);
@@ -494,7 +490,7 @@ class FeaturesTourController {
             doneConfig: doneConfig,
             done: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(12),
                 child: doneConfig.child != null
                     ? doneConfig.child!(() {
                         complete(IntroduceResult.done);
@@ -523,9 +519,7 @@ class FeaturesTourController {
               },
               child: Material(
                 color: Colors.transparent,
-                type: MaterialType.canvas,
                 child: AbsorbPointer(
-                  absorbing: true,
                   child: UnfeaturesTour(
                     child: childConfig.child?.call(state.widget.child) ??
                         state.widget.child,
@@ -558,12 +552,12 @@ class FeaturesTourController {
   }
 
   Future<void> _removedAllShownIntroductions(bool? force) async {
-    if (force == true) return;
+    if (force ?? false) return;
     if (force == false) {
       _states.clear();
     }
 
-    List<double> removedIndexes = [];
+    final removedIndexes = <double>[];
     for (final state in _states.entries) {
       final tour = state.value;
       if (_introducedIndexes.contains(state.key)) {
@@ -571,7 +565,7 @@ class FeaturesTourController {
       } else {
         final key = _getPrefKey(tour);
         final isShown = _prefs!.getBool(key);
-        if (isShown == true) {
+        if (isShown ?? false) {
           removedIndexes.add(state.key);
         }
       }
@@ -590,7 +584,7 @@ class FeaturesTourController {
     FutureOr<void> Function() onShownPreDialog,
   ) async {
     // Should show the predialog or not.
-    bool shouldShowPredialog = true;
+    var shouldShowPredialog = true;
 
     // Respect `force`.
     if (force != null) {
@@ -607,7 +601,7 @@ class FeaturesTourController {
 
         final ButtonTypes? predialogResult;
         if (config.modifiedDialogResult != null) {
-          Completer<bool> completer = Completer();
+          final completer = Completer<bool>();
           completer.complete(config.modifiedDialogResult!(context));
           predialogResult = switch (await completer.future) {
             true => ButtonTypes.accept,
@@ -656,7 +650,7 @@ class FeaturesTourController {
     }
 
     // Create a completer if not already pending
-    _pendingIndexes.putIfAbsent(index, () => Completer<_FeaturesTourState>());
+    _pendingIndexes.putIfAbsent(index, Completer<_FeaturesTourState>.new);
 
     try {
       return await _pendingIndexes[index]!.future.timeout(timeout);

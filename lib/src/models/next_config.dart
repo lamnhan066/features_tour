@@ -2,18 +2,6 @@ import 'package:features_tour/src/models/base_button_config.dart';
 import 'package:flutter/material.dart';
 
 class NextConfig extends BaseButtonConfig {
-  /// Global configuration.
-  static NextConfig global = const NextConfig._();
-
-  const NextConfig._({
-    super.child,
-    super.text = 'NEXT',
-    super.alignment = Alignment.bottomRight,
-    super.color,
-    super.enabled = true,
-    super.textStyle,
-    super.buttonStyle,
-  });
 
   /// Creates a new [NextConfig] based on the [global] values.
   ///
@@ -70,6 +58,18 @@ class NextConfig extends BaseButtonConfig {
       buttonStyle: buttonStyle,
     );
   }
+
+  const NextConfig._({
+    super.child,
+    super.text = 'NEXT',
+    super.alignment = Alignment.bottomRight,
+    super.color,
+    super.enabled = true,
+    super.textStyle,
+    super.buttonStyle,
+  });
+  /// Global configuration.
+  static NextConfig global = const NextConfig._();
 
   /// Create a new NextConfig base on this values.
   @override

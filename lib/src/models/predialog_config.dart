@@ -3,9 +3,49 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class PredialogConfig {
-  /// Global configuration instance.
-  /// This allows for a shared default configuration across the app.
-  static PredialogConfig global = PredialogConfig._();
+
+  /// Creates a new `PredialogConfig` instance with optional overrides.
+  factory PredialogConfig({
+    bool? enabled,
+    FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
+    Color? backgroundColor,
+    Color? textColor,
+    String? title,
+    String? applyToAllPagesText,
+    Color? applyToAllPagesTextColor,
+    String? content,
+    Text? acceptButtonText,
+    ButtonStyle? acceptButtonStyle,
+    Text? laterButtonText,
+    ButtonStyle? laterButtonStyle,
+    Text? dismissButtonText,
+    ButtonStyle? dismissButtonStyle,
+    double? borderRadius,
+    VoidCallback? onAcceptButtonPressed,
+    VoidCallback? onLaterButtonPressed,
+    VoidCallback? onDismissButtonPressed,
+  }) {
+    return global.copyWith(
+      enabled: enabled,
+      modifiedDialogResult: modifiedDialogResult,
+      backgroundColor: backgroundColor,
+      textColor: textColor,
+      title: title,
+      applyToAllPagesText: applyToAllPagesText,
+      applyToAllPagesTextColor: applyToAllPagesTextColor,
+      content: content,
+      acceptButtonText: acceptButtonText,
+      acceptButtonStyle: acceptButtonStyle,
+      laterButtonText: laterButtonText,
+      laterButtonStyle: laterButtonStyle,
+      dismissButtonText: dismissButtonText,
+      dismissButtonStyle: dismissButtonStyle,
+      borderRadius: borderRadius,
+      onAcceptButtonPressed: onAcceptButtonPressed,
+      onLaterButtonPressed: onLaterButtonPressed,
+      onDismissButtonPressed: onDismissButtonPressed,
+    );
+  }
 
   /// Creates a new instance of `PredialogConfig` with customizable options.
   PredialogConfig._({
@@ -33,6 +73,9 @@ class PredialogConfig {
     this.onLaterButtonPressed,
     this.onDismissButtonPressed,
   });
+  /// Global configuration instance.
+  /// This allows for a shared default configuration across the app.
+  static PredialogConfig global = PredialogConfig._();
 
   /// Whether the pre-dialog should be displayed or not.
   final bool enabled;
@@ -89,49 +132,6 @@ class PredialogConfig {
 
   /// Callback triggered when the dismiss button is pressed.
   final VoidCallback? onDismissButtonPressed;
-
-  /// Creates a new `PredialogConfig` instance with optional overrides.
-  factory PredialogConfig({
-    bool? enabled,
-    FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
-    Color? backgroundColor,
-    Color? textColor,
-    String? title,
-    String? applyToAllPagesText,
-    Color? applyToAllPagesTextColor,
-    String? content,
-    Text? acceptButtonText,
-    ButtonStyle? acceptButtonStyle,
-    Text? laterButtonText,
-    ButtonStyle? laterButtonStyle,
-    Text? dismissButtonText,
-    ButtonStyle? dismissButtonStyle,
-    double? borderRadius,
-    VoidCallback? onAcceptButtonPressed,
-    VoidCallback? onLaterButtonPressed,
-    VoidCallback? onDismissButtonPressed,
-  }) {
-    return global.copyWith(
-      enabled: enabled,
-      modifiedDialogResult: modifiedDialogResult,
-      backgroundColor: backgroundColor,
-      textColor: textColor,
-      title: title,
-      applyToAllPagesText: applyToAllPagesText,
-      applyToAllPagesTextColor: applyToAllPagesTextColor,
-      content: content,
-      acceptButtonText: acceptButtonText,
-      acceptButtonStyle: acceptButtonStyle,
-      laterButtonText: laterButtonText,
-      laterButtonStyle: laterButtonStyle,
-      dismissButtonText: dismissButtonText,
-      dismissButtonStyle: dismissButtonStyle,
-      borderRadius: borderRadius,
-      onAcceptButtonPressed: onAcceptButtonPressed,
-      onLaterButtonPressed: onLaterButtonPressed,
-      onDismissButtonPressed: onDismissButtonPressed,
-    );
-  }
 
   /// Creates a new `PredialogConfig` instance based on existing values.
   PredialogConfig copyWith({

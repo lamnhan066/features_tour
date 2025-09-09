@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:features_tour/src/features_tour.dart';
 import 'package:features_tour/src/models/button_types.dart';
+import 'package:features_tour/src/models/predialog_config.dart';
 import 'package:flutter/material.dart';
-
-import '../features_tour.dart';
-import '../models/predialog_config.dart';
 
 /// Caches the last "Do not ask again" selection.
 ButtonTypes? _applyToAllPages;
@@ -22,7 +21,7 @@ Future<ButtonTypes> predialog(
     return _applyToAllPages!;
   }
 
-  bool isChecked = false;
+  var isChecked = false;
   final completer = Completer<ButtonTypes>();
 
   void complete(ButtonTypes type) {
@@ -107,10 +106,6 @@ Future<ButtonTypes> predialog(
 
 /// A stateful checkbox row with text for "Apply to all pages".
 class _CheckboxRow extends StatefulWidget {
-  final String text;
-  final Color? baseTextColor;
-  final Color? checkboxTextColor;
-  final ValueChanged<bool> onChanged;
 
   const _CheckboxRow({
     required this.text,
@@ -118,6 +113,10 @@ class _CheckboxRow extends StatefulWidget {
     required this.checkboxTextColor,
     required this.onChanged,
   });
+  final String text;
+  final Color? baseTextColor;
+  final Color? checkboxTextColor;
+  final ValueChanged<bool> onChanged;
 
   @override
   State<_CheckboxRow> createState() => _CheckboxRowState();

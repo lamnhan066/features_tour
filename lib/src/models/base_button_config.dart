@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseButtonConfig {
+
+  const BaseButtonConfig({
+    this.child,
+    this.text = '',
+    this.alignment = Alignment.bottomRight,
+    this.color,
+    this.enabled = true,
+    this.textStyle,
+    this.buttonStyle,
+  });
   /// Custom widget for the button.
   /// When this widget is set, you must pass the `onPressed` callback to the button's `onPressed` or `onTap` property.
   ///
@@ -40,16 +50,6 @@ abstract class BaseButtonConfig {
   /// ),
   /// ```
   final ButtonStyle? buttonStyle;
-
-  const BaseButtonConfig({
-    this.child,
-    this.text = '',
-    this.alignment = Alignment.bottomRight,
-    this.color,
-    this.enabled = true,
-    this.textStyle,
-    this.buttonStyle,
-  });
 
   /// Create a new BaseConfig base on this values.
   BaseButtonConfig copyWith({

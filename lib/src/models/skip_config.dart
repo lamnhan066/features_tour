@@ -2,18 +2,6 @@ import 'package:features_tour/src/models/base_button_config.dart';
 import 'package:flutter/material.dart';
 
 class SkipConfig extends BaseButtonConfig {
-  /// Global configuration.
-  static SkipConfig global = const SkipConfig._();
-
-  const SkipConfig._({
-    super.child,
-    super.text = 'SKIP',
-    super.alignment = Alignment.bottomLeft,
-    super.color,
-    super.enabled = true,
-    super.textStyle,
-    super.buttonStyle,
-  });
 
   /// Creates a new `SkipConfig` based on the provided [global] values.
   ///
@@ -69,6 +57,18 @@ class SkipConfig extends BaseButtonConfig {
       buttonStyle: buttonStyle,
     );
   }
+
+  const SkipConfig._({
+    super.child,
+    super.text = 'SKIP',
+    super.alignment = Alignment.bottomLeft,
+    super.color,
+    super.enabled = true,
+    super.textStyle,
+    super.buttonStyle,
+  });
+  /// Global configuration.
+  static SkipConfig global = const SkipConfig._();
 
   /// Create a new SkipConfig base on this values.
   @override

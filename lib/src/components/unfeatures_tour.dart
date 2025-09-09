@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 class UnfeaturesTour extends InheritedWidget {
   const UnfeaturesTour({
-    super.key,
-    required super.child,
+    required super.child, super.key,
   });
 
   static bool isUnfeaturesTour(BuildContext? context) {

@@ -2,18 +2,6 @@ import 'package:features_tour/src/models/base_button_config.dart';
 import 'package:flutter/material.dart';
 
 class DoneConfig extends BaseButtonConfig {
-  /// Global configuration.
-  static DoneConfig global = DoneConfig._();
-
-  DoneConfig._({
-    super.child,
-    super.text = 'DONE',
-    super.alignment = Alignment.bottomRight,
-    super.color,
-    super.enabled = true,
-    super.textStyle,
-    super.buttonStyle,
-  });
 
   /// Creates a new [DoneConfig] based on the [global] values.
   ///
@@ -69,6 +57,18 @@ class DoneConfig extends BaseButtonConfig {
         textStyle: textStyle,
         buttonStyle: buttonStyle,
       );
+
+  DoneConfig._({
+    super.child,
+    super.text = 'DONE',
+    super.alignment = Alignment.bottomRight,
+    super.color,
+    super.enabled = true,
+    super.textStyle,
+    super.buttonStyle,
+  });
+  /// Global configuration.
+  static DoneConfig global = DoneConfig._();
 
   /// Create a new DoneConfig base on this values.
   @override

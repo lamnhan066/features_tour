@@ -6,14 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 
 void main() {
-  List<TourState> collectedStates = [];
+  var collectedStates = <TourState>[];
 
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     collectedStates = [];
 
     FeaturesTour.setGlobalConfig(
-      force: null,
       predialogConfig: PredialogConfig(enabled: false),
       nextConfig: NextConfig(text: 'NEXT'),
       skipConfig: SkipConfig(text: 'SKIP'),
@@ -364,7 +363,7 @@ void main() {
     testWidgets('onBeforeIntroduce is called before showing the intro',
         (tester) async {
       final controller = FeaturesTourController('App');
-      bool called = false;
+      var called = false;
 
       await tester.pumpWidget(MaterialApp(
         home: App(
@@ -439,7 +438,7 @@ void main() {
           predialogConfig: PredialogConfig(
             enabled: true,
             title: 'Introduction',
-            acceptButtonText: Text('Okay'),
+            acceptButtonText: const Text('Okay'),
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -495,7 +494,7 @@ void main() {
           predialogConfig: PredialogConfig(
             enabled: true,
             title: 'Introduction',
-            laterButtonText: Text('Later'),
+            laterButtonText: const Text('Later'),
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -547,7 +546,7 @@ void main() {
           predialogConfig: PredialogConfig(
             enabled: true,
             title: 'Introduction',
-            dismissButtonText: Text('Dismiss'),
+            dismissButtonText: const Text('Dismiss'),
             applyToAllPagesText: 'Apply to all',
           ),
           onState: (state) async {
