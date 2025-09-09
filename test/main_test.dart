@@ -73,8 +73,19 @@ void main() {
       });
 
       await tester.pumpAndSettle();
-      expect(collectedStates.any((e) => e is TourIntroducing), isTrue);
-      expect(collectedStates.any((e) => e is TourCompleted), isTrue);
+      expect(find.text('a.intro'), findsNothing);
+      expect(find.text('b.intro'), findsNothing);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
 
     testWidgets('Tapping NEXT shows the next feature', (tester) async {
@@ -127,8 +138,20 @@ void main() {
       });
 
       await tester.pumpAndSettle();
-      expect(collectedStates.any((e) => e is TourIntroducing), isTrue);
-      expect(collectedStates.any((e) => e is TourCompleted), isTrue);
+
+      expect(find.text('a.intro'), findsNothing);
+      expect(find.text('b.intro'), findsNothing);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
 
     testWidgets('Tapping SKIP dismisses the tour', (tester) async {
@@ -174,9 +197,18 @@ void main() {
       });
 
       await tester.pumpAndSettle();
+
       expect(find.text('a.intro'), findsNothing);
       expect(find.text('b.intro'), findsNothing);
-      expect(collectedStates.any((e) => e is TourCompleted), isTrue);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
 
     testWidgets('Tapping DONE on last feature dismisses the tour',
@@ -231,9 +263,20 @@ void main() {
       });
 
       await tester.pumpAndSettle();
+
       expect(find.text('a.intro'), findsNothing);
       expect(find.text('b.intro'), findsNothing);
-      expect(collectedStates.any((e) => e is TourCompleted), isTrue);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
   });
 
@@ -277,9 +320,18 @@ void main() {
           },
         );
       });
+
       await tester.pumpAndSettle();
 
-      expect(collectedStates.any((e) => e is TourEmptyStates), isTrue);
+      expect(find.text('a.intro'), findsNothing);
+      expect(find.text('b.intro'), findsNothing);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourEmptyStates>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
 
     testWidgets('nextIndex waits for the specified feature to appear',
@@ -353,9 +405,18 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(collectedStates.any((e) => e is TourIntroducing), isTrue);
-      expect(collectedStates.any((e) => e is TourAfterIntroduceCalled), isTrue);
-      expect(collectedStates.any((e) => e is TourCompleted), isTrue);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>(),
+          isA<TourAfterIntroduceCalled>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
   });
 
@@ -400,13 +461,19 @@ void main() {
           },
         );
       });
+
       await tester.pumpAndSettle();
 
       expect(called, isTrue);
-      expect(collectedStates.any((e) => e is TourIntroducing), isTrue);
       expect(
-          collectedStates.any((e) => e is TourBeforeIntroduceCalled), isTrue);
-      expect(collectedStates.any((e) => e is TourCompleted), isTrue);
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
   });
 
@@ -459,11 +526,18 @@ void main() {
           },
         );
       });
+
       await tester.pumpAndSettle();
 
-      expect(collectedStates.any((e) => e is TourPreDialogIsShown), isTrue);
-      expect(collectedStates.any((e) => e is TourIntroducing), isTrue);
-      expect(collectedStates.any((e) => e is TourCompleted), isTrue);
+      expect(
+          collectedStates,
+          containsAllInOrder([
+            isA<TourPreDialogIsShown>(),
+            isA<TourPreDialogAcceptButtonPressed>(),
+            isA<TourIntroducing>(),
+            isA<TourIntroduceResultEmitted>(),
+            isA<TourCompleted>(),
+          ]));
     });
 
     testWidgets('Tapping "Later" in predialog dismisses the tour for now',
