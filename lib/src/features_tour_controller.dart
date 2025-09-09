@@ -139,274 +139,267 @@ class FeaturesTourController {
             '${''.padRight(25 - (addBlank.length / 2).round(), '=')}');
     printDebug(() => ''.padLeft(50, '='));
 
-    void cleanup() {
-      hideCover(context, _debugLog ? (log) => printDebug(() => log) : null);
-      _debugLog = FeaturesTour._debugLog;
-      _isIntroducing = false;
-    }
+    try {
+      if (!context.mounted) {
+        printDebug(() => 'The page $pageName context is not mounted');
 
-    if (!context.mounted) {
-      printDebug(() => 'The page $pageName context is not mounted');
-      cleanup();
-      await onState?.call(TourNotMounted());
-      return;
-    }
-
-    _prefs ??= await SharedPreferences.getInstance();
-
-    if (!context.mounted) {
-      printDebug(() => 'The page $pageName context is not mounted');
-      cleanup();
-      await onState?.call(TourNotMounted());
-      return;
-    }
-
-    await _waitForTransition(context); // Main page transition
-
-    // Wait for `delay` duration before starting the tours.
-    await Future.delayed(delay);
-
-    // Get default value from global `force`.
-    force ??= FeaturesTour._force;
-
-    if (force == true) {
-      _states.clear();
-      _states.addAll(_cachedStates);
-    }
-
-    if (_states.isEmpty && firstIndex == null) {
-      printDebug(() => 'The page $pageName has no state');
-      cleanup();
-      await onState?.call(TourEmptyStates());
-      return;
-    }
-
-    // Ignore all the tours
-    if (force == null && await SharedPrefs.getDismissAllTours() == true) {
-      printDebug(() => 'All tours have been dismissed');
-      _removePage(markAsShowed: true);
-      cleanup();
-      await onState?.call(TourAllTourDismissedByUser());
-      return;
-    }
-
-    // All introduced states should be cleared before running a new tour to avoid
-    // caching.
-    _introducedIndexes.clear();
-
-    if (!_shouldShowIntroduction() && force != true) {
-      printDebug(() => 'There is no new `FeaturesTour` -> Completed');
-      cleanup();
-      await onState?.call(TourEmptyStates());
-      return;
-    }
-
-    if (!context.mounted) {
-      printDebug(() => 'The page $pageName context is not mounted');
-      cleanup();
-      await onState?.call(TourNotMounted());
-      return;
-    }
-
-    // Put this here so we don't have to check the context again.
-    final defaultIntroduceBackgroundColor = _getOnSurfaceDefaultColor(context);
-
-    final result = await _showPredialog(
-      context,
-      force,
-      predialogConfig,
-      () async {
-        printDebug(() => 'Pre-dialog is shown');
-        await onState?.call(TourPreDialogIsShown());
-      },
-    );
-
-    switch (result) {
-      case ButtonTypes.accept:
-        await onState?.call(TourPreDialogAcceptButtonPressed());
-        break;
-      case ButtonTypes.later:
-        cleanup();
-        await onState?.call(TourPreDialogLaterButtonPressed());
+        await onState?.call(TourNotMounted());
         return;
-      case ButtonTypes.dismiss:
-        _removePage(markAsShowed: true);
-        cleanup();
-        await onState?.call(TourPreDialogDismissButtonPressed());
+      }
+
+      _prefs ??= await SharedPreferences.getInstance();
+
+      if (!context.mounted) {
+        printDebug(() => 'The page $pageName context is not mounted');
+
+        await onState?.call(TourNotMounted());
         return;
-    }
+      }
 
-    // Watching for the [FeaturesTour.nextIndex] value.
-    _FeaturesTourState? nextState;
+      await _waitForTransition(context); // Main page transition
 
-    // Waiting for the first index.
-    if (firstIndex != null) {
-      nextState = await _nextIndex(firstIndex, firstIndexTimeout);
-    }
+      // Wait for `delay` duration before starting the tours.
+      await Future.delayed(delay);
 
-    printDebug(() => 'Start the tour');
-    while (_states.isNotEmpty) {
-      await _removedAllShownIntroductions(force);
-      if (_states.isEmpty) {
-        printDebug(() => 'No more states to introduce');
+      // Get default value from global `force`.
+      force ??= FeaturesTour._force;
+
+      if (force == true) {
+        _states.clear();
+        _states.addAll(_cachedStates);
+      }
+
+      if (_states.isEmpty && firstIndex == null) {
+        printDebug(() => 'The page $pageName has no state');
         await onState?.call(TourEmptyStates());
-        break;
+        return;
       }
 
-      final _FeaturesTourState state;
-
-      if (nextState == null) {
-        state = _states.remove(_states.firstKey())!;
-      } else {
-        state = nextState;
-        _states.remove(nextState.widget.index);
+      // Ignore all the tours
+      if (force == null && await SharedPrefs.getDismissAllTours() == true) {
+        printDebug(() => 'All tours have been dismissed');
+        _removePage(markAsShowed: true);
+        await onState?.call(TourAllTourDismissedByUser());
+        return;
       }
 
-      final nextIndex = state.widget.nextIndex;
-      final nextIndexTimeout = state.widget.nextIndexTimeout;
-      final key = _getPrefKey(state);
-      printDebug(() => 'Start widget with key $key:');
+      // All introduced states should be cleared before running a new tour to avoid
+      // caching.
+      _introducedIndexes.clear();
+
+      if (!_shouldShowIntroduction() && force != true) {
+        printDebug(() => 'There is no new `FeaturesTour` -> Completed');
+        await onState?.call(TourEmptyStates());
+        return;
+      }
 
       if (!context.mounted) {
-        printDebug(() => '   -> The parent widget was unmounted');
+        printDebug(() => 'The page $pageName context is not mounted');
         await onState?.call(TourNotMounted());
-        break;
+        return;
       }
 
-      bool shouldShowIntroduce;
-      if (force != null) {
-        printDebug(
-            () => '`force` is $force, so the introduction must respect it.');
-        shouldShowIntroduce = force;
-      } else {
-        printDebug(
-            () => '`force` is null, so the introduce will act like normal.');
-        final isShown = _prefs!.getBool(key);
-        shouldShowIntroduce = isShown != true;
-      }
+      // Put this here so we don't have to check the context again.
+      final defaultIntroduceBackgroundColor =
+          _getOnSurfaceDefaultColor(context);
 
-      if (_introducedIndexes.contains(state.widget.index)) {
-        shouldShowIntroduce = false;
-      }
-
-      if (!shouldShowIntroduce) {
-        printDebug(() =>
-            '   -> This widget has been introduced -> move to the next widget.');
-        await _removeState(state, false);
-        await onState
-            ?.call(TourShouldNotShowIntroduction(index: state.widget.index));
-        continue;
-      }
-
-      // Wait for the child widget transition to complete.
-      await _waitForTransition(context);
-
-      if (!context.mounted) {
-        printDebug(() => '   -> The parent widget was unmounted');
-        await onState?.call(TourNotMounted());
-        break;
-      }
-
-      // Close the previous cover if it exists.
-      hideCover(context, _debugLog ? (log) => printDebug(() => log) : null);
-
-      // Show the cover to avoid user tapping the screen.
-      final introduceConfig =
-          state.widget.introduceConfig ?? IntroduceConfig.global;
-      final introduceBackgroundColor =
-          introduceConfig.backgroundColor ?? defaultIntroduceBackgroundColor;
-      showCover(
+      final result = await _showPredialog(
         context,
-        introduceBackgroundColor,
-        _debugLog ? (log) => printDebug(() => log) : null,
+        force,
+        predialogConfig,
+        () async {
+          printDebug(() => 'Pre-dialog is shown');
+          await onState?.call(TourPreDialogIsShown());
+        },
       );
 
-      if (state.widget.onBeforeIntroduce != null) {
-        printDebug(() => '   -> Call `onBeforeIntroduce`');
-        await state.widget.onBeforeIntroduce!();
-        await onState?.call(TourBeforeIntroduceCalled());
-      }
-
-      if (!context.mounted) {
-        printDebug(() => '   -> The parent widget was unmounted');
-        await onState?.call(TourNotMounted());
-        break;
-      }
-
-      // If there is no state in queue and no index to wait for then it's
-      // the last state.
-      final isLastState = _states.isEmpty && nextIndex == null;
-      final result =
-          await _showIntroduce(context, state, isLastState, () async {
-        printDebug(() => '   -> Introduction is shown');
-        await onState?.call(TourIntroducing(index: state.widget.index));
-      });
-
-      if (state.widget.onAfterIntroduce != null) {
-        printDebug(() => '   -> Call `onAfterIntroduce`');
-        await state.widget.onAfterIntroduce!(result);
-        await onState?.call(TourAfterIntroduceCalled());
-      }
-
       switch (result) {
-        case IntroduceResult.disabled:
-        case IntroduceResult.notMounted:
-          await _removeState(state, false);
+        case ButtonTypes.accept:
+          await onState?.call(TourPreDialogAcceptButtonPressed());
           break;
-        case IntroduceResult.done:
-        case IntroduceResult.next:
-          await _removeState(state, true);
-          break;
-        case IntroduceResult.skip:
-          await _removeState(state, true);
-          await _removePage(markAsShowed: true);
-          break;
+        case ButtonTypes.later:
+          await onState?.call(TourPreDialogLaterButtonPressed());
+          return;
+        case ButtonTypes.dismiss:
+          _removePage(markAsShowed: true);
+          await onState?.call(TourPreDialogDismissButtonPressed());
+          return;
       }
 
-      await onState?.call(TourIntroduceResultEmitted(result: result));
+      // Watching for the [FeaturesTour.nextIndex] value.
+      _FeaturesTourState? nextState;
 
-      String status() {
-        return switch (result) {
-          IntroduceResult.disabled ||
-          IntroduceResult.notMounted =>
-            'This widget has been cancelled with result: ${result.name}',
-          IntroduceResult.next => 'Move to the next widget',
-          IntroduceResult.skip => 'Skip this tour',
-          IntroduceResult.done => 'The Tour has been completed',
-        };
+      // Waiting for the first index.
+      if (firstIndex != null) {
+        nextState = await _nextIndex(firstIndex, firstIndexTimeout);
       }
 
-      printDebug(() => '   -> ${status()}');
+      printDebug(() => 'Start the tour');
+      while (_states.isNotEmpty) {
+        await _removedAllShownIntroductions(force);
+        if (_states.isEmpty) {
+          printDebug(() => 'No more states to introduce');
+          await onState?.call(TourEmptyStates());
+          break;
+        }
 
-      // Do not continue if the tour is ended.
-      if (result != IntroduceResult.next) break;
-
-      // Wait for the next state to appear if `nextIndex` is non-null.
-      if (nextIndex != null) {
-        printDebug(() =>
-            'The `nextIndex` is non-null => Waiting for the next index: $nextIndex ...');
-
-        nextState = await _nextIndex(nextIndex, nextIndexTimeout);
+        final _FeaturesTourState state;
 
         if (nextState == null) {
-          printDebug(() =>
-              '   -> Cannot not wait for the next index $nextIndex because timeout is reached. Use the next ordered value instead.');
+          state = _states.remove(_states.firstKey())!;
+        } else {
+          state = nextState;
+          _states.remove(nextState.widget.index);
+        }
 
-          // Add the timeout state index to the introduced list so I will not
-          // be introduced even when it's shown.
-          _introducedIndexes.add(nextIndex);
+        final nextIndex = state.widget.nextIndex;
+        final nextIndexTimeout = state.widget.nextIndexTimeout;
+        final key = _getPrefKey(state);
+        printDebug(() => 'Start widget with key $key:');
+
+        if (!context.mounted) {
+          printDebug(() => '   -> The parent widget was unmounted');
+          await onState?.call(TourNotMounted());
+          break;
+        }
+
+        bool shouldShowIntroduce;
+        if (force != null) {
+          printDebug(
+              () => '`force` is $force, so the introduction must respect it.');
+          shouldShowIntroduce = force;
         } else {
           printDebug(
-              () => '   -> Next index is available with state: $nextState');
+              () => '`force` is null, so the introduce will act like normal.');
+          final isShown = _prefs!.getBool(key);
+          shouldShowIntroduce = isShown != true;
         }
-      } else {
-        nextState = null;
-      }
-    }
 
-    cleanup();
-    printDebug(() => 'This tour has been completed');
-    await onState?.call(TourCompleted());
+        if (_introducedIndexes.contains(state.widget.index)) {
+          shouldShowIntroduce = false;
+        }
+
+        if (!shouldShowIntroduce) {
+          printDebug(() =>
+              '   -> This widget has been introduced -> move to the next widget.');
+          await _removeState(state, false);
+          await onState
+              ?.call(TourShouldNotShowIntroduction(index: state.widget.index));
+          continue;
+        }
+
+        // Wait for the child widget transition to complete.
+        await _waitForTransition(context);
+
+        if (!context.mounted) {
+          printDebug(() => '   -> The parent widget was unmounted');
+          await onState?.call(TourNotMounted());
+          break;
+        }
+
+        // Close the previous cover if it exists.
+        hideCover(context, _debugLog ? (log) => printDebug(() => log) : null);
+
+        // Show the cover to avoid user tapping the screen.
+        final introduceConfig =
+            state.widget.introduceConfig ?? IntroduceConfig.global;
+        final introduceBackgroundColor =
+            introduceConfig.backgroundColor ?? defaultIntroduceBackgroundColor;
+        showCover(
+          context,
+          introduceBackgroundColor,
+          _debugLog ? (log) => printDebug(() => log) : null,
+        );
+
+        if (state.widget.onBeforeIntroduce != null) {
+          printDebug(() => '   -> Call `onBeforeIntroduce`');
+          await state.widget.onBeforeIntroduce!();
+          await onState?.call(TourBeforeIntroduceCalled());
+        }
+
+        if (!context.mounted) {
+          printDebug(() => '   -> The parent widget was unmounted');
+          await onState?.call(TourNotMounted());
+          break;
+        }
+
+        // If there is no state in queue and no index to wait for then it's
+        // the last state.
+        final isLastState = _states.isEmpty && nextIndex == null;
+        final result =
+            await _showIntroduce(context, state, isLastState, () async {
+          printDebug(() => '   -> Introduction is shown');
+          await onState?.call(TourIntroducing(index: state.widget.index));
+        });
+
+        if (state.widget.onAfterIntroduce != null) {
+          printDebug(() => '   -> Call `onAfterIntroduce`');
+          await state.widget.onAfterIntroduce!(result);
+          await onState?.call(TourAfterIntroduceCalled());
+        }
+
+        switch (result) {
+          case IntroduceResult.disabled:
+          case IntroduceResult.notMounted:
+            await _removeState(state, false);
+            break;
+          case IntroduceResult.done:
+          case IntroduceResult.next:
+            await _removeState(state, true);
+            break;
+          case IntroduceResult.skip:
+            await _removeState(state, true);
+            await _removePage(markAsShowed: true);
+            break;
+        }
+
+        await onState?.call(TourIntroduceResultEmitted(result: result));
+
+        String status() {
+          return switch (result) {
+            IntroduceResult.disabled ||
+            IntroduceResult.notMounted =>
+              'This widget has been cancelled with result: ${result.name}',
+            IntroduceResult.next => 'Move to the next widget',
+            IntroduceResult.skip => 'Skip this tour',
+            IntroduceResult.done => 'The Tour has been completed',
+          };
+        }
+
+        printDebug(() => '   -> ${status()}');
+
+        // Do not continue if the tour is ended.
+        if (result != IntroduceResult.next) break;
+
+        // Wait for the next state to appear if `nextIndex` is non-null.
+        if (nextIndex != null) {
+          printDebug(() =>
+              'The `nextIndex` is non-null => Waiting for the next index: $nextIndex ...');
+
+          nextState = await _nextIndex(nextIndex, nextIndexTimeout);
+
+          if (nextState == null) {
+            printDebug(() =>
+                '   -> Cannot not wait for the next index $nextIndex because timeout is reached. Use the next ordered value instead.');
+
+            // Add the timeout state index to the introduced list so I will not
+            // be introduced even when it's shown.
+            _introducedIndexes.add(nextIndex);
+          } else {
+            printDebug(
+                () => '   -> Next index is available with state: $nextState');
+          }
+        } else {
+          nextState = null;
+        }
+      }
+    } finally {
+      hideCover(context, _debugLog ? (log) => printDebug(() => log) : null);
+      _debugLog = FeaturesTour._debugLog;
+      await onState?.call(TourCompleted());
+      printDebug(() => 'This tour has been completed');
+      _isIntroducing = false;
+    }
   }
 
   /// Stops the current tour by sending a skip signal, equivalent to pressing
