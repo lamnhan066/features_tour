@@ -30,6 +30,12 @@ class TourAllTourDismissedByUser extends TourState {
   const TourAllTourDismissedByUser();
 }
 
+/// Indicates that the pre-dialog for the feature tour is not shown.
+class TourPreDialogNotShown extends TourState {
+  /// Creates a new instance of [TourPreDialogNotShown].
+  const TourPreDialogNotShown();
+}
+
 /// Indicates that the pre-dialog for the feature tour is currently being shown.
 class TourPreDialogIsShown extends TourState {
   /// Creates a new instance of [TourPreDialogIsShown].
@@ -56,18 +62,18 @@ class TourPreDialogDismissButtonPressed extends TourState {
 
 /// Indicates that a specific feature is currently being introduced.
 class TourIntroducing extends TourState {
-
   /// Creates a new instance of [TourIntroducing].
   const TourIntroducing({required this.index});
+
   /// The index of the feature being introduced.
   final double? index;
 }
 
 /// Indicates that the introduction for a specific feature should not be shown.
 class TourShouldNotShowIntroduction extends TourState {
-
   /// Creates a new instance of [TourShouldNotShowIntroduction].
   const TourShouldNotShowIntroduction({required this.index});
+
   /// The index of the feature that should not be shown.
   final double? index;
 }
@@ -86,9 +92,9 @@ class TourAfterIntroduceCalled extends TourState {
 
 /// Indicates that an introduction has been completed and a result has been emitted.
 class TourIntroduceResultEmitted extends TourState {
-
   /// Creates a new instance of [TourIntroduceResultEmitted].
   const TourIntroduceResultEmitted({required this.result});
+
   /// The result of the introduction.
   final IntroduceResult result;
 }

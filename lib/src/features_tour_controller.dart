@@ -220,6 +220,8 @@ class FeaturesTourController {
       );
 
       switch (result) {
+        case null:
+          await onState?.call(const TourPreDialogNotShown());
         case ButtonTypes.accept:
           await onState?.call(const TourPreDialogAcceptButtonPressed());
         case ButtonTypes.later:
@@ -583,7 +585,7 @@ class FeaturesTourController {
   }
 
   /// Show the predialog if possible.
-  Future<ButtonTypes> _showPredialog(
+  Future<ButtonTypes?> _showPredialog(
     BuildContext context,
     bool? force,
     PredialogConfig? config,
@@ -642,7 +644,7 @@ class FeaturesTourController {
       _printDebug(() => 'Should show predialog return false');
     }
 
-    return ButtonTypes.accept;
+    return null;
   }
 
   /// Wait for the next index to be available.
