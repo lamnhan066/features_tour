@@ -12,7 +12,6 @@ import 'components/cover_dialog.dart';
 import 'components/features_child.dart';
 
 part 'features_tour_controller.dart';
-part 'utils/print_debug.dart';
 part 'utils/shared_prefs.dart';
 
 class FeaturesTour extends StatefulWidget {
@@ -109,7 +108,9 @@ class FeaturesTour extends StatefulWidget {
     for (final controller in FeaturesTourController._controllers) {
       await controller._removePage(markAsShowed: markAsShowed);
     }
-    printDebug(() => 'All pages has been removed');
+    if (_debugLog) {
+      debugPrint('All pages has been removed');
+    }
   }
 
   /// Creates a [FeaturesTour] to display a guided tour for a specific widget.

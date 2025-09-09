@@ -36,11 +36,11 @@ class FeaturesTourController {
   Completer? _introduceCompleter;
 
   bool _isIntroducing = false;
+  final bool _debugLog = FeaturesTour._debugLog;
 
   /// Register the current FeaturesTour state.
   void _register(_FeaturesTourState state) {
-    if (FeaturesTour._debugLog &&
-        !_cachedStates.containsKey(state.widget.index)) {
+    if (_debugLog && !_cachedStates.containsKey(state.widget.index)) {
       printDebug(() =>
           '`$pageName`: register index ${state.widget.index} => total: ${_cachedStates.length + 1}');
     }
@@ -58,8 +58,7 @@ class FeaturesTourController {
 
   /// Unregister the current FeaturesTour state.
   void _unregister(_FeaturesTourState state) {
-    if (FeaturesTour._debugLog &&
-        _cachedStates.containsKey(state.widget.index)) {
+    if (_debugLog && _cachedStates.containsKey(state.widget.index)) {
       printDebug(() =>
           '`$pageName`: unregister index ${state.widget.index} => total: ${_cachedStates.length - 1}');
     }
@@ -141,7 +140,7 @@ class FeaturesTourController {
     printDebug(() => ''.padLeft(50, '='));
 
     void cleanup() {
-      hideCover(context);
+      hideCover(context, _debugLog ? (log) => printDebug(() => log) : null);
       FeaturesTour._debugLog = cachedDebugLog;
       _isIntroducing = false;
     }
@@ -309,14 +308,18 @@ class FeaturesTourController {
       }
 
       // Close the previous cover if it exists.
-      hideCover(context);
+      hideCover(context, _debugLog ? (log) => printDebug(() => log) : null);
 
       // Show the cover to avoid user tapping the screen.
       final introduceConfig =
           state.widget.introduceConfig ?? IntroduceConfig.global;
       final introduceBackgroundColor =
           introduceConfig.backgroundColor ?? defaultIntroduceBackgroundColor;
-      showCover(context, introduceBackgroundColor);
+      showCover(
+        context,
+        introduceBackgroundColor,
+        _debugLog ? (log) => printDebug(() => log) : null,
+      );
 
       if (state.widget.onBeforeIntroduce != null) {
         printDebug(() => '   -> Call `onBeforeIntroduce`');
@@ -622,6 +625,7 @@ class FeaturesTourController {
             context,
             config,
             onShownPreDialog,
+            _debugLog ? (log) => printDebug(() => log) : null,
           );
         }
 
@@ -746,5 +750,11 @@ class FeaturesTourController {
   /// Get key for shared preferences.
   String _getPrefKey(_FeaturesTourState state) {
     return '${FeaturesTour._prefix}_${pageName}_${state.widget.index}';
+  }
+
+  void printDebug(Function message) {
+    if (_debugLog) {
+      debugPrint(message());
+    }
   }
 }

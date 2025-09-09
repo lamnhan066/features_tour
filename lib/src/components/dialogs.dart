@@ -14,10 +14,11 @@ Future<ButtonTypes> predialog(
   BuildContext context,
   PredialogConfig config,
   FutureOr<void> Function() onShownPreDialog,
+  void Function(String log)? printDebug,
 ) async {
   // Return cached selection if "Do not ask again" was checked previously.
   if (_applyToAllPages != null) {
-    printDebug(() => 'Returning cached result: $_applyToAllPages');
+    printDebug?.call('Returning cached result: $_applyToAllPages');
     return _applyToAllPages!;
   }
 
@@ -84,11 +85,11 @@ Future<ButtonTypes> predialog(
     final result = await completer.future;
 
     if (isChecked) {
-      printDebug(() => 'Updating global pre-dialog selection');
+      printDebug?.call('Updating global pre-dialog selection');
       _applyToAllPages = result;
 
       if (result == ButtonTypes.dismiss) {
-        printDebug(() => 'Disabling all future introduction tours.');
+        printDebug?.call('Disabling all future introduction tours.');
 
         // TODO: Handle tour-specific dismissals better.
         SharedPrefs.setDismissAllTours(true);

@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../features_tour.dart';
-
 OverlayEntry? _coverOverlay;
 
 /// Show the cover to avoid user tapping the screen.
-void showCover(BuildContext context, Color color) {
+void showCover(
+  BuildContext context,
+  Color color,
+  void Function(String log)? printDebug,
+) {
   if (!context.mounted) {
-    printDebug(
-        () => 'Cannot show the cover because the build context is not mounted');
+    printDebug?.call(
+        'Cannot show the cover because the build context is not mounted');
     return;
   }
 
   if (_coverOverlay != null) {
-    printDebug(() => 'The cover is already shown');
+    printDebug?.call('The cover is already shown');
     return;
   }
 
@@ -31,10 +33,11 @@ void showCover(BuildContext context, Color color) {
 }
 
 /// Hide the cover to let the user able to tap the screen.
-void hideCover(BuildContext context) {
+void hideCover(BuildContext context, void Function(String log)? printDebug) {
   if (!context.mounted) {
-    printDebug(
-        () => 'Cannot hide the cover because the build context is not mounted');
+    printDebug?.call(
+      'Cannot hide the cover because the build context is not mounted',
+    );
     return;
   }
 
