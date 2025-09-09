@@ -24,10 +24,7 @@ void showCover(
   _coverOverlay = OverlayEntry(builder: (ctx) {
     return Material(
       color: color,
-      child: const PopScope(
-        canPop: false,
-        child: SizedBox.shrink(),
-      ),
+      child: const SizedBox.shrink(),
     );
   });
 
