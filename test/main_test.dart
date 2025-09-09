@@ -79,7 +79,7 @@ void main() {
         collectedStates,
         containsAllInOrder([
           isA<TourPreDialogNotShown>(),
-          isA<TourIntroducing>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourIntroduceResultEmitted>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
@@ -146,8 +146,12 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogNotShown>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
-          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result == IntroduceResult.next,
+            'IntroduceResult.next',
+            true,
+          ),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 2),
           isA<TourIntroduceResultEmitted>(),
           isA<TourCompleted>(),
         ]),
@@ -205,7 +209,11 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogNotShown>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result == IntroduceResult.skip,
+            'IntroduceResult.skip',
+            true,
+          ),
           isA<TourCompleted>(),
         ]),
       );
@@ -273,7 +281,11 @@ void main() {
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result == IntroduceResult.done,
+            'IntroduceResult.done',
+            true,
+          ),
           isA<TourCompleted>(),
         ]),
       );
@@ -329,6 +341,82 @@ void main() {
         collectedStates,
         containsAllInOrder([
           isA<TourEmptyStates>(),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+
+    testWidgets('Previously seen tours are shown again with force',
+        (tester) async {
+      SharedPreferences.setMockInitialValues({
+        'FeaturesTour_App_1.0': true,
+        'FeaturesTour_App_2.0': true,
+      });
+
+      final controller = FeaturesTourController('App');
+      await tester.pumpWidget(MaterialApp(
+        home: App(
+          tours: [
+            FeaturesTour(
+              index: 1,
+              controller: controller,
+              introduce: const Text('a.intro'),
+              child: const Text('a'),
+            ),
+            FeaturesTour(
+              index: 2,
+              controller: controller,
+              introduce: const Text('b.intro'),
+              doneConfig: DoneConfig(enabled: true),
+              child: const Text('b'),
+            ),
+          ],
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state case TourIntroducing(index: final index)) {
+              if (index == 1) {
+                await tester.pump();
+                expect(find.text('a.intro'), findsOneWidget);
+                await tester.tap(find.text('NEXT'));
+              } else if (index == 2) {
+                await tester.pump();
+                expect(find.text('b.intro'), findsOneWidget);
+                expect(find.text('DONE'), findsOneWidget);
+                await tester.tap(find.text('DONE'));
+              }
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('a.intro'), findsNothing);
+      expect(find.text('b.intro'), findsNothing);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShown>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result == IntroduceResult.done,
+            'IntroduceResult.done',
+            true,
+          ),
           isA<TourCompleted>(),
         ]),
       );
