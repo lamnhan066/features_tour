@@ -178,7 +178,7 @@ class FeaturesTourController {
       // Ignore all the tours
       if (force == null && await SharedPrefs.getDismissAllTours() == true) {
         printDebug(() => 'All tours have been dismissed');
-        _removePage(markAsShowed: true);
+        await _removePage(markAsShowed: true);
         await onState?.call(TourAllTourDismissedByUser());
         return;
       }
@@ -221,7 +221,7 @@ class FeaturesTourController {
           await onState?.call(TourPreDialogLaterButtonPressed());
           return;
         case ButtonTypes.dismiss:
-          _removePage(markAsShowed: true);
+          await _removePage(markAsShowed: true);
           await onState?.call(TourPreDialogDismissButtonPressed());
           return;
       }
