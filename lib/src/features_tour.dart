@@ -6,7 +6,6 @@ import 'package:features_tour/src/components/cover_dialog.dart';
 import 'package:features_tour/src/components/dialogs.dart';
 import 'package:features_tour/src/components/features_child.dart';
 import 'package:features_tour/src/components/unfeatures_tour.dart';
-import 'package:features_tour/src/models/button_types.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -167,6 +166,7 @@ class FeaturesTour extends StatefulWidget {
     for (final controller in FeaturesTourController._controllers) {
       await controller._removePage(markAsShowed: markAsShowed);
     }
+    FeaturesTourController._controllers.clear();
     if (_debugLog) {
       debugPrint('All pages has been removed');
     }

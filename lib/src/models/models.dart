@@ -4,6 +4,7 @@ export 'done_config.dart';
 export 'instruction_result.dart';
 export 'introduce_config.dart';
 export 'next_config.dart';
+export 'predialog_button_type.dart';
 export 'predialog_config.dart';
 export 'skip_config.dart';
 export 'tour_state.dart';

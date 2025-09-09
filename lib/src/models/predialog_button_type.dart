@@ -1,5 +1,5 @@
 /// Represents the different button types available in the pre-dialog.
-enum ButtonTypes {
+enum PredialogButtonType {
   /// Accept button, typically used to confirm an action.
   accept,
 

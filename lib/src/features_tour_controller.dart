@@ -133,10 +133,6 @@ class FeaturesTourController {
     // Wait until the next frame of the application's UI has been drawn.
     await null;
 
-    if (debugLog != null) {
-      FeaturesTour._debugLog = debugLog;
-    }
-
     final addBlank = ' $pageName ';
     _printDebug(() => ''.padLeft(50, '='));
     _printDebug(
@@ -217,19 +213,29 @@ class FeaturesTourController {
           _printDebug(() => 'Pre-dialog is shown');
           await onState?.call(const TourPreDialogIsShown());
         },
+        (type) async {
+          _printDebug(() => 'Applied to all pages');
+          await onState?.call(TourPreDialogNowShownByAppliedToAllPages(type));
+        },
       );
 
       switch (result) {
         case null:
           await onState?.call(const TourPreDialogNotShown());
-        case ButtonTypes.accept:
-          await onState?.call(const TourPreDialogAcceptButtonPressed());
-        case ButtonTypes.later:
-          await onState?.call(const TourPreDialogLaterButtonPressed());
+        case PredialogButtonType.accept:
+          await onState?.call(
+            const TourPreDialogButtonPressed(PredialogButtonType.accept),
+          );
+        case PredialogButtonType.later:
+          await onState?.call(
+            const TourPreDialogButtonPressed(PredialogButtonType.later),
+          );
           return;
-        case ButtonTypes.dismiss:
+        case PredialogButtonType.dismiss:
           await _removePage();
-          await onState?.call(const TourPreDialogDismissButtonPressed());
+          await onState?.call(
+            const TourPreDialogButtonPressed(PredialogButtonType.dismiss),
+          );
           return;
       }
 
@@ -585,11 +591,12 @@ class FeaturesTourController {
   }
 
   /// Show the predialog if possible.
-  Future<ButtonTypes?> _showPredialog(
+  Future<PredialogButtonType?> _showPredialog(
     BuildContext context,
     bool? force,
     PredialogConfig? config,
     FutureOr<void> Function() onShownPreDialog,
+    FutureOr<void> Function(PredialogButtonType type) onAppliedToAllPages,
   ) async {
     // Should show the predialog or not.
     var shouldShowPredialog = true;
@@ -607,31 +614,32 @@ class FeaturesTourController {
       if (effectiveConfig.enabled) {
         _printDebug(() => 'Predialog is enabled');
 
-        final ButtonTypes? predialogResult;
+        final PredialogButtonType? predialogResult;
         if (effectiveConfig.modifiedDialogResult != null) {
           final completer = Completer<bool>()
             ..complete(effectiveConfig.modifiedDialogResult!(context));
           predialogResult = switch (await completer.future) {
-            true => ButtonTypes.accept,
-            false => ButtonTypes.later,
+            true => PredialogButtonType.accept,
+            false => PredialogButtonType.later,
           };
         } else {
           predialogResult = await predialog(
             context,
             effectiveConfig,
             onShownPreDialog,
+            onAppliedToAllPages,
             _debugLog ? (log) => _printDebug(() => log) : null,
           );
         }
 
         switch (predialogResult) {
-          case ButtonTypes.accept:
+          case PredialogButtonType.accept:
             _printDebug(() => 'User accepted to show the introduction');
             effectiveConfig.onAcceptButtonPressed?.call();
-          case ButtonTypes.later:
+          case PredialogButtonType.later:
             _printDebug(() => 'User chose to show the introduction later');
             effectiveConfig.onLaterButtonPressed?.call();
-          case ButtonTypes.dismiss:
+          case PredialogButtonType.dismiss:
             _printDebug(() => 'User dismissed to show the introduction');
             effectiveConfig.onDismissButtonPressed?.call();
         }

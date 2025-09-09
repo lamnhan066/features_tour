@@ -1,30 +1,38 @@
 import 'dart:async';
 
 import 'package:features_tour/src/features_tour.dart';
-import 'package:features_tour/src/models/button_types.dart';
+import 'package:features_tour/src/models/predialog_button_type.dart';
 import 'package:features_tour/src/models/predialog_config.dart';
 import 'package:flutter/material.dart';
 
 /// Caches the last "Do not ask again" selection.
-ButtonTypes? _applyToAllPages;
+PredialogButtonType? _applyToAllPages;
+
+/// FOR TESTING ONLY: Resets the cached "Do not ask again" selection.
+@visibleForTesting
+void resetPredialog() {
+  _applyToAllPages = null;
+}
 
 /// Displays a pre-dialog with a configurable UI.
-Future<ButtonTypes> predialog(
+Future<PredialogButtonType> predialog(
   BuildContext context,
   PredialogConfig config,
   FutureOr<void> Function() onShownPreDialog,
+  FutureOr<void> Function(PredialogButtonType type) onAppliedToAllPages,
   void Function(String log)? printDebug,
 ) async {
   // Return cached selection if "Do not ask again" was checked previously.
   if (_applyToAllPages != null) {
     printDebug?.call('Returning cached result: $_applyToAllPages');
+    await onAppliedToAllPages(_applyToAllPages!);
     return _applyToAllPages!;
   }
 
   var isChecked = false;
-  final completer = Completer<ButtonTypes>();
+  final completer = Completer<PredialogButtonType>();
 
-  void complete(ButtonTypes type) {
+  void complete(PredialogButtonType type) {
     if (!completer.isCompleted) completer.complete(type);
   }
 
@@ -57,17 +65,17 @@ Future<ButtonTypes> predialog(
             borderRadius: BorderRadius.circular(config.borderRadius)),
         actions: [
           ElevatedButton(
-            onPressed: () => complete(ButtonTypes.accept),
+            onPressed: () => complete(PredialogButtonType.accept),
             style: config.acceptButtonStyle,
             child: config.acceptButtonText,
           ),
           TextButton(
-            onPressed: () => complete(ButtonTypes.later),
+            onPressed: () => complete(PredialogButtonType.later),
             style: config.laterButtonStyle,
             child: config.laterButtonText,
           ),
           TextButton(
-            onPressed: () => complete(ButtonTypes.dismiss),
+            onPressed: () => complete(PredialogButtonType.dismiss),
             style: config.dismissButtonStyle,
             child: config.dismissButtonText,
           ),
@@ -87,7 +95,7 @@ Future<ButtonTypes> predialog(
       printDebug?.call('Updating global pre-dialog selection');
       _applyToAllPages = result;
 
-      if (result == ButtonTypes.dismiss) {
+      if (result == PredialogButtonType.dismiss) {
         printDebug?.call('Disabling all future introduction tours.');
 
         // TODO(lamnhan066): Handle tour-specific dismissals better.

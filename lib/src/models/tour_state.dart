@@ -36,28 +36,29 @@ class TourPreDialogNotShown extends TourState {
   const TourPreDialogNotShown();
 }
 
+/// Indicates that the pre-dialog for the feature tour is not shown because
+/// the user has applied the choice to all pages.
+class TourPreDialogNowShownByAppliedToAllPages extends TourState {
+  /// Creates a new instance of [TourPreDialogNowShownByAppliedToAllPages].
+  const TourPreDialogNowShownByAppliedToAllPages(this.buttonType);
+
+  /// The type of button that triggered the state change.
+  final PredialogButtonType buttonType;
+}
+
 /// Indicates that the pre-dialog for the feature tour is currently being shown.
 class TourPreDialogIsShown extends TourState {
   /// Creates a new instance of [TourPreDialogIsShown].
   const TourPreDialogIsShown();
 }
 
-/// Indicates that the user has pressed the accept button in the pre-dialog.
-class TourPreDialogAcceptButtonPressed extends TourState {
-  /// Creates a new instance of [TourPreDialogAcceptButtonPressed].
-  const TourPreDialogAcceptButtonPressed();
-}
+/// Indicates that a button in the pre-dialog has been pressed.
+class TourPreDialogButtonPressed extends TourState {
+  /// Creates a new instance of [TourPreDialogButtonPressed].
+  const TourPreDialogButtonPressed(this.buttonType);
 
-/// Indicates that the user has pressed the "later" button in the pre-dialog.
-class TourPreDialogLaterButtonPressed extends TourState {
-  /// Creates a new instance of [TourPreDialogLaterButtonPressed].
-  const TourPreDialogLaterButtonPressed();
-}
-
-/// Indicates that the user has pressed the dismiss button in the pre-dialog.
-class TourPreDialogDismissButtonPressed extends TourState {
-  /// Creates a new instance of [TourPreDialogDismissButtonPressed].
-  const TourPreDialogDismissButtonPressed();
+  /// The type of button that was pressed.
+  final PredialogButtonType buttonType;
 }
 
 /// Indicates that a specific feature is currently being introduced.
