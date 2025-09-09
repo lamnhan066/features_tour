@@ -343,11 +343,15 @@ class FeaturesTourController {
         // If there is no state in queue and no index to wait for then it's
         // the last state.
         final isLastState = _states.isEmpty && nextIndex == null;
-        final result =
-            await _showIntroduce(context, state, isLastState, () async {
-          _printDebug(() => '   -> Introduction is shown');
-          await onState?.call(TourIntroducing(index: state.widget.index));
-        });
+        final result = await _showIntroduce(
+          context,
+          state,
+          isLastState,
+          () async {
+            _printDebug(() => '   -> Introduction is shown');
+            await onState?.call(TourIntroducing(index: state.widget.index));
+          },
+        );
 
         if (state.widget.onAfterIntroduce != null) {
           _printDebug(() => '   -> Call `onAfterIntroduce`');
@@ -418,7 +422,7 @@ class FeaturesTourController {
 
   /// Stops the current tour by sending a skip signal, equivalent to pressing
   /// the SKIP button.
-  Future<void> _stop() async {
+  void _stop() {
     if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
       _introduceCompleter?.complete(IntroduceResult.skip);
     }
