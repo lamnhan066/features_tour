@@ -97,6 +97,10 @@ class FeaturesTourController {
   /// with the current [TourState] of the tour. This allows you to monitor the tour's
   /// progress and respond to different states as they occur.
   ///
+  /// If [popToSkip] is `true`, the user can skip the current tour by pressing
+  /// the back button (Android) or swipe back gesture (iOS). If `false`, the
+  /// back button or swipe back gesture will be disabled during the tour.
+  ///
   /// Example:
   /// ```dart
   /// tourController.start(context: context, force: true);
@@ -117,9 +121,9 @@ class FeaturesTourController {
     Duration delay = const Duration(milliseconds: 500),
     bool? force,
     PredialogConfig? predialogConfig,
-    bool? debugLog,
     FutureOr<void> Function(TourState state)? onState,
     bool popToSkip = true,
+    bool? debugLog,
   }) async {
     _popToSkip = popToSkip;
     _debugLog = debugLog ?? FeaturesTour._debugLog;
@@ -405,7 +409,8 @@ class FeaturesTourController {
             // be introduced even when it's shown.
             _introducedIndexes.add(nextIndex);
           } else {
-            _printDebug(() => 'The next index is available with state: $nextState.');
+            _printDebug(
+                () => 'The next index is available with state: $nextState.');
           }
         } else {
           nextState = null;
@@ -641,7 +646,8 @@ class FeaturesTourController {
         // TODO(lamnhan066): Remove deprecated field in the next major release
         // ignore: deprecated_member_use_from_same_package
         else if (effectiveConfig.modifiedDialogResult != null) {
-          _printDebug(() => 'Using a modified dialog result for the pre-dialog.');
+          _printDebug(
+              () => 'Using a modified dialog result for the pre-dialog.');
           onShownCustomDialog?.call();
           // TODO(lamnhan066): Remove deprecated field in the next major release
           // ignore: deprecated_member_use_from_same_package
