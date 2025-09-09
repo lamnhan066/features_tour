@@ -272,6 +272,8 @@ class FeaturesTourController {
           _states.remove(nextState.widget.index);
         }
 
+        state._blockPop();
+
         final nextIndex = state.widget.nextIndex;
         final nextIndexTimeout = state.widget.nextIndexTimeout;
         final key = _getPrefKey(state);
@@ -415,6 +417,9 @@ class FeaturesTourController {
         }
       }
     } finally {
+      for (final state in _cachedStates.values) {
+        state._allowPop();
+      }
       hideCover(_debugLog ? (log) => _printDebug(() => log) : null);
       _debugLog = FeaturesTour._debugLog;
       await onState?.call(const TourCompleted());
@@ -786,7 +791,7 @@ class FeaturesTourController {
   /// Print debug message if debug is enabled.
   void _printDebug(String Function() message) {
     if (_debugLog) {
-      debugPrint(message());
+      debugPrint('[FeaturesTour][$pageName] ${message()}');
     }
   }
 }

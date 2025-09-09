@@ -250,6 +250,21 @@ class FeaturesTour extends StatefulWidget {
 
 class _FeaturesTourState extends State<FeaturesTour> {
   late bool isEnabled;
+  bool _canPop = true;
+
+  void _blockPop() {
+    if (!_canPop) return;
+
+    _canPop = false;
+    if (mounted) setState(() {});
+  }
+
+  void _allowPop() {
+    if (_canPop) return;
+
+    _canPop = true;
+    if (mounted) setState(() {});
+  }
 
   @override
   void dispose() {
@@ -269,7 +284,7 @@ class _FeaturesTourState extends State<FeaturesTour> {
   Widget build(BuildContext context) {
     return PopScope(
       key: isEnabled ? widget.controller._globalKeys[widget.index] : null,
-      canPop: false,
+      canPop: _canPop,
       onPopInvokedWithResult: (didPop, result) async {
         widget.controller._handlePopScope();
       },
