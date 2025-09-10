@@ -17,6 +17,7 @@ class FeaturesChild extends StatefulWidget {
     required this.doneConfig,
     required this.isLastState,
     required this.introduce,
+    required this.introduceConfig,
     required this.padding,
     super.key,
     this.alignment,
@@ -55,6 +56,9 @@ class FeaturesChild extends StatefulWidget {
 
   /// The feature introduction widget, typically a `Text` widget.
   final Widget introduce;
+
+  /// The introduction widget's configuration.
+  final IntroduceConfig introduceConfig;
 
   /// The padding of the `introduce` widget.
   final EdgeInsetsGeometry padding;
@@ -336,7 +340,9 @@ class _FeaturesChildState extends State<FeaturesChild>
                               ? Colors.black
                               : Colors.white,
                         ),
-                        child: widget.introduce,
+                        child: widget.introduceConfig.builder
+                                ?.call(context, rect!, widget.introduce) ??
+                            widget.introduce,
                       ),
                     ),
                   ),
