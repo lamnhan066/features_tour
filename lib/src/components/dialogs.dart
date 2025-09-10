@@ -169,6 +169,7 @@ class _CheckboxRowState extends State<_CheckboxRow> {
   @override
   Widget build(BuildContext context) {
     final color = widget.checkboxTextStyle?.color ?? widget.baseTextColor;
+
     return FittedBox(
       alignment: Alignment.centerLeft,
       child: Row(
@@ -186,8 +187,8 @@ class _CheckboxRowState extends State<_CheckboxRow> {
           const SizedBox(width: 8),
           GestureDetector(
             onTap: _toggleCheckbox,
-            child: DefaultTextStyle(
-              style: TextStyle(color: widget.baseTextColor, fontSize: 13.5),
+            child: DefaultTextStyle.merge(
+              style: TextStyle(color: color, fontSize: 13.5),
               child: Text(
                 widget.text,
                 style: widget.checkboxTextStyle,
