@@ -1,3 +1,33 @@
+## 0.5.0-rc.7
+
+* Adds `onState` callback to `FeaturesTourController.start` to receive [TourState] update during the tour lifecycle.
+* Adds `IntroduceConfig.builder` so we can decor the `introduce` widget easily and globally.
+* Adds `RoundedRectIntroduceConfig` that make the introducion looks better.
+
+* Deprecates `Predialog` and `predialog` in favor of `PreDialog` and `preDialog` accoss the code base.
+* Deprecates `FeaturesTour.canPop` in favor of `FeaturesTourController.start(popToSkip)`.
+* Deprecates `PreDialogConfig.modifiedDialogResult` in favor of `PreDialogConfig.customDialogBuilder`.
+* Deprecates:
+  * `PreDialogConfig.applyToAllPagesText` in favor of `PreDialogConfig.applyToAllCheckboxLabel`.
+  * `PreDialogConfig.applyToAllPagesTextColor` in favor of `PreDialogConfig.applyToAllCheckboxLabelStyle`.
+  * `PreDialogConfig.acceptButtonText` in favor of `PreDialogConfig.acceptButtonLabel`.
+  * `PreDialogConfig.laterButtonText` in favor of `PreDialogConfig.laterButtonLabel`.
+  * `PreDialogConfig.dismissButtonText` in favor of `PreDialogConfig.dismissButtonLabel`.
+* Deprecates
+  * `ChildConfig.child` in favor of `ChildConfig.builder`.
+  * `NextConfig.child` in favor of `NextConfig.builder`.
+  * `SkipConfig.child` in favor of `SkipConfig.builder`.
+  * `DoneConfig.child` in favor of `DoneConfig.builder`.
+* Reverses the order of the action buttons in the pre-dialog.
+* Changes the `PreDialogConfig.acceptTextLabel` default text from `Okay` to `Start Tour`.
+* Changes to use `DefaultTextStyle.merge` instead of `DefaultTextStyle`.
+
+* Improves TYPO and grammar in logs.
+* Changes to use `very_good_analysis` lints.
+* Adds many base tests and many logic improvements while creating tests :).
+
+*This is a significant change with many deprecations, but I believe it’s worth it. Please let me know if there’s anything I should avoid changing.*
+
 ## 0.5.0-rc.6
 
 * Enhance state update logic to check if the globalKey context is mounted in `FeaturesChild`.
