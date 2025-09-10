@@ -43,7 +43,7 @@ class TourPreDialogNotShownByAppliedToAllPages extends TourState {
   const TourPreDialogNotShownByAppliedToAllPages(this.buttonType);
 
   /// The type of button that triggered the state change.
-  final PredialogButtonType buttonType;
+  final PreDialogButtonType buttonType;
 }
 
 /// Indicates that the pre-dialog for the feature tour is currently being shown.
@@ -73,7 +73,7 @@ class TourPreDialogButtonPressed extends TourState {
   const TourPreDialogButtonPressed(this.buttonType);
 
   /// The type of button that was pressed.
-  final PredialogButtonType buttonType;
+  final PreDialogButtonType buttonType;
 }
 
 /// Indicates that a specific feature is currently being introduced.

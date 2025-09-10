@@ -4,12 +4,20 @@ import 'package:features_tour/features_tour.dart';
 import 'package:flutter/material.dart';
 
 /// Configuration for the pre-dialog shown before starting a features tour.
-class PredialogConfig {
+@Deprecated('Use PreDialogConfig instead')
+typedef PredialogConfig = PreDialogConfig;
+
+/// Configuration for the pre-dialog shown before starting a features tour.
+class PreDialogConfig {
   /// Creates a new `PredialogConfig` instance with optional overrides.
-  factory PredialogConfig({
+  factory PreDialogConfig({
     bool? enabled,
+    @Deprecated('Use customDialog instead')
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
-    FutureOr<PredialogButtonType> Function(BuildContext context)? customDialog,
+    FutureOr<PreDialogButtonType> Function(
+      BuildContext context,
+      void Function(bool isChecked) updateApplyToAllPagesState,
+    )? customDialog,
     Color? backgroundColor,
     Color? textColor,
     String? title,
@@ -53,7 +61,7 @@ class PredialogConfig {
   }
 
   /// Creates a new instance of `PredialogConfig` with customizable options.
-  PredialogConfig._({
+  PreDialogConfig._({
     this.enabled = true,
     this.title = 'Introduction',
     this.content =
@@ -81,7 +89,7 @@ class PredialogConfig {
 
   /// The global configuration instance.
   /// This allows for a shared default configuration across the app.
-  static PredialogConfig global = PredialogConfig._();
+  static PreDialogConfig global = PreDialogConfig._();
 
   /// Whether the pre-dialog should be displayed.
   final bool enabled;
@@ -133,8 +141,14 @@ class PredialogConfig {
 
   /// A custom dialog builder function. If provided, this will be used instead of
   /// the default dialog UI.
-  final FutureOr<PredialogButtonType> Function(BuildContext context)?
-      customDialog;
+  ///
+  /// The function takes the current [BuildContext] and an `updateApplyToAllPagesState`
+  /// callback to update the "Apply to all pages" checkbox state, and returns
+  /// a `FutureOr<PreDialogButtonType>`.
+  final FutureOr<PreDialogButtonType> Function(
+    BuildContext context,
+    void Function(bool isChecked) updateApplyToAllPagesState,
+  )? customDialog;
 
   /// A callback that is triggered when the accept button is pressed.
   final VoidCallback? onAcceptButtonPressed;
@@ -146,11 +160,14 @@ class PredialogConfig {
   final VoidCallback? onDismissButtonPressed;
 
   /// Creates a new `PredialogConfig` instance based on the existing values.
-  PredialogConfig copyWith({
+  PreDialogConfig copyWith({
     bool? enabled,
     @Deprecated('Use customDialog instead')
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
-    FutureOr<PredialogButtonType> Function(BuildContext context)? customDialog,
+    FutureOr<PreDialogButtonType> Function(
+      BuildContext context,
+      void Function(bool isChecked) updateApplyToAllPagesState,
+    )? customDialog,
     Color? backgroundColor,
     Color? textColor,
     String? title,
@@ -168,7 +185,7 @@ class PredialogConfig {
     VoidCallback? onLaterButtonPressed,
     VoidCallback? onDismissButtonPressed,
   }) {
-    return PredialogConfig._(
+    return PreDialogConfig._(
       enabled: enabled ?? this.enabled,
       // TODO(lamnhan066): Remove deprecated field in the next major release
       // ignore: deprecated_member_use_from_same_package

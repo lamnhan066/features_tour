@@ -133,8 +133,14 @@ class FeaturesTour extends StatefulWidget {
     /// The configuration of the [introduce] widget. The default is [IntroduceConfig.global].
     IntroduceConfig? introduceConfig,
 
-    /// The configuration of the pre-dialog widget. The default is [PredialogConfig.global].
-    PredialogConfig? predialogConfig,
+    /// The configuration of the [showPreDialog] widget. The default is [PreDialogConfig.global].
+    @Deprecated(
+      'Use `preDialogConfig` instead. This will be removed in the next major version.',
+    )
+    PreDialogConfig? predialogConfig,
+
+    /// The configuration of the pre-dialog widget. The default is [PreDialogConfig.global].
+    PreDialogConfig? preDialogConfig,
 
     /// The configuration of the skip button. The default is [SkipConfig.global].
     SkipConfig? skipConfig,
@@ -151,13 +157,18 @@ class FeaturesTour extends StatefulWidget {
     /// Allows printing the debug logs. The default is `kDebugMode`.
     bool? debugLog,
   }) {
+    assert(
+      preDialogConfig == null || predialogConfig == null,
+      'You can only set `predialogConfig` or `preDialogConfig`.',
+    );
     if (force != null) _force = force;
     if (childConfig != null) ChildConfig.global = childConfig;
     if (skipConfig != null) SkipConfig.global = skipConfig;
     if (nextConfig != null) NextConfig.global = nextConfig;
     if (doneConfig != null) DoneConfig.global = doneConfig;
     if (introduceConfig != null) IntroduceConfig.global = introduceConfig;
-    if (predialogConfig != null) PredialogConfig.global = predialogConfig;
+    if (predialogConfig != null) PreDialogConfig.global = predialogConfig;
+    if (preDialogConfig != null) PreDialogConfig.global = preDialogConfig;
     if (preferencePrefix != null) _prefix = preferencePrefix;
     if (debugLog != null) _debugLog = debugLog;
   }

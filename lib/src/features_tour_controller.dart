@@ -120,11 +120,20 @@ class FeaturesTourController {
     Duration? firstIndexTimeout,
     Duration delay = const Duration(milliseconds: 500),
     bool? force,
-    PredialogConfig? predialogConfig,
+    @Deprecated(
+      'Use `preDialogConfig` instead. This will be removed in the next major version.',
+    )
+    PreDialogConfig? predialogConfig,
+    PreDialogConfig? preDialogConfig,
     FutureOr<void> Function(TourState state)? onState,
     bool popToSkip = true,
     bool? debugLog,
   }) async {
+    assert(
+      preDialogConfig == null || predialogConfig == null,
+      'You can only set `predialogConfig` or `preDialogConfig`.',
+    );
+    final effectivePreDialogConfig = predialogConfig ?? preDialogConfig;
     _popToSkip = popToSkip;
     _debugLog = debugLog ?? FeaturesTour._debugLog;
     firstIndex ??= waitForFirstIndex;
@@ -210,7 +219,7 @@ class FeaturesTourController {
       final result = await _showPredialog(
         context,
         force,
-        predialogConfig,
+        effectivePreDialogConfig,
         () async {
           _printDebug(() => 'The pre-dialog is shown.');
           await onState?.call(const TourPreDialogIsShown());
@@ -232,19 +241,19 @@ class FeaturesTourController {
       switch (result) {
         case null:
           await onState?.call(const TourPreDialogNotShown());
-        case PredialogButtonType.accept:
+        case PreDialogButtonType.accept:
           await onState?.call(
-            const TourPreDialogButtonPressed(PredialogButtonType.accept),
+            const TourPreDialogButtonPressed(PreDialogButtonType.accept),
           );
-        case PredialogButtonType.later:
+        case PreDialogButtonType.later:
           await onState?.call(
-            const TourPreDialogButtonPressed(PredialogButtonType.later),
+            const TourPreDialogButtonPressed(PreDialogButtonType.later),
           );
           return;
-        case PredialogButtonType.dismiss:
+        case PreDialogButtonType.dismiss:
           await _removePage();
           await onState?.call(
-            const TourPreDialogButtonPressed(PredialogButtonType.dismiss),
+            const TourPreDialogButtonPressed(PreDialogButtonType.dismiss),
           );
           return;
       }
@@ -617,12 +626,12 @@ class FeaturesTourController {
   }
 
   /// Shows the pre-dialog if possible.
-  Future<PredialogButtonType?> _showPredialog(
+  Future<PreDialogButtonType?> _showPredialog(
     BuildContext context,
     bool? force,
-    PredialogConfig? config,
+    PreDialogConfig? config,
     FutureOr<void> Function() onShownPreDialog,
-    FutureOr<void> Function(PredialogButtonType type) onAppliedToAllPages,
+    FutureOr<void> Function(PreDialogButtonType type) onAppliedToAllPages,
     FutureOr<void> Function()? onShownCustomDialog,
     void Function(bool value)? onApplyToAllPagesCheckboxChanged,
   ) async {
@@ -637,16 +646,21 @@ class FeaturesTourController {
 
     if (shouldShowPredialog) {
       _printDebug(() => 'Should show pre-dialog returned true.');
-      final effectiveConfig = config ?? PredialogConfig.global;
+      final effectiveConfig = config ?? PreDialogConfig.global;
 
       if (effectiveConfig.enabled) {
         _printDebug(() => 'The pre-dialog is enabled.');
 
-        final PredialogButtonType? predialogResult;
+        final PreDialogButtonType? predialogResult;
         if (effectiveConfig.customDialog != null) {
           _printDebug(() => 'Using a custom dialog for the pre-dialog.');
           onShownCustomDialog?.call();
-          predialogResult = await effectiveConfig.customDialog!(context);
+          predialogResult = await effectiveConfig.customDialog!(
+            context,
+            (value) {
+              onApplyToAllPagesCheckboxChanged?.call(value);
+            },
+          );
         }
         // TODO(lamnhan066): Remove deprecated field in the next major release
         // ignore: deprecated_member_use_from_same_package
@@ -658,11 +672,11 @@ class FeaturesTourController {
           // ignore: deprecated_member_use_from_same_package
           final result = await effectiveConfig.modifiedDialogResult!(context);
           predialogResult = switch (result) {
-            true => PredialogButtonType.accept,
-            false => PredialogButtonType.later,
+            true => PreDialogButtonType.accept,
+            false => PreDialogButtonType.later,
           };
         } else {
-          predialogResult = await predialog(
+          predialogResult = await showPreDialog(
             context,
             effectiveConfig,
             onShownPreDialog,
@@ -673,13 +687,13 @@ class FeaturesTourController {
         }
 
         switch (predialogResult) {
-          case PredialogButtonType.accept:
+          case PreDialogButtonType.accept:
             _printDebug(() => 'The user accepted to show the introduction.');
             effectiveConfig.onAcceptButtonPressed?.call();
-          case PredialogButtonType.later:
+          case PreDialogButtonType.later:
             _printDebug(() => 'The user chose to show the introduction later.');
             effectiveConfig.onLaterButtonPressed?.call();
-          case PredialogButtonType.dismiss:
+          case PreDialogButtonType.dismiss:
             _printDebug(() => 'The user dismissed the introduction.');
             effectiveConfig.onDismissButtonPressed?.call();
         }
