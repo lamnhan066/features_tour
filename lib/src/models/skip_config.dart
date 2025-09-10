@@ -39,6 +39,8 @@ class SkipConfig extends BaseButtonConfig {
   ///  ),
   /// ```
   factory SkipConfig({
+    Widget Function(BuildContext context, VoidCallback onPressed)? builder,
+    @Deprecated('Use builder instead')
     Widget Function(VoidCallback onPressed)? child,
     String? text,
     Alignment? alignment,
@@ -48,6 +50,9 @@ class SkipConfig extends BaseButtonConfig {
     ButtonStyle? buttonStyle,
   }) {
     return global.copyWith(
+      builder: builder,
+      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
+      // ignore: deprecated_member_use_from_same_package
       child: child,
       text: text,
       alignment: alignment,
@@ -59,7 +64,8 @@ class SkipConfig extends BaseButtonConfig {
   }
 
   const SkipConfig._({
-    super.child,
+    @Deprecated('Use builder instead') super.child,
+    super.builder,
     super.text = 'SKIP',
     super.alignment = Alignment.bottomLeft,
     super.color,
@@ -74,6 +80,8 @@ class SkipConfig extends BaseButtonConfig {
   /// Creates a new SkipConfig based on these values.
   @override
   SkipConfig copyWith({
+    Widget Function(BuildContext context, VoidCallback onPressed)? builder,
+    @Deprecated('Use builder instead')
     Widget Function(VoidCallback onPressed)? child,
     String? text,
     Alignment? alignment,
@@ -83,6 +91,9 @@ class SkipConfig extends BaseButtonConfig {
     ButtonStyle? buttonStyle,
   }) {
     return SkipConfig._(
+      builder: builder ?? this.builder,
+      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
+      // ignore: deprecated_member_use_from_same_package
       child: child,
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,

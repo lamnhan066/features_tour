@@ -478,6 +478,48 @@ class FeaturesTourController {
       }
     }
 
+    void skipAction() => complete(IntroduceResult.skip);
+    // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
+    // ignore: deprecated_member_use_from_same_package
+    final skipButton = skipConfig.child?.call(skipAction) ??
+        skipConfig.builder?.call(context, skipAction) ??
+        ElevatedButton(
+          onPressed: skipAction,
+          style: skipConfig.buttonStyle,
+          child: Text(
+            skipConfig.text,
+            style: skipConfig.textStyle ?? TextStyle(color: skipConfig.color),
+          ),
+        );
+
+    void nextAction() => complete(IntroduceResult.next);
+    // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
+    // ignore: deprecated_member_use_from_same_package
+    final nextButton = nextConfig.child?.call(nextAction) ??
+        nextConfig.builder?.call(context, nextAction) ??
+        ElevatedButton(
+          onPressed: nextAction,
+          style: nextConfig.buttonStyle,
+          child: Text(
+            nextConfig.text,
+            style: nextConfig.textStyle ?? TextStyle(color: nextConfig.color),
+          ),
+        );
+
+    void doneAction() => complete(IntroduceResult.done);
+    // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
+    // ignore: deprecated_member_use_from_same_package
+    final doneButton = doneConfig.child?.call(doneAction) ??
+        doneConfig.builder?.call(context, doneAction) ??
+        ElevatedButton(
+          onPressed: doneAction,
+          style: doneConfig.buttonStyle,
+          child: Text(
+            doneConfig.text,
+            style: doneConfig.textStyle ?? TextStyle(color: doneConfig.color),
+          ),
+        );
+
     final overlayEntry = OverlayEntry(builder: (ctx) {
       return GestureDetector(
         onTap: childConfig.barrierDismissible
@@ -493,63 +535,21 @@ class FeaturesTourController {
             skip: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(12),
-                child: skipConfig.child != null
-                    ? skipConfig.child!(() {
-                        complete(IntroduceResult.skip);
-                      })
-                    : ElevatedButton(
-                        onPressed: () {
-                          complete(IntroduceResult.skip);
-                        },
-                        style: skipConfig.buttonStyle,
-                        child: Text(
-                          skipConfig.text,
-                          style: skipConfig.textStyle ??
-                              TextStyle(color: skipConfig.color),
-                        ),
-                      ),
+                child: skipButton,
               ),
             ),
             skipConfig: skipConfig,
             next: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(12),
-                child: nextConfig.child != null
-                    ? nextConfig.child!(() {
-                        complete(IntroduceResult.next);
-                      })
-                    : ElevatedButton(
-                        onPressed: () {
-                          complete(IntroduceResult.next);
-                        },
-                        style: nextConfig.buttonStyle,
-                        child: Text(
-                          nextConfig.text,
-                          style: nextConfig.textStyle ??
-                              TextStyle(color: nextConfig.color),
-                        ),
-                      ),
+                child: nextButton,
               ),
             ),
             doneConfig: doneConfig,
             done: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(12),
-                child: doneConfig.child != null
-                    ? doneConfig.child!(() {
-                        complete(IntroduceResult.done);
-                      })
-                    : ElevatedButton(
-                        onPressed: () {
-                          complete(IntroduceResult.done);
-                        },
-                        style: doneConfig.buttonStyle,
-                        child: Text(
-                          doneConfig.text,
-                          style: doneConfig.textStyle ??
-                              TextStyle(color: doneConfig.color),
-                        ),
-                      ),
+                child: doneButton,
               ),
             ),
             isLastState: isLastState,
