@@ -8,12 +8,17 @@ typedef IntroduceBuilder = Widget Function(
   Widget introduce,
 );
 
+/// A builder function to determine the color of the modal barrier that darkens
+/// everything behind the tour.
+typedef BarrierColorBuilder = Color Function(BuildContext context);
+
 /// Configuration for the `introduce` widget in the Features Tour.
 class IntroduceConfig {
   /// Creates a new IntroduceConfig based on [global] values.
   factory IntroduceConfig({
-    IntroduceBuilder? builder,
-    Color? backgroundColor,
+    IntroduceBuilder builder = _defaultBuilder,
+    @Deprecated('Use barrierColorBuilder instead') Color? backgroundColor,
+    BarrierColorBuilder barrierColorBuilder = _defaultBarrierColorBuilder,
     EdgeInsetsGeometry? padding,
     QuadrantAlignment? quadrantAlignment,
     Alignment? alignment,
@@ -21,7 +26,9 @@ class IntroduceConfig {
   }) {
     return global.copyWith(
       builder: builder,
-      backgroundColor: backgroundColor,
+      barrierColorBuilder: backgroundColor != null
+          ? (builder) => backgroundColor
+          : barrierColorBuilder,
       padding: padding,
       alignment: alignment,
       quadrantAlignment: quadrantAlignment,
@@ -30,8 +37,8 @@ class IntroduceConfig {
   }
 
   const IntroduceConfig._({
-    this.builder,
-    this.backgroundColor,
+    this.builder = _defaultBuilder,
+    this.barrierColorBuilder = _defaultBarrierColorBuilder,
     this.padding = const EdgeInsets.all(20),
     this.quadrantAlignment,
     this.alignment,
@@ -41,11 +48,37 @@ class IntroduceConfig {
   /// Global configuration.
   static IntroduceConfig global = const IntroduceConfig._();
 
-  /// A builder function to wrap the `introduce` widget.
-  final IntroduceBuilder? builder;
+  /// The default builder function to wrap the `introduce` widget.
+  static Widget _defaultBuilder(
+    BuildContext context,
+    Rect childRect,
+    Widget introduce,
+  ) {
+    final brightness = Theme.brightnessOf(context);
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: brightness == Brightness.dark
+            ? Colors.black.withValues(alpha: .85)
+            : Colors.white.withValues(alpha: .85),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: introduce,
+    );
+  }
 
-  /// The color of the background for the `introduce` widget.
-  final Color? backgroundColor;
+  static Color _defaultBarrierColorBuilder(BuildContext context) {
+    if (Theme.of(context).brightness == Brightness.dark) {
+      return ColorScheme.of(context).onSurface.withValues(alpha: 0.18);
+    }
+    return ColorScheme.of(context).onSurface.withValues(alpha: 0.82);
+  }
+
+  /// A builder function to wrap the `introduce` widget.
+  final IntroduceBuilder builder;
+
+  /// The color of the modal barrier that darkens everything behind the tour.
+  final Color Function(BuildContext context) barrierColorBuilder;
 
   /// The padding around the `introduce` widget.
   final EdgeInsetsGeometry padding;
@@ -67,7 +100,8 @@ class IntroduceConfig {
   /// Creates a new IntroduceConfig based on these values.
   IntroduceConfig copyWith({
     IntroduceBuilder? builder,
-    Color? backgroundColor,
+    @Deprecated('Use barrierColorBuilder instead') Color? backgroundColor,
+    BarrierColorBuilder? barrierColorBuilder,
     EdgeInsetsGeometry? padding,
     Alignment? alignment,
     QuadrantAlignment? quadrantAlignment,
@@ -76,7 +110,9 @@ class IntroduceConfig {
   }) {
     return IntroduceConfig._(
       builder: builder ?? this.builder,
-      backgroundColor: backgroundColor ?? this.backgroundColor,
+      barrierColorBuilder: backgroundColor != null
+          ? (builder) => backgroundColor
+          : (barrierColorBuilder ?? this.barrierColorBuilder),
       padding: padding ?? this.padding,
       alignment: alignment ?? this.alignment,
       quadrantAlignment: quadrantAlignment ?? this.quadrantAlignment,

@@ -218,10 +218,6 @@ class FeaturesTourController {
         return;
       }
 
-      // We put this here so we don't have to check the context again.
-      final defaultIntroduceBackgroundColor =
-          _getOnSurfaceDefaultColor(context);
-
       final result = await _showPredialog(
         context,
         force,
@@ -350,7 +346,8 @@ class FeaturesTourController {
         final introduceConfig =
             state.widget.introduceConfig ?? IntroduceConfig.global;
         final introduceBackgroundColor =
-            introduceConfig.backgroundColor ?? defaultIntroduceBackgroundColor;
+            introduceConfig.barrierColorBuilder(context);
+
         showCover(
           context,
           introduceBackgroundColor,
@@ -492,6 +489,7 @@ class FeaturesTourController {
             globalKey: _globalKeys[state.widget.index]!,
             childConfig: childConfig,
             introduce: state.widget.introduce,
+            introduceConfig: introduceConfig,
             skip: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(12),
@@ -767,10 +765,6 @@ class FeaturesTourController {
     }
 
     return false;
-  }
-
-  Color _getOnSurfaceDefaultColor(BuildContext context) {
-    return ColorScheme.of(context).onSurface.withValues(alpha: 0.82);
   }
 
   /// Gets the key for shared preferences.
