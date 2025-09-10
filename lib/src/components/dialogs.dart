@@ -84,7 +84,7 @@ Future<PreDialogButtonType> showPreDialog(
                 complete(PreDialogButtonType.dismiss);
               },
               style: config.dismissButtonStyle,
-              child: DefaultTextStyle(
+              child: DefaultTextStyle.merge(
                 style:
                     TextStyle(color: ColorScheme.of(context).onSurfaceVariant),
                 child: Text(config.dismissButtonLabel),
