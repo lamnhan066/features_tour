@@ -12,11 +12,20 @@ void main() {
       laterButtonLabel: 'Later',
       dismissButtonLabel: 'Dismiss',
     ),
+    introduceConfig: RoundedRectIntroduceConfig(),
     childConfig: ChildConfig(isAnimateChild: false),
-    nextConfig: NextConfig(
-      child: (onPressed) => FilledButton(
+    skipConfig: SkipConfig(
+      builder: (context, onPressed) => ElevatedButton.icon(
         onPressed: onPressed,
-        child: const Text('NEXT'),
+        icon: const Icon(Icons.skip_next),
+        label: const Text('SKIP'),
+      ),
+    ),
+    nextConfig: NextConfig(
+      builder: (context, onPressed) => FilledButton.icon(
+        onPressed: onPressed,
+        icon: const Icon(Icons.arrow_forward),
+        label: const Text('NEXT'),
       ),
     ),
     doneConfig: DoneConfig(
@@ -164,10 +173,20 @@ class _AppState extends State<App> {
         introduce: Text(
           'This is a list of items',
           style: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
         introduceConfig: IntroduceConfig(
+          builder: (context, childRect, introduce) {
+            return Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: ColorScheme.of(context).primary.withValues(alpha: 0.9),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: introduce,
+            );
+          },
           quadrantAlignment: QuadrantAlignment.inside,
         ),
         childConfig: ChildConfig(
