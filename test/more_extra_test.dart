@@ -429,7 +429,10 @@ void main() {
           delay: Duration.zero,
           preDialogConfig: PreDialogConfig(
             enabled: true,
-            customDialogBuilder: (_, __) => PreDialogButtonType.accept,
+            customDialogBuilder: (_, onApplyToAllPagesCheckboxChanged) {
+              onApplyToAllPagesCheckboxChanged(false);
+              return PreDialogButtonType.accept;
+            },
           ),
           onState: (state) async {
             collectedStates.add(state);
