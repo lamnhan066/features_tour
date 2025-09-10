@@ -20,6 +20,7 @@ Future<PredialogButtonType> predialog(
   PredialogConfig config,
   FutureOr<void> Function() onShownPreDialog,
   FutureOr<void> Function(PredialogButtonType type) onAppliedToAllPages,
+  void Function(bool value)? onApplyToAllPagesCheckboxChanged,
   void Function(String log)? printDebug,
 ) async {
   // Returns the cached selection if "Do not ask again" was checked previously.
@@ -56,7 +57,10 @@ Future<PredialogButtonType> predialog(
               text: config.applyToAllPagesText,
               baseTextColor: config.textColor,
               checkboxTextColor: config.applyToAllPagesTextColor,
-              onChanged: (value) => isChecked = value,
+              onChanged: (value) {
+                isChecked = value;
+                onApplyToAllPagesCheckboxChanged?.call(value);
+              },
             ),
           ],
         ),

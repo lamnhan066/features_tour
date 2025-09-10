@@ -58,6 +58,15 @@ class TourPreDialogIsShownWithCustomDialog extends TourState {
   const TourPreDialogIsShownWithCustomDialog();
 }
 
+/// Indicates that the "Apply to all pages" checkbox state has changed.
+class TourPreDialogApplyToAllPagesCheckboxChanged extends TourState {
+  /// Creates a new instance of [TourPreDialogApplyToAllPagesCheckboxChanged].
+  const TourPreDialogApplyToAllPagesCheckboxChanged(this.isChecked);
+
+  /// Indicates whether the checkbox is checked or not.
+  final bool isChecked;
+}
+
 /// Indicates that a button in the pre-dialog has been pressed.
 class TourPreDialogButtonPressed extends TourState {
   /// Creates a new instance of [TourPreDialogButtonPressed].

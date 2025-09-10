@@ -223,6 +223,10 @@ class FeaturesTourController {
           _printDebug(() => 'A custom dialog is shown for the pre-dialog.');
           await onState?.call(const TourPreDialogIsShownWithCustomDialog());
         },
+        (value) {
+          _printDebug(() => 'The "Apply to all pages" checkbox is now $value.');
+          onState?.call(TourPreDialogApplyToAllPagesCheckboxChanged(value));
+        },
       );
 
       switch (result) {
@@ -620,6 +624,7 @@ class FeaturesTourController {
     FutureOr<void> Function() onShownPreDialog,
     FutureOr<void> Function(PredialogButtonType type) onAppliedToAllPages,
     FutureOr<void> Function()? onShownCustomDialog,
+    void Function(bool value)? onApplyToAllPagesCheckboxChanged,
   ) async {
     // Determines whether to show the pre-dialog.
     var shouldShowPredialog = true;
@@ -662,6 +667,7 @@ class FeaturesTourController {
             effectiveConfig,
             onShownPreDialog,
             onAppliedToAllPages,
+            onApplyToAllPagesCheckboxChanged,
             _debugLog ? (log) => _printDebug(() => log) : null,
           );
         }
