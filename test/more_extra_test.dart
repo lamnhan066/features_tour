@@ -1,6 +1,7 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/cover_dialog.dart'; // Added for showCover and hideCover
 import 'package:features_tour/src/components/dialogs.dart';
+import 'package:features_tour/src/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,7 @@ void main() {
   var collectedStates = <TourState>[];
 
   setUp(() {
+    FeaturesTour.setTestingLogger(Logger((s) {}));
     resetPreDialog();
     SharedPreferences.setMockInitialValues({});
     collectedStates = [];
