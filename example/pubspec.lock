@@ -63,7 +63,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.5.0-rc.6"
+    version: "0.5.0-rc.7"
   ffi:
     dependency: transitive
     description:
