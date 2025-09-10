@@ -65,10 +65,7 @@ class PredialogConfig {
     this.acceptButtonStyle,
     this.laterButtonText = const Text('Later'),
     this.laterButtonStyle,
-    this.dismissButtonText = const Text(
-      'Dismiss',
-      style: TextStyle(color: Colors.grey),
-    ),
+    this.dismissButtonText = const Text('Dismiss'),
     this.dismissButtonStyle,
     this.borderRadius = 12,
     this.backgroundColor,

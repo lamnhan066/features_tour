@@ -81,7 +81,10 @@ Future<PredialogButtonType> predialog(
           TextButton(
             onPressed: () => complete(PredialogButtonType.dismiss),
             style: config.dismissButtonStyle,
-            child: config.dismissButtonText,
+            child: DefaultTextStyle(
+              style: TextStyle(color: ColorScheme.of(context).onSurfaceVariant),
+              child: config.dismissButtonText,
+            ),
           ),
         ],
       ),
