@@ -335,15 +335,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                       child: widget.introduceConfig.builder(
                         context,
                         rect!,
-                        DefaultTextStyle.merge(
-                          style: TextStyle(
-                            color:
-                                Theme.brightnessOf(context) == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                          ),
-                          child: widget.introduce,
-                        ),
+                        widget.introduce,
                       ),
                     ),
                   ),

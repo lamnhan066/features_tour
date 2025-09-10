@@ -17,10 +17,10 @@ class IntroduceConfig {
   /// Creates a new IntroduceConfig based on [global] values.
   ///
   /// Using [builder] to customize the appearance of the `introduce` widget.
-  /// Default is set to [_defaultIntroduceBuilder].
+  /// Default is set to [IntroduceDecorations.introduceDefaultBuilder].
   ///
   /// Using [barrierColorBuilder] to customize the color of the modal barrier.
-  /// Default is set to [_defaultBarrierColorBuilder].
+  /// Default is set to [IntroduceDecorations.barrierColorDefaultBuilder].
   ///
   /// Using [padding] to set the padding around the `introduce` widget. This
   /// value is used to create space between the `introduce` widget and the
@@ -32,6 +32,14 @@ class IntroduceConfig {
   ///
   /// Using [useRootOverlay] to determine if the tour should be shown above
   /// all other [Overlay]s. Default is set to false.
+  ///
+  /// See also:
+  ///   * [IntroduceBuilder]: A function that builds the `introduce` widget.
+  ///     * [IntroduceDecorations.introduceDefaultBuilder]
+  ///     * [IntroduceDecorations.introduceRoundedRectBuilder]
+  ///   * [BarrierColorBuilder]: A function that builds the color of the modal barrier.
+  ///     * [IntroduceDecorations.barrierColorDefaultBuilder]
+  ///     * [IntroduceDecorations.barrierColorBetterVisibleBuilder]
   factory IntroduceConfig({
     IntroduceBuilder? builder,
     @Deprecated('Use barrierColorBuilder instead') Color? backgroundColor,
@@ -54,8 +62,8 @@ class IntroduceConfig {
   }
 
   const IntroduceConfig._({
-    this.builder = _defaultIntroduceBuilder,
-    this.barrierColorBuilder = _defaultBarrierColorBuilder,
+    this.builder = IntroduceDecorations.introduceDefaultBuilder,
+    this.barrierColorBuilder = IntroduceDecorations.barrierColorDefaultBuilder,
     this.padding = const EdgeInsets.all(20),
     this.quadrantAlignment,
     this.alignment,
@@ -64,32 +72,6 @@ class IntroduceConfig {
 
   /// Global configuration.
   static IntroduceConfig global = const IntroduceConfig._();
-
-  /// The default builder function to wrap the `introduce` widget.
-  static Widget _defaultIntroduceBuilder(
-    BuildContext context,
-    Rect childRect,
-    Widget introduce,
-  ) {
-    final brightness = Theme.brightnessOf(context);
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: brightness == Brightness.dark
-            ? Colors.black.withValues(alpha: .85)
-            : Colors.white.withValues(alpha: .85),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: introduce,
-    );
-  }
-
-  static Color _defaultBarrierColorBuilder(BuildContext context) {
-    if (Theme.of(context).brightness == Brightness.dark) {
-      return ColorScheme.of(context).onSurface.withValues(alpha: 0.18);
-    }
-    return ColorScheme.of(context).onSurface.withValues(alpha: 0.82);
-  }
 
   /// A builder function to wrap the `introduce` widget.
   final IntroduceBuilder builder;

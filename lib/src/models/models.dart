@@ -3,6 +3,7 @@ export 'child_config.dart';
 export 'done_config.dart';
 export 'instruction_result.dart';
 export 'introduce_config.dart';
+export 'introduce_decorations.dart';
 export 'next_config.dart';
 export 'pre_dialog_button_type.dart';
 export 'pre_dialog_config.dart';
