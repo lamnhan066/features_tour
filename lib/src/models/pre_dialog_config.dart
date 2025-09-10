@@ -21,14 +21,18 @@ class PreDialogConfig {
     Color? backgroundColor,
     Color? textColor,
     String? title,
-    String? applyToAllPagesText,
+    @Deprecated('Use applyToAllPagesLabel instead') String? applyToAllPagesText,
+    String? applyToAllPagesLabel,
     Color? applyToAllPagesTextColor,
     String? content,
-    Text? acceptButtonText,
+    @Deprecated('Use acceptButtonLabel instead') Text? acceptButtonText,
+    String? acceptButtonLabel,
     ButtonStyle? acceptButtonStyle,
-    Text? laterButtonText,
+    @Deprecated('Use laterButtonLabel instead') Text? laterButtonText,
+    String? laterButtonLabel,
     ButtonStyle? laterButtonStyle,
-    Text? dismissButtonText,
+    @Deprecated('Use dismissButtonLabel instead') Text? dismissButtonText,
+    String? dismissButtonLabel,
     ButtonStyle? dismissButtonStyle,
     double? borderRadius,
     VoidCallback? onAcceptButtonPressed,
@@ -44,14 +48,14 @@ class PreDialogConfig {
       backgroundColor: backgroundColor,
       textColor: textColor,
       title: title,
-      applyToAllPagesText: applyToAllPagesText,
+      applyToAllPagesLabel: applyToAllPagesLabel ?? applyToAllPagesText,
       applyToAllPagesTextColor: applyToAllPagesTextColor,
       content: content,
-      acceptButtonText: acceptButtonText,
+      acceptButtonLabel: acceptButtonLabel ?? acceptButtonText?.data,
       acceptButtonStyle: acceptButtonStyle,
-      laterButtonText: laterButtonText,
+      laterButtonLabel: laterButtonLabel ?? laterButtonText?.data,
       laterButtonStyle: laterButtonStyle,
-      dismissButtonText: dismissButtonText,
+      dismissButtonLabel: dismissButtonLabel ?? dismissButtonText?.data,
       dismissButtonStyle: dismissButtonStyle,
       borderRadius: borderRadius,
       onAcceptButtonPressed: onAcceptButtonPressed,
@@ -67,13 +71,13 @@ class PreDialogConfig {
     this.content =
         'This page has some new features that you might want to discover.\n\n'
             'Would you like to take a tour?',
-    this.applyToAllPagesText = 'Apply to all pages',
+    this.applyToAllPagesLabel = 'Apply to all pages',
     this.applyToAllPagesTextColor,
-    this.acceptButtonText = const Text('Okay'),
+    this.acceptButtonLabel = 'Okay',
     this.acceptButtonStyle,
-    this.laterButtonText = const Text('Later'),
+    this.laterButtonLabel = 'Later',
     this.laterButtonStyle,
-    this.dismissButtonText = const Text('Dismiss'),
+    this.dismissButtonLabel = 'Dismiss',
     this.dismissButtonStyle,
     this.borderRadius = 12,
     this.backgroundColor,
@@ -106,28 +110,28 @@ class PreDialogConfig {
   /// The message content of the dialog.
   final String content;
 
-  /// The label for the 'Apply to all pages' checkbox.
-  final String applyToAllPagesText;
+  /// The label for the 'Apply to all pages' checkbox, used for semantics.
+  final String applyToAllPagesLabel;
 
   /// The color of the 'Apply to all pages' label text, which is also applied to the checkbox.
   ///
   /// The default is [textColor]; otherwise, it falls back to the primary color.
   final Color? applyToAllPagesTextColor;
 
-  /// The text for the accept button.
-  final Text acceptButtonText;
+  /// The label for the accept button, which is also used for semantics.
+  final String acceptButtonLabel;
 
   /// The styling for the accept button (typically an `ElevatedButton`).
   final ButtonStyle? acceptButtonStyle;
 
-  /// The text for the later button, which allows the user to postpone an action.
-  final Text laterButtonText;
+  /// The label for the later button, which is also used for semantics.
+  final String laterButtonLabel;
 
   /// The styling for the later button (typically a `TextButton`).
   final ButtonStyle? laterButtonStyle;
 
-  /// The text for the dismiss button, which allows the user to close the dialog.
-  final Text dismissButtonText;
+  /// The label for the dismiss button, which is also used for semantics.
+  final String dismissButtonLabel;
 
   /// The styling for the dismiss button (typically a `TextButton`).
   final ButtonStyle? dismissButtonStyle;
@@ -172,13 +176,13 @@ class PreDialogConfig {
     Color? textColor,
     String? title,
     String? content,
-    String? applyToAllPagesText,
+    String? applyToAllPagesLabel,
     Color? applyToAllPagesTextColor,
-    Text? acceptButtonText,
+    String? acceptButtonLabel,
     ButtonStyle? acceptButtonStyle,
-    Text? laterButtonText,
+    String? laterButtonLabel,
     ButtonStyle? laterButtonStyle,
-    Text? dismissButtonText,
+    String? dismissButtonLabel,
     ButtonStyle? dismissButtonStyle,
     double? borderRadius,
     VoidCallback? onAcceptButtonPressed,
@@ -195,14 +199,14 @@ class PreDialogConfig {
       textColor: textColor ?? this.textColor,
       title: title ?? this.title,
       content: content ?? this.content,
-      applyToAllPagesText: applyToAllPagesText ?? this.applyToAllPagesText,
+      applyToAllPagesLabel: applyToAllPagesLabel ?? this.applyToAllPagesLabel,
       applyToAllPagesTextColor:
           applyToAllPagesTextColor ?? this.applyToAllPagesTextColor,
-      acceptButtonText: acceptButtonText ?? this.acceptButtonText,
+      acceptButtonLabel: acceptButtonLabel ?? this.acceptButtonLabel,
       acceptButtonStyle: acceptButtonStyle ?? this.acceptButtonStyle,
-      laterButtonText: laterButtonText ?? this.laterButtonText,
+      laterButtonLabel: laterButtonLabel ?? this.laterButtonLabel,
       laterButtonStyle: laterButtonStyle ?? this.laterButtonStyle,
-      dismissButtonText: dismissButtonText ?? this.dismissButtonText,
+      dismissButtonLabel: dismissButtonLabel ?? this.dismissButtonLabel,
       dismissButtonStyle: dismissButtonStyle ?? this.dismissButtonStyle,
       borderRadius: borderRadius ?? this.borderRadius,
       onAcceptButtonPressed:

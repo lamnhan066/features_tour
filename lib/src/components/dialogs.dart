@@ -54,7 +54,9 @@ Future<PreDialogButtonType> showPreDialog(
             ),
             const SizedBox(height: 20),
             _CheckboxRow(
-              text: config.applyToAllPagesText,
+              // TODO(lamnhan066): Remove deprecated field in the next major release
+              // ignore: deprecated_member_use_from_same_package
+              text: config.applyToAllPagesLabel,
               baseTextColor: config.textColor,
               checkboxTextColor: config.applyToAllPagesTextColor,
               onChanged: (value) {
@@ -71,19 +73,19 @@ Future<PreDialogButtonType> showPreDialog(
           ElevatedButton(
             onPressed: () => complete(PreDialogButtonType.accept),
             style: config.acceptButtonStyle,
-            child: config.acceptButtonText,
+            child: Text(config.acceptButtonLabel),
           ),
           TextButton(
             onPressed: () => complete(PreDialogButtonType.later),
             style: config.laterButtonStyle,
-            child: config.laterButtonText,
+            child: Text(config.laterButtonLabel),
           ),
           TextButton(
             onPressed: () => complete(PreDialogButtonType.dismiss),
             style: config.dismissButtonStyle,
             child: DefaultTextStyle(
               style: TextStyle(color: ColorScheme.of(context).onSurfaceVariant),
-              child: config.dismissButtonText,
+              child: Text(config.dismissButtonLabel),
             ),
           ),
         ],
