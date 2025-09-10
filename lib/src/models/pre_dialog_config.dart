@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 /// The function returns a `FutureOr<PreDialogButtonType>` indicating the user's choice.
 typedef CustomPreDialog = FutureOr<PreDialogButtonType> Function(
   BuildContext context,
-  void Function(bool value)? onApplyToAllPagesCheckboxChanged,
+  void Function(bool value) onApplyToAllPagesCheckboxChanged,
 );
 
 /// Configuration for the pre-dialog shown before starting a features tour.
