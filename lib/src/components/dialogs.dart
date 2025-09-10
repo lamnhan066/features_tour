@@ -42,8 +42,6 @@ Future<PreDialogButtonType> showPreDialog(
       color: Colors.black54,
       child: AlertDialog(
         title: Text(config.title, style: TextStyle(color: config.textColor)),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,8 +52,6 @@ Future<PreDialogButtonType> showPreDialog(
             ),
             const SizedBox(height: 20),
             _CheckboxRow(
-              // TODO(lamnhan066): Remove deprecated field in the next major release
-              // ignore: deprecated_member_use_from_same_package
               text: config.applyToAllPagesLabel,
               baseTextColor: config.textColor,
               checkboxTextColor: config.applyToAllPagesTextColor,
@@ -70,16 +66,6 @@ Future<PreDialogButtonType> showPreDialog(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(config.borderRadius)),
         actions: [
-          ElevatedButton(
-            onPressed: () => complete(PreDialogButtonType.accept),
-            style: config.acceptButtonStyle,
-            child: Text(config.acceptButtonLabel),
-          ),
-          TextButton(
-            onPressed: () => complete(PreDialogButtonType.later),
-            style: config.laterButtonStyle,
-            child: Text(config.laterButtonLabel),
-          ),
           TextButton(
             onPressed: () => complete(PreDialogButtonType.dismiss),
             style: config.dismissButtonStyle,
@@ -87,6 +73,16 @@ Future<PreDialogButtonType> showPreDialog(
               style: TextStyle(color: ColorScheme.of(context).onSurfaceVariant),
               child: Text(config.dismissButtonLabel),
             ),
+          ),
+          TextButton(
+            onPressed: () => complete(PreDialogButtonType.later),
+            style: config.laterButtonStyle,
+            child: Text(config.laterButtonLabel),
+          ),
+          FilledButton(
+            onPressed: () => complete(PreDialogButtonType.accept),
+            style: config.acceptButtonStyle,
+            child: Text(config.acceptButtonLabel),
           ),
         ],
       ),
