@@ -364,7 +364,7 @@ void main() {
           delay: Duration.zero,
           preDialogConfig: PreDialogConfig(
             enabled: true,
-            customDialog: (_, __) async => PreDialogButtonType.accept,
+            customDialogBuilder: (_, __) async => PreDialogButtonType.accept,
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -406,7 +406,7 @@ void main() {
           delay: Duration.zero,
           preDialogConfig: PreDialogConfig(
             enabled: true,
-            customDialog: (_, __) => PreDialogButtonType.later,
+            customDialogBuilder: (_, __) => PreDialogButtonType.later,
           ),
           onState: (state) async {
             collectedStates.add(state);
