@@ -104,6 +104,7 @@ void main() {
               index: 1,
               controller: controller,
               introduce: const Text('a.intro'),
+              introduceConfig: RoundedRectIntroduceConfig(),
               child: const Text('a'),
             ),
             FeaturesTour(
