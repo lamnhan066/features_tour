@@ -1,3 +1,7 @@
+## 0.5.0-rc.8
+
+* Deprecates `debugLog` in the `FeaturesTourController.start(debugLog)` in favor of `FeaturesTourController(debugLog)`.
+
 ## 0.5.0-rc.7
 
 * Adds `onState` callback to `FeaturesTourController.start` to receive [TourState] update during the tour lifecycle.
