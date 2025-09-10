@@ -51,12 +51,18 @@ class PreDialogConfig {
     @Deprecated('Use applyToAllPagesLabel instead') String? applyToAllPagesText,
 
     /// The label for the 'Apply to all pages' checkbox, used for semantics.
-    String? applyToAllPagesLabel,
+    String? applyToAllCheckboxLabel,
 
     /// The color of the 'Apply to all pages' label text, which is also applied to the checkbox.
     ///
     /// The default is [textColor]; otherwise, it falls back to the primary color.
+    @Deprecated('Use applyToAllCheckboxLabelStyle instead')
     Color? applyToAllPagesTextColor,
+
+    /// The style for the 'Apply to all pages' label text.
+    ///
+    /// This also applies to the checkbox.
+    TextStyle? applyToAllCheckboxLabelStyle,
 
     /// The message content of the dialog.
     String? content,
@@ -105,14 +111,21 @@ class PreDialogConfig {
       };
     }
 
+    var effectiveApplyToAllCheckboxLabelStyle = applyToAllCheckboxLabelStyle;
+    if (effectiveApplyToAllCheckboxLabelStyle == null &&
+        applyToAllPagesTextColor != null) {
+      effectiveApplyToAllCheckboxLabelStyle =
+          TextStyle(color: applyToAllPagesTextColor);
+    }
+
     return global.copyWith(
       enabled: enabled,
       customDialogBuilder: effectiveCustomDialog,
       backgroundColor: backgroundColor,
       textColor: textColor,
       title: title,
-      applyToAllPagesLabel: applyToAllPagesLabel ?? applyToAllPagesText,
-      applyToAllPagesTextColor: applyToAllPagesTextColor,
+      applyToAllPagesLabel: applyToAllCheckboxLabel ?? applyToAllPagesText,
+      applyToAllCheckboxLabelStyle: effectiveApplyToAllCheckboxLabelStyle,
       content: content,
       acceptButtonLabel: acceptButtonLabel ?? acceptButtonText?.data,
       acceptButtonStyle: acceptButtonStyle,
@@ -135,7 +148,7 @@ class PreDialogConfig {
         'This page has some new features that you might want to discover.\n\n'
             'Would you like to take a tour?',
     this.applyToAllPagesLabel = 'Apply to all pages',
-    this.applyToAllPagesTextColor,
+    this.applyToAllCheckboxLabelStyle,
     this.acceptButtonLabel = 'Start Tour',
     this.acceptButtonStyle,
     this.laterButtonLabel = 'Later',
@@ -173,10 +186,10 @@ class PreDialogConfig {
   /// The label for the 'Apply to all pages' checkbox, used for semantics.
   final String applyToAllPagesLabel;
 
-  /// The color of the 'Apply to all pages' label text, which is also applied to the checkbox.
+  /// The style for the 'Apply to all pages' label text.
   ///
-  /// The default is [textColor]; otherwise, it falls back to the primary color.
-  final Color? applyToAllPagesTextColor;
+  /// This also applies to the checkbox.
+  final TextStyle? applyToAllCheckboxLabelStyle;
 
   /// The label for the accept button, which is also used for semantics.
   final String acceptButtonLabel;
@@ -228,7 +241,7 @@ class PreDialogConfig {
     String? title,
     String? content,
     String? applyToAllPagesLabel,
-    Color? applyToAllPagesTextColor,
+    TextStyle? applyToAllCheckboxLabelStyle,
     String? acceptButtonLabel,
     ButtonStyle? acceptButtonStyle,
     String? laterButtonLabel,
@@ -248,8 +261,8 @@ class PreDialogConfig {
       title: title ?? this.title,
       content: content ?? this.content,
       applyToAllPagesLabel: applyToAllPagesLabel ?? this.applyToAllPagesLabel,
-      applyToAllPagesTextColor:
-          applyToAllPagesTextColor ?? this.applyToAllPagesTextColor,
+      applyToAllCheckboxLabelStyle:
+          applyToAllCheckboxLabelStyle ?? this.applyToAllCheckboxLabelStyle,
       acceptButtonLabel: acceptButtonLabel ?? this.acceptButtonLabel,
       acceptButtonStyle: acceptButtonStyle ?? this.acceptButtonStyle,
       laterButtonLabel: laterButtonLabel ?? this.laterButtonLabel,

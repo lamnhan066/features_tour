@@ -66,7 +66,7 @@ Future<PreDialogButtonType> showPreDialog(
               _CheckboxRow(
                 text: config.applyToAllPagesLabel,
                 baseTextColor: config.textColor,
-                checkboxTextColor: config.applyToAllPagesTextColor,
+                checkboxTextStyle: config.applyToAllCheckboxLabelStyle,
                 onChanged: (value) {
                   isChecked = value;
                   onApplyToAllPagesCheckboxChanged?.call(value);
@@ -144,12 +144,12 @@ class _CheckboxRow extends StatefulWidget {
   const _CheckboxRow({
     required this.text,
     required this.baseTextColor,
-    required this.checkboxTextColor,
+    required this.checkboxTextStyle,
     required this.onChanged,
   });
   final String text;
   final Color? baseTextColor;
-  final Color? checkboxTextColor;
+  final TextStyle? checkboxTextStyle;
   final ValueChanged<bool> onChanged;
 
   @override
@@ -168,7 +168,7 @@ class _CheckboxRowState extends State<_CheckboxRow> {
 
   @override
   Widget build(BuildContext context) {
-    final color = widget.checkboxTextColor ?? widget.baseTextColor;
+    final color = widget.checkboxTextStyle?.color ?? widget.baseTextColor;
     return FittedBox(
       alignment: Alignment.centerLeft,
       child: Row(
@@ -186,9 +186,12 @@ class _CheckboxRowState extends State<_CheckboxRow> {
           const SizedBox(width: 8),
           GestureDetector(
             onTap: _toggleCheckbox,
-            child: Text(
-              widget.text,
-              style: TextStyle(color: color, fontSize: 13.5),
+            child: DefaultTextStyle(
+              style: TextStyle(color: widget.baseTextColor, fontSize: 13.5),
+              child: Text(
+                widget.text,
+                style: widget.checkboxTextStyle,
+              ),
             ),
           ),
         ],

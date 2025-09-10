@@ -190,7 +190,7 @@ void main() {
             enabled: true,
             laterButtonLabel: 'Later',
             dismissButtonLabel: 'Dismiss',
-            applyToAllPagesLabel: 'Apply to all',
+            applyToAllCheckboxLabel: 'Apply to all',
           ),
           onState: (state) async {
             if (state is TourPreDialogShownDefault) {

@@ -843,7 +843,7 @@ void main() {
             enabled: true,
             title: 'Introduction',
             dismissButtonLabel: 'Dismiss',
-            applyToAllPagesLabel: 'Apply to all',
+            applyToAllCheckboxLabel: 'Apply to all',
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -916,7 +916,7 @@ void main() {
             enabled: true,
             title: 'Introduction',
             acceptButtonLabel: 'Okay',
-            applyToAllPagesLabel: 'Apply to all',
+            applyToAllCheckboxLabel: 'Apply to all',
           ),
           onState: (state) async {
             collectedStates.add(state);

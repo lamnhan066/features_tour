@@ -7,7 +7,7 @@ void main() {
       enabled: true,
       title: 'Welcome to Features Tour',
       content: 'This tour will guide you through the main features of the app.',
-      applyToAllPagesLabel: 'Apply to all pages',
+      applyToAllCheckboxLabel: 'Apply to all pages',
       acceptButtonLabel: 'Start Tour',
       laterButtonLabel: 'Later',
       dismissButtonLabel: 'Dismiss',
