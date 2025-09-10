@@ -15,6 +15,9 @@ class NextConfig extends BaseButtonConfig {
   /// ),
   /// ```
   ///
+  /// [builder] is a builder function that provides a context and an `onPressed` callback
+  /// to create a custom next button widget.
+  ///
   /// [text] defines the text on the next button. The default is "NEXT".
   ///
   /// [alignment] specifies the alignment of the next button. The default is

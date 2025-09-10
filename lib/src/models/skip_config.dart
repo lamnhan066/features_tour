@@ -15,6 +15,9 @@ class SkipConfig extends BaseButtonConfig {
   /// ),
   /// ```
   ///
+  /// [builder] is a builder function that provides a context and an `onPressed` callback
+  /// to create a custom skip button widget.
+  ///
   /// [text] defines the label for the skip button. The default is 'SKIP'.
   ///
   /// [alignment] specifies the position of the skip text. The default is `Alignment.bottomLeft`.

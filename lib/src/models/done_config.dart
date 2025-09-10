@@ -15,14 +15,17 @@ class DoneConfig extends BaseButtonConfig {
   /// ),
   /// ```
   ///
-  /// [text] is the text displayed on the button. The default is 'SKIP'.
+  /// [builder] is a builder function that provides a context and an `onPressed` callback
+  /// to create a custom done button widget.
   ///
-  /// [alignment] determines the position of the skip text. The default is
-  /// `Alignment.bottomLeft`.
+  /// [text] is the text displayed on the button. The default is 'DONE'.
   ///
-  /// [color] sets the color of the skip text. The default is `null`.
+  /// [alignment] determines the position of the done text. The default is
+  /// `Alignment.bottomRight`.
   ///
-  /// [enabled] determines whether the skip button is enabled. The default is `true`.
+  /// [color] sets the color of the done text. The default is `null`.
+  ///
+  /// [enabled] determines whether the done button is enabled. The default is `true`.
   ///
   /// [textStyle] defines the text style for the button.
   ///
