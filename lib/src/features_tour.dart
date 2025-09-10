@@ -6,6 +6,7 @@ import 'package:features_tour/src/components/cover_dialog.dart';
 import 'package:features_tour/src/components/dialogs.dart';
 import 'package:features_tour/src/components/features_child.dart';
 import 'package:features_tour/src/components/unfeatures_tour.dart';
+import 'package:features_tour/src/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -88,6 +89,9 @@ class FeaturesTour extends StatefulWidget {
 
   /// Allows printing the debug logs.
   static bool _debugLog = false;
+
+  /// The global logger for all controllers.
+  static Logger? _globalLogger;
 
   /// Sets the global configs.
   ///
@@ -187,6 +191,20 @@ class FeaturesTour extends StatefulWidget {
     FeaturesTourController._controllers.clear();
     if (_debugLog) {
       debugPrint('All pages have been removed.');
+    }
+  }
+
+  /// Sets a global logger for all controllers.
+  @visibleForTesting
+  // For testing purposes only.
+  // ignore: use_setters_to_change_properties
+  static void setTestingLogger(Logger? logger) {
+    if (logger == null) {
+      _debugLog = false;
+      _globalLogger = null;
+    } else {
+      _debugLog = true;
+      _globalLogger = logger;
     }
   }
 
