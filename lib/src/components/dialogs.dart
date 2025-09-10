@@ -18,9 +18,8 @@ void resetPreDialog() {
 Future<PreDialogButtonType> showPreDialog(
   BuildContext context,
   PreDialogConfig config,
-  FutureOr<void> Function() onShownPreDialog,
+  FutureOr<void> Function(bool isCustom) onPreDialogIsDisplayed,
   FutureOr<void> Function(PreDialogButtonType type) onReturnByAppliedToAllPages,
-  VoidCallback onShowCustomPreDialog,
   void Function(bool value)? onApplyToAllPagesCheckboxChanged,
   void Function(String log)? printDebug,
 ) async {
@@ -41,7 +40,6 @@ Future<PreDialogButtonType> showPreDialog(
   OverlayEntry? overlayEntry;
 
   if (config.customDialogBuilder != null) {
-    printDebug?.call('Showing custom pre-dialog.');
     completer.complete(config.customDialogBuilder!(
       context,
       (value) async {
@@ -49,6 +47,7 @@ Future<PreDialogButtonType> showPreDialog(
         onApplyToAllPagesCheckboxChanged?.call(value);
       },
     ));
+    await onPreDialogIsDisplayed(true);
   } else {
     overlayEntry = OverlayEntry(
       builder: (context) => Material(
@@ -104,9 +103,8 @@ Future<PreDialogButtonType> showPreDialog(
     );
 
     Overlay.of(context, rootOverlay: true).insert(overlayEntry);
+    await onPreDialogIsDisplayed(false);
   }
-
-  await onShownPreDialog();
 
   try {
     final result = await completer.future;
