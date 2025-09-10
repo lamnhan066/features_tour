@@ -59,7 +59,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourEmptyStates>(),
+          isA<TourEmpty>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -131,7 +131,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourAfterIntroduceCalled>(),
           isA<TourIntroduceResultEmitted>(),
@@ -183,7 +183,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
           isA<TourCompleted>(),
@@ -219,7 +219,7 @@ void main() {
           preDialogConfig: PreDialogConfig(enabled: true),
           onState: (state) async {
             collectedStates.add(state);
-            if (state is TourPreDialogIsShown) {
+            if (state is TourPreDialogShownDefault) {
               await tester.pump();
               expect(find.text('Introduction'), findsOneWidget);
               await tester.tap(find.text('Okay'));
@@ -237,7 +237,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogIsShown>(),
+          isA<TourPreDialogShownDefault>(),
           isA<TourPreDialogButtonPressed>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
@@ -369,7 +369,7 @@ void main() {
           ),
           onState: (state) async {
             collectedStates.add(state);
-            if (state is TourPreDialogIsShown) {
+            if (state is TourPreDialogShownDefault) {
               await tester.pump();
               expect(find.text('Introduction'), findsOneWidget);
               // Check if disabled buttons are not found
@@ -393,7 +393,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogIsShown>(),
+          isA<TourPreDialogShownDefault>(),
           isA<TourPreDialogButtonPressed>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
@@ -452,7 +452,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogIsShownWithCustomDialog>(),
+          isA<TourPreDialogShownCustom>(),
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'buttonType',
@@ -503,11 +503,12 @@ void main() {
       });
       await tester.pumpAndSettle();
 
-      expect(collectedStates, isNot(contains(isA<TourPreDialogIsShown>())));
+      expect(
+          collectedStates, isNot(contains(isA<TourPreDialogShownDefault>())));
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
           isA<TourCompleted>(),
@@ -550,11 +551,12 @@ void main() {
       });
       await tester.pumpAndSettle();
 
-      expect(collectedStates, isNot(contains(isA<TourPreDialogIsShown>())));
+      expect(
+          collectedStates, isNot(contains(isA<TourPreDialogShownDefault>())));
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
           isA<TourCompleted>(),

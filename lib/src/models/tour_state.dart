@@ -19,49 +19,49 @@ class TourNotMounted extends TourState {
 }
 
 /// Indicates that there are no feature tour states to be shown.
-class TourEmptyStates extends TourState {
-  /// Creates a new instance of [TourEmptyStates].
-  const TourEmptyStates();
+class TourEmpty extends TourState {
+  /// Creates a new instance of [TourEmpty].
+  const TourEmpty();
 }
 
 /// Indicates that the user has dismissed all feature tours.
-class TourAllTourDismissedByUser extends TourState {
-  /// Creates a new instance of [TourAllTourDismissedByUser].
-  const TourAllTourDismissedByUser();
+class TourDismissedAllByUser extends TourState {
+  /// Creates a new instance of [TourDismissedAllByUser].
+  const TourDismissedAllByUser();
 }
 
 /// Indicates that the pre-dialog for the feature tour is not shown.
-class TourPreDialogNotShown extends TourState {
-  /// Creates a new instance of [TourPreDialogNotShown].
-  const TourPreDialogNotShown();
+class TourPreDialogHidden extends TourState {
+  /// Creates a new instance of [TourPreDialogHidden].
+  const TourPreDialogHidden();
 }
 
 /// Indicates that the pre-dialog for the feature tour is not shown because
 /// the user has applied the choice to all pages.
-class TourPreDialogNotShownByAppliedToAllPages extends TourState {
-  /// Creates a new instance of [TourPreDialogNotShownByAppliedToAllPages].
-  const TourPreDialogNotShownByAppliedToAllPages(this.buttonType);
+class TourPreDialogHiddenByAppliedToAll extends TourState {
+  /// Creates a new instance of [TourPreDialogHiddenByAppliedToAll].
+  const TourPreDialogHiddenByAppliedToAll(this.buttonType);
 
   /// The type of button that triggered the state change.
   final PreDialogButtonType buttonType;
 }
 
 /// Indicates that the pre-dialog for the feature tour is currently being shown.
-class TourPreDialogIsShown extends TourState {
-  /// Creates a new instance of [TourPreDialogIsShown].
-  const TourPreDialogIsShown();
+class TourPreDialogShownDefault extends TourState {
+  /// Creates a new instance of [TourPreDialogShownDefault].
+  const TourPreDialogShownDefault();
 }
 
 /// Indicates that a custom pre-dialog for the feature tour is currently being shown.
-class TourPreDialogIsShownWithCustomDialog extends TourState {
-  /// Creates a new instance of [TourPreDialogIsShownWithCustomDialog].
-  const TourPreDialogIsShownWithCustomDialog();
+class TourPreDialogShownCustom extends TourState {
+  /// Creates a new instance of [TourPreDialogShownCustom].
+  const TourPreDialogShownCustom();
 }
 
 /// Indicates that the "Apply to all pages" checkbox state has changed.
-class TourPreDialogApplyToAllPagesCheckboxChanged extends TourState {
-  /// Creates a new instance of [TourPreDialogApplyToAllPagesCheckboxChanged].
-  const TourPreDialogApplyToAllPagesCheckboxChanged(this.isChecked);
+class TourPreDialogApplyToAllChanged extends TourState {
+  /// Creates a new instance of [TourPreDialogApplyToAllChanged].
+  const TourPreDialogApplyToAllChanged(this.isChecked);
 
   /// Indicates whether the checkbox is checked or not.
   final bool isChecked;
@@ -86,9 +86,9 @@ class TourIntroducing extends TourState {
 }
 
 /// Indicates that the introduction for a specific feature should not be shown.
-class TourShouldNotShowIntroduction extends TourState {
-  /// Creates a new instance of [TourShouldNotShowIntroduction].
-  const TourShouldNotShowIntroduction({required this.index});
+class TourSkippedIntroduction extends TourState {
+  /// Creates a new instance of [TourSkippedIntroduction].
+  const TourSkippedIntroduction({required this.index});
 
   /// The index of the feature that should not be shown.
   final double? index;

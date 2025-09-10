@@ -137,7 +137,7 @@ void main() {
             delay: Duration.zero,
             preDialogConfig: PreDialogConfig(enabled: true),
             onState: (state) async {
-              if (state is TourPreDialogIsShown) {
+              if (state is TourPreDialogShownDefault) {
                 // Simulate an error in onShownPreDialog
                 throw Exception('Simulated error in onShownPreDialog');
               }
@@ -191,7 +191,7 @@ void main() {
             applyToAllPagesLabel: 'Apply to all',
           ),
           onState: (state) async {
-            if (state is TourPreDialogIsShown) {
+            if (state is TourPreDialogShownDefault) {
               await tester.pump();
               await tester.tap(find.byType(Checkbox));
               await tester.pumpAndSettle();
@@ -219,7 +219,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShownByAppliedToAllPages>().having(
+          isA<TourPreDialogHiddenByAppliedToAll>().having(
             (s) => s.buttonType,
             'buttonType',
             PreDialogButtonType.later,
@@ -246,7 +246,7 @@ void main() {
           preDialogConfig: PreDialogConfig(enabled: true),
           onState: (state) async {
             collectedStates.add(state);
-            if (state is TourPreDialogIsShown) {
+            if (state is TourPreDialogShownDefault) {
               await tester.pump();
               // Dismiss the dialog to complete the flow
               await tester.tap(find.text('Dismiss'));
@@ -259,7 +259,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogIsShown>(),
+          isA<TourPreDialogShownDefault>(),
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'buttonType',
@@ -383,7 +383,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogIsShownWithCustomDialog>(),
+          isA<TourPreDialogShownCustom>(),
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'accept',
@@ -425,7 +425,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogIsShownWithCustomDialog>(),
+          isA<TourPreDialogShownCustom>(),
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'later',
@@ -586,7 +586,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>().having(
             (s) => s.result,

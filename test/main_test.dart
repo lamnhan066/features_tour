@@ -82,7 +82,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourIntroduceResultEmitted>(),
           isA<TourIntroducing>(),
@@ -148,7 +148,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>().having(
             (s) => s.result == IntroduceResult.next,
@@ -211,7 +211,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>().having(
             (s) => s.result == IntroduceResult.skip,
@@ -281,7 +281,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
           isA<TourIntroducing>(),
@@ -344,7 +344,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourEmptyStates>(),
+          isA<TourEmpty>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -412,7 +412,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
           isA<TourIntroducing>(),
@@ -500,7 +500,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourAfterIntroduceCalled>(),
           isA<TourIntroduceResultEmitted>(),
@@ -562,7 +562,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
           isA<TourIntroduceResultEmitted>(),
           isA<TourCompleted>(),
@@ -619,7 +619,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourBeforeIntroduceCalled>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
@@ -678,7 +678,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourAfterIntroduceCalled>(),
           isA<TourIntroduceResultEmitted>(),
@@ -721,7 +721,7 @@ void main() {
           onState: (state) async {
             collectedStates.add(state);
 
-            if (state is TourPreDialogIsShown) {
+            if (state is TourPreDialogShownDefault) {
               await tester.pump();
               expect(find.text('Introduction'), findsOneWidget);
               await tester.tap(find.text('Okay'));
@@ -743,7 +743,7 @@ void main() {
       expect(
           collectedStates,
           containsAllInOrder([
-            isA<TourPreDialogIsShown>(),
+            isA<TourPreDialogShownDefault>(),
             isA<TourPreDialogButtonPressed>().having(
               (s) => s.buttonType,
               'buttonType',
@@ -788,7 +788,7 @@ void main() {
           onState: (state) async {
             collectedStates.add(state);
 
-            if (state is TourPreDialogIsShown) {
+            if (state is TourPreDialogShownDefault) {
               await tester.pump();
               expect(find.text('Introduction'), findsOneWidget);
               await tester.tap(find.text('Later'));
@@ -800,7 +800,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogIsShown>(),
+          isA<TourPreDialogShownDefault>(),
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'buttonType',
@@ -846,7 +846,7 @@ void main() {
           onState: (state) async {
             collectedStates.add(state);
 
-            if (state is TourPreDialogIsShown) {
+            if (state is TourPreDialogShownDefault) {
               await tester.pump();
               expect(find.text('Introduction'), findsOneWidget);
               expect(find.text('Apply to all'), findsOneWidget);
@@ -865,8 +865,8 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogIsShown>(),
-          isA<TourPreDialogApplyToAllPagesCheckboxChanged>().having(
+          isA<TourPreDialogShownDefault>(),
+          isA<TourPreDialogApplyToAllChanged>().having(
             (s) => s.isChecked,
             'isChecked',
             true,
@@ -918,7 +918,7 @@ void main() {
           ),
           onState: (state) async {
             collectedStates.add(state);
-            if (state is TourPreDialogIsShown) {
+            if (state is TourPreDialogShownDefault) {
               await tester.pump();
               expect(find.text('Introduction'), findsOneWidget);
               final checkbox = find.byType(Checkbox);
@@ -938,8 +938,8 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogIsShown>(),
-          isA<TourPreDialogApplyToAllPagesCheckboxChanged>().having(
+          isA<TourPreDialogShownDefault>(),
+          isA<TourPreDialogApplyToAllChanged>().having(
             (s) => s.isChecked,
             'isChecked',
             true,
@@ -993,11 +993,11 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify pre-dialog was not shown for the second tour
-      expect(collectedStates.whereType<TourPreDialogIsShown>(), isEmpty);
+      expect(collectedStates.whereType<TourPreDialogShownDefault>(), isEmpty);
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShownByAppliedToAllPages>().having(
+          isA<TourPreDialogHiddenByAppliedToAll>().having(
             (s) => s.buttonType,
             'buttonType',
             PreDialogButtonType.accept,
@@ -1072,7 +1072,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourIntroduceResultEmitted>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 3),
@@ -1136,7 +1136,7 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNotShown>(),
+          isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourIntroduceResultEmitted>(),
           isA<TourCompleted>(),

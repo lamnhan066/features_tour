@@ -184,7 +184,7 @@ class FeaturesTourController {
 
       if (_states.isEmpty && firstIndex == null) {
         _printDebug(() => 'The page $pageName has no state.');
-        await onState?.call(const TourEmptyStates());
+        await onState?.call(const TourEmpty());
         return;
       }
 
@@ -192,7 +192,7 @@ class FeaturesTourController {
       if (force == null && await DismissAllTourStorage.getDismissAllTours()) {
         _printDebug(() => 'All tours have been dismissed.');
         await _removePage();
-        await onState?.call(const TourAllTourDismissedByUser());
+        await onState?.call(const TourDismissedAllByUser());
         return;
       }
 
@@ -202,7 +202,7 @@ class FeaturesTourController {
 
       if (!_shouldShowIntroduction() && force != true) {
         _printDebug(() => 'There are no new `FeaturesTour`s. Tour completed.');
-        await onState?.call(const TourEmptyStates());
+        await onState?.call(const TourEmpty());
         return;
       }
 
@@ -223,25 +223,25 @@ class FeaturesTourController {
         (isCustom) async {
           if (isCustom) {
             _printDebug(() => 'A custom dialog is shown for the pre-dialog.');
-            await onState?.call(const TourPreDialogIsShownWithCustomDialog());
+            await onState?.call(const TourPreDialogShownCustom());
           } else {
             _printDebug(() => 'The pre-dialog is shown.');
-            await onState?.call(const TourPreDialogIsShown());
+            await onState?.call(const TourPreDialogShownDefault());
           }
         },
         (type) async {
           _printDebug(() => 'This has been applied to all pages.');
-          await onState?.call(TourPreDialogNotShownByAppliedToAllPages(type));
+          await onState?.call(TourPreDialogHiddenByAppliedToAll(type));
         },
         (value) {
           _printDebug(() => 'The "Apply to all pages" checkbox is now $value.');
-          onState?.call(TourPreDialogApplyToAllPagesCheckboxChanged(value));
+          onState?.call(TourPreDialogApplyToAllChanged(value));
         },
       );
 
       switch (result) {
         case null:
-          await onState?.call(const TourPreDialogNotShown());
+          await onState?.call(const TourPreDialogHidden());
         case PreDialogButtonType.accept:
           _printDebug(() => 'The user accepted to show the introduction.');
           await onState?.call(
@@ -275,7 +275,7 @@ class FeaturesTourController {
         await _removedAllShownIntroductions(force);
         if (_states.isEmpty) {
           _printDebug(() => 'No more states to introduce.');
-          await onState?.call(const TourEmptyStates());
+          await onState?.call(const TourEmpty());
           break;
         }
 
@@ -322,7 +322,7 @@ class FeaturesTourController {
               '   -> This widget has been introduced. Moving to the next widget.');
           await _removeState(state, false);
           await onState
-              ?.call(TourShouldNotShowIntroduction(index: state.widget.index));
+              ?.call(TourSkippedIntroduction(index: state.widget.index));
           continue;
         }
 
