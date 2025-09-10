@@ -15,10 +15,27 @@ typedef BarrierColorBuilder = Color Function(BuildContext context);
 /// Configuration for the `introduce` widget in the Features Tour.
 class IntroduceConfig {
   /// Creates a new IntroduceConfig based on [global] values.
+  ///
+  /// Using [builder] to customize the appearance of the `introduce` widget.
+  /// Default is set to [_defaultIntroduceBuilder].
+  ///
+  /// Using [barrierColorBuilder] to customize the color of the modal barrier.
+  /// Default is set to [_defaultBarrierColorBuilder].
+  ///
+  /// Using [padding] to set the padding around the `introduce` widget. This
+  /// value is used to create space between the `introduce` widget and the
+  /// `child` widget. Default is set to `EdgeInsets.all(20)`.
+  ///
+  /// You can also use [quadrantAlignment] and [alignment] to position
+  /// the `introduce` widget relative to the `child` widget. These values
+  /// are mostly automatically handled by the package.
+  ///
+  /// Using [useRootOverlay] to determine if the tour should be shown above
+  /// all other [Overlay]s. Default is set to false.
   factory IntroduceConfig({
-    IntroduceBuilder builder = _defaultBuilder,
+    IntroduceBuilder? builder,
     @Deprecated('Use barrierColorBuilder instead') Color? backgroundColor,
-    BarrierColorBuilder barrierColorBuilder = _defaultBarrierColorBuilder,
+    BarrierColorBuilder? barrierColorBuilder,
     EdgeInsetsGeometry? padding,
     QuadrantAlignment? quadrantAlignment,
     Alignment? alignment,
@@ -37,7 +54,7 @@ class IntroduceConfig {
   }
 
   const IntroduceConfig._({
-    this.builder = _defaultBuilder,
+    this.builder = _defaultIntroduceBuilder,
     this.barrierColorBuilder = _defaultBarrierColorBuilder,
     this.padding = const EdgeInsets.all(20),
     this.quadrantAlignment,
@@ -49,7 +66,7 @@ class IntroduceConfig {
   static IntroduceConfig global = const IntroduceConfig._();
 
   /// The default builder function to wrap the `introduce` widget.
-  static Widget _defaultBuilder(
+  static Widget _defaultIntroduceBuilder(
     BuildContext context,
     Rect childRect,
     Widget introduce,
