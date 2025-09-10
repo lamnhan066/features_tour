@@ -17,10 +17,8 @@ class IntroduceConfig {
   /// Creates a new IntroduceConfig based on [global] values.
   ///
   /// Using [builder] to customize the appearance of the `introduce` widget.
-  /// Default is set to [IntroduceDecorations.introduceDefaultBuilder].
   ///
   /// Using [barrierColorBuilder] to customize the color of the modal barrier.
-  /// Default is set to [IntroduceDecorations.barrierColorDefaultBuilder].
   ///
   /// Using [padding] to set the padding around the `introduce` widget. This
   /// value is used to create space between the `introduce` widget and the
@@ -34,12 +32,8 @@ class IntroduceConfig {
   /// all other [Overlay]s. Default is set to false.
   ///
   /// See also:
-  ///   * [IntroduceBuilder]: A function that builds the `introduce` widget.
-  ///     * [IntroduceDecorations.introduceDefaultBuilder]
-  ///     * [IntroduceDecorations.introduceRoundedRectBuilder]
-  ///   * [BarrierColorBuilder]: A function that builds the color of the modal barrier.
-  ///     * [IntroduceDecorations.barrierColorDefaultBuilder]
-  ///     * [IntroduceDecorations.barrierColorBetterVisibleBuilder]
+  ///   * [RoundedRectIntroduceConfig] for a configuration with rounded rectangle
+  ///     decoration and better visible barrier color.
   factory IntroduceConfig({
     IntroduceBuilder? builder,
     @Deprecated('Use barrierColorBuilder instead') Color? backgroundColor,
@@ -62,8 +56,8 @@ class IntroduceConfig {
   }
 
   const IntroduceConfig._({
-    this.builder = IntroduceDecorations.introduceDefaultBuilder,
-    this.barrierColorBuilder = IntroduceDecorations.barrierColorDefaultBuilder,
+    required this.builder,
+    required this.barrierColorBuilder,
     this.padding = const EdgeInsets.all(20),
     this.quadrantAlignment,
     this.alignment,
@@ -71,7 +65,10 @@ class IntroduceConfig {
   });
 
   /// Global configuration.
-  static IntroduceConfig global = const IntroduceConfig._();
+  static IntroduceConfig global = const IntroduceConfig._(
+    builder: _introduceDefaultBuilder,
+    barrierColorBuilder: _barrierColorDefaultBuilder,
+  );
 
   /// A builder function to wrap the `introduce` widget.
   final IntroduceBuilder builder;
@@ -117,5 +114,78 @@ class IntroduceConfig {
       quadrantAlignment: quadrantAlignment ?? this.quadrantAlignment,
       useRootOverlay: useRootOverlay ?? this.useRootOverlay,
     );
+  }
+
+  static Widget _introduceDefaultBuilder(
+    BuildContext context,
+    Rect childRect,
+    Widget introduce,
+  ) {
+    return DefaultTextStyle.merge(
+      style: TextStyle(
+        color: Theme.brightnessOf(context) == Brightness.dark
+            ? Colors.black
+            : Colors.white,
+      ),
+      child: introduce,
+    );
+  }
+
+  static Color _barrierColorDefaultBuilder(BuildContext context) {
+    return ColorScheme.of(context).onSurface.withValues(alpha: 0.82);
+  }
+}
+
+/// An IntroduceConfig with rounded rectangle decoration and better visible barrier color.
+class RoundedRectIntroduceConfig extends IntroduceConfig {
+  /// Creates a new RoundedRectIntroduceConfig with rounded rectangle decoration.
+  RoundedRectIntroduceConfig({double borderRadius = 4})
+      : super._(
+          builder: (context, childRect, introduce) {
+            return _introduceRoundedRectBuilder(
+              context,
+              childRect,
+              introduce,
+              borderRadius,
+            );
+          },
+          barrierColorBuilder: _barrierColorBetterVisibleBuilder,
+        );
+
+  /// A builder function that wraps the `introduce` widget with a rounded rectangle.`
+  static Widget _introduceRoundedRectBuilder(
+    BuildContext context,
+    Rect childRect,
+    Widget introduce,
+    double borderRadius,
+  ) {
+    final brightness = Theme.brightnessOf(context);
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: brightness == Brightness.dark
+            ? Colors.black.withValues(alpha: .85)
+            : Colors.white.withValues(alpha: .85),
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+      child: DefaultTextStyle.merge(
+        style: TextStyle(
+          color: Theme.brightnessOf(context) == Brightness.dark
+              ? Colors.white
+              : Colors.black,
+        ),
+        child: introduce,
+      ),
+    );
+  }
+
+  /// A better visible barrier color builder that adjusts the alpha based on
+  /// the current theme brightness.
+
+  static Color _barrierColorBetterVisibleBuilder(BuildContext context) {
+    if (Theme.of(context).brightness == Brightness.dark) {
+      return ColorScheme.of(context).onSurface.withValues(alpha: 0.18);
+    }
+    return ColorScheme.of(context).onSurface.withValues(alpha: 0.82);
   }
 }
