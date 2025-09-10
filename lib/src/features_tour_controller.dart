@@ -11,8 +11,15 @@ class FeaturesTourController {
   ///
   /// **Note:** Avoid changing the [pageName] to prevent re-displaying the instructions
   /// for this page.
-  FeaturesTourController(this.pageName) {
+  FeaturesTourController(this.pageName, {bool? debugLog})
+      : _debugLog = debugLog ?? FeaturesTour._debugLog {
     _controllers.add(this);
+
+    if (_debugLog) {
+      _logger ??= Logger((s) => debugPrint('[FeaturesTour][$pageName]: $s'));
+    } else {
+      _logger = null;
+    }
   }
 
   /// The internal preferences.
@@ -41,7 +48,7 @@ class FeaturesTourController {
   Completer<IntroduceResult>? _introduceCompleter;
 
   bool _isIntroducing = false;
-  bool _debugLog = FeaturesTour._debugLog;
+  final bool _debugLog;
   bool _popToSkip = true;
   Logger? _logger = FeaturesTour._globalLogger;
 
@@ -128,6 +135,9 @@ class FeaturesTourController {
     PreDialogConfig? preDialogConfig,
     FutureOr<void> Function(TourState state)? onState,
     bool popToSkip = true,
+    @Deprecated(
+      'Use `FeaturesTourController.debugLog` instead. This will be removed in the next major version.',
+    )
     bool? debugLog,
   }) async {
     assert(
@@ -136,8 +146,8 @@ class FeaturesTourController {
     );
     final effectivePreDialogConfig = predialogConfig ?? preDialogConfig;
     _popToSkip = popToSkip;
-    _debugLog = debugLog ?? FeaturesTour._debugLog;
-    if (_debugLog) {
+    // TODO(lamnhan066): Remove `debugLog` in the next major version.
+    if ((_debugLog || (debugLog ?? false)) && _logger == null) {
       _logger ??= Logger((s) => debugPrint('[FeaturesTour][$pageName]: $s'));
     } else {
       _logger = null;
@@ -442,7 +452,6 @@ class FeaturesTourController {
         state._allowPop();
       }
       hideCover(_debugLog ? (log) => _logger?.log(() => log) : null);
-      _debugLog = FeaturesTour._debugLog;
       await onState?.call(const TourCompleted());
       _logger?.log(() => 'This tour has been completed.');
       _isIntroducing = false;
