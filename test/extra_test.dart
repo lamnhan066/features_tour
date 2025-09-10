@@ -143,7 +143,7 @@ void main() {
               }
             },
           );
-        } catch (e, st) {
+        } on Exception catch (e, st) {
           caughtError = e;
           caughtStackTrace = st;
         }
@@ -186,9 +186,9 @@ void main() {
           delay: Duration.zero,
           preDialogConfig: PreDialogConfig(
             enabled: true,
-            laterButtonText: const Text('Later'),
-            dismissButtonText: const Text('Dismiss'),
-            applyToAllPagesText: 'Apply to all',
+            laterButtonLabel: 'Later',
+            dismissButtonLabel: 'Dismiss',
+            applyToAllPagesLabel: 'Apply to all',
           ),
           onState: (state) async {
             if (state is TourPreDialogIsShown) {

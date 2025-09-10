@@ -716,7 +716,7 @@ void main() {
           preDialogConfig: PreDialogConfig(
             enabled: true,
             title: 'Introduction',
-            acceptButtonText: const Text('Okay'),
+            acceptButtonLabel: 'Okay',
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -783,7 +783,7 @@ void main() {
           preDialogConfig: PreDialogConfig(
             enabled: true,
             title: 'Introduction',
-            laterButtonText: const Text('Later'),
+            laterButtonLabel: 'Later',
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -840,8 +840,8 @@ void main() {
           preDialogConfig: PreDialogConfig(
             enabled: true,
             title: 'Introduction',
-            dismissButtonText: const Text('Dismiss'),
-            applyToAllPagesText: 'Apply to all',
+            dismissButtonLabel: 'Dismiss',
+            applyToAllPagesLabel: 'Apply to all',
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -913,8 +913,8 @@ void main() {
           preDialogConfig: PreDialogConfig(
             enabled: true,
             title: 'Introduction',
-            acceptButtonText: const Text('Okay'),
-            applyToAllPagesText: 'Apply to all',
+            acceptButtonLabel: 'Okay',
+            applyToAllPagesLabel: 'Apply to all',
           ),
           onState: (state) async {
             collectedStates.add(state);
