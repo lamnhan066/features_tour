@@ -24,29 +24,74 @@ typedef PredialogConfig = PreDialogConfig;
 class PreDialogConfig {
   /// Creates a new `PredialogConfig` instance with optional overrides.
   factory PreDialogConfig({
+    /// Whether the pre-dialog should be displayed.
     bool? enabled,
     @Deprecated('Use dialogBuilder instead')
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
+
+    /// A custom dialog builder function. If provided, this will be used instead of
+    /// the default dialog UI.
+    ///
+    /// If `onApplyToAllPagesCheckboxChanged` is provided, it will cache the user's choice
+    /// for future dialogs in the current session (reset in the next app-open).
+    ///
+    /// *If you're using a custom dialog, all other configuration options will be ignored.*
+    ///
+    /// The function returns a `FutureOr<PreDialogButtonType>` indicating the user's choice.
     CustomPreDialog? customDialogBuilder,
+
+    /// The background color of the dialog.
     Color? backgroundColor,
+
+    /// The text color for the dialog content.
     Color? textColor,
+
+    /// The title of the dialog.
     String? title,
     @Deprecated('Use applyToAllPagesLabel instead') String? applyToAllPagesText,
+
+    /// The label for the 'Apply to all pages' checkbox, used for semantics.
     String? applyToAllPagesLabel,
+
+    /// The color of the 'Apply to all pages' label text, which is also applied to the checkbox.
+    ///
+    /// The default is [textColor]; otherwise, it falls back to the primary color.
     Color? applyToAllPagesTextColor,
+
+    /// The message content of the dialog.
     String? content,
     @Deprecated('Use acceptButtonLabel instead') Text? acceptButtonText,
+
+    /// The label for the accept button, which is also used for semantics.
     String? acceptButtonLabel,
+
+    /// The styling for the accept button (typically an `FilledButton`).
     ButtonStyle? acceptButtonStyle,
     @Deprecated('Use laterButtonLabel instead') Text? laterButtonText,
+
+    /// The label for the later button, which is also used for semantics.
     String? laterButtonLabel,
+
+    /// The styling for the later button (typically a `TextButton`).
     ButtonStyle? laterButtonStyle,
     @Deprecated('Use dismissButtonLabel instead') Text? dismissButtonText,
+
+    /// The label for the dismiss button, which is also used for semantics.
     String? dismissButtonLabel,
+
+    /// The styling for the dismiss button (typically a `TextButton`).
     ButtonStyle? dismissButtonStyle,
+
+    /// The radius of the dialog's corners, which makes it rounded.
     double? borderRadius,
+
+    /// Callback when the accept button is pressed.
     VoidCallback? onAcceptButtonPressed,
+
+    /// Callback when the later button is pressed.
     VoidCallback? onLaterButtonPressed,
+
+    /// Callback when the dismiss button is pressed.
     VoidCallback? onDismissButtonPressed,
   }) {
     var effectiveCustomDialog = customDialogBuilder;
@@ -62,7 +107,7 @@ class PreDialogConfig {
 
     return global.copyWith(
       enabled: enabled,
-      customDialog: effectiveCustomDialog,
+      customDialogBuilder: effectiveCustomDialog,
       backgroundColor: backgroundColor,
       textColor: textColor,
       title: title,
@@ -160,6 +205,8 @@ class PreDialogConfig {
   /// If `onApplyToAllPagesCheckboxChanged` is provided, it will cache the user's choice
   /// for future dialogs in the current session (reset in the next app-open).
   ///
+  /// *If you're using a custom dialog, all other configuration options will be ignored.*
+  ///
   /// The function returns a `FutureOr<PreDialogButtonType>` indicating the user's choice.
   final CustomPreDialog? customDialogBuilder;
 
@@ -175,9 +222,9 @@ class PreDialogConfig {
   /// Creates a new `PredialogConfig` instance based on the existing values.
   PreDialogConfig copyWith({
     bool? enabled,
-    @Deprecated('Use customDialog instead')
+    @Deprecated('Use customDialogBuilder instead')
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
-    CustomPreDialog? customDialog,
+    CustomPreDialog? customDialogBuilder,
     Color? backgroundColor,
     Color? textColor,
     String? title,
@@ -197,7 +244,7 @@ class PreDialogConfig {
   }) {
     return PreDialogConfig._(
       enabled: enabled ?? this.enabled,
-      customDialogBuilder: customDialog ?? customDialogBuilder,
+      customDialogBuilder: customDialogBuilder ?? this.customDialogBuilder,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       textColor: textColor ?? this.textColor,
       title: title ?? this.title,
