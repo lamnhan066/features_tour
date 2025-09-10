@@ -11,13 +11,13 @@ void main() {
   var collectedStates = <TourState>[];
 
   setUp(() {
-    resetPredialog();
+    resetPreDialog();
     SharedPreferences.setMockInitialValues({});
     collectedStates = [];
 
-    // Reset the global state for predialogs between tests
+    // Reset the global state for pre-dialogs between tests
     FeaturesTour.setGlobalConfig(
-      predialogConfig: PredialogConfig(enabled: false),
+      preDialogConfig: PreDialogConfig(enabled: false),
       nextConfig: NextConfig(text: 'NEXT'),
       skipConfig: SkipConfig(text: 'SKIP'),
       doneConfig: DoneConfig(text: 'DONE'),
@@ -688,8 +688,8 @@ void main() {
     });
   });
 
-  group('Predialog', () {
-    testWidgets('Tapping "Okay" in predialog starts the tour', (tester) async {
+  group('PreDialog', () {
+    testWidgets('Tapping "Okay" in pre-dialog starts the tour', (tester) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(MaterialApp(
@@ -713,7 +713,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          predialogConfig: PredialogConfig(
+          preDialogConfig: PreDialogConfig(
             enabled: true,
             title: 'Introduction',
             acceptButtonText: const Text('Okay'),
@@ -747,7 +747,7 @@ void main() {
             isA<TourPreDialogButtonPressed>().having(
               (s) => s.buttonType,
               'buttonType',
-              PredialogButtonType.accept,
+              PreDialogButtonType.accept,
             ),
             isA<TourIntroducing>(),
             isA<TourIntroduceResultEmitted>(),
@@ -755,7 +755,7 @@ void main() {
           ]));
     });
 
-    testWidgets('Tapping "Later" in predialog dismisses the tour for now',
+    testWidgets('Tapping "Later" in pre-dialog dismisses the tour for now',
         (tester) async {
       final controller = FeaturesTourController('App');
 
@@ -780,7 +780,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          predialogConfig: PredialogConfig(
+          preDialogConfig: PreDialogConfig(
             enabled: true,
             title: 'Introduction',
             laterButtonText: const Text('Later'),
@@ -804,7 +804,7 @@ void main() {
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'buttonType',
-            PredialogButtonType.later,
+            PreDialogButtonType.later,
           ),
           isA<TourCompleted>(),
         ]),
@@ -837,7 +837,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          predialogConfig: PredialogConfig(
+          preDialogConfig: PreDialogConfig(
             enabled: true,
             title: 'Introduction',
             dismissButtonText: const Text('Dismiss'),
@@ -874,7 +874,7 @@ void main() {
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'buttonType',
-            PredialogButtonType.dismiss,
+            PreDialogButtonType.dismiss,
           ),
           isA<TourCompleted>(),
         ]),
@@ -904,13 +904,13 @@ void main() {
       await tester.pumpAndSettle();
       final context1 = tester.element(find.byKey(const Key('Page1')));
 
-      // Show predialog for page 1, check "apply to all" and accept
+      // Show pre-dialog for page 1, check "apply to all" and accept
       await tester.runAsync(() async {
         await controller1.start(
           context1,
           force: true,
           delay: Duration.zero,
-          predialogConfig: PredialogConfig(
+          preDialogConfig: PreDialogConfig(
             enabled: true,
             title: 'Introduction',
             acceptButtonText: const Text('Okay'),
@@ -947,7 +947,7 @@ void main() {
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'buttonType',
-            PredialogButtonType.accept,
+            PreDialogButtonType.accept,
           ),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
@@ -973,13 +973,13 @@ void main() {
       await tester.pumpAndSettle();
       final context2 = tester.element(find.byKey(const Key('Page2')));
 
-      // Start tour for page 2, predialog should be skipped
+      // Start tour for page 2, pre-dialog should be skipped
       await tester.runAsync(() async {
         await controller2.start(
           context2,
           force: true,
           delay: Duration.zero,
-          predialogConfig: PredialogConfig(enabled: true),
+          preDialogConfig: PreDialogConfig(enabled: true),
           onState: (state) async {
             collectedStates.add(state);
             if (state is TourIntroducing) {
@@ -992,7 +992,7 @@ void main() {
       });
       await tester.pumpAndSettle();
 
-      // Verify predialog was not shown for the second tour
+      // Verify pre-dialog was not shown for the second tour
       expect(collectedStates.whereType<TourPreDialogIsShown>(), isEmpty);
       expect(
         collectedStates,
@@ -1000,7 +1000,7 @@ void main() {
           isA<TourPreDialogNotShownByAppliedToAllPages>().having(
             (s) => s.buttonType,
             'buttonType',
-            PredialogButtonType.accept,
+            PreDialogButtonType.accept,
           ),
           isA<TourPreDialogButtonPressed>(),
           isA<TourIntroducing>(),

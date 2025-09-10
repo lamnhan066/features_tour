@@ -26,13 +26,13 @@ void main() {
   var collectedStates = <TourState>[];
 
   setUp(() {
-    resetPredialog();
+    resetPreDialog();
     SharedPreferences.setMockInitialValues({});
     collectedStates = [];
 
-    // Reset the global state for predialogs between tests
+    // Reset the global state for pre-dialogs between tests
     FeaturesTour.setGlobalConfig(
-      predialogConfig: PredialogConfig(enabled: false),
+      preDialogConfig: PreDialogConfig(enabled: false),
       nextConfig: NextConfig(text: 'NEXT'),
       skipConfig: SkipConfig(text: 'SKIP'),
       doneConfig: DoneConfig(text: 'DONE'),
@@ -107,7 +107,7 @@ void main() {
           find.byType(Material), findsNothing); // Ensure no overlay is inserted
     });
 
-    testWidgets('predialog handles error in onShownPreDialog', (tester) async {
+    testWidgets('pre-dialog handles error in onShownPreDialog', (tester) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(MaterialApp(
@@ -135,7 +135,7 @@ void main() {
             context,
             force: true,
             delay: Duration.zero,
-            predialogConfig: PredialogConfig(enabled: true),
+            preDialogConfig: PreDialogConfig(enabled: true),
             onState: (state) async {
               if (state is TourPreDialogIsShown) {
                 // Simulate an error in onShownPreDialog
@@ -158,7 +158,7 @@ void main() {
       expect(find.byType(AlertDialog), findsNothing);
     });
 
-    testWidgets('resetPredialog resets the cached predialog selection',
+    testWidgets('resetPreDialog resets the cached pre-dialog selection',
         (tester) async {
       final controller = FeaturesTourController('App');
 
@@ -184,7 +184,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          predialogConfig: PredialogConfig(
+          preDialogConfig: PreDialogConfig(
             enabled: true,
             laterButtonText: const Text('Later'),
             dismissButtonText: const Text('Dismiss'),
@@ -202,13 +202,13 @@ void main() {
       });
       await tester.pumpAndSettle();
 
-      // Now, start the tour again. It should skip the predialog due to caching.
+      // Now, start the tour again. It should skip the pre-dialog due to caching.
       await tester.runAsync(() async {
         await controller.start(
           context,
           force: true,
           delay: Duration.zero,
-          predialogConfig: PredialogConfig(enabled: true),
+          preDialogConfig: PreDialogConfig(enabled: true),
           onState: (state) {
             collectedStates.add(state);
           },
@@ -222,28 +222,28 @@ void main() {
           isA<TourPreDialogNotShownByAppliedToAllPages>().having(
             (s) => s.buttonType,
             'buttonType',
-            PredialogButtonType.later,
+            PreDialogButtonType.later,
           ),
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'buttonType',
-            PredialogButtonType.later,
+            PreDialogButtonType.later,
           ),
           isA<TourCompleted>(),
         ]),
       );
 
       collectedStates.clear();
-      // Reset the predialog cache
-      resetPredialog();
+      // Reset the pre-dialog cache
+      resetPreDialog();
 
-      // Start the tour a third time. The predialog should now appear again.
+      // Start the tour a third time. The pre-dialog should now appear again.
       await tester.runAsync(() async {
         await controller.start(
           context,
           force: true,
           delay: Duration.zero,
-          predialogConfig: PredialogConfig(enabled: true),
+          preDialogConfig: PreDialogConfig(enabled: true),
           onState: (state) async {
             collectedStates.add(state);
             if (state is TourPreDialogIsShown) {
@@ -263,7 +263,7 @@ void main() {
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'buttonType',
-            PredialogButtonType.dismiss,
+            PreDialogButtonType.dismiss,
           ),
           isA<TourCompleted>(),
         ]),
@@ -336,7 +336,7 @@ void main() {
   });
 
   group('Configuration Edge Cases', () {
-    testWidgets('predialogConfig.modifiedDialogResult overrides dialog',
+    testWidgets('pre-dialogConfig.modifiedDialogResult overrides dialog',
         (tester) async {
       final controller = FeaturesTourController('App');
 
@@ -362,9 +362,9 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          predialogConfig: PredialogConfig(
+          preDialogConfig: PreDialogConfig(
             enabled: true,
-            modifiedDialogResult: (_) => true,
+            customDialog: (_, __) async => PreDialogButtonType.accept,
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -387,7 +387,7 @@ void main() {
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'accept',
-            PredialogButtonType.accept,
+            PreDialogButtonType.accept,
           ),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
@@ -396,7 +396,7 @@ void main() {
       );
 
       collectedStates.clear();
-      resetPredialog();
+      resetPreDialog();
 
       // Test with modifiedDialogResult returning false
       await tester.runAsync(() async {
@@ -404,9 +404,9 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          predialogConfig: PredialogConfig(
+          preDialogConfig: PreDialogConfig(
             enabled: true,
-            modifiedDialogResult: (_) => false,
+            customDialog: (_, __) => PreDialogButtonType.later,
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -429,7 +429,7 @@ void main() {
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'later',
-            PredialogButtonType.later,
+            PreDialogButtonType.later,
           ),
           isA<TourCompleted>(),
         ]),
