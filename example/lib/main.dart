@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(
-    predialogConfig: PredialogConfig(
+    preDialogConfig: PreDialogConfig(
       enabled: true,
+      title: 'Welcome to Features Tour',
+      content: 'This tour will guide you through the main features of the app.',
+      applyToAllPagesLabel: 'Apply to all pages',
+      acceptButtonLabel: 'Start Tour',
+      laterButtonLabel: 'Later',
+      dismissButtonLabel: 'Dismiss',
     ),
     childConfig: ChildConfig(isAnimateChild: false),
     nextConfig: NextConfig(
@@ -290,7 +296,7 @@ class _AppState extends State<App> {
                 tourController.start(
                   context,
                   force: true,
-                  predialogConfig: PredialogConfig(enabled: false),
+                  preDialogConfig: PreDialogConfig(enabled: false),
                 );
               },
               child: const Icon(Icons.restart_alt_rounded),
