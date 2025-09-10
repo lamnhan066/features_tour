@@ -866,6 +866,11 @@ void main() {
         collectedStates,
         containsAllInOrder([
           isA<TourPreDialogIsShown>(),
+          isA<TourPreDialogApplyToAllPagesCheckboxChanged>().having(
+            (s) => s.isChecked,
+            'isChecked',
+            true,
+          ),
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'buttonType',
@@ -934,6 +939,11 @@ void main() {
         collectedStates,
         containsAllInOrder([
           isA<TourPreDialogIsShown>(),
+          isA<TourPreDialogApplyToAllPagesCheckboxChanged>().having(
+            (s) => s.isChecked,
+            'isChecked',
+            true,
+          ),
           isA<TourPreDialogButtonPressed>().having(
             (s) => s.buttonType,
             'buttonType',
@@ -987,11 +997,12 @@ void main() {
       expect(
         collectedStates,
         containsAllInOrder([
-          isA<TourPreDialogNowShownByAppliedToAllPages>().having(
+          isA<TourPreDialogNotShownByAppliedToAllPages>().having(
             (s) => s.buttonType,
             'buttonType',
             PredialogButtonType.accept,
           ),
+          isA<TourPreDialogButtonPressed>(),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
           isA<TourCompleted>(),

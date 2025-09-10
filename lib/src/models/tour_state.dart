@@ -38,9 +38,9 @@ class TourPreDialogNotShown extends TourState {
 
 /// Indicates that the pre-dialog for the feature tour is not shown because
 /// the user has applied the choice to all pages.
-class TourPreDialogShownByAppliedToAllPages extends TourState {
-  /// Creates a new instance of [TourPreDialogShownByAppliedToAllPages].
-  const TourPreDialogShownByAppliedToAllPages(this.buttonType);
+class TourPreDialogNotShownByAppliedToAllPages extends TourState {
+  /// Creates a new instance of [TourPreDialogNotShownByAppliedToAllPages].
+  const TourPreDialogNotShownByAppliedToAllPages(this.buttonType);
 
   /// The type of button that triggered the state change.
   final PredialogButtonType buttonType;

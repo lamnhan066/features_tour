@@ -217,7 +217,7 @@ class FeaturesTourController {
         },
         (type) async {
           _printDebug(() => 'This has been applied to all pages.');
-          await onState?.call(TourPreDialogShownByAppliedToAllPages(type));
+          await onState?.call(TourPreDialogNotShownByAppliedToAllPages(type));
         },
         () async {
           _printDebug(() => 'A custom dialog is shown for the pre-dialog.');
