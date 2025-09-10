@@ -330,7 +330,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                     padding: widget.padding,
                     child: Align(
                       alignment: alignment,
-                      child: DefaultTextStyle(
+                      child: DefaultTextStyle.merge(
                         style: TextStyle(
                           color: brightness == Brightness.dark
                               ? Colors.black
