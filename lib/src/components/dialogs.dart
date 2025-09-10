@@ -19,14 +19,14 @@ Future<PreDialogButtonType> showPreDialog(
   BuildContext context,
   PreDialogConfig config,
   FutureOr<void> Function() onShownPreDialog,
-  FutureOr<void> Function(PreDialogButtonType type) onAppliedToAllPages,
+  FutureOr<void> Function(PreDialogButtonType type) onReturnByAppliedToAllPages,
   void Function(bool value)? onApplyToAllPagesCheckboxChanged,
   void Function(String log)? printDebug,
 ) async {
   // Returns the cached selection if "Do not ask again" was checked previously.
   if (_applyToAllPages != null) {
     printDebug?.call('Returning cached result: $_applyToAllPages.');
-    await onAppliedToAllPages(_applyToAllPages!);
+    await onReturnByAppliedToAllPages(_applyToAllPages!);
     return _applyToAllPages!;
   }
 
