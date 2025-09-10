@@ -222,8 +222,6 @@ class PreDialogConfig {
   /// Creates a new `PredialogConfig` instance based on the existing values.
   PreDialogConfig copyWith({
     bool? enabled,
-    @Deprecated('Use customDialogBuilder instead')
-    FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
     CustomPreDialog? customDialogBuilder,
     Color? backgroundColor,
     Color? textColor,

@@ -336,7 +336,7 @@ void main() {
   });
 
   group('Configuration Edge Cases', () {
-    testWidgets('pre-dialogConfig.modifiedDialogResult overrides dialog',
+    testWidgets('pre-dialogConfig.customDialogBuilder overrides dialog',
         (tester) async {
       final controller = FeaturesTourController('App');
 
