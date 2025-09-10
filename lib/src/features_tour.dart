@@ -190,7 +190,11 @@ class FeaturesTour extends StatefulWidget {
     }
     FeaturesTourController._controllers.clear();
     if (_debugLog) {
-      debugPrint('All pages have been removed.');
+      if (_globalLogger == null) {
+        debugPrint('[FeaturesTour] All pages have been removed.');
+      } else {
+        _globalLogger!.log(() => '[FeaturesTour] All pages have been removed.');
+      }
     }
   }
 
