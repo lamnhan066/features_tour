@@ -79,7 +79,10 @@ Future<PreDialogButtonType> showPreDialog(
               borderRadius: BorderRadius.circular(config.borderRadius)),
           actions: [
             TextButton(
-              onPressed: () => complete(PreDialogButtonType.dismiss),
+              onPressed: () async {
+                config.onDismissButtonPressed?.call();
+                complete(PreDialogButtonType.dismiss);
+              },
               style: config.dismissButtonStyle,
               child: DefaultTextStyle(
                 style:
@@ -88,12 +91,18 @@ Future<PreDialogButtonType> showPreDialog(
               ),
             ),
             TextButton(
-              onPressed: () => complete(PreDialogButtonType.later),
+              onPressed: () async {
+                config.onLaterButtonPressed?.call();
+                complete(PreDialogButtonType.later);
+              },
               style: config.laterButtonStyle,
               child: Text(config.laterButtonLabel),
             ),
             FilledButton(
-              onPressed: () => complete(PreDialogButtonType.accept),
+              onPressed: () async {
+                config.onAcceptButtonPressed?.call();
+                complete(PreDialogButtonType.accept);
+              },
               style: config.acceptButtonStyle,
               child: Text(config.acceptButtonLabel),
             ),

@@ -243,15 +243,18 @@ class FeaturesTourController {
         case null:
           await onState?.call(const TourPreDialogNotShown());
         case PreDialogButtonType.accept:
+          _printDebug(() => 'The user accepted to show the introduction.');
           await onState?.call(
             const TourPreDialogButtonPressed(PreDialogButtonType.accept),
           );
         case PreDialogButtonType.later:
+          _printDebug(() => 'The user chose to show the introduction later.');
           await onState?.call(
             const TourPreDialogButtonPressed(PreDialogButtonType.later),
           );
           return;
         case PreDialogButtonType.dismiss:
+          _printDebug(() => 'The user dismissed the introduction.');
           await _removePage();
           await onState?.call(
             const TourPreDialogButtonPressed(PreDialogButtonType.dismiss),
@@ -659,18 +662,6 @@ class FeaturesTourController {
           onApplyToAllPagesCheckboxChanged,
           _debugLog ? (log) => _printDebug(() => log) : null,
         );
-
-        switch (predialogResult) {
-          case PreDialogButtonType.accept:
-            _printDebug(() => 'The user accepted to show the introduction.');
-            effectiveConfig.onAcceptButtonPressed?.call();
-          case PreDialogButtonType.later:
-            _printDebug(() => 'The user chose to show the introduction later.');
-            effectiveConfig.onLaterButtonPressed?.call();
-          case PreDialogButtonType.dismiss:
-            _printDebug(() => 'The user dismissed the introduction.');
-            effectiveConfig.onDismissButtonPressed?.call();
-        }
 
         return predialogResult;
       } else {
