@@ -1,5 +1,7 @@
 # Features Tour
 
+[![codecov](https://codecov.io/gh/lamnhan066/features_tour/graph/badge.svg?token=1RTE5RXFIR)](https://codecov.io/gh/lamnhan066/features_tour)
+
 Features Tour is a package that enables you to easily create tours to introduce your widget features in your app with order. It provides a straightforward and flexible API that allows you to customize the look and feel of the tour to match your app's design.
 
 ## Introduction
