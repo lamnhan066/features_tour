@@ -565,7 +565,11 @@ class FeaturesTourController {
                 color: Colors.transparent,
                 child: AbsorbPointer(
                   child: UnfeaturesTour(
+                    // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
+                    // ignore: deprecated_member_use_from_same_package
                     child: childConfig.child?.call(state.widget.child) ??
+                        childConfig.builder
+                            ?.call(context, state.widget.child) ??
                         state.widget.child,
                   ),
                 ),
