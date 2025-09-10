@@ -20,6 +20,7 @@ Future<PreDialogButtonType> showPreDialog(
   PreDialogConfig config,
   FutureOr<void> Function() onShownPreDialog,
   FutureOr<void> Function(PreDialogButtonType type) onReturnByAppliedToAllPages,
+  VoidCallback onShowCustomPreDialog,
   void Function(bool value)? onApplyToAllPagesCheckboxChanged,
   void Function(String log)? printDebug,
 ) async {
@@ -37,59 +38,73 @@ Future<PreDialogButtonType> showPreDialog(
     if (!completer.isCompleted) completer.complete(type);
   }
 
-  final overlayEntry = OverlayEntry(
-    builder: (context) => Material(
-      color: Colors.black54,
-      child: AlertDialog(
-        title: Text(config.title, style: TextStyle(color: config.textColor)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              config.content,
-              style: TextStyle(color: config.textColor, fontSize: 13.5),
+  OverlayEntry? overlayEntry;
+
+  if (config.customDialogBuilder != null) {
+    printDebug?.call('Showing custom pre-dialog.');
+    completer.complete(config.customDialogBuilder!(
+      context,
+      (value) async {
+        isChecked = value;
+        onApplyToAllPagesCheckboxChanged?.call(value);
+      },
+    ));
+  } else {
+    overlayEntry = OverlayEntry(
+      builder: (context) => Material(
+        color: Colors.black54,
+        child: AlertDialog(
+          title: Text(config.title, style: TextStyle(color: config.textColor)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                config.content,
+                style: TextStyle(color: config.textColor, fontSize: 13.5),
+              ),
+              const SizedBox(height: 20),
+              _CheckboxRow(
+                text: config.applyToAllPagesLabel,
+                baseTextColor: config.textColor,
+                checkboxTextColor: config.applyToAllPagesTextColor,
+                onChanged: (value) {
+                  isChecked = value;
+                  onApplyToAllPagesCheckboxChanged?.call(value);
+                },
+              ),
+            ],
+          ),
+          backgroundColor: config.backgroundColor,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(config.borderRadius)),
+          actions: [
+            TextButton(
+              onPressed: () => complete(PreDialogButtonType.dismiss),
+              style: config.dismissButtonStyle,
+              child: DefaultTextStyle(
+                style:
+                    TextStyle(color: ColorScheme.of(context).onSurfaceVariant),
+                child: Text(config.dismissButtonLabel),
+              ),
             ),
-            const SizedBox(height: 20),
-            _CheckboxRow(
-              text: config.applyToAllPagesLabel,
-              baseTextColor: config.textColor,
-              checkboxTextColor: config.applyToAllPagesTextColor,
-              onChanged: (value) {
-                isChecked = value;
-                onApplyToAllPagesCheckboxChanged?.call(value);
-              },
+            TextButton(
+              onPressed: () => complete(PreDialogButtonType.later),
+              style: config.laterButtonStyle,
+              child: Text(config.laterButtonLabel),
+            ),
+            FilledButton(
+              onPressed: () => complete(PreDialogButtonType.accept),
+              style: config.acceptButtonStyle,
+              child: Text(config.acceptButtonLabel),
             ),
           ],
         ),
-        backgroundColor: config.backgroundColor,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(config.borderRadius)),
-        actions: [
-          TextButton(
-            onPressed: () => complete(PreDialogButtonType.dismiss),
-            style: config.dismissButtonStyle,
-            child: DefaultTextStyle(
-              style: TextStyle(color: ColorScheme.of(context).onSurfaceVariant),
-              child: Text(config.dismissButtonLabel),
-            ),
-          ),
-          TextButton(
-            onPressed: () => complete(PreDialogButtonType.later),
-            style: config.laterButtonStyle,
-            child: Text(config.laterButtonLabel),
-          ),
-          FilledButton(
-            onPressed: () => complete(PreDialogButtonType.accept),
-            style: config.acceptButtonStyle,
-            child: Text(config.acceptButtonLabel),
-          ),
-        ],
       ),
-    ),
-  );
+    );
 
-  Overlay.of(context, rootOverlay: true).insert(overlayEntry);
+    Overlay.of(context, rootOverlay: true).insert(overlayEntry);
+  }
 
   await onShownPreDialog();
 
@@ -113,7 +128,7 @@ Future<PreDialogButtonType> showPreDialog(
     completer.completeError(e, stackTrace);
     rethrow;
   } finally {
-    overlayEntry.remove();
+    overlayEntry?.remove();
   }
 }
 

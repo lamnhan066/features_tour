@@ -632,8 +632,8 @@ class FeaturesTourController {
     PreDialogConfig? config,
     FutureOr<void> Function() onShownPreDialog,
     FutureOr<void> Function(PreDialogButtonType type) onAppliedToAllPages,
-    FutureOr<void> Function()? onShownCustomDialog,
-    void Function(bool value)? onApplyToAllPagesCheckboxChanged,
+    FutureOr<void> Function() onCustomPreDialogIsDisplayed,
+    void Function(bool value) onApplyToAllPagesCheckboxChanged,
   ) async {
     // Determines whether to show the pre-dialog.
     var shouldShowPredialog = true;
@@ -651,40 +651,15 @@ class FeaturesTourController {
       if (effectiveConfig.enabled) {
         _printDebug(() => 'The pre-dialog is enabled.');
 
-        final PreDialogButtonType? predialogResult;
-        if (effectiveConfig.customDialog != null) {
-          _printDebug(() => 'Using a custom dialog for the pre-dialog.');
-          onShownCustomDialog?.call();
-          predialogResult = await effectiveConfig.customDialog!(
-            context,
-            (value) {
-              onApplyToAllPagesCheckboxChanged?.call(value);
-            },
-          );
-        }
-        // TODO(lamnhan066): Remove deprecated field in the next major release
-        // ignore: deprecated_member_use_from_same_package
-        else if (effectiveConfig.modifiedDialogResult != null) {
-          _printDebug(
-              () => 'Using a modified dialog result for the pre-dialog.');
-          onShownCustomDialog?.call();
-          // TODO(lamnhan066): Remove deprecated field in the next major release
-          // ignore: deprecated_member_use_from_same_package
-          final result = await effectiveConfig.modifiedDialogResult!(context);
-          predialogResult = switch (result) {
-            true => PreDialogButtonType.accept,
-            false => PreDialogButtonType.later,
-          };
-        } else {
-          predialogResult = await showPreDialog(
-            context,
-            effectiveConfig,
-            onShownPreDialog,
-            onAppliedToAllPages,
-            onApplyToAllPagesCheckboxChanged,
-            _debugLog ? (log) => _printDebug(() => log) : null,
-          );
-        }
+        final predialogResult = await showPreDialog(
+          context,
+          effectiveConfig,
+          onShownPreDialog,
+          onAppliedToAllPages,
+          onCustomPreDialogIsDisplayed,
+          onApplyToAllPagesCheckboxChanged,
+          _debugLog ? (log) => _printDebug(() => log) : null,
+        );
 
         switch (predialogResult) {
           case PreDialogButtonType.accept:
@@ -702,6 +677,7 @@ class FeaturesTourController {
       } else {
         _printDebug(() => 'The pre-dialog is not enabled.');
       }
+      return null;
     } else {
       _printDebug(() => 'Should show pre-dialog returned false.');
     }

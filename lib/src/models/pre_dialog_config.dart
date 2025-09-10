@@ -3,6 +3,19 @@ import 'dart:async';
 import 'package:features_tour/features_tour.dart';
 import 'package:flutter/material.dart';
 
+/// A function type that defines a custom pre-dialog builder.
+///
+/// The function takes the current [BuildContext] and a callback:
+/// - [onApplyToAllPagesCheckboxChanged]: A callback to be invoked when the state
+///   of the "Apply to all pages" checkbox changes. It will cache the user's choice
+///   for future dialogs in the current session (reset in the next app-open).
+///
+/// The function returns a `FutureOr<PreDialogButtonType>` indicating the user's choice.
+typedef CustomPreDialog = FutureOr<PreDialogButtonType> Function(
+  BuildContext context,
+  void Function(bool value)? onApplyToAllPagesCheckboxChanged,
+);
+
 /// Configuration for the pre-dialog shown before starting a features tour.
 @Deprecated('Use PreDialogConfig instead')
 typedef PredialogConfig = PreDialogConfig;
@@ -12,12 +25,9 @@ class PreDialogConfig {
   /// Creates a new `PredialogConfig` instance with optional overrides.
   factory PreDialogConfig({
     bool? enabled,
-    @Deprecated('Use customDialog instead')
+    @Deprecated('Use dialogBuilder instead')
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
-    FutureOr<PreDialogButtonType> Function(
-      BuildContext context,
-      void Function(bool isChecked) updateApplyToAllPagesState,
-    )? customDialog,
+    CustomPreDialog? customDialogBuilder,
     Color? backgroundColor,
     Color? textColor,
     String? title,
@@ -39,12 +49,20 @@ class PreDialogConfig {
     VoidCallback? onLaterButtonPressed,
     VoidCallback? onDismissButtonPressed,
   }) {
+    var effectiveCustomDialog = customDialogBuilder;
+    if (effectiveCustomDialog == null && modifiedDialogResult != null) {
+      effectiveCustomDialog = (
+        context,
+        onApplyToAllPagesCheckboxChanged,
+      ) async {
+        final result = await modifiedDialogResult(context);
+        return result ? PreDialogButtonType.accept : PreDialogButtonType.later;
+      };
+    }
+
     return global.copyWith(
       enabled: enabled,
-      // TODO(lamnhan066): Remove deprecated field in the next major release
-      // ignore: deprecated_member_use_from_same_package
-      modifiedDialogResult: modifiedDialogResult,
-      customDialog: customDialog,
+      customDialog: effectiveCustomDialog,
       backgroundColor: backgroundColor,
       textColor: textColor,
       title: title,
@@ -73,7 +91,7 @@ class PreDialogConfig {
             'Would you like to take a tour?',
     this.applyToAllPagesLabel = 'Apply to all pages',
     this.applyToAllPagesTextColor,
-    this.acceptButtonLabel = 'Okay',
+    this.acceptButtonLabel = 'Start Tour',
     this.acceptButtonStyle,
     this.laterButtonLabel = 'Later',
     this.laterButtonStyle,
@@ -82,10 +100,7 @@ class PreDialogConfig {
     this.borderRadius = 12,
     this.backgroundColor,
     this.textColor,
-    // TODO(lamnhan066): Remove deprecated field in the next major release
-    // ignore: deprecated_consistency
-    this.modifiedDialogResult,
-    this.customDialog,
+    this.customDialogBuilder,
     this.onAcceptButtonPressed,
     this.onLaterButtonPressed,
     this.onDismissButtonPressed,
@@ -139,20 +154,14 @@ class PreDialogConfig {
   /// The radius of the dialog's corners, which makes it rounded.
   final double borderRadius;
 
-  /// A custom function to override the default dialog behavior.
-  @Deprecated('Use customDialog instead')
-  final FutureOr<bool> Function(BuildContext context)? modifiedDialogResult;
-
   /// A custom dialog builder function. If provided, this will be used instead of
   /// the default dialog UI.
   ///
-  /// The function takes the current [BuildContext] and an `updateApplyToAllPagesState`
-  /// callback to update the "Apply to all pages" checkbox state, and returns
-  /// a `FutureOr<PreDialogButtonType>`.
-  final FutureOr<PreDialogButtonType> Function(
-    BuildContext context,
-    void Function(bool isChecked) updateApplyToAllPagesState,
-  )? customDialog;
+  /// If `onApplyToAllPagesCheckboxChanged` is provided, it will cache the user's choice
+  /// for future dialogs in the current session (reset in the next app-open).
+  ///
+  /// The function returns a `FutureOr<PreDialogButtonType>` indicating the user's choice.
+  final CustomPreDialog? customDialogBuilder;
 
   /// A callback that is triggered when the accept button is pressed.
   final VoidCallback? onAcceptButtonPressed;
@@ -168,10 +177,7 @@ class PreDialogConfig {
     bool? enabled,
     @Deprecated('Use customDialog instead')
     FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
-    FutureOr<PreDialogButtonType> Function(
-      BuildContext context,
-      void Function(bool isChecked) updateApplyToAllPagesState,
-    )? customDialog,
+    CustomPreDialog? customDialog,
     Color? backgroundColor,
     Color? textColor,
     String? title,
@@ -191,10 +197,7 @@ class PreDialogConfig {
   }) {
     return PreDialogConfig._(
       enabled: enabled ?? this.enabled,
-      // TODO(lamnhan066): Remove deprecated field in the next major release
-      // ignore: deprecated_member_use_from_same_package
-      modifiedDialogResult: modifiedDialogResult ?? this.modifiedDialogResult,
-      customDialog: customDialog ?? this.customDialog,
+      customDialogBuilder: customDialog ?? customDialogBuilder,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       textColor: textColor ?? this.textColor,
       title: title ?? this.title,
