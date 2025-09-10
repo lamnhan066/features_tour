@@ -1,6 +1,7 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/cover_dialog.dart';
 import 'package:features_tour/src/components/dialogs.dart';
+import 'package:features_tour/src/extensions/get_widget_position.dart';
 import 'package:features_tour/src/features_tour.dart'
     show DismissAllTourStorage;
 import 'package:flutter/material.dart';
@@ -8,6 +9,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
+
+class BuildContextFake implements BuildContext {
+  @override
+  bool get mounted => false;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    // Implement any methods that are called during the test, or throw if unexpected
+    throw UnsupportedError(
+        'BuildContextFake does not support ${invocation.memberName}');
+  }
+}
 
 void main() {
   var collectedStates = <TourState>[];
@@ -78,6 +91,185 @@ void main() {
   });
 
   group('Component Behavior', () {
+    testWidgets('showCover does not show when context is not mounted',
+        (tester) async {
+      final logs = <String>[];
+      void printDebug(String log) => logs.add(log);
+
+      // Create a context that is not mounted
+      final unmountedContext = BuildContextFake();
+
+      showCover(unmountedContext, Colors.black54, printDebug);
+
+      expect(logs,
+          ['Cannot show the cover because the build context is not mounted']);
+      expect(
+          find.byType(Material), findsNothing); // Ensure no overlay is inserted
+    });
+
+    testWidgets('predialog handles error in onShownPreDialog', (tester) async {
+      final controller = FeaturesTourController('App');
+
+      await tester.pumpWidget(MaterialApp(
+        home: App(
+          tours: [
+            FeaturesTour(
+              index: 1,
+              controller: controller,
+              introduce: const Text('a.intro'),
+              child: const Text('a'),
+            ),
+          ],
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      Object? caughtError;
+      StackTrace? caughtStackTrace;
+
+      await tester.runAsync(() async {
+        try {
+          await controller.start(
+            context,
+            force: true,
+            delay: Duration.zero,
+            predialogConfig: PredialogConfig(enabled: true),
+            onState: (state) async {
+              if (state is TourPreDialogIsShown) {
+                // Simulate an error in onShownPreDialog
+                throw Exception('Simulated error in onShownPreDialog');
+              }
+            },
+          );
+        } catch (e, st) {
+          caughtError = e;
+          caughtStackTrace = st;
+        }
+      });
+
+      expect(caughtError, isA<Exception>());
+      expect(caughtError.toString(),
+          contains('Simulated error in onShownPreDialog'));
+      expect(caughtStackTrace, isNotNull);
+
+      // Ensure the overlay is removed even if an error occurs
+      expect(find.byType(AlertDialog), findsNothing);
+    });
+
+    testWidgets('resetPredialog resets the cached predialog selection',
+        (tester) async {
+      final controller = FeaturesTourController('App');
+
+      await tester.pumpWidget(MaterialApp(
+        home: App(
+          tours: [
+            FeaturesTour(
+              index: 1,
+              controller: controller,
+              introduce: const Text('a.intro'),
+              child: const Text('a'),
+            ),
+          ],
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      // First, make a selection that gets cached (e.g., "Later" with "Apply to all")
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          predialogConfig: PredialogConfig(
+            enabled: true,
+            laterButtonText: const Text('Later'),
+            dismissButtonText: const Text('Dismiss'),
+            applyToAllPagesText: 'Apply to all',
+          ),
+          onState: (state) async {
+            if (state is TourPreDialogIsShown) {
+              await tester.pump();
+              await tester.tap(find.byType(Checkbox));
+              await tester.pumpAndSettle();
+              await tester.tap(find.text('Later'));
+            }
+          },
+        );
+      });
+      await tester.pumpAndSettle();
+
+      // Now, start the tour again. It should skip the predialog due to caching.
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          predialogConfig: PredialogConfig(enabled: true),
+          onState: (state) {
+            collectedStates.add(state);
+          },
+        );
+      });
+      await tester.pump();
+
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogNotShownByAppliedToAllPages>().having(
+            (s) => s.buttonType,
+            'buttonType',
+            PredialogButtonType.later,
+          ),
+          isA<TourPreDialogButtonPressed>().having(
+            (s) => s.buttonType,
+            'buttonType',
+            PredialogButtonType.later,
+          ),
+          isA<TourCompleted>(),
+        ]),
+      );
+
+      collectedStates.clear();
+      // Reset the predialog cache
+      resetPredialog();
+
+      // Start the tour a third time. The predialog should now appear again.
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          predialogConfig: PredialogConfig(enabled: true),
+          onState: (state) async {
+            collectedStates.add(state);
+            if (state is TourPreDialogIsShown) {
+              await tester.pump();
+              // Dismiss the dialog to complete the flow
+              await tester.tap(find.text('Dismiss'));
+            }
+          },
+        );
+      });
+      await tester.pumpAndSettle();
+
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogIsShown>(),
+          isA<TourPreDialogButtonPressed>().having(
+            (s) => s.buttonType,
+            'buttonType',
+            PredialogButtonType.dismiss,
+          ),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+
     testWidgets('Cover dialog handles repeated calls', (tester) async {
       final logs = <String>[];
       void printDebug(String log) => logs.add(log);
@@ -105,6 +297,41 @@ void main() {
         'Hiding the cover',
         'The cover is already hidden',
       ]);
+    });
+  });
+
+  group('Extensions', () {
+    testWidgets('GlobalKeyExtension.globalPaintBounds returns correct Rect',
+        (tester) async {
+      final globalKey = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Center(
+            child: SizedBox(
+              key: globalKey,
+              width: 100,
+              height: 50,
+              child: const Placeholder(),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      final rect = globalKey.globalPaintBounds;
+      expect(rect, isNotNull);
+      expect(rect!.width, 100);
+      expect(rect.height, 50);
+
+      // Verify position (center of screen)
+      final screenWidth =
+          tester.view.physicalSize.width / tester.view.devicePixelRatio;
+      final screenHeight =
+          tester.view.physicalSize.height / tester.view.devicePixelRatio;
+
+      expect(rect.left, closeTo((screenWidth - 100) / 2, 1.0));
+      expect(rect.top, closeTo((screenHeight - 50) / 2, 1.0));
     });
   });
 
@@ -158,7 +385,10 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogIsShownWithCustomDialog>(),
           isA<TourPreDialogButtonPressed>().having(
-              (s) => s.buttonType, 'accept', PredialogButtonType.accept),
+            (s) => s.buttonType,
+            'accept',
+            PredialogButtonType.accept,
+          ),
           isA<TourIntroducing>(),
           isA<TourIntroduceResultEmitted>(),
           isA<TourCompleted>(),
