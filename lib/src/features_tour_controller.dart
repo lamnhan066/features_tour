@@ -147,7 +147,8 @@ class FeaturesTourController {
     final effectivePreDialogConfig = predialogConfig ?? preDialogConfig;
     _popToSkip = popToSkip;
     // TODO(lamnhan066): Remove `debugLog` in the next major version.
-    if ((_debugLog || (debugLog ?? false)) && _logger == null) {
+    final isLoggingEnabled = _debugLog || (debugLog ?? false);
+    if (isLoggingEnabled) {
       _logger ??= Logger((s) => debugPrint('[FeaturesTour][$pageName]: $s'));
     } else {
       _logger = null;
