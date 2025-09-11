@@ -1,3 +1,7 @@
+## 0.5.0-rc.9
+
+* Fixes an issue where logging did not function as expected.
+
 ## 0.5.0-rc.8
 
 * Deprecates `debugLog` in the `FeaturesTourController.start(debugLog)` in favor of `FeaturesTourController(debugLog)`.
