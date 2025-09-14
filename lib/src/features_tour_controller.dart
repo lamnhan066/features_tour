@@ -413,8 +413,6 @@ class FeaturesTourController {
 
         await onState?.call(TourIntroduceResultEmitted(result: result));
 
-        _introducingIndex.value = null;
-
         String status() {
           return switch (result) {
             IntroduceResult.disabled ||
