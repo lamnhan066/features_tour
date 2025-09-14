@@ -10,6 +10,7 @@ import 'package:features_tour/src/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+part 'components/features_tour_padding.dart';
 part 'features_tour_controller.dart';
 part 'utils/shared_prefs.dart';
 

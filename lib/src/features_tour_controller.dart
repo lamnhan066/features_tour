@@ -48,6 +48,7 @@ class FeaturesTourController {
   Completer<IntroduceResult>? _introduceCompleter;
 
   bool _isIntroducing = false;
+  final _introducingIndex = ValueNotifier<double?>(null);
   final bool _debugLog;
   bool _popToSkip = true;
   Logger? _logger = FeaturesTour._globalLogger;
@@ -377,6 +378,8 @@ class FeaturesTourController {
           break;
         }
 
+        _introducingIndex.value = state.widget.index;
+
         // If there is no state in the queue and no index to wait for, then it's
         // the last state.
         final isLastState = _states.isEmpty && nextIndex == null;
@@ -409,6 +412,8 @@ class FeaturesTourController {
         }
 
         await onState?.call(TourIntroduceResultEmitted(result: result));
+
+        _introducingIndex.value = null;
 
         String status() {
           return switch (result) {
@@ -452,6 +457,7 @@ class FeaturesTourController {
       for (final state in _cachedStates.values) {
         state._allowPop();
       }
+      _introducingIndex.value = null;
       hideCover(_debugLog ? (log) => _logger?.log(() => log) : null);
       await onState?.call(const TourCompleted());
       _logger?.log(() => 'This tour has been completed.');
