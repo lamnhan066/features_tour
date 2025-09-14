@@ -43,7 +43,7 @@ class FeaturesTourPadding extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: controller._introducingIndex,
-      builder: (context, value, child) {
+      builder: (context, value, _) {
         return AnimatedPadding(
           duration: animationDuration,
           curve: animationCurve,
