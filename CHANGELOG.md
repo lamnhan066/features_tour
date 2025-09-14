@@ -1,3 +1,7 @@
+## 0.5.0-rc.10
+
+* Adds `FeaturesTourPadding` to add a padding while introducing specific indexes.
+
 ## 0.5.0-rc.9
 
 * Fixes an issue where logging did not function as expected.
