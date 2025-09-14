@@ -48,8 +48,8 @@ abstract class MainTourIndex {
   static const firstItem = 4.0;
   static const item90 = 5.0;
   static const dialogButton = 5.5;
-  static const floatingButton = 6.0;
-  static const restartTourButton = 7.0;
+  static const restartTourButton = 6.0;
+  static const floatingButton = 7.0;
 }
 
 class ChangeableThemeMaterialApp extends StatefulWidget {
@@ -192,139 +192,157 @@ class _AppState extends State<App> {
         childConfig: ChildConfig(
           enableAnimation: false,
         ),
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FeaturesTour(
-                  controller: tourController,
-                  index: MainTourIndex.firstItem,
-                  nextIndex: MainTourIndex.item90,
-                  introduce: const Text('This is the item 0'),
-                  child: const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text('Item 0'),
-                  ),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              controller: scrollController,
+              child: SizedBox(
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FeaturesTour(
+                      controller: tourController,
+                      index: MainTourIndex.firstItem,
+                      nextIndex: MainTourIndex.item90,
+                      introduce: const Text('This is the item 0'),
+                      child: const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text('Item 0'),
+                      ),
+                    ),
+                    for (var index = 1; index <= 100; index++)
+                      FeaturesTour(
+                        enabled: index == 95,
+                        controller: tourController,
+                        index: MainTourIndex.item90,
+                        nextIndex: MainTourIndex.dialogButton,
+                        introduce: Text('This is the item $index'),
+                        onBeforeIntroduce: () async {
+                          // Scroll to the last item when the first item is tapped
+                          await scrollController.animateTo(
+                            scrollController.position.maxScrollExtent,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        onAfterIntroduce: (introduceResult) async {
+                          if (introduceResult
+                              case IntroduceResult.next ||
+                                  IntroduceResult.done) {
+                            // Scroll to the first item when item 90 is tapped
+                            await scrollController.animateTo(
+                              0,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+
+                            // Show a dialog after item 90 is tapped
+                            if (context.mounted) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('A Dialog'),
+                                    actions: [
+                                      FeaturesTour(
+                                        controller: tourController,
+                                        index: MainTourIndex.dialogButton,
+                                        introduce: const Text(
+                                          'Tap here to close the dialog',
+                                        ),
+                                        onAfterIntroduce: (result) {
+                                          if (introduceResult !=
+                                                  IntroduceResult.next &&
+                                              introduceResult !=
+                                                  IntroduceResult.done) {
+                                            return;
+                                          }
+
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Ok'),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text('Item $index'),
+                        ),
+                      ),
+                  ],
                 ),
-                for (var index = 1; index <= 100; index++)
-                  FeaturesTour(
-                    enabled: index == 98,
-                    controller: tourController,
-                    index: MainTourIndex.item90,
-                    nextIndex: MainTourIndex.dialogButton,
-                    introduce: Text('This is the item $index'),
-                    onBeforeIntroduce: () async {
-                      // Scroll to the last item when the first item is tapped
-                      await scrollController.animateTo(
-                        scrollController.position.maxScrollExtent,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    },
-                    onAfterIntroduce: (introduceResult) async {
-                      if (introduceResult
-                          case IntroduceResult.next || IntroduceResult.done) {
-                        // Scroll to the first item when item 90 is tapped
-                        await scrollController.animateTo(
-                          0,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-
-                        // Show a dialog after item 90 is tapped
-                        if (context.mounted) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('A Dialog'),
-                                actions: [
-                                  FeaturesTour(
-                                    controller: tourController,
-                                    index: MainTourIndex.dialogButton,
-                                    introduce: const Text(
-                                      'Tap here to close the dialog',
-                                    ),
-                                    onAfterIntroduce: (result) {
-                                      if (introduceResult !=
-                                              IntroduceResult.next &&
-                                          introduceResult !=
-                                              IntroduceResult.done) {
-                                        return;
-                                      }
-
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Ok'),
-                                    ),
-                                  ),
-                                ],
+              ),
+            ),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FeaturesTour(
+                          controller: tourController,
+                          index: MainTourIndex.restartTourButton,
+                          introduce:
+                              const Text('Tap here to run the tour again'),
+                          childConfig: ChildConfig(
+                            shapeBorder: const CircleBorder(),
+                            borderSizeInflate: 10.0,
+                          ),
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              tourController.start(
+                                context,
+                                force: true,
+                                preDialogConfig:
+                                    PreDialogConfig(enabled: false),
                               );
                             },
-                          );
-                        }
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text('Item $index'),
+                            child: const Icon(Icons.restart_alt_rounded),
+                          ),
+                        ),
+                        FeaturesTour(
+                          controller: tourController,
+                          index: MainTourIndex.floatingButton,
+                          introduce: const Text('Tap here to add a new item'),
+                          childConfig: ChildConfig(
+                            shapeBorder: const CircleBorder(),
+                            borderSizeInflate: 10.0,
+                          ),
+                          child: FloatingActionButton(
+                            onPressed: () {},
+                            child: const Icon(Icons.add),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-              ],
+                    FeaturesTourPadding(
+                      controller: tourController,
+                      indexes: {
+                        MainTourIndex.floatingButton,
+                        MainTourIndex.restartTourButton
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FeaturesTour(
-            controller: tourController,
-            index: MainTourIndex.floatingButton,
-            introduce: const Text('Tap here to add a new item'),
-            childConfig: ChildConfig(
-              shapeBorder: const CircleBorder(),
-              borderSizeInflate: 10.0,
-            ),
-            doneConfig: DoneConfig(alignment: Alignment.bottomLeft),
-            child: FloatingActionButton(
-              onPressed: () {},
-              child: const Icon(Icons.add),
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          FeaturesTour(
-            controller: tourController,
-            index: MainTourIndex.restartTourButton,
-            introduce: const Text('Tap here to run the tour again'),
-            childConfig: ChildConfig(
-              shapeBorder: const CircleBorder(),
-              borderSizeInflate: 10.0,
-            ),
-            child: FloatingActionButton(
-              onPressed: () {
-                tourController.start(
-                  context,
-                  force: true,
-                  preDialogConfig: PreDialogConfig(enabled: false),
-                );
-              },
-              child: const Icon(Icons.restart_alt_rounded),
-            ),
-          ),
-          FeaturesTourPadding(
-            controller: tourController,
-            indexes: {MainTourIndex.restartTourButton},
-          ),
-        ],
       ),
     );
   }
