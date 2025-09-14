@@ -309,7 +309,6 @@ class _AppState extends State<App> {
               shapeBorder: const CircleBorder(),
               borderSizeInflate: 10.0,
             ),
-            doneConfig: DoneConfig(alignment: Alignment.bottomLeft),
             child: FloatingActionButton(
               onPressed: () {
                 tourController.start(
@@ -320,6 +319,10 @@ class _AppState extends State<App> {
               },
               child: const Icon(Icons.restart_alt_rounded),
             ),
+          ),
+          FeaturesTourPadding(
+            controller: tourController,
+            indexes: {MainTourIndex.restartTourButton},
           ),
         ],
       ),
