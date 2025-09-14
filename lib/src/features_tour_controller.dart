@@ -341,6 +341,8 @@ class FeaturesTourController {
           continue;
         }
 
+        _introducingIndex.value = state.widget.index;
+
         _logger?.log(() => '   -> Waiting for the page transition...');
         await _waitForTransition(context); // Main page transition
         _logger?.log(() => '   -> Page transition completed.');
@@ -377,8 +379,6 @@ class FeaturesTourController {
           await onState?.call(const TourNotMounted());
           break;
         }
-
-        _introducingIndex.value = state.widget.index;
 
         // If there is no state in the queue and no index to wait for, then it's
         // the last state.
