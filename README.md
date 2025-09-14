@@ -226,6 +226,33 @@ If the widget is not part of the widget tree (e.g., dynamically created by `List
 
 By following these methods, you can handle scenarios where widgets are either off-screen or dynamically created, ensuring a smooth and uninterrupted tour experience.
 
+### Handling Bottom Edge Widgets
+
+When introducing widgets located near the bottom edge of the screen, navigation buttons may overlap them. To prevent this, use the built-in `FeaturesTourPadding` widget to add bottom padding during specific tour steps.
+
+```dart
+Column(
+    children: [
+        FeaturesTour(
+            controller: tourController,
+            index: 1.0,
+            introduce: const Text('A bottom edge widget'),
+            childConfig: ChildConfig(
+                shapeBorder: const CircleBorder(),
+                borderSizeInflate: 10.0,
+            ),
+            child: AnBottomEdgeWidget(),
+        ),
+        FeaturesTourPadding(
+            controller: tourController,
+            indexes: {1.0}, // Adds padding when introducing index 1.0
+        ),
+    ],
+)
+```
+
+This approach ensures that your bottom edge widgets remain visible and unobstructed during the tour.
+
 ## Contributions
 
 Contributions to this project are welcome! If you would like to contribute, please feel free to submit pull requests or open issues.
