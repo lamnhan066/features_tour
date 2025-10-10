@@ -26,10 +26,11 @@ jobs:
         working-directory: example
         run: flutter build web --release --base-href="/features_tour/"
 
-      - name: 📂 Deploy to FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: 📂 Deploy to SFTP
+        uses: wangyucode/sftp-upload-action@v2.0.4
         with:
-          server: ftp.lamnhan.dev
+          host: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: example/build/web/
+          privateKey: ${{ secrets.FTP_PRIVATE_KEY }}
+          localDir: example/build/web/
+          remoteDir: ${{ secrets.REMOTE_DIR }}
