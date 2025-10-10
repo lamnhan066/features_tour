@@ -1,3 +1,8 @@
+## 0.5.0
+
+* Bump very_good_analysis to `v10.0.0`.
+* Release to stable.
+
 ## 0.5.0-rc.10
 
 * Adds `FeaturesTourPadding` to add a padding while introducing specific indexes.
