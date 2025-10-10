@@ -31,24 +31,26 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-            FeaturesTour(
-              index: 2,
-              controller: controller,
-              introduce: const Text('b.intro'),
-              child: const Text('b'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -97,25 +99,27 @@ void main() {
     testWidgets('Tapping NEXT shows the next feature', (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              introduceConfig: RoundedRectIntroduceConfig(),
-              child: const Text('a'),
-            ),
-            FeaturesTour(
-              index: 2,
-              controller: controller,
-              introduce: const Text('b.intro'),
-              child: const Text('b'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                introduceConfig: RoundedRectIntroduceConfig(),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -168,24 +172,26 @@ void main() {
     testWidgets('Tapping SKIP dismisses the tour', (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-            FeaturesTour(
-              index: 2,
-              controller: controller,
-              introduce: const Text('b.intro'),
-              child: const Text('b'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -230,25 +236,27 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-            FeaturesTour(
-              index: 2,
-              controller: controller,
-              introduce: const Text('b.intro'),
-              doneConfig: DoneConfig(enabled: true),
-              child: const Text('b'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                doneConfig: DoneConfig(enabled: true),
+                child: const Text('b'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -308,24 +316,26 @@ void main() {
       });
 
       final controller = FeaturesTourController('App');
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-            FeaturesTour(
-              index: 2,
-              controller: controller,
-              introduce: const Text('b.intro'),
-              child: const Text('b'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -361,25 +371,27 @@ void main() {
       });
 
       final controller = FeaturesTourController('App');
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-            FeaturesTour(
-              index: 2,
-              controller: controller,
-              introduce: const Text('b.intro'),
-              doneConfig: DoneConfig(enabled: true),
-              child: const Text('b'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                doneConfig: DoneConfig(enabled: true),
+                child: const Text('b'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -434,34 +446,36 @@ void main() {
       final controller = FeaturesTourController('App');
       final showSecond = ValueNotifier(false);
 
-      await tester.pumpWidget(MaterialApp(
-        home: ValueListenableBuilder<bool>(
-          valueListenable: showSecond,
-          builder: (context, value, child) {
-            return App(
-              tours: [
-                FeaturesTour(
-                  index: 1,
-                  controller: controller,
-                  introduce: const Text('a.intro'),
-                  nextIndex: 2,
-                  child: const Text('a'),
-                  onAfterIntroduce: (_) {
-                    showSecond.value = true;
-                  },
-                ),
-                if (value)
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ValueListenableBuilder<bool>(
+            valueListenable: showSecond,
+            builder: (context, value, child) {
+              return App(
+                tours: [
                   FeaturesTour(
-                    index: 2,
+                    index: 1,
                     controller: controller,
-                    introduce: const Text('b.intro'),
-                    child: const Text('b'),
+                    introduce: const Text('a.intro'),
+                    nextIndex: 2,
+                    child: const Text('a'),
+                    onAfterIntroduce: (_) {
+                      showSecond.value = true;
+                    },
                   ),
-              ],
-            );
-          },
+                  if (value)
+                    FeaturesTour(
+                      index: 2,
+                      controller: controller,
+                      introduce: const Text('b.intro'),
+                      child: const Text('b'),
+                    ),
+                ],
+              );
+            },
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -517,25 +531,27 @@ void main() {
     testWidgets('Tour skips features with enabled: false', (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              enabled: false,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-            FeaturesTour(
-              index: 2,
-              controller: controller,
-              introduce: const Text('b.intro'),
-              child: const Text('b'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                enabled: false,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -580,21 +596,23 @@ void main() {
       final controller = FeaturesTourController('App');
       var called = false;
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-              onBeforeIntroduce: () {
-                called = true;
-              },
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+                onBeforeIntroduce: () {
+                  called = true;
+                },
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -637,22 +655,24 @@ void main() {
       var called = false;
       IntroduceResult? receivedResult;
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-              onAfterIntroduce: (result) {
-                called = true;
-                receivedResult = result;
-              },
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+                onAfterIntroduce: (result) {
+                  called = true;
+                  receivedResult = result;
+                },
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -695,18 +715,20 @@ void main() {
     testWidgets('Tapping "Okay" in pre-dialog starts the tour', (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -744,36 +766,39 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-          collectedStates,
-          containsAllInOrder([
-            isA<TourPreDialogShownDefault>(),
-            isA<TourPreDialogButtonPressed>().having(
-              (s) => s.buttonType,
-              'buttonType',
-              PreDialogButtonType.accept,
-            ),
-            isA<TourIntroducing>(),
-            isA<TourIntroduceResultEmitted>(),
-            isA<TourCompleted>(),
-          ]));
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogShownDefault>(),
+          isA<TourPreDialogButtonPressed>().having(
+            (s) => s.buttonType,
+            'buttonType',
+            PreDialogButtonType.accept,
+          ),
+          isA<TourIntroducing>(),
+          isA<TourIntroduceResultEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
 
     testWidgets('Tapping "Later" in pre-dialog dismisses the tour for now',
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -819,18 +844,20 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -891,19 +918,21 @@ void main() {
       final controller2 = FeaturesTourController('Page2');
 
       // Start with page 1
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          key: const Key('Page1'),
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller1,
-              introduce: const Text('page1.intro'),
-              child: const Text('page1'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            key: const Key('Page1'),
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller1,
+                introduce: const Text('page1.intro'),
+                child: const Text('page1'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
       final context1 = tester.element(find.byKey(const Key('Page1')));
 
@@ -960,19 +989,21 @@ void main() {
 
       // Now switch to page 2
       collectedStates.clear();
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          key: const Key('Page2'),
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller2,
-              introduce: const Text('page2.intro'),
-              child: const Text('page2'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            key: const Key('Page2'),
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller2,
+                introduce: const Text('page2.intro'),
+                child: const Text('page2'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
       final context2 = tester.element(find.byKey(const Key('Page2')));
 
@@ -1019,26 +1050,28 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              nextIndex: 99, // This index will never appear
-              nextIndexTimeout: const Duration(milliseconds: 100),
-              child: const Text('a'),
-            ),
-            FeaturesTour(
-              index: 3,
-              controller: controller,
-              introduce: const Text('c.intro'),
-              child: const Text('c'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                nextIndex: 99, // This index will never appear
+                nextIndexTimeout: const Duration(milliseconds: 100),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 3,
+                controller: controller,
+                introduce: const Text('c.intro'),
+                child: const Text('c'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -1089,26 +1122,28 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-            UnfeaturesTour(
-              child: FeaturesTour(
-                index: 2,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
                 controller: controller,
-                introduce: const Text('b.intro'),
-                child: const Text('b'),
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
               ),
-            ),
-          ],
+              UnfeaturesTour(
+                child: FeaturesTour(
+                  index: 2,
+                  controller: controller,
+                  introduce: const Text('b.intro'),
+                  child: const Text('b'),
+                ),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));

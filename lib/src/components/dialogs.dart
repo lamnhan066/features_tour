@@ -40,13 +40,15 @@ Future<PreDialogButtonType> showPreDialog(
   OverlayEntry? overlayEntry;
 
   if (config.customDialogBuilder != null) {
-    completer.complete(config.customDialogBuilder!(
-      context,
-      (value) async {
-        isChecked = value;
-        onApplyToAllPagesCheckboxChanged?.call(value);
-      },
-    ));
+    completer.complete(
+      config.customDialogBuilder!(
+        context,
+        (value) async {
+          isChecked = value;
+          onApplyToAllPagesCheckboxChanged?.call(value);
+        },
+      ),
+    );
     await onPreDialogIsDisplayed(true);
   } else {
     overlayEntry = OverlayEntry(
@@ -76,7 +78,8 @@ Future<PreDialogButtonType> showPreDialog(
           ),
           backgroundColor: config.backgroundColor,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(config.borderRadius)),
+            borderRadius: BorderRadius.circular(config.borderRadius),
+          ),
           actions: [
             TextButton(
               onPressed: () async {

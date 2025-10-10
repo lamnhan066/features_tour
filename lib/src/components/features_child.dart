@@ -244,13 +244,15 @@ class _FeaturesChildState extends State<FeaturesChild>
     _scaleAnimation = Tween<double>(
       begin: widget.childConfig.zoomScale,
       end: 1,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: widget.childConfig.curve,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _scaleController,
+        curve: widget.childConfig.curve,
+      ),
+    );
 
     if (widget.childConfig.enableAnimation) {
-      _scaleController.repeat(reverse: true);
+      _scaleController.repeat(reverse: true).ignore();
     } else {
       _scaleController.value = 1;
       _scaleController.stop();

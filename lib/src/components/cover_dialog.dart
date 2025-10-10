@@ -10,7 +10,8 @@ void showCover(
 ) {
   if (!context.mounted) {
     printDebug?.call(
-        'Cannot show the cover because the build context is not mounted');
+      'Cannot show the cover because the build context is not mounted',
+    );
     return;
   }
 
@@ -21,12 +22,14 @@ void showCover(
 
   printDebug?.call('Showing the cover');
 
-  _coverOverlay = OverlayEntry(builder: (ctx) {
-    return Material(
-      color: color,
-      child: const SizedBox.shrink(),
-    );
-  });
+  _coverOverlay = OverlayEntry(
+    builder: (ctx) {
+      return Material(
+        color: color,
+        child: const SizedBox.shrink(),
+      );
+    },
+  );
 
   Overlay.of(context, rootOverlay: true).insert(_coverOverlay!);
 }

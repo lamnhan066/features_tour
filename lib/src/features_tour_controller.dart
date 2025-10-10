@@ -37,7 +37,9 @@ class FeaturesTourController {
 
   /// The internal cached states that have been unregistered.
   final _cachedStates = SplayTreeMap<double, _FeaturesTourState>.from(
-      {}, (a, b) => a.compareTo(b));
+    {},
+    (a, b) => a.compareTo(b),
+  );
 
   final _globalKeys = <double, GlobalKey>{};
   final Map<double, Completer<_FeaturesTourState>> _pendingIndexes = {};
@@ -56,8 +58,10 @@ class FeaturesTourController {
   /// Registers the current FeaturesTour state.
   void _register(_FeaturesTourState state) {
     if (_debugLog && !_cachedStates.containsKey(state.widget.index)) {
-      _logger?.log(() =>
-          'Registering index ${state.widget.index}. Total states: ${_cachedStates.length + 1}');
+      _logger?.log(
+        () =>
+            'Registering index ${state.widget.index}. Total states: ${_cachedStates.length + 1}',
+      );
     }
     _states[state.widget.index] = state;
     _cachedStates[state.widget.index] = state;
@@ -74,8 +78,10 @@ class FeaturesTourController {
   /// Unregisters the current FeaturesTour state.
   void _unregister(_FeaturesTourState state) {
     if (_debugLog && _cachedStates.containsKey(state.widget.index)) {
-      _logger?.log(() =>
-          'Unregistering index ${state.widget.index}. Total states: ${_cachedStates.length - 1}');
+      _logger?.log(
+        () =>
+            'Unregistering index ${state.widget.index}. Total states: ${_cachedStates.length - 1}',
+      );
     }
     _states.remove(state.widget.index);
     _cachedStates.remove(state.widget.index);
@@ -247,10 +253,10 @@ class FeaturesTourController {
           _logger?.log(() => 'This has been applied to all pages.');
           await onState?.call(TourPreDialogHiddenByAppliedToAll(type));
         },
-        (value) {
+        (value) async {
           _logger
               ?.log(() => 'The "Apply to all pages" checkbox is now $value.');
-          onState?.call(TourPreDialogApplyToAllChanged(value));
+          await onState?.call(TourPreDialogApplyToAllChanged(value));
         },
       );
 
@@ -318,12 +324,16 @@ class FeaturesTourController {
 
         bool shouldShowIntroduce;
         if (force != null) {
-          _logger?.log(() =>
-              '   -> `force` is $force, so the introduction must respect it.');
+          _logger?.log(
+            () =>
+                '   -> `force` is $force, so the introduction must respect it.',
+          );
           shouldShowIntroduce = force;
         } else {
-          _logger?.log(() =>
-              '   -> `force` is null, so the introduction will act like normal.');
+          _logger?.log(
+            () =>
+                '   -> `force` is null, so the introduction will act like normal.',
+          );
           final isShown = _prefs!.getBool(key);
           shouldShowIntroduce = isShown != true;
         }
@@ -333,8 +343,10 @@ class FeaturesTourController {
         }
 
         if (!shouldShowIntroduce) {
-          _logger?.log(() =>
-              '   -> This widget has been introduced. Moving to the next widget.');
+          _logger?.log(
+            () =>
+                '   -> This widget has been introduced. Moving to the next widget.',
+          );
           await _removeState(state, false);
           await onState
               ?.call(TourSkippedIntroduction(index: state.widget.index));
@@ -431,21 +443,26 @@ class FeaturesTourController {
 
         // Waits for the next state to appear if `nextIndex` is non-null.
         if (nextIndex != null) {
-          _logger?.log(() =>
-              'The `nextIndex` is non-null. Waiting for the next index: $nextIndex...');
+          _logger?.log(
+            () =>
+                'The `nextIndex` is non-null. Waiting for the next index: $nextIndex...',
+          );
 
           nextState = await _nextIndex(nextIndex, nextIndexTimeout);
 
           if (nextState == null) {
-            _logger?.log(() =>
-                'Cannot wait for the next index $nextIndex because the timeout was reached. Using the next ordered value instead.');
+            _logger?.log(
+              () =>
+                  'Cannot wait for the next index $nextIndex because the timeout was reached. Using the next ordered value instead.',
+            );
 
             // Adds the timeout state index to the introduced list so it will not
             // be introduced even when it's shown.
             _introducedIndexes.add(nextIndex);
           } else {
             _logger?.log(
-                () => 'The next index is available with state: $nextState.');
+              () => 'The next index is available with state: $nextState.',
+            );
           }
         } else {
           nextState = null;
@@ -534,65 +551,67 @@ class FeaturesTourController {
           ),
         );
 
-    final overlayEntry = OverlayEntry(builder: (ctx) {
-      return GestureDetector(
-        onTap: childConfig.barrierDismissible
-            ? () => complete(IntroduceResult.next)
-            : null,
-        child: Material(
-          color: Colors.transparent,
-          child: FeaturesChild(
-            globalKey: _globalKeys[state.widget.index]!,
-            childConfig: childConfig,
-            introduce: state.widget.introduce,
-            introduceConfig: introduceConfig,
-            skip: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: skipButton,
+    final overlayEntry = OverlayEntry(
+      builder: (ctx) {
+        return GestureDetector(
+          onTap: childConfig.barrierDismissible
+              ? () => complete(IntroduceResult.next)
+              : null,
+          child: Material(
+            color: Colors.transparent,
+            child: FeaturesChild(
+              globalKey: _globalKeys[state.widget.index]!,
+              childConfig: childConfig,
+              introduce: state.widget.introduce,
+              introduceConfig: introduceConfig,
+              skip: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: skipButton,
+                ),
               ),
-            ),
-            skipConfig: skipConfig,
-            next: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: nextButton,
+              skipConfig: skipConfig,
+              next: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: nextButton,
+                ),
               ),
-            ),
-            doneConfig: doneConfig,
-            done: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: doneButton,
+              doneConfig: doneConfig,
+              done: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: doneButton,
+                ),
               ),
-            ),
-            isLastState: isLastState,
-            nextConfig: nextConfig,
-            padding: introduceConfig.padding,
-            alignment: introduceConfig.alignment,
-            quadrantAlignment: introduceConfig.quadrantAlignment,
-            child: GestureDetector(
-              onTap: () {
-                complete(IntroduceResult.next);
-              },
-              child: Material(
-                color: Colors.transparent,
-                child: AbsorbPointer(
-                  child: UnfeaturesTour(
-                    // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-                    // ignore: deprecated_member_use_from_same_package
-                    child: childConfig.child?.call(state.widget.child) ??
-                        childConfig.builder
-                            ?.call(context, state.widget.child) ??
-                        state.widget.child,
+              isLastState: isLastState,
+              nextConfig: nextConfig,
+              padding: introduceConfig.padding,
+              alignment: introduceConfig.alignment,
+              quadrantAlignment: introduceConfig.quadrantAlignment,
+              child: GestureDetector(
+                onTap: () {
+                  complete(IntroduceResult.next);
+                },
+                child: Material(
+                  color: Colors.transparent,
+                  child: AbsorbPointer(
+                    child: UnfeaturesTour(
+                      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
+                      // ignore: deprecated_member_use_from_same_package
+                      child: childConfig.child?.call(state.widget.child) ??
+                          childConfig.builder
+                              ?.call(context, state.widget.child) ??
+                          state.widget.child,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     if (!context.mounted) return IntroduceResult.notMounted;
 
@@ -647,9 +666,7 @@ class FeaturesTourController {
       }
     }
 
-    for (final key in removedIndexes) {
-      _states.remove(key);
-    }
+    removedIndexes.forEach(_states.remove);
   }
 
   /// Shows the pre-dialog if possible.

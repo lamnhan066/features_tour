@@ -37,11 +37,13 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(const MaterialApp(
-        home: App(
-          tours: [],
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: App(
+            tours: [],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -72,33 +74,35 @@ void main() {
       final controller = FeaturesTourController('App');
       final showChild = ValueNotifier(true);
 
-      await tester.pumpWidget(MaterialApp(
-        home: ValueListenableBuilder(
-          valueListenable: showChild,
-          builder: (context, value, child) {
-            return App(
-              tours: [
-                if (value)
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ValueListenableBuilder(
+            valueListenable: showChild,
+            builder: (context, value, child) {
+              return App(
+                tours: [
+                  if (value)
+                    FeaturesTour(
+                      index: 1,
+                      controller: controller,
+                      introduce: const Text('a.intro'),
+                      child: const Text('a'),
+                      onAfterIntroduce: (_) {
+                        showChild.value = false;
+                      },
+                    ),
                   FeaturesTour(
-                    index: 1,
+                    index: 2,
                     controller: controller,
-                    introduce: const Text('a.intro'),
-                    child: const Text('a'),
-                    onAfterIntroduce: (_) {
-                      showChild.value = false;
-                    },
+                    introduce: const Text('b.intro'),
+                    child: const Text('b'),
                   ),
-                FeaturesTour(
-                  index: 2,
-                  controller: controller,
-                  introduce: const Text('b.intro'),
-                  child: const Text('b'),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -147,18 +151,20 @@ void main() {
     testWidgets('controller stops the tour and clears overlay', (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -197,18 +203,20 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -253,35 +261,10 @@ void main() {
     testWidgets('showIntroduceDialog aligns correctly for all quadrants',
         (tester) async {
       final childKey = GlobalKey();
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: SizedBox(
-              key: childKey,
-              width: 100,
-              height: 50,
-              child: const Placeholder(),
-            ),
-          ),
-        ),
-      ));
-      await tester.pumpAndSettle();
-      final context = tester.element(find.byType(Scaffold));
-      final childRect = tester.getRect(find.byKey(childKey));
-
-      for (final alignment in QuadrantAlignment.values) {
-        // This test is now testing the alignment of the FeaturesTour's introduce widget
-        // by setting the introduceConfig.quadrantAlignment.
-        // The direct call to showIntroduceDialog is removed.
-        await tester.pumpWidget(MaterialApp(
+      await tester.pumpWidget(
+        MaterialApp(
           home: Scaffold(
-            body: FeaturesTour(
-              index: 1,
-              controller: FeaturesTourController('TestApp'),
-              introduce: Text(alignment.name),
-              introduceConfig: IntroduceConfig(
-                quadrantAlignment: alignment,
-              ),
+            body: Center(
               child: SizedBox(
                 key: childKey,
                 width: 100,
@@ -290,7 +273,36 @@ void main() {
               ),
             ),
           ),
-        ));
+        ),
+      );
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(Scaffold));
+      final childRect = tester.getRect(find.byKey(childKey));
+
+      for (final alignment in QuadrantAlignment.values) {
+        // This test is now testing the alignment of the FeaturesTour's introduce widget
+        // by setting the introduceConfig.quadrantAlignment.
+        // The direct call to showIntroduceDialog is removed.
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: FeaturesTour(
+                index: 1,
+                controller: FeaturesTourController('TestApp'),
+                introduce: Text(alignment.name),
+                introduceConfig: IntroduceConfig(
+                  quadrantAlignment: alignment,
+                ),
+                child: SizedBox(
+                  key: childKey,
+                  width: 100,
+                  height: 50,
+                  child: const Placeholder(),
+                ),
+              ),
+            ),
+          ),
+        );
         await tester.pumpAndSettle();
 
         final controller = FeaturesTourController('TestApp');
@@ -316,18 +328,26 @@ void main() {
                     expect(introRect.right, lessThanOrEqualTo(childRect.left));
                   case QuadrantAlignment.right:
                     expect(
-                        introRect.left, greaterThanOrEqualTo(childRect.right));
+                      introRect.left,
+                      greaterThanOrEqualTo(childRect.right),
+                    );
                   case QuadrantAlignment.bottom:
                     expect(
-                        introRect.top, greaterThanOrEqualTo(childRect.bottom));
+                      introRect.top,
+                      greaterThanOrEqualTo(childRect.bottom),
+                    );
                   case QuadrantAlignment.inside:
                     // For inside, the intro dialog should be within the childRect
                     expect(
-                        introRect.left, greaterThanOrEqualTo(childRect.left));
+                      introRect.left,
+                      greaterThanOrEqualTo(childRect.left),
+                    );
                     expect(introRect.top, greaterThanOrEqualTo(childRect.top));
                     expect(introRect.right, lessThanOrEqualTo(childRect.right));
                     expect(
-                        introRect.bottom, lessThanOrEqualTo(childRect.bottom));
+                      introRect.bottom,
+                      lessThanOrEqualTo(childRect.bottom),
+                    );
                 }
                 await tester.tap(find.text('DONE'));
               }
@@ -341,18 +361,20 @@ void main() {
     testWidgets('Pre-dialog respects disabled buttons', (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -408,18 +430,20 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -471,18 +495,20 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -506,7 +532,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-          collectedStates, isNot(contains(isA<TourPreDialogShownDefault>())));
+        collectedStates,
+        isNot(contains(isA<TourPreDialogShownDefault>())),
+      );
       expect(
         collectedStates,
         containsAllInOrder([
@@ -521,17 +549,19 @@ void main() {
     testWidgets('showIntroduceDialog when introduce is null', (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -554,7 +584,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-          collectedStates, isNot(contains(isA<TourPreDialogShownDefault>())));
+        collectedStates,
+        isNot(contains(isA<TourPreDialogShownDefault>())),
+      );
       expect(
         collectedStates,
         containsAllInOrder([
@@ -573,17 +605,21 @@ void main() {
         logs.add(message ?? '');
       }
 
-      await tester.pumpWidget(MaterialApp(
-        home: Builder(builder: (context) {
-          return ElevatedButton(
-            onPressed: () {
-              showCover(context, Colors.black54, customDebugPrint);
-              hideCover(customDebugPrint);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () {
+                  showCover(context, Colors.black54, customDebugPrint);
+                  hideCover(customDebugPrint);
+                },
+                child: const Text('Test'),
+              );
             },
-            child: const Text('Test'),
-          );
-        }),
-      ));
+          ),
+        ),
+      );
 
       await tester.tap(find.text('Test'));
       await tester.pump();

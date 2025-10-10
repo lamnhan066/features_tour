@@ -19,7 +19,8 @@ class BuildContextFake implements BuildContext {
   dynamic noSuchMethod(Invocation invocation) {
     // Implement any methods that are called during the test, or throw if unexpected
     throw UnsupportedError(
-        'BuildContextFake does not support ${invocation.memberName}');
+      'BuildContextFake does not support ${invocation.memberName}',
+    );
   }
 }
 
@@ -46,24 +47,26 @@ void main() {
         (tester) async {
       final controller1 = FeaturesTourController('Page1');
       final controller2 = FeaturesTourController('Page2');
-      await tester.pumpWidget(MaterialApp(
-        home: Column(
-          children: [
-            FeaturesTour(
-              index: 1,
-              controller: controller1,
-              introduce: const Text('p1.i1'),
-              child: const Text('p1.c1'),
-            ),
-            FeaturesTour(
-              index: 1,
-              controller: controller2,
-              introduce: const Text('p2.i1'),
-              child: const Text('p2.c1'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Column(
+            children: [
+              FeaturesTour(
+                index: 1,
+                controller: controller1,
+                introduce: const Text('p1.i1'),
+                child: const Text('p1.c1'),
+              ),
+              FeaturesTour(
+                index: 1,
+                controller: controller2,
+                introduce: const Text('p2.i1'),
+                child: const Text('p2.c1'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       // At this point, controllers are registered and have states.
@@ -103,27 +106,33 @@ void main() {
 
       showCover(unmountedContext, Colors.black54, printDebug);
 
-      expect(logs,
-          ['Cannot show the cover because the build context is not mounted']);
       expect(
-          find.byType(Material), findsNothing); // Ensure no overlay is inserted
+        logs,
+        ['Cannot show the cover because the build context is not mounted'],
+      );
+      expect(
+        find.byType(Material),
+        findsNothing,
+      ); // Ensure no overlay is inserted
     });
 
     testWidgets('pre-dialog handles error in onShownPreDialog', (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -152,8 +161,10 @@ void main() {
       });
 
       expect(caughtError, isA<Exception>());
-      expect(caughtError.toString(),
-          contains('Simulated error in onShownPreDialog'));
+      expect(
+        caughtError.toString(),
+        contains('Simulated error in onShownPreDialog'),
+      );
       expect(caughtStackTrace, isNotNull);
 
       // Ensure the overlay is removed even if an error occurs
@@ -164,18 +175,20 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -276,19 +289,23 @@ void main() {
       final logs = <String>[];
       void printDebug(String log) => logs.add(log);
 
-      await tester.pumpWidget(MaterialApp(
-        home: Builder(builder: (context) {
-          return ElevatedButton(
-            onPressed: () {
-              showCover(context, Colors.black54, printDebug);
-              showCover(context, Colors.black54, printDebug);
-              hideCover(printDebug);
-              hideCover(printDebug);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () {
+                  showCover(context, Colors.black54, printDebug);
+                  showCover(context, Colors.black54, printDebug);
+                  hideCover(printDebug);
+                  hideCover(printDebug);
+                },
+                child: const Text('Test'),
+              );
             },
-            child: const Text('Test'),
-          );
-        }),
-      ));
+          ),
+        ),
+      );
 
       await tester.tap(find.text('Test'));
       await tester.pump();
@@ -342,18 +359,20 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -442,22 +461,24 @@ void main() {
         (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              childConfig: ChildConfig(
-                shapeBorder: const CircleBorder(),
-                isAnimateChild: false,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                childConfig: ChildConfig(
+                  shapeBorder: const CircleBorder(),
+                  isAnimateChild: false,
+                ),
+                child: const Text('a'),
               ),
-              child: const Text('a'),
-            ),
-          ],
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -486,24 +507,26 @@ void main() {
     testWidgets('IntroduceConfig applies quadrant alignment', (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: FeaturesTour(
-            index: 1,
-            controller: controller,
-            introduce: const Text('a.intro'),
-            introduceConfig: IntroduceConfig(
-              quadrantAlignment: QuadrantAlignment.top,
-            ),
-            child: const SizedBox(
-              key: Key('child'),
-              width: 50,
-              height: 50,
-              child: Placeholder(),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FeaturesTour(
+              index: 1,
+              controller: controller,
+              introduce: const Text('a.intro'),
+              introduceConfig: IntroduceConfig(
+                quadrantAlignment: QuadrantAlignment.top,
+              ),
+              child: const SizedBox(
+                key: Key('child'),
+                width: 50,
+                height: 50,
+                child: Placeholder(),
+              ),
             ),
           ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(Scaffold));
@@ -539,24 +562,26 @@ void main() {
     testWidgets('controller stop ends the tour', (tester) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(MaterialApp(
-        home: App(
-          tours: [
-            FeaturesTour(
-              index: 1,
-              controller: controller,
-              introduce: const Text('a.intro'),
-              child: const Text('a'),
-            ),
-            FeaturesTour(
-              index: 2,
-              controller: controller,
-              introduce: const Text('b.intro'),
-              child: const Text('b'),
-            ),
-          ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));

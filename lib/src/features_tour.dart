@@ -57,7 +57,8 @@ class FeaturesTour extends StatefulWidget {
     /// If `canPop` is `true`, the tour will be dismissed when popped. Otherwise,
     /// it blocks the current route from being popped.
     @Deprecated(
-        'Use `FeaturesTourController.start(popToSkip: true)` instead. This parameter has no effect for now.')
+      'Use `FeaturesTourController.start(popToSkip: true)` instead. This parameter has no effect for now.',
+    )
     bool canPop = true,
     @Deprecated(
       'Use `nextIndex` instead. This will be removed in the next major version.',
@@ -201,8 +202,6 @@ class FeaturesTour extends StatefulWidget {
 
   /// Sets a global logger for all controllers.
   @visibleForTesting
-  // For testing purposes only.
-  // ignore: use_setters_to_change_properties
   static void setTestingLogger(Logger? logger) {
     if (logger == null) {
       _debugLog = false;
