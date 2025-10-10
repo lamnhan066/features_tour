@@ -35,3 +35,5 @@ jobs:
           local-dir: example/build/web/
           server-dir: features_tour/
           port: 21
+          protocol: ftps
+          security: explicit
