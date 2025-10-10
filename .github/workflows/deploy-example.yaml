@@ -36,4 +36,4 @@ jobs:
           server-dir: features_tour/
           port: 21
           protocol: ftps
-          security: explicit
+          security: loose
