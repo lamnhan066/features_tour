@@ -105,7 +105,7 @@ class FeaturesTourController {
   /// specified by [firstIndexTimeout]. If the timeout is exceeded, the smallest
   /// available index will be used.
   ///
-  /// The pre-dialog can be configured using [predialogConfig]. This dialog prompts
+  /// The pre-dialog can be configured using [preDialogConfig]. This dialog prompts
   /// the user to confirm whether they want to start the tour.
   ///
   /// The [onState] callback is an optional callback function that is invoked
@@ -122,46 +122,21 @@ class FeaturesTourController {
   /// ```
   Future<void> start(
     BuildContext context, {
-    @Deprecated(
-      'Use `firstIndex` instead. This will be removed in the next release candidate.',
-    )
-    double? waitForFirstIndex,
-    @Deprecated(
-      'Use `firstIndexTimeout` instead. This will be removed in the next release candidate.',
-    )
-    Duration waitForFirstTimeout = const Duration(seconds: 3),
     double? firstIndex,
-    // TODO(lamnhan066): Set `firstIndexTimeout` to `Duration(seconds: 3)` in the next release candidate.
-    Duration? firstIndexTimeout,
+    Duration firstIndexTimeout = const Duration(seconds: 3),
     Duration delay = const Duration(milliseconds: 500),
     bool? force,
-    @Deprecated(
-      'Use `preDialogConfig` instead. This will be removed in the next major version.',
-    )
-    PreDialogConfig? predialogConfig,
     PreDialogConfig? preDialogConfig,
     FutureOr<void> Function(TourState state)? onState,
     bool popToSkip = true,
-    @Deprecated(
-      'Use `FeaturesTourController.debugLog` instead. This will be removed in the next major version.',
-    )
-    bool? debugLog,
   }) async {
-    assert(
-      preDialogConfig == null || predialogConfig == null,
-      'You can only set `predialogConfig` or `preDialogConfig`.',
-    );
-    final effectivePreDialogConfig = predialogConfig ?? preDialogConfig;
+    final effectivePreDialogConfig = preDialogConfig;
     _popToSkip = popToSkip;
-    // TODO(lamnhan066): Remove `debugLog` in the next major version.
-    final isLoggingEnabled = _debugLog || (debugLog ?? false);
-    if (isLoggingEnabled) {
+    if (_debugLog) {
       _logger ??= Logger((s) => debugPrint('[FeaturesTour][$pageName]: $s'));
     } else {
       _logger = null;
     }
-    firstIndex ??= waitForFirstIndex;
-    firstIndexTimeout ??= waitForFirstTimeout;
 
     if (_isIntroducing) {
       _logger?.log(() => 'The tour is already in progress.');
@@ -510,10 +485,8 @@ class FeaturesTourController {
     }
 
     void skipAction() => complete(IntroduceResult.skip);
-    // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-    // ignore: deprecated_member_use_from_same_package
-    final skipButton = skipConfig.child?.call(skipAction) ??
-        skipConfig.builder?.call(context, skipAction) ??
+
+    final skipButton = skipConfig.builder?.call(context, skipAction) ??
         ElevatedButton(
           onPressed: skipAction,
           style: skipConfig.buttonStyle,
@@ -524,10 +497,8 @@ class FeaturesTourController {
         );
 
     void nextAction() => complete(IntroduceResult.next);
-    // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-    // ignore: deprecated_member_use_from_same_package
-    final nextButton = nextConfig.child?.call(nextAction) ??
-        nextConfig.builder?.call(context, nextAction) ??
+
+    final nextButton = nextConfig.builder?.call(context, nextAction) ??
         ElevatedButton(
           onPressed: nextAction,
           style: nextConfig.buttonStyle,
@@ -538,10 +509,8 @@ class FeaturesTourController {
         );
 
     void doneAction() => complete(IntroduceResult.done);
-    // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-    // ignore: deprecated_member_use_from_same_package
-    final doneButton = doneConfig.child?.call(doneAction) ??
-        doneConfig.builder?.call(context, doneAction) ??
+
+    final doneButton = doneConfig.builder?.call(context, doneAction) ??
         ElevatedButton(
           onPressed: doneAction,
           style: doneConfig.buttonStyle,
@@ -597,10 +566,7 @@ class FeaturesTourController {
                   color: Colors.transparent,
                   child: AbsorbPointer(
                     child: UnfeaturesTour(
-                      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-                      // ignore: deprecated_member_use_from_same_package
-                      child: childConfig.child?.call(state.widget.child) ??
-                          childConfig.builder
+                      child: childConfig.builder
                               ?.call(context, state.widget.child) ??
                           state.widget.child,
                     ),

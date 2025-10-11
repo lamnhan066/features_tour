@@ -44,7 +44,6 @@ class DoneConfig extends BaseButtonConfig {
   /// ```
   factory DoneConfig({
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
-    Widget Function(VoidCallback onPressed)? child,
     String? text,
     Alignment? alignment,
     Color? color,
@@ -54,9 +53,6 @@ class DoneConfig extends BaseButtonConfig {
   }) =>
       global.copyWith(
         builder: builder,
-        // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-        // ignore: deprecated_member_use_from_same_package
-        child: child,
         text: text,
         alignment: alignment,
         color: color,
@@ -66,7 +62,6 @@ class DoneConfig extends BaseButtonConfig {
       );
 
   DoneConfig._({
-    @Deprecated('Use builder instead') super.child,
     super.builder,
     super.text = 'DONE',
     super.alignment = Alignment.bottomRight,
@@ -82,8 +77,6 @@ class DoneConfig extends BaseButtonConfig {
   /// Creates a new DoneConfig based on these values.
   @override
   DoneConfig copyWith({
-    @Deprecated('Use builder instead')
-    Widget Function(VoidCallback onPressed)? child,
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
     String? text,
     Alignment? alignment,
@@ -94,9 +87,6 @@ class DoneConfig extends BaseButtonConfig {
   }) {
     return DoneConfig._(
       builder: builder ?? this.builder,
-      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-      // ignore: deprecated_member_use_from_same_package
-      child: child ?? this.child,
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,

@@ -25,9 +25,6 @@ class FeaturesTour extends StatefulWidget {
   /// It is a `double`, which allows for the insertion of new features between existing ones.
   /// Ensure this value remains unchanged to prevent re-introducing the same feature unnecessarily.
   ///
-  /// If [canPop] is `true`, the tour will be dismissed when popped. Otherwise,
-  /// it blocks the current route from being popped.
-  ///
   /// Use [nextIndex] to specify the next index to display.
   /// The app will pause user interaction until the specified index becomes available, making it ideal
   /// for scenarios like displaying a [FeaturesTour] in a dialog that opens after the current feature.
@@ -51,26 +48,8 @@ class FeaturesTour extends StatefulWidget {
     required this.index,
     required this.child,
     super.key,
-
-    /// The [child] will be wrapped with [PopScope] to control the pop behavior.
-    ///
-    /// If `canPop` is `true`, the tour will be dismissed when popped. Otherwise,
-    /// it blocks the current route from being popped.
-    @Deprecated(
-      'Use `FeaturesTourController.start(popToSkip: true)` instead. This parameter has no effect for now.',
-    )
-    bool canPop = true,
-    @Deprecated(
-      'Use `nextIndex` instead. This will be removed in the next major version.',
-    )
-    double? waitForIndex,
-    @Deprecated(
-      'Use `nextIndexTimeout` instead. This will be removed in the next major version.',
-    )
-    Duration waitForTimeout = const Duration(seconds: 3),
-    double? nextIndex,
-    // TODO(lamnhan066): Set `nextIndexTimeout` to `Duration(seconds: 3)` in the next release candidate.
-    Duration? nextIndexTimeout,
+    this.nextIndex,
+    this.nextIndexTimeout = const Duration(seconds: 3),
     this.childConfig,
     this.introduce = const SizedBox.shrink(),
     this.introduceConfig,
@@ -80,8 +59,7 @@ class FeaturesTour extends StatefulWidget {
     this.enabled = true,
     this.onBeforeIntroduce,
     this.onAfterIntroduce,
-  })  : nextIndex = nextIndex ?? waitForIndex,
-        nextIndexTimeout = nextIndexTimeout ?? waitForTimeout;
+  });
 
   /// The prefix of this package.
   static String _prefix = 'FeaturesTour';
@@ -145,12 +123,6 @@ class FeaturesTour extends StatefulWidget {
     /// The configuration of the [introduce] widget. The default is [IntroduceConfig.global].
     IntroduceConfig? introduceConfig,
 
-    /// The configuration of the [showPreDialog] widget. The default is [PreDialogConfig.global].
-    @Deprecated(
-      'Use `preDialogConfig` instead. This will be removed in the next major version.',
-    )
-    PreDialogConfig? predialogConfig,
-
     /// The configuration of the pre-dialog widget. The default is [PreDialogConfig.global].
     PreDialogConfig? preDialogConfig,
 
@@ -169,17 +141,12 @@ class FeaturesTour extends StatefulWidget {
     /// Allows printing the debug logs. The default is `kDebugMode`.
     bool? debugLog,
   }) {
-    assert(
-      preDialogConfig == null || predialogConfig == null,
-      'You can only set `predialogConfig` or `preDialogConfig`.',
-    );
     if (force != null) _force = force;
     if (childConfig != null) ChildConfig.global = childConfig;
     if (skipConfig != null) SkipConfig.global = skipConfig;
     if (nextConfig != null) NextConfig.global = nextConfig;
     if (doneConfig != null) DoneConfig.global = doneConfig;
     if (introduceConfig != null) IntroduceConfig.global = introduceConfig;
-    if (predialogConfig != null) PreDialogConfig.global = predialogConfig;
     if (preDialogConfig != null) PreDialogConfig.global = preDialogConfig;
     if (preferencePrefix != null) _prefix = preferencePrefix;
     if (debugLog != null) _debugLog = debugLog;

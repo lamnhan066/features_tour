@@ -5,16 +5,6 @@ import 'package:flutter/material.dart';
 class SkipConfig extends BaseButtonConfig {
   /// Creates a new `SkipConfig` based on the provided [global] values.
   ///
-  /// [child] is a custom widget for the skip button. When this is set,
-  /// you must pass the `onPressed` method.
-  /// Example:
-  /// ```dart
-  /// child: (onPressed) => FilledButton(
-  ///   onPressed: onPressed,
-  ///   child: const Text('SKIP'),
-  /// ),
-  /// ```
-  ///
   /// [builder] is a builder function that provides a context and an `onPressed` callback
   /// to create a custom skip button widget.
   ///
@@ -43,8 +33,6 @@ class SkipConfig extends BaseButtonConfig {
   /// ```
   factory SkipConfig({
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
-    @Deprecated('Use builder instead')
-    Widget Function(VoidCallback onPressed)? child,
     String? text,
     Alignment? alignment,
     Color? color,
@@ -54,9 +42,6 @@ class SkipConfig extends BaseButtonConfig {
   }) {
     return global.copyWith(
       builder: builder,
-      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-      // ignore: deprecated_member_use_from_same_package
-      child: child,
       text: text,
       alignment: alignment,
       color: color,
@@ -67,7 +52,6 @@ class SkipConfig extends BaseButtonConfig {
   }
 
   const SkipConfig._({
-    @Deprecated('Use builder instead') super.child,
     super.builder,
     super.text = 'SKIP',
     super.alignment = Alignment.bottomLeft,
@@ -84,8 +68,6 @@ class SkipConfig extends BaseButtonConfig {
   @override
   SkipConfig copyWith({
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
-    @Deprecated('Use builder instead')
-    Widget Function(VoidCallback onPressed)? child,
     String? text,
     Alignment? alignment,
     Color? color,
@@ -95,9 +77,6 @@ class SkipConfig extends BaseButtonConfig {
   }) {
     return SkipConfig._(
       builder: builder ?? this.builder,
-      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-      // ignore: deprecated_member_use_from_same_package
-      child: child,
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,

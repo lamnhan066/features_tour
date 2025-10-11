@@ -36,7 +36,6 @@ class IntroduceConfig {
   ///     decoration and better visible barrier color.
   factory IntroduceConfig({
     IntroduceBuilder? builder,
-    @Deprecated('Use barrierColorBuilder instead') Color? backgroundColor,
     BarrierColorBuilder? barrierColorBuilder,
     EdgeInsetsGeometry? padding,
     QuadrantAlignment? quadrantAlignment,
@@ -45,9 +44,7 @@ class IntroduceConfig {
   }) {
     return global.copyWith(
       builder: builder,
-      barrierColorBuilder: backgroundColor != null
-          ? (builder) => backgroundColor
-          : barrierColorBuilder,
+      barrierColorBuilder: barrierColorBuilder,
       padding: padding,
       alignment: alignment,
       quadrantAlignment: quadrantAlignment,
@@ -96,7 +93,6 @@ class IntroduceConfig {
   /// Creates a new IntroduceConfig based on these values.
   IntroduceConfig copyWith({
     IntroduceBuilder? builder,
-    @Deprecated('Use barrierColorBuilder instead') Color? backgroundColor,
     BarrierColorBuilder? barrierColorBuilder,
     EdgeInsetsGeometry? padding,
     Alignment? alignment,
@@ -106,9 +102,7 @@ class IntroduceConfig {
   }) {
     return IntroduceConfig._(
       builder: builder ?? this.builder,
-      barrierColorBuilder: backgroundColor != null
-          ? (builder) => backgroundColor
-          : (barrierColorBuilder ?? this.barrierColorBuilder),
+      barrierColorBuilder: barrierColorBuilder ?? this.barrierColorBuilder,
       padding: padding ?? this.padding,
       alignment: alignment ?? this.alignment,
       quadrantAlignment: quadrantAlignment ?? this.quadrantAlignment,

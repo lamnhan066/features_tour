@@ -5,7 +5,6 @@ class ChildConfig {
   /// Applies new settings to the `child` widget based on [global] settings.
   factory ChildConfig({
     Widget Function(BuildContext context, Widget child)? builder,
-    @Deprecated('Use builder instead') Widget Function(Widget child)? child,
     bool? isAnimateChild,
     double? borderSizeInflate,
     Color? backgroundColor,
@@ -18,9 +17,6 @@ class ChildConfig {
   }) {
     return global.copyWith(
       builder: builder,
-      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-      // ignore: deprecated_member_use_from_same_package
-      child: child,
       isAnimateChild: isAnimateChild,
       borderSizeInflate: borderSizeInflate,
       backgroundColor: backgroundColor,
@@ -35,7 +31,6 @@ class ChildConfig {
 
   /// The default value of the `child` widget.
   const ChildConfig._({
-    @Deprecated('Use builder instead') this.child,
     this.builder,
     this.isAnimateChild = true,
     this.borderSizeInflate = 3,
@@ -52,11 +47,6 @@ class ChildConfig {
 
   /// Global configuration.
   static ChildConfig global = const ChildConfig._();
-
-  /// If this `child` is `null`, the original `child` will be used. The original
-  /// child is also passed through the function.
-  @Deprecated('Use builder instead')
-  final Widget Function(Widget child)? child;
 
   /// A builder function to wrap the `child` widget.
   final Widget Function(BuildContext context, Widget child)? builder;
@@ -102,7 +92,6 @@ class ChildConfig {
 
   /// Applies new settings to the current settings.
   ChildConfig copyWith({
-    @Deprecated('Use builder instead') Widget Function(Widget child)? child,
     Widget Function(BuildContext context, Widget child)? builder,
     bool? isAnimateChild,
     double? borderSizeInflate,
@@ -116,9 +105,6 @@ class ChildConfig {
   }) {
     return ChildConfig._(
       builder: builder ?? this.builder,
-      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-      // ignore: deprecated_member_use_from_same_package
-      child: child ?? this.child,
       isAnimateChild: isAnimateChild ?? this.isAnimateChild,
       borderSizeInflate: borderSizeInflate ?? this.borderSizeInflate,
       backgroundColor: backgroundColor ?? this.backgroundColor,

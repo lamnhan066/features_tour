@@ -29,7 +29,7 @@ void main() {
       ),
     ),
     doneConfig: DoneConfig(
-      child: (onPressed) => FilledButton(
+      builder: (context, onPressed) => FilledButton(
         onPressed: onPressed,
         child: const Text('DONE'),
       ),

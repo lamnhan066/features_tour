@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 abstract class BaseButtonConfig {
   /// Creates a [BaseButtonConfig] instance.
   const BaseButtonConfig({
-    @Deprecated('Use builder instead') this.child,
     this.builder,
     this.text = '',
     this.alignment = Alignment.bottomRight,
@@ -12,23 +11,7 @@ abstract class BaseButtonConfig {
     this.enabled = true,
     this.textStyle,
     this.buttonStyle,
-  }) : assert(
-          child == null || builder == null,
-          'Cannot provide both child and builder. Use builder instead of child.',
-        );
-
-  /// A custom widget for the button.
-  /// When this widget is set, you must pass the `onPressed` callback to the button's `onPressed` or `onTap` property.
-  ///
-  /// Example:
-  /// ```dart
-  /// child: (onPressed) => ElevatedButton(
-  ///   onPressed: onPressed,
-  ///   child: Text('This is a button'),
-  /// ),
-  /// ```
-  @Deprecated('Use builder instead')
-  final Widget Function(VoidCallback onPressed)? child;
+  });
 
   /// A builder function that provides a context and an `onPressed` callback
   /// to create a custom button widget.
@@ -64,8 +47,6 @@ abstract class BaseButtonConfig {
 
   /// Creates a new BaseConfig based on these values.
   BaseButtonConfig copyWith({
-    @Deprecated('Use builder instead')
-    Widget Function(VoidCallback onPressed)? child,
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
     String? text,
     Alignment? alignment,

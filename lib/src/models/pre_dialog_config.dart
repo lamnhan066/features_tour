@@ -17,17 +17,11 @@ typedef CustomPreDialog = FutureOr<PreDialogButtonType> Function(
 );
 
 /// Configuration for the pre-dialog shown before starting a features tour.
-@Deprecated('Use PreDialogConfig instead')
-typedef PredialogConfig = PreDialogConfig;
-
-/// Configuration for the pre-dialog shown before starting a features tour.
 class PreDialogConfig {
   /// Creates a new `PredialogConfig` instance with optional overrides.
   factory PreDialogConfig({
     /// Whether the pre-dialog should be displayed.
     bool? enabled,
-    @Deprecated('Use dialogBuilder instead')
-    FutureOr<bool> Function(BuildContext)? modifiedDialogResult,
 
     /// A custom dialog builder function. If provided, this will be used instead of
     /// the default dialog UI.
@@ -48,16 +42,9 @@ class PreDialogConfig {
 
     /// The title of the dialog.
     String? title,
-    @Deprecated('Use applyToAllPagesLabel instead') String? applyToAllPagesText,
 
     /// The label for the 'Apply to all pages' checkbox, used for semantics.
     String? applyToAllCheckboxLabel,
-
-    /// The color of the 'Apply to all pages' label text, which is also applied to the checkbox.
-    ///
-    /// The default is [textColor]; otherwise, it falls back to the primary color.
-    @Deprecated('Use applyToAllCheckboxLabelStyle instead')
-    Color? applyToAllPagesTextColor,
 
     /// The style for the 'Apply to all pages' label text.
     ///
@@ -66,21 +53,18 @@ class PreDialogConfig {
 
     /// The message content of the dialog.
     String? content,
-    @Deprecated('Use acceptButtonLabel instead') Text? acceptButtonText,
 
     /// The label for the accept button, which is also used for semantics.
     String? acceptButtonLabel,
 
     /// The styling for the accept button (typically an `FilledButton`).
     ButtonStyle? acceptButtonStyle,
-    @Deprecated('Use laterButtonLabel instead') Text? laterButtonText,
 
     /// The label for the later button, which is also used for semantics.
     String? laterButtonLabel,
 
     /// The styling for the later button (typically a `TextButton`).
     ButtonStyle? laterButtonStyle,
-    @Deprecated('Use dismissButtonLabel instead') Text? dismissButtonText,
 
     /// The label for the dismiss button, which is also used for semantics.
     String? dismissButtonLabel,
@@ -100,38 +84,20 @@ class PreDialogConfig {
     /// Callback when the dismiss button is pressed.
     VoidCallback? onDismissButtonPressed,
   }) {
-    var effectiveCustomDialog = customDialogBuilder;
-    if (effectiveCustomDialog == null && modifiedDialogResult != null) {
-      effectiveCustomDialog = (
-        context,
-        onApplyToAllPagesCheckboxChanged,
-      ) async {
-        final result = await modifiedDialogResult(context);
-        return result ? PreDialogButtonType.accept : PreDialogButtonType.later;
-      };
-    }
-
-    var effectiveApplyToAllCheckboxLabelStyle = applyToAllCheckboxLabelStyle;
-    if (effectiveApplyToAllCheckboxLabelStyle == null &&
-        applyToAllPagesTextColor != null) {
-      effectiveApplyToAllCheckboxLabelStyle =
-          TextStyle(color: applyToAllPagesTextColor);
-    }
-
     return global.copyWith(
       enabled: enabled,
-      customDialogBuilder: effectiveCustomDialog,
+      customDialogBuilder: customDialogBuilder,
       backgroundColor: backgroundColor,
       textColor: textColor,
       title: title,
-      applyToAllPagesLabel: applyToAllCheckboxLabel ?? applyToAllPagesText,
-      applyToAllCheckboxLabelStyle: effectiveApplyToAllCheckboxLabelStyle,
+      applyToAllPagesLabel: applyToAllCheckboxLabel,
+      applyToAllCheckboxLabelStyle: applyToAllCheckboxLabelStyle,
       content: content,
-      acceptButtonLabel: acceptButtonLabel ?? acceptButtonText?.data,
+      acceptButtonLabel: acceptButtonLabel,
       acceptButtonStyle: acceptButtonStyle,
-      laterButtonLabel: laterButtonLabel ?? laterButtonText?.data,
+      laterButtonLabel: laterButtonLabel,
       laterButtonStyle: laterButtonStyle,
-      dismissButtonLabel: dismissButtonLabel ?? dismissButtonText?.data,
+      dismissButtonLabel: dismissButtonLabel,
       dismissButtonStyle: dismissButtonStyle,
       borderRadius: borderRadius,
       onAcceptButtonPressed: onAcceptButtonPressed,

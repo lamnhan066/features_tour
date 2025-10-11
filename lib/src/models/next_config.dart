@@ -44,8 +44,6 @@ class NextConfig extends BaseButtonConfig {
   /// ```
   factory NextConfig({
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
-    @Deprecated('Use builder instead')
-    Widget Function(VoidCallback onPressed)? child,
     String? text,
     Alignment? alignment,
     Color? color,
@@ -55,9 +53,6 @@ class NextConfig extends BaseButtonConfig {
   }) {
     return global.copyWith(
       builder: builder,
-      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-      // ignore: deprecated_member_use_from_same_package
-      child: child,
       text: text,
       alignment: alignment,
       color: color,
@@ -68,7 +63,6 @@ class NextConfig extends BaseButtonConfig {
   }
 
   const NextConfig._({
-    @Deprecated('Use builder instead') super.child,
     super.builder,
     super.text = 'NEXT',
     super.alignment = Alignment.bottomRight,
@@ -84,8 +78,6 @@ class NextConfig extends BaseButtonConfig {
   /// Creates a new NextConfig based on these values.
   @override
   NextConfig copyWith({
-    @Deprecated('Use builder instead')
-    Widget Function(VoidCallback onPressed)? child,
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
     String? text,
     Alignment? alignment,
@@ -96,9 +88,6 @@ class NextConfig extends BaseButtonConfig {
   }) {
     return NextConfig._(
       builder: builder ?? this.builder,
-      // TODO(lamnhan066): Remove deprecated `child` in the next stable release.
-      // ignore: deprecated_member_use_from_same_package
-      child: child ?? this.child,
       text: text ?? this.text,
       alignment: alignment ?? this.alignment,
       color: color ?? this.color,
