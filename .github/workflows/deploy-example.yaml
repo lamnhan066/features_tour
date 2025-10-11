@@ -35,5 +35,5 @@ jobs:
           port: ${{ secrets.SFTP_REMOTE_PORT }}
           source: example/build/web
           target: ${{ secrets.SFTP_REMOTE_PATH }}
-          strip_components: true
+          strip_components: 1
           debug: ${{ secrets.SFTP_DEBUG }}
