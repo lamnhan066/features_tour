@@ -242,6 +242,7 @@ class _AppState extends State<App> {
                             if (context.mounted) {
                               showDialog(
                                 context: context,
+                                barrierDismissible: false,
                                 builder: (context) {
                                   return AlertDialog(
                                     title: const Text('A Dialog'),
