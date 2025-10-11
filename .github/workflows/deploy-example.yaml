@@ -26,16 +26,12 @@ jobs:
         working-directory: example
         run: flutter build web --wasm --release --base-href="/features_tour/"
 
-      - name: Copy files via SSH
-        uses: appleboy/scp-action@v1
+      - name: SFTP upload
+        uses: Dylan700/sftp-upload-action@latest
         with:
-          host: ${{ secrets.SFTP_REMOTE_HOST }}
+          server: ${{ secrets.SFTP_REMOTE_HOST }}
           username: ${{ secrets.SFTP_REMOTE_USER }}
           password: ${{ secrets.SFTP_REMOTE_PASSWORD }}
           port: ${{ secrets.SFTP_REMOTE_PORT }}
-          protocol: sftp
-          source: example/build/web/*
-          target: /pub/features_tour
-          strip_components: 0
-          overwrite: true
-          debug: true
+          uploads: |
+            ./example/build/web/ => ./pub/features_tour/
