@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.SFTP_REMOTE_USER }}
           password: ${{ secrets.SFTP_REMOTE_PASSWORD }}
           port: ${{ secrets.SFTP_REMOTE_PORT }}
-          source: example/build/web
+          protocol: sftp
+          source: example/build/web/*
           target: ${{ secrets.SFTP_REMOTE_PATH }}
-          strip_components: 1
           debug: ${{ secrets.SFTP_DEBUG }}
