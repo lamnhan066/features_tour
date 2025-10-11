@@ -26,14 +26,12 @@ jobs:
         working-directory: example
         run: flutter build web --release --base-href="/features_tour/"
 
-      - name: 📂 Deploy to FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+      - name: rsync deployments
+        uses: appleboy/scp-action@v1
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: example/build/web/
-          server-dir: features_tour/
-          port: 21
-          protocol: ftps
-          security: loose
+          host: ${{ secrets.SFTP_REMOTE_HOST }}
+          username: ${{ secrets.SFTP_REMOTE_USER }}
+          password: ${{ secrets.SFTP_REMOTE_PASSWORD }}
+          port: ${{ secrets.SFTP_REMOTE_PORT }}
+          source: example/build/web
+          target: ${{ secrets.SFTP_REMOTE_PATH }}
