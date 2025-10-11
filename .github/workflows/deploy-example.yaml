@@ -24,9 +24,9 @@ jobs:
 
       - name: Build Flutter Web for Example
         working-directory: example
-        run: flutter build web --release --base-href="/features_tour/"
+        run: flutter build web --wasm --release --base-href="/features_tour/"
 
-      - name: rsync deployments
+      - name: Copy files via SSH
         uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.SFTP_REMOTE_HOST }}
@@ -35,3 +35,4 @@ jobs:
           port: ${{ secrets.SFTP_REMOTE_PORT }}
           source: example/build/web
           target: ${{ secrets.SFTP_REMOTE_PATH }}
+          strip_components: true
