@@ -13,5 +13,5 @@ enum IntroduceResult {
   next,
 
   /// [done] is returned when the done button is pressed.
-  done;
+  done,
 }

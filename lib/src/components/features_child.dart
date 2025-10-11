@@ -126,7 +126,8 @@ class _FeaturesChildState extends State<FeaturesChild>
 
     _autoSetQuadrantAlignment(rect!);
 
-    final size = MediaQuery.maybeOf(context)?.size ??
+    final size =
+        MediaQuery.maybeOf(context)?.size ??
         MediaQueryData.fromView(View.of(context)).size;
 
     switch (_quadrantAlignment!) {
@@ -146,8 +147,12 @@ class _FeaturesChildState extends State<FeaturesChild>
           } else {
             alignment = Alignment.bottomCenter;
           }
-          introduceRect =
-              Rect.fromLTWH(left, 0, dialogWidth, introduceRect.height);
+          introduceRect = Rect.fromLTWH(
+            left,
+            0,
+            dialogWidth,
+            introduceRect.height,
+          );
         }
       case QuadrantAlignment.left:
         introduceRect = Rect.fromLTRB(0, 0, rect!.left, size.height);
@@ -187,8 +192,12 @@ class _FeaturesChildState extends State<FeaturesChild>
           } else {
             alignment = Alignment.topCenter;
           }
-          introduceRect =
-              Rect.fromLTWH(left, introduceRect.top, dialogWidth, size.height);
+          introduceRect = Rect.fromLTWH(
+            left,
+            introduceRect.top,
+            dialogWidth,
+            size.height,
+          );
         }
       case QuadrantAlignment.inside:
         introduceRect = rect!;
@@ -287,100 +296,100 @@ class _FeaturesChildState extends State<FeaturesChild>
     return rect == null
         ? const Center(child: CircularProgressIndicator())
         : Stack(
-            children: [
-              // Border widget
+          children: [
+            // Border widget
+            Positioned.fromRect(
+              rect: rect!.inflate(widget.childConfig.borderSizeInflate),
+              child: AnimatedBuilder(
+                animation: _scaleAnimation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: Material(
+                      color: widget.childConfig.backgroundColor,
+                      shape: widget.childConfig.shapeBorder,
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            // Child widget.
+            if (widget.childConfig.enableAnimation &&
+                widget.childConfig.isAnimateChild)
               Positioned.fromRect(
-                rect: rect!.inflate(widget.childConfig.borderSizeInflate),
+                rect: rect!,
                 child: AnimatedBuilder(
                   animation: _scaleAnimation,
                   builder: (context, child) {
                     return Transform.scale(
                       scale: _scaleAnimation.value,
-                      child: Material(
-                        color: widget.childConfig.backgroundColor,
-                        shape: widget.childConfig.shapeBorder,
-                      ),
+                      child: widget.child,
                     );
                   },
                 ),
+              )
+            else
+              Positioned.fromRect(
+                rect: rect!,
+                child: widget.child,
               ),
 
-              // Child widget.
-              if (widget.childConfig.enableAnimation &&
-                  widget.childConfig.isAnimateChild)
-                Positioned.fromRect(
-                  rect: rect!,
-                  child: AnimatedBuilder(
-                    animation: _scaleAnimation,
-                    builder: (context, child) {
-                      return Transform.scale(
-                        scale: _scaleAnimation.value,
-                        child: widget.child,
-                      );
-                    },
-                  ),
-                )
-              else
-                Positioned.fromRect(
-                  rect: rect!,
-                  child: widget.child,
-                ),
-
-              // Introduction widget.
-              Positioned.fromRect(
-                rect: introduceRect,
-                child: IgnorePointer(
-                  child: Padding(
-                    padding: widget.padding,
-                    child: Align(
-                      alignment: alignment,
-                      child: widget.introduceConfig.builder(
-                        context,
-                        rect!,
-                        widget.introduce,
-                      ),
+            // Introduction widget.
+            Positioned.fromRect(
+              rect: introduceRect,
+              child: IgnorePointer(
+                child: Padding(
+                  padding: widget.padding,
+                  child: Align(
+                    alignment: alignment,
+                    child: widget.introduceConfig.builder(
+                      context,
+                      rect!,
+                      widget.introduce,
                     ),
                   ),
                 ),
               ),
+            ),
 
-              Scaffold(
-                resizeToAvoidBottomInset: true,
-                backgroundColor: Colors.transparent,
-                body: Stack(
-                  children: [
-                    // Skip text widget.
-                    if (!(widget.isLastState && widget.doneConfig.enabled) &&
-                        widget.skipConfig.enabled)
-                      Positioned.fill(
-                        child: Align(
-                          alignment: widget.skipConfig.alignment,
-                          child: widget.skip,
-                        ),
+            Scaffold(
+              resizeToAvoidBottomInset: true,
+              backgroundColor: Colors.transparent,
+              body: Stack(
+                children: [
+                  // Skip text widget.
+                  if (!(widget.isLastState && widget.doneConfig.enabled) &&
+                      widget.skipConfig.enabled)
+                    Positioned.fill(
+                      child: Align(
+                        alignment: widget.skipConfig.alignment,
+                        child: widget.skip,
                       ),
+                    ),
 
-                    // Next text widget.
-                    if (!(widget.isLastState && widget.doneConfig.enabled) &&
-                        widget.nextConfig.enabled)
-                      Positioned.fill(
-                        child: Align(
-                          alignment: widget.nextConfig.alignment,
-                          child: widget.next,
-                        ),
+                  // Next text widget.
+                  if (!(widget.isLastState && widget.doneConfig.enabled) &&
+                      widget.nextConfig.enabled)
+                    Positioned.fill(
+                      child: Align(
+                        alignment: widget.nextConfig.alignment,
+                        child: widget.next,
                       ),
+                    ),
 
-                    // Done text widget.
-                    if (widget.isLastState && widget.doneConfig.enabled)
-                      Positioned.fill(
-                        child: Align(
-                          alignment: widget.doneConfig.alignment,
-                          child: widget.done,
-                        ),
+                  // Done text widget.
+                  if (widget.isLastState && widget.doneConfig.enabled)
+                    Positioned.fill(
+                      child: Align(
+                        alignment: widget.doneConfig.alignment,
+                        child: widget.done,
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
-            ],
-          );
+            ),
+          ],
+        );
   }
 }

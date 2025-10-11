@@ -47,9 +47,10 @@ class FeaturesTourPadding extends StatelessWidget {
         return AnimatedPadding(
           duration: animationDuration,
           curve: animationCurve,
-          padding: value != null && indexes.contains(value)
-              ? padding
-              : EdgeInsets.zero,
+          padding:
+              value != null && indexes.contains(value)
+                  ? padding
+                  : EdgeInsets.zero,
           child: child,
         );
       },

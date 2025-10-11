@@ -40,16 +40,15 @@ class DoneConfig extends BaseButtonConfig {
     bool? enabled,
     TextStyle? textStyle,
     ButtonStyle? buttonStyle,
-  }) =>
-      global.copyWith(
-        builder: builder,
-        text: text,
-        alignment: alignment,
-        color: color,
-        enabled: enabled,
-        textStyle: textStyle,
-        buttonStyle: buttonStyle,
-      );
+  }) => global.copyWith(
+    builder: builder,
+    text: text,
+    alignment: alignment,
+    color: color,
+    enabled: enabled,
+    textStyle: textStyle,
+    buttonStyle: buttonStyle,
+  );
 
   DoneConfig._({
     super.builder,

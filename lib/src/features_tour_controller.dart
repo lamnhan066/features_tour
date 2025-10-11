@@ -12,7 +12,7 @@ class FeaturesTourController {
   /// **Note:** Avoid changing the [pageName] to prevent re-displaying the instructions
   /// for this page.
   FeaturesTourController(this.pageName, {bool? debugLog})
-      : _debugLog = debugLog ?? FeaturesTour._debugLog {
+    : _debugLog = debugLog ?? FeaturesTour._debugLog {
     _controllers.add(this);
 
     if (_debugLog) {
@@ -32,8 +32,10 @@ class FeaturesTourController {
   final String pageName;
 
   /// The internal list of the states.
-  final SplayTreeMap<double, _FeaturesTourState> _states =
-      SplayTreeMap.from({}, (a, b) => a.compareTo(b));
+  final SplayTreeMap<double, _FeaturesTourState> _states = SplayTreeMap.from(
+    {},
+    (a, b) => a.compareTo(b),
+  );
 
   /// The internal cached states that have been unregistered.
   final _cachedStates = SplayTreeMap<double, _FeaturesTourState>.from(
@@ -65,8 +67,9 @@ class FeaturesTourController {
     }
     _states[state.widget.index] = state;
     _cachedStates[state.widget.index] = state;
-    _globalKeys[state.widget.index] ??=
-        GlobalObjectKey('$pageName-${state.widget.index}');
+    _globalKeys[state.widget.index] ??= GlobalObjectKey(
+      '$pageName-${state.widget.index}',
+    );
 
     // Completes any pending completers for this index.
     if (_pendingIndexes.containsKey(state.widget.index)) {
@@ -229,8 +232,9 @@ class FeaturesTourController {
           await onState?.call(TourPreDialogHiddenByAppliedToAll(type));
         },
         (value) async {
-          _logger
-              ?.log(() => 'The "Apply to all pages" checkbox is now $value.');
+          _logger?.log(
+            () => 'The "Apply to all pages" checkbox is now $value.',
+          );
           await onState?.call(TourPreDialogApplyToAllChanged(value));
         },
       );
@@ -323,8 +327,9 @@ class FeaturesTourController {
                 '   -> This widget has been introduced. Moving to the next widget.',
           );
           await _removeState(state, false);
-          await onState
-              ?.call(TourSkippedIntroduction(index: state.widget.index));
+          await onState?.call(
+            TourSkippedIntroduction(index: state.widget.index),
+          );
           continue;
         }
 
@@ -346,8 +351,9 @@ class FeaturesTourController {
         // Shows the cover to prevent the user from tapping the screen.
         final introduceConfig =
             state.widget.introduceConfig ?? IntroduceConfig.global;
-        final introduceBackgroundColor =
-            introduceConfig.barrierColorBuilder(context);
+        final introduceBackgroundColor = introduceConfig.barrierColorBuilder(
+          context,
+        );
 
         showCover(
           context,
@@ -402,8 +408,7 @@ class FeaturesTourController {
 
         String status() {
           return switch (result) {
-            IntroduceResult.disabled ||
-            IntroduceResult.notMounted =>
+            IntroduceResult.disabled || IntroduceResult.notMounted =>
               'This widget has been canceled with result: ${result.name}.',
             IntroduceResult.next => 'Moving to the next widget.',
             IntroduceResult.skip => 'Skipping this tour.',
@@ -486,7 +491,8 @@ class FeaturesTourController {
 
     void skipAction() => complete(IntroduceResult.skip);
 
-    final skipButton = skipConfig.builder?.call(context, skipAction) ??
+    final skipButton =
+        skipConfig.builder?.call(context, skipAction) ??
         ElevatedButton(
           onPressed: skipAction,
           style: skipConfig.buttonStyle,
@@ -498,7 +504,8 @@ class FeaturesTourController {
 
     void nextAction() => complete(IntroduceResult.next);
 
-    final nextButton = nextConfig.builder?.call(context, nextAction) ??
+    final nextButton =
+        nextConfig.builder?.call(context, nextAction) ??
         ElevatedButton(
           onPressed: nextAction,
           style: nextConfig.buttonStyle,
@@ -510,7 +517,8 @@ class FeaturesTourController {
 
     void doneAction() => complete(IntroduceResult.done);
 
-    final doneButton = doneConfig.builder?.call(context, doneAction) ??
+    final doneButton =
+        doneConfig.builder?.call(context, doneAction) ??
         ElevatedButton(
           onPressed: doneAction,
           style: doneConfig.buttonStyle,
@@ -523,9 +531,10 @@ class FeaturesTourController {
     final overlayEntry = OverlayEntry(
       builder: (ctx) {
         return GestureDetector(
-          onTap: childConfig.barrierDismissible
-              ? () => complete(IntroduceResult.next)
-              : null,
+          onTap:
+              childConfig.barrierDismissible
+                  ? () => complete(IntroduceResult.next)
+                  : null,
           child: Material(
             color: Colors.transparent,
             child: FeaturesChild(
@@ -566,8 +575,11 @@ class FeaturesTourController {
                   color: Colors.transparent,
                   child: AbsorbPointer(
                     child: UnfeaturesTour(
-                      child: childConfig.builder
-                              ?.call(context, state.widget.child) ??
+                      child:
+                          childConfig.builder?.call(
+                            context,
+                            state.widget.child,
+                          ) ??
                           state.widget.child,
                     ),
                   ),

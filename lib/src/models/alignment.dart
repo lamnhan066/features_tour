@@ -13,5 +13,5 @@ enum QuadrantAlignment {
   bottom,
 
   /// A special case where the rectangle covers the widget.
-  inside;
+  inside,
 }

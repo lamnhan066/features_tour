@@ -11,10 +11,11 @@ import 'package:flutter/material.dart';
 ///   for future dialogs in the current session (reset in the next app-open).
 ///
 /// The function returns a `FutureOr<PreDialogButtonType>` indicating the user's choice.
-typedef CustomPreDialog = FutureOr<PreDialogButtonType> Function(
-  BuildContext context,
-  void Function(bool value) onApplyToAllPagesCheckboxChanged,
-);
+typedef CustomPreDialog =
+    FutureOr<PreDialogButtonType> Function(
+      BuildContext context,
+      void Function(bool value) onApplyToAllPagesCheckboxChanged,
+    );
 
 /// Configuration for the pre-dialog shown before starting a features tour.
 class PreDialogConfig {

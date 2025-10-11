@@ -241,7 +241,7 @@ class FeaturesTour extends StatefulWidget {
   /// If the callback returns a [Future], the tour will wait for it to complete before
   /// proceeding to the next step.
   final FutureOr<void> Function(IntroduceResult introduceResult)?
-      onAfterIntroduce;
+  onAfterIntroduce;
 
   @override
   State<FeaturesTour> createState() => _FeaturesTourState();

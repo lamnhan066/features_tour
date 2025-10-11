@@ -43,8 +43,9 @@ void main() {
   });
 
   group('Static Methods and Storage', () {
-    testWidgets('FeaturesTour.removeAll marks all tours as shown',
-        (tester) async {
+    testWidgets('FeaturesTour.removeAll marks all tours as shown', (
+      tester,
+    ) async {
       final controller1 = FeaturesTourController('Page1');
       final controller2 = FeaturesTourController('Page2');
       await tester.pumpWidget(
@@ -77,8 +78,9 @@ void main() {
       expect(prefs.getBool('FeaturesTour_Page2_1.0'), isTrue);
     });
 
-    testWidgets('DismissAllTourStorage saves and retrieves dismissal state',
-        (tester) async {
+    testWidgets('DismissAllTourStorage saves and retrieves dismissal state', (
+      tester,
+    ) async {
       // Init by calling it once.
       await DismissAllTourStorage.getDismissAllTours();
 
@@ -96,8 +98,9 @@ void main() {
   });
 
   group('Component Behavior', () {
-    testWidgets('showCover does not show when context is not mounted',
-        (tester) async {
+    testWidgets('showCover does not show when context is not mounted', (
+      tester,
+    ) async {
       final logs = <String>[];
       void printDebug(String log) => logs.add(log);
 
@@ -171,8 +174,9 @@ void main() {
       expect(find.byType(AlertDialog), findsNothing);
     });
 
-    testWidgets('resetPreDialog resets the cached pre-dialog selection',
-        (tester) async {
+    testWidgets('resetPreDialog resets the cached pre-dialog selection', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -320,8 +324,9 @@ void main() {
   });
 
   group('Extensions', () {
-    testWidgets('GlobalKeyExtension.globalPaintBounds returns correct Rect',
-        (tester) async {
+    testWidgets('GlobalKeyExtension.globalPaintBounds returns correct Rect', (
+      tester,
+    ) async {
       final globalKey = GlobalKey();
       await tester.pumpWidget(
         MaterialApp(
@@ -355,8 +360,9 @@ void main() {
   });
 
   group('Configuration Edge Cases', () {
-    testWidgets('pre-dialogConfig.customDialogBuilder overrides dialog',
-        (tester) async {
+    testWidgets('pre-dialogConfig.customDialogBuilder overrides dialog', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -385,7 +391,7 @@ void main() {
           delay: Duration.zero,
           preDialogConfig: PreDialogConfig(
             enabled: true,
-            customDialogBuilder: (_, __) async => PreDialogButtonType.accept,
+            customDialogBuilder: (_, _) async => PreDialogButtonType.accept,
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -427,7 +433,7 @@ void main() {
           delay: Duration.zero,
           preDialogConfig: PreDialogConfig(
             enabled: true,
-            customDialogBuilder: (_, __) => PreDialogButtonType.later,
+            customDialogBuilder: (_, _) => PreDialogButtonType.later,
           ),
           onState: (state) async {
             collectedStates.add(state);
@@ -457,8 +463,9 @@ void main() {
       );
     });
 
-    testWidgets('ChildConfig applies custom shape and animation settings',
-        (tester) async {
+    testWidgets('ChildConfig applies custom shape and animation settings', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -492,10 +499,11 @@ void main() {
             if (state is TourIntroducing) {
               await tester.pump();
               // Find the Material widget that draws the border
-              final borderMaterial =
-                  tester.widgetList<Material>(find.byType(Material)).firstWhere(
-                        (m) => m.shape is CircleBorder,
-                      );
+              final borderMaterial = tester
+                  .widgetList<Material>(find.byType(Material))
+                  .firstWhere(
+                    (m) => m.shape is CircleBorder,
+                  );
               expect(borderMaterial.shape, isA<CircleBorder>());
               await tester.tap(find.text('DONE'));
             }
@@ -544,8 +552,9 @@ void main() {
                 matching: find.byType(Positioned),
               );
               final introRect = tester.getRect(introFinder);
-              final childRect =
-                  tester.getRect(find.byKey(const Key('child')).first);
+              final childRect = tester.getRect(
+                find.byKey(const Key('child')).first,
+              );
 
               // Intro rect should be above the child rect
               expect(introRect.bottom, lessThanOrEqualTo(childRect.top));

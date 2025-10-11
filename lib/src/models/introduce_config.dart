@@ -2,11 +2,12 @@ import 'package:features_tour/features_tour.dart';
 import 'package:flutter/material.dart';
 
 /// A builder function to wrap the `introduce` widget.
-typedef IntroduceBuilder = Widget Function(
-  BuildContext context,
-  Rect childRect,
-  Widget introduce,
-);
+typedef IntroduceBuilder =
+    Widget Function(
+      BuildContext context,
+      Rect childRect,
+      Widget introduce,
+    );
 
 /// A builder function to determine the color of the modal barrier that darkens
 /// everything behind the tour.
@@ -117,9 +118,10 @@ class IntroduceConfig {
   ) {
     return DefaultTextStyle.merge(
       style: TextStyle(
-        color: Theme.brightnessOf(context) == Brightness.dark
-            ? Colors.black
-            : Colors.white,
+        color:
+            Theme.brightnessOf(context) == Brightness.dark
+                ? Colors.black
+                : Colors.white,
       ),
       child: introduce,
     );
@@ -134,17 +136,17 @@ class IntroduceConfig {
 class RoundedRectIntroduceConfig extends IntroduceConfig {
   /// Creates a new RoundedRectIntroduceConfig with rounded rectangle decoration.
   RoundedRectIntroduceConfig({double borderRadius = 4})
-      : super._(
-          builder: (context, childRect, introduce) {
-            return _introduceRoundedRectBuilder(
-              context,
-              childRect,
-              introduce,
-              borderRadius,
-            );
-          },
-          barrierColorBuilder: _barrierColorBetterVisibleBuilder,
-        );
+    : super._(
+        builder: (context, childRect, introduce) {
+          return _introduceRoundedRectBuilder(
+            context,
+            childRect,
+            introduce,
+            borderRadius,
+          );
+        },
+        barrierColorBuilder: _barrierColorBetterVisibleBuilder,
+      );
 
   /// A builder function that wraps the `introduce` widget with a rounded rectangle.`
   static Widget _introduceRoundedRectBuilder(
@@ -157,16 +159,18 @@ class RoundedRectIntroduceConfig extends IntroduceConfig {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: brightness == Brightness.dark
-            ? Colors.black.withValues(alpha: .85)
-            : Colors.white.withValues(alpha: .85),
+        color:
+            brightness == Brightness.dark
+                ? Colors.black.withValues(alpha: .85)
+                : Colors.white.withValues(alpha: .85),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: DefaultTextStyle.merge(
         style: TextStyle(
-          color: Theme.brightnessOf(context) == Brightness.dark
-              ? Colors.white
-              : Colors.black,
+          color:
+              Theme.brightnessOf(context) == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
         ),
         child: introduce,
       ),

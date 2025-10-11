@@ -27,8 +27,9 @@ void main() {
   });
 
   group('Core Functionality', () {
-    testWidgets('When tour starts, it should show the first feature',
-        (tester) async {
+    testWidgets('When tour starts, it should show the first feature', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -232,8 +233,9 @@ void main() {
       );
     });
 
-    testWidgets('Tapping DONE on last feature dismisses the tour',
-        (tester) async {
+    testWidgets('Tapping DONE on last feature dismisses the tour', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -308,8 +310,9 @@ void main() {
   });
 
   group('Configuration', () {
-    testWidgets('Previously seen tours are not shown again without force',
-        (tester) async {
+    testWidgets('Previously seen tours are not shown again without force', (
+      tester,
+    ) async {
       SharedPreferences.setMockInitialValues({
         'FeaturesTour_App_1.0': true,
         'FeaturesTour_App_2.0': true,
@@ -363,8 +366,9 @@ void main() {
       );
     });
 
-    testWidgets('Previously seen tours are shown again with force',
-        (tester) async {
+    testWidgets('Previously seen tours are shown again with force', (
+      tester,
+    ) async {
       SharedPreferences.setMockInitialValues({
         'FeaturesTour_App_1.0': true,
         'FeaturesTour_App_2.0': true,
@@ -441,8 +445,9 @@ void main() {
       );
     });
 
-    testWidgets('nextIndex waits for the specified feature to appear',
-        (tester) async {
+    testWidgets('nextIndex waits for the specified feature to appear', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
       final showSecond = ValueNotifier(false);
 
@@ -591,8 +596,9 @@ void main() {
   });
 
   group('Callbacks', () {
-    testWidgets('onBeforeIntroduce is called before showing the intro',
-        (tester) async {
+    testWidgets('onBeforeIntroduce is called before showing the intro', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
       var called = false;
 
@@ -649,8 +655,9 @@ void main() {
       );
     });
 
-    testWidgets('onAfterIntroduce is called after showing the intro',
-        (tester) async {
+    testWidgets('onAfterIntroduce is called after showing the intro', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
       var called = false;
       IntroduceResult? receivedResult;
@@ -781,8 +788,9 @@ void main() {
       );
     });
 
-    testWidgets('Tapping "Later" in pre-dialog dismisses the tour for now',
-        (tester) async {
+    testWidgets('Tapping "Later" in pre-dialog dismisses the tour for now', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -840,214 +848,217 @@ void main() {
     });
 
     testWidgets(
-        'Tapping "Dismiss" with "Apply to all" dismisses all tours permanently',
-        (tester) async {
-      final controller = FeaturesTourController('App');
+      'Tapping "Dismiss" with "Apply to all" dismisses all tours permanently',
+      (tester) async {
+        final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: App(
-            tours: [
-              FeaturesTour(
-                index: 1,
-                controller: controller,
-                introduce: const Text('a.intro'),
-                child: const Text('a'),
-              ),
-            ],
+        await tester.pumpWidget(
+          MaterialApp(
+            home: App(
+              tours: [
+                FeaturesTour(
+                  index: 1,
+                  controller: controller,
+                  introduce: const Text('a.intro'),
+                  child: const Text('a'),
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-      final context = tester.element(find.byType(App));
-
-      await tester.runAsync(() async {
-        await controller.start(
-          context,
-          force: true,
-          delay: Duration.zero,
-          preDialogConfig: PreDialogConfig(
-            enabled: true,
-            title: 'Introduction',
-            dismissButtonLabel: 'Dismiss',
-            applyToAllCheckboxLabel: 'Apply to all',
-          ),
-          onState: (state) async {
-            collectedStates.add(state);
-
-            if (state is TourPreDialogShownDefault) {
-              await tester.pump();
-              expect(find.text('Introduction'), findsOneWidget);
-              expect(find.text('Apply to all'), findsOneWidget);
-
-              await tester.tap(find.byType(Checkbox));
-              await tester.pumpAndSettle();
-              await tester.tap(find.text('Dismiss'));
-              await tester.pumpAndSettle();
-            }
-          },
         );
-      });
 
-      final prefs = await SharedPreferences.getInstance();
-      expect(prefs.getBool('FeaturesTour_DismissAllTours'), isTrue);
-      expect(
-        collectedStates,
-        containsAllInOrder([
-          isA<TourPreDialogShownDefault>(),
-          isA<TourPreDialogApplyToAllChanged>().having(
-            (s) => s.isChecked,
-            'isChecked',
-            true,
-          ),
-          isA<TourPreDialogButtonPressed>().having(
-            (s) => s.buttonType,
-            'buttonType',
-            PreDialogButtonType.dismiss,
-          ),
-          isA<TourCompleted>(),
-        ]),
-      );
-    });
+        await tester.pumpAndSettle();
+        final context = tester.element(find.byType(App));
+
+        await tester.runAsync(() async {
+          await controller.start(
+            context,
+            force: true,
+            delay: Duration.zero,
+            preDialogConfig: PreDialogConfig(
+              enabled: true,
+              title: 'Introduction',
+              dismissButtonLabel: 'Dismiss',
+              applyToAllCheckboxLabel: 'Apply to all',
+            ),
+            onState: (state) async {
+              collectedStates.add(state);
+
+              if (state is TourPreDialogShownDefault) {
+                await tester.pump();
+                expect(find.text('Introduction'), findsOneWidget);
+                expect(find.text('Apply to all'), findsOneWidget);
+
+                await tester.tap(find.byType(Checkbox));
+                await tester.pumpAndSettle();
+                await tester.tap(find.text('Dismiss'));
+                await tester.pumpAndSettle();
+              }
+            },
+          );
+        });
+
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getBool('FeaturesTour_DismissAllTours'), isTrue);
+        expect(
+          collectedStates,
+          containsAllInOrder([
+            isA<TourPreDialogShownDefault>(),
+            isA<TourPreDialogApplyToAllChanged>().having(
+              (s) => s.isChecked,
+              'isChecked',
+              true,
+            ),
+            isA<TourPreDialogButtonPressed>().having(
+              (s) => s.buttonType,
+              'buttonType',
+              PreDialogButtonType.dismiss,
+            ),
+            isA<TourCompleted>(),
+          ]),
+        );
+      },
+    );
 
     testWidgets(
-        'Tapping "Okay" with "Apply to all" accepts for all subsequent tours',
-        (tester) async {
-      final controller1 = FeaturesTourController('Page1');
-      final controller2 = FeaturesTourController('Page2');
+      'Tapping "Okay" with "Apply to all" accepts for all subsequent tours',
+      (tester) async {
+        final controller1 = FeaturesTourController('Page1');
+        final controller2 = FeaturesTourController('Page2');
 
-      // Start with page 1
-      await tester.pumpWidget(
-        MaterialApp(
-          home: App(
-            key: const Key('Page1'),
-            tours: [
-              FeaturesTour(
-                index: 1,
-                controller: controller1,
-                introduce: const Text('page1.intro'),
-                child: const Text('page1'),
-              ),
-            ],
+        // Start with page 1
+        await tester.pumpWidget(
+          MaterialApp(
+            home: App(
+              key: const Key('Page1'),
+              tours: [
+                FeaturesTour(
+                  index: 1,
+                  controller: controller1,
+                  introduce: const Text('page1.intro'),
+                  child: const Text('page1'),
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      final context1 = tester.element(find.byKey(const Key('Page1')));
-
-      // Show pre-dialog for page 1, check "apply to all" and accept
-      await tester.runAsync(() async {
-        await controller1.start(
-          context1,
-          force: true,
-          delay: Duration.zero,
-          preDialogConfig: PreDialogConfig(
-            enabled: true,
-            title: 'Introduction',
-            acceptButtonLabel: 'Okay',
-            applyToAllCheckboxLabel: 'Apply to all',
-          ),
-          onState: (state) async {
-            collectedStates.add(state);
-            if (state is TourPreDialogShownDefault) {
-              await tester.pump();
-              expect(find.text('Introduction'), findsOneWidget);
-              final checkbox = find.byType(Checkbox);
-              await tester.tap(checkbox);
-              await tester.pump();
-              await tester.tap(find.text('Okay'));
-            }
-            if (state is TourIntroducing) {
-              await tester.pump();
-              await tester.tap(find.text('DONE'));
-            }
-          },
         );
-      });
-      await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
+        final context1 = tester.element(find.byKey(const Key('Page1')));
 
-      expect(
-        collectedStates,
-        containsAllInOrder([
-          isA<TourPreDialogShownDefault>(),
-          isA<TourPreDialogApplyToAllChanged>().having(
-            (s) => s.isChecked,
-            'isChecked',
-            true,
-          ),
-          isA<TourPreDialogButtonPressed>().having(
-            (s) => s.buttonType,
-            'buttonType',
-            PreDialogButtonType.accept,
-          ),
-          isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
-          isA<TourCompleted>(),
-        ]),
-      );
+        // Show pre-dialog for page 1, check "apply to all" and accept
+        await tester.runAsync(() async {
+          await controller1.start(
+            context1,
+            force: true,
+            delay: Duration.zero,
+            preDialogConfig: PreDialogConfig(
+              enabled: true,
+              title: 'Introduction',
+              acceptButtonLabel: 'Okay',
+              applyToAllCheckboxLabel: 'Apply to all',
+            ),
+            onState: (state) async {
+              collectedStates.add(state);
+              if (state is TourPreDialogShownDefault) {
+                await tester.pump();
+                expect(find.text('Introduction'), findsOneWidget);
+                final checkbox = find.byType(Checkbox);
+                await tester.tap(checkbox);
+                await tester.pump();
+                await tester.tap(find.text('Okay'));
+              }
+              if (state is TourIntroducing) {
+                await tester.pump();
+                await tester.tap(find.text('DONE'));
+              }
+            },
+          );
+        });
+        await tester.pumpAndSettle();
 
-      // Now switch to page 2
-      collectedStates.clear();
-      await tester.pumpWidget(
-        MaterialApp(
-          home: App(
-            key: const Key('Page2'),
-            tours: [
-              FeaturesTour(
-                index: 1,
-                controller: controller2,
-                introduce: const Text('page2.intro'),
-                child: const Text('page2'),
-              ),
-            ],
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      final context2 = tester.element(find.byKey(const Key('Page2')));
-
-      // Start tour for page 2, pre-dialog should be skipped
-      await tester.runAsync(() async {
-        await controller2.start(
-          context2,
-          force: true,
-          delay: Duration.zero,
-          preDialogConfig: PreDialogConfig(enabled: true),
-          onState: (state) async {
-            collectedStates.add(state);
-            if (state is TourIntroducing) {
-              await tester.pump();
-              expect(find.text('page2.intro'), findsOneWidget);
-              await tester.tap(find.text('DONE'));
-            }
-          },
+        expect(
+          collectedStates,
+          containsAllInOrder([
+            isA<TourPreDialogShownDefault>(),
+            isA<TourPreDialogApplyToAllChanged>().having(
+              (s) => s.isChecked,
+              'isChecked',
+              true,
+            ),
+            isA<TourPreDialogButtonPressed>().having(
+              (s) => s.buttonType,
+              'buttonType',
+              PreDialogButtonType.accept,
+            ),
+            isA<TourIntroducing>(),
+            isA<TourIntroduceResultEmitted>(),
+            isA<TourCompleted>(),
+          ]),
         );
-      });
-      await tester.pumpAndSettle();
 
-      // Verify pre-dialog was not shown for the second tour
-      expect(collectedStates.whereType<TourPreDialogShownDefault>(), isEmpty);
-      expect(
-        collectedStates,
-        containsAllInOrder([
-          isA<TourPreDialogHiddenByAppliedToAll>().having(
-            (s) => s.buttonType,
-            'buttonType',
-            PreDialogButtonType.accept,
+        // Now switch to page 2
+        collectedStates.clear();
+        await tester.pumpWidget(
+          MaterialApp(
+            home: App(
+              key: const Key('Page2'),
+              tours: [
+                FeaturesTour(
+                  index: 1,
+                  controller: controller2,
+                  introduce: const Text('page2.intro'),
+                  child: const Text('page2'),
+                ),
+              ],
+            ),
           ),
-          isA<TourPreDialogButtonPressed>(),
-          isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
-          isA<TourCompleted>(),
-        ]),
-      );
-    });
+        );
+        await tester.pumpAndSettle();
+        final context2 = tester.element(find.byKey(const Key('Page2')));
+
+        // Start tour for page 2, pre-dialog should be skipped
+        await tester.runAsync(() async {
+          await controller2.start(
+            context2,
+            force: true,
+            delay: Duration.zero,
+            preDialogConfig: PreDialogConfig(enabled: true),
+            onState: (state) async {
+              collectedStates.add(state);
+              if (state is TourIntroducing) {
+                await tester.pump();
+                expect(find.text('page2.intro'), findsOneWidget);
+                await tester.tap(find.text('DONE'));
+              }
+            },
+          );
+        });
+        await tester.pumpAndSettle();
+
+        // Verify pre-dialog was not shown for the second tour
+        expect(collectedStates.whereType<TourPreDialogShownDefault>(), isEmpty);
+        expect(
+          collectedStates,
+          containsAllInOrder([
+            isA<TourPreDialogHiddenByAppliedToAll>().having(
+              (s) => s.buttonType,
+              'buttonType',
+              PreDialogButtonType.accept,
+            ),
+            isA<TourPreDialogButtonPressed>(),
+            isA<TourIntroducing>(),
+            isA<TourIntroduceResultEmitted>(),
+            isA<TourCompleted>(),
+          ]),
+        );
+      },
+    );
   });
 
   group('Advanced Scenarios', () {
-    testWidgets('nextIndex times out and proceeds to next available feature',
-        (tester) async {
+    testWidgets('nextIndex times out and proceeds to next available feature', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -1118,8 +1129,9 @@ void main() {
       );
     });
 
-    testWidgets('UnfeaturesTour widget prevents tour for descendants',
-        (tester) async {
+    testWidgets('UnfeaturesTour widget prevents tour for descendants', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(

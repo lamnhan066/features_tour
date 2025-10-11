@@ -52,66 +52,71 @@ Future<PreDialogButtonType> showPreDialog(
     await onPreDialogIsDisplayed(true);
   } else {
     overlayEntry = OverlayEntry(
-      builder: (context) => Material(
-        color: Colors.black54,
-        child: AlertDialog(
-          title: Text(config.title, style: TextStyle(color: config.textColor)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                config.content,
-                style: TextStyle(color: config.textColor, fontSize: 13.5),
+      builder:
+          (context) => Material(
+            color: Colors.black54,
+            child: AlertDialog(
+              title: Text(
+                config.title,
+                style: TextStyle(color: config.textColor),
               ),
-              const SizedBox(height: 20),
-              _CheckboxRow(
-                text: config.applyToAllPagesLabel,
-                baseTextColor: config.textColor,
-                checkboxTextStyle: config.applyToAllCheckboxLabelStyle,
-                onChanged: (value) {
-                  isChecked = value;
-                  onApplyToAllPagesCheckboxChanged?.call(value);
-                },
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    config.content,
+                    style: TextStyle(color: config.textColor, fontSize: 13.5),
+                  ),
+                  const SizedBox(height: 20),
+                  _CheckboxRow(
+                    text: config.applyToAllPagesLabel,
+                    baseTextColor: config.textColor,
+                    checkboxTextStyle: config.applyToAllCheckboxLabelStyle,
+                    onChanged: (value) {
+                      isChecked = value;
+                      onApplyToAllPagesCheckboxChanged?.call(value);
+                    },
+                  ),
+                ],
               ),
-            ],
+              backgroundColor: config.backgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(config.borderRadius),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    config.onDismissButtonPressed?.call();
+                    complete(PreDialogButtonType.dismiss);
+                  },
+                  style: config.dismissButtonStyle,
+                  child: DefaultTextStyle.merge(
+                    style: TextStyle(
+                      color: ColorScheme.of(context).onSurfaceVariant,
+                    ),
+                    child: Text(config.dismissButtonLabel),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    config.onLaterButtonPressed?.call();
+                    complete(PreDialogButtonType.later);
+                  },
+                  style: config.laterButtonStyle,
+                  child: Text(config.laterButtonLabel),
+                ),
+                FilledButton(
+                  onPressed: () async {
+                    config.onAcceptButtonPressed?.call();
+                    complete(PreDialogButtonType.accept);
+                  },
+                  style: config.acceptButtonStyle,
+                  child: Text(config.acceptButtonLabel),
+                ),
+              ],
+            ),
           ),
-          backgroundColor: config.backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(config.borderRadius),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                config.onDismissButtonPressed?.call();
-                complete(PreDialogButtonType.dismiss);
-              },
-              style: config.dismissButtonStyle,
-              child: DefaultTextStyle.merge(
-                style:
-                    TextStyle(color: ColorScheme.of(context).onSurfaceVariant),
-                child: Text(config.dismissButtonLabel),
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                config.onLaterButtonPressed?.call();
-                complete(PreDialogButtonType.later);
-              },
-              style: config.laterButtonStyle,
-              child: Text(config.laterButtonLabel),
-            ),
-            FilledButton(
-              onPressed: () async {
-                config.onAcceptButtonPressed?.call();
-                complete(PreDialogButtonType.accept);
-              },
-              style: config.acceptButtonStyle,
-              child: Text(config.acceptButtonLabel),
-            ),
-          ],
-        ),
-      ),
     );
 
     Overlay.of(context, rootOverlay: true).insert(overlayEntry);

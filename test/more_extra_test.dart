@@ -33,8 +33,9 @@ void main() {
   });
 
   group('FeaturesTourController Extra Tests', () {
-    testWidgets('controller.start with empty tour list completes immediately',
-        (tester) async {
+    testWidgets('controller.start with empty tour list completes immediately', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -69,8 +70,9 @@ void main() {
       );
     });
 
-    testWidgets('Tour fails gracefully if child widget is not found',
-        (tester) async {
+    testWidgets('Tour fails gracefully if child widget is not found', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
       final showChild = ValueNotifier(true);
 
@@ -199,8 +201,9 @@ void main() {
       );
     });
 
-    testWidgets('controller.start with delay shows pre-dialog after delay',
-        (tester) async {
+    testWidgets('controller.start with delay shows pre-dialog after delay', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -258,8 +261,9 @@ void main() {
   });
 
   group('Dialogs Extra Tests', () {
-    testWidgets('showIntroduceDialog aligns correctly for all quadrants',
-        (tester) async {
+    testWidgets('showIntroduceDialog aligns correctly for all quadrants', (
+      tester,
+    ) async {
       final childKey = GlobalKey();
       await tester.pumpWidget(
         MaterialApp(
@@ -426,8 +430,9 @@ void main() {
       );
     });
 
-    testWidgets('showPreDialog with customDialogBuilder returning a value',
-        (tester) async {
+    testWidgets('showPreDialog with customDialogBuilder returning a value', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -491,8 +496,9 @@ void main() {
       );
     });
 
-    testWidgets('showPreDialog when preDialogConfig.enabled is false',
-        (tester) async {
+    testWidgets('showPreDialog when preDialogConfig.enabled is false', (
+      tester,
+    ) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -598,8 +604,9 @@ void main() {
       );
     });
 
-    testWidgets('showCover and hideCover with debugPrint enabled',
-        (tester) async {
+    testWidgets('showCover and hideCover with debugPrint enabled', (
+      tester,
+    ) async {
       final logs = <String>[];
       void customDebugPrint(String? message, {int? wrapWidth}) {
         logs.add(message ?? '');
