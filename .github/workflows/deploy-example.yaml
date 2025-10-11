@@ -46,6 +46,7 @@ jobs:
           port: ${{ secrets.SFTP_REMOTE_PORT }}
           protocol: sftp
           source: example/build/web/*
-          target: pub/features_tour
+          target: /pub/features_tour
           strip_components: 0
+          overwrite: true
           debug: true
