@@ -1,3 +1,8 @@
+## 0.6.0
+
+* Remove all deprecated methods.
+* Bump version of dart sdk to `^3.7.0` and flutter to `>=3.29.0`.
+
 ## 0.5.0
 
 * Bump very_good_analysis to `v10.0.0`.
