@@ -26,6 +26,17 @@ jobs:
         working-directory: example
         run: flutter build web --wasm --release --base-href="/features_tour/"
 
+      - name: 🏗️ Create remote directory
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SFTP_REMOTE_HOST }}
+          username: ${{ secrets.SFTP_REMOTE_USER }}
+          password: ${{ secrets.SFTP_REMOTE_PASSWORD }}
+          port: ${{ secrets.SFTP_REMOTE_PORT }}
+          script: |
+            mkdir -p pub/features_tour
+          debug: true
+
       - name: Copy files via SSH
         uses: appleboy/scp-action@v1
         with:
