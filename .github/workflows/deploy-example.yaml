@@ -35,5 +35,5 @@ jobs:
           port: ${{ secrets.SFTP_REMOTE_PORT }}
           protocol: sftp
           source: example/build/web/*
-          target: ${{ secrets.SFTP_REMOTE_PATH }}
-          debug: ${{ secrets.SFTP_DEBUG }}
+          target: pub/features_tour/*
+          debug: true
