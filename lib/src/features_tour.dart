@@ -84,7 +84,7 @@ class FeaturesTour extends StatefulWidget {
   ///
   /// [introduceConfig] to configure the introduce widget.
   ///
-  /// [predialogConfig] to configure the pre-dialog widget.
+  /// [preDialogConfig] to configure the pre-dialog widget.
   ///
   /// [skipConfig] and [nextConfig] to configure the Skip and Next buttons.
   ///

@@ -5,16 +5,6 @@ import 'package:flutter/material.dart';
 class NextConfig extends BaseButtonConfig {
   /// Creates a new [NextConfig] based on the [global] values.
   ///
-  /// [child] is a custom widget for the next button. When this is set,
-  /// you must pass the `onPressed` method.
-  /// Example:
-  /// ```dart
-  /// child: (onPressed) => FilledButton(
-  ///   onPressed: onPressed,
-  ///   child: const Text('NEXT'),
-  /// ),
-  /// ```
-  ///
   /// [builder] is a builder function that provides a context and an `onPressed` callback
   /// to create a custom next button widget.
   ///
