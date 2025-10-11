@@ -36,3 +36,4 @@ jobs:
           source: example/build/web
           target: ${{ secrets.SFTP_REMOTE_PATH }}
           strip_components: true
+          debug: ${{ secrets.SFTP_DEBUG }}
