@@ -1,6 +1,6 @@
 ## 0.6.0
 
-* Remove all deprecated methods.
+* **BREADKING CHANGE:** Remove all deprecated methods.
 * Bump version of dart sdk to `^3.7.0` and flutter to `>=3.29.0`.
 
 ## 0.5.0
