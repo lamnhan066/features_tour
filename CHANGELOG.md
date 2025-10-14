@@ -1,3 +1,8 @@
+## 0.6.1
+
+* Use fvm to control the flutter version to make the code works as expected.
+* Fix some code that only works in the newer flutter version.
+
 ## 0.6.0
 
 * **BREADKING CHANGE:** Remove all deprecated methods.
