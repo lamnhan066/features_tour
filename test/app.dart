@@ -8,10 +8,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [...tours],
-      ),
+      body: Column(mainAxisSize: MainAxisSize.min, children: [...tours]),
     );
   }
 }

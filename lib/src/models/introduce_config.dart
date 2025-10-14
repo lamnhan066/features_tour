@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 
 /// A builder function to wrap the `introduce` widget.
 typedef IntroduceBuilder =
-    Widget Function(
-      BuildContext context,
-      Rect childRect,
-      Widget introduce,
-    );
+    Widget Function(BuildContext context, Rect childRect, Widget introduce);
 
 /// A builder function to determine the color of the modal barrier that darkens
 /// everything behind the tour.
@@ -119,7 +115,7 @@ class IntroduceConfig {
     return DefaultTextStyle.merge(
       style: TextStyle(
         color:
-            Theme.brightnessOf(context) == Brightness.dark
+            Theme.of(context).brightness == Brightness.dark
                 ? Colors.black
                 : Colors.white,
       ),
@@ -155,7 +151,7 @@ class RoundedRectIntroduceConfig extends IntroduceConfig {
     Widget introduce,
     double borderRadius,
   ) {
-    final brightness = Theme.brightnessOf(context);
+    final brightness = Theme.of(context).brightness;
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -167,10 +163,7 @@ class RoundedRectIntroduceConfig extends IntroduceConfig {
       ),
       child: DefaultTextStyle.merge(
         style: TextStyle(
-          color:
-              Theme.brightnessOf(context) == Brightness.dark
-                  ? Colors.white
-                  : Colors.black,
+          color: brightness == Brightness.dark ? Colors.white : Colors.black,
         ),
         child: introduce,
       ),

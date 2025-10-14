@@ -38,13 +38,7 @@ void main() {
     ) async {
       final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: App(
-            tours: [],
-          ),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: App(tours: [])));
 
       await tester.pumpAndSettle();
       final context = tester.element(find.byType(App));
@@ -63,10 +57,7 @@ void main() {
 
       expect(
         collectedStates,
-        containsAllInOrder([
-          isA<TourEmpty>(),
-          isA<TourCompleted>(),
-        ]),
+        containsAllInOrder([isA<TourEmpty>(), isA<TourCompleted>()]),
       );
     });
 
@@ -294,9 +285,7 @@ void main() {
                 index: 1,
                 controller: FeaturesTourController('TestApp'),
                 introduce: Text(alignment.name),
-                introduceConfig: IntroduceConfig(
-                  quadrantAlignment: alignment,
-                ),
+                introduceConfig: IntroduceConfig(quadrantAlignment: alignment),
                 child: SizedBox(
                   key: childKey,
                   width: 100,
@@ -631,10 +620,7 @@ void main() {
       await tester.tap(find.text('Test'));
       await tester.pump();
 
-      expect(logs, [
-        'Showing the cover',
-        'Hiding the cover',
-      ]);
+      expect(logs, ['Showing the cover', 'Hiding the cover']);
     });
   });
 }

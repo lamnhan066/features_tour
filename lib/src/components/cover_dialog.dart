@@ -24,10 +24,7 @@ void showCover(
 
   _coverOverlay = OverlayEntry(
     builder: (ctx) {
-      return Material(
-        color: color,
-        child: const SizedBox.shrink(),
-      );
+      return Material(color: color, child: const SizedBox.shrink());
     },
   );
 

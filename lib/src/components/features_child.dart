@@ -330,10 +330,7 @@ class _FeaturesChildState extends State<FeaturesChild>
                 ),
               )
             else
-              Positioned.fromRect(
-                rect: rect!,
-                child: widget.child,
-              ),
+              Positioned.fromRect(rect: rect!, child: widget.child),
 
             // Introduction widget.
             Positioned.fromRect(

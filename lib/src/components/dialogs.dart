@@ -41,13 +41,10 @@ Future<PreDialogButtonType> showPreDialog(
 
   if (config.customDialogBuilder != null) {
     completer.complete(
-      config.customDialogBuilder!(
-        context,
-        (value) async {
-          isChecked = value;
-          onApplyToAllPagesCheckboxChanged?.call(value);
-        },
-      ),
+      config.customDialogBuilder!(context, (value) async {
+        isChecked = value;
+        onApplyToAllPagesCheckboxChanged?.call(value);
+      }),
     );
     await onPreDialogIsDisplayed(true);
   } else {
@@ -197,10 +194,7 @@ class _CheckboxRowState extends State<_CheckboxRow> {
             onTap: _toggleCheckbox,
             child: DefaultTextStyle.merge(
               style: TextStyle(color: color, fontSize: 13.5),
-              child: Text(
-                widget.text,
-                style: widget.checkboxTextStyle,
-              ),
+              child: Text(widget.text, style: widget.checkboxTextStyle),
             ),
           ),
         ],

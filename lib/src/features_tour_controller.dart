@@ -694,10 +694,7 @@ class FeaturesTourController {
   }
 
   /// Waits for the next index to be available.
-  Future<_FeaturesTourState?> _nextIndex(
-    double index,
-    Duration timeout,
-  ) async {
+  Future<_FeaturesTourState?> _nextIndex(double index, Duration timeout) async {
     // Checks if the state is already available.
     if (_states.containsKey(index)) {
       return _states[index];

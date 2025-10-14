@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 /// unfeatured tour.
 class UnfeaturesTour extends InheritedWidget {
   /// Creates an [UnfeaturesTour] widget.
-  const UnfeaturesTour({
-    required super.child,
-    super.key,
-  });
+  const UnfeaturesTour({required super.child, super.key});
 
   /// Checks if the current [context] is within an [UnfeaturesTour].
   static bool isUnfeaturesTour(BuildContext? context) {

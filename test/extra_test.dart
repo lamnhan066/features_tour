@@ -109,10 +109,9 @@ void main() {
 
       showCover(unmountedContext, Colors.black54, printDebug);
 
-      expect(
-        logs,
-        ['Cannot show the cover because the build context is not mounted'],
-      );
+      expect(logs, [
+        'Cannot show the cover because the build context is not mounted',
+      ]);
       expect(
         find.byType(Material),
         findsNothing,
@@ -501,9 +500,7 @@ void main() {
               // Find the Material widget that draws the border
               final borderMaterial = tester
                   .widgetList<Material>(find.byType(Material))
-                  .firstWhere(
-                    (m) => m.shape is CircleBorder,
-                  );
+                  .firstWhere((m) => m.shape is CircleBorder);
               expect(borderMaterial.shape, isA<CircleBorder>());
               await tester.tap(find.text('DONE'));
             }

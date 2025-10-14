@@ -359,10 +359,7 @@ void main() {
       expect(find.text('b.intro'), findsNothing);
       expect(
         collectedStates,
-        containsAllInOrder([
-          isA<TourEmpty>(),
-          isA<TourCompleted>(),
-        ]),
+        containsAllInOrder([isA<TourEmpty>(), isA<TourCompleted>()]),
       );
     });
 
