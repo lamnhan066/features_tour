@@ -1,3 +1,7 @@
+## 0.6.2
+
+* Fixed the overlay level mismatch that blocked FeaturesTour button interactions.
+
 ## 0.6.1
 
 * Use fvm to control the flutter version to make the code works as expected.
