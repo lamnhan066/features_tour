@@ -16,7 +16,10 @@ class FeaturesTourController {
     _controllers.add(this);
 
     if (_debugLog) {
-      _logger ??= Logger((s) => debugPrint('[FeaturesTour][$pageName]: $s'));
+      _logger ??= const LiteLogger(
+        name: 'FeaturesTour',
+        minLevel: LogLevel.debug,
+      );
     } else {
       _logger = null;
     }
@@ -55,12 +58,12 @@ class FeaturesTourController {
   final _introducingIndex = ValueNotifier<double?>(null);
   final bool _debugLog;
   bool _popToSkip = true;
-  Logger? _logger = FeaturesTour._globalLogger;
+  LiteLogger? _logger = FeaturesTour._globalLogger;
 
   /// Registers the current FeaturesTour state.
   void _register(_FeaturesTourState state) {
     if (_debugLog && !_cachedStates.containsKey(state.widget.index)) {
-      _logger?.log(
+      _logger?.debug(
         () =>
             'Registering index ${state.widget.index}. Total states: ${_cachedStates.length + 1}',
       );
@@ -81,7 +84,7 @@ class FeaturesTourController {
   /// Unregisters the current FeaturesTour state.
   void _unregister(_FeaturesTourState state) {
     if (_debugLog && _cachedStates.containsKey(state.widget.index)) {
-      _logger?.log(
+      _logger?.debug(
         () =>
             'Unregistering index ${state.widget.index}. Total states: ${_cachedStates.length - 1}',
       );
@@ -136,13 +139,16 @@ class FeaturesTourController {
     final effectivePreDialogConfig = preDialogConfig;
     _popToSkip = popToSkip;
     if (_debugLog) {
-      _logger ??= Logger((s) => debugPrint('[FeaturesTour][$pageName]: $s'));
+      _logger ??= const LiteLogger(
+        name: 'FeaturesTour',
+        minLevel: LogLevel.debug,
+      );
     } else {
       _logger = null;
     }
 
     if (_isIntroducing) {
-      _logger?.log(() => 'The tour is already in progress.');
+      _logger?.warning(() => 'The tour is already in progress.');
       await onState?.call(const TourInProgress());
       return;
     }
@@ -153,7 +159,7 @@ class FeaturesTourController {
 
     try {
       if (!context.mounted) {
-        _logger?.log(() => 'The page $pageName context is not mounted.');
+        _logger?.warning(() => 'The page $pageName context is not mounted.');
 
         await onState?.call(const TourNotMounted());
         return;
@@ -162,15 +168,15 @@ class FeaturesTourController {
       _prefs ??= await SharedPreferences.getInstance();
 
       if (!context.mounted) {
-        _logger?.log(() => 'The page $pageName context is not mounted.');
+        _logger?.warning(() => 'The page $pageName context is not mounted.');
 
         await onState?.call(const TourNotMounted());
         return;
       }
 
-      _logger?.log(() => 'Waiting for the page transition...');
+      _logger?.step(() => 'Waiting for the page transition...');
       await _waitForTransition(context); // Main page transition
-      _logger?.log(() => 'Page transition completed.');
+      _logger?.step(() => 'Page transition completed.');
 
       // Wait for `delay` duration before starting the tours.
       await Future<void>.delayed(delay);
@@ -185,14 +191,14 @@ class FeaturesTourController {
       }
 
       if (_states.isEmpty && firstIndex == null) {
-        _logger?.log(() => 'The page $pageName has no state.');
+        _logger?.warning(() => 'The page $pageName has no state.');
         await onState?.call(const TourEmpty());
         return;
       }
 
       // Ignore all the tours
       if (force == null && await DismissAllTourStorage.getDismissAllTours()) {
-        _logger?.log(() => 'All tours have been dismissed.');
+        _logger?.info(() => 'All tours have been dismissed.');
         await _removePage();
         await onState?.call(const TourDismissedAllByUser());
         return;
@@ -203,13 +209,15 @@ class FeaturesTourController {
       _introducedIndexes.clear();
 
       if (!_shouldShowIntroduction() && force != true) {
-        _logger?.log(() => 'There are no new `FeaturesTour`s. Tour completed.');
+        _logger?.info(
+          () => 'There are no new `FeaturesTour`s. Tour completed.',
+        );
         await onState?.call(const TourEmpty());
         return;
       }
 
       if (!context.mounted) {
-        _logger?.log(() => 'The page $pageName context is not mounted.');
+        _logger?.warning(() => 'The page $pageName context is not mounted.');
         await onState?.call(const TourNotMounted());
         return;
       }
@@ -220,19 +228,19 @@ class FeaturesTourController {
         effectivePreDialogConfig,
         (isCustom) async {
           if (isCustom) {
-            _logger?.log(() => 'A custom dialog is shown for the pre-dialog.');
+            _logger?.info(() => 'A custom dialog is shown for the pre-dialog.');
             await onState?.call(const TourPreDialogShownCustom());
           } else {
-            _logger?.log(() => 'The pre-dialog is shown.');
+            _logger?.info(() => 'The pre-dialog is shown.');
             await onState?.call(const TourPreDialogShownDefault());
           }
         },
         (type) async {
-          _logger?.log(() => 'This has been applied to all pages.');
+          _logger?.info(() => 'This has been applied to all pages.');
           await onState?.call(TourPreDialogHiddenByAppliedToAll(type));
         },
         (value) async {
-          _logger?.log(
+          _logger?.debug(
             () => 'The "Apply to all pages" checkbox is now $value.',
           );
           await onState?.call(TourPreDialogApplyToAllChanged(value));
@@ -243,18 +251,18 @@ class FeaturesTourController {
         case null:
           await onState?.call(const TourPreDialogHidden());
         case PreDialogButtonType.accept:
-          _logger?.log(() => 'The user accepted to show the introduction.');
+          _logger?.info(() => 'The user accepted to show the introduction.');
           await onState?.call(
             const TourPreDialogButtonPressed(PreDialogButtonType.accept),
           );
         case PreDialogButtonType.later:
-          _logger?.log(() => 'The user chose to show the introduction later.');
+          _logger?.info(() => 'The user chose to show the introduction later.');
           await onState?.call(
             const TourPreDialogButtonPressed(PreDialogButtonType.later),
           );
           return;
         case PreDialogButtonType.dismiss:
-          _logger?.log(() => 'The user dismissed the introduction.');
+          _logger?.info(() => 'The user dismissed the introduction.');
           await _removePage();
           await onState?.call(
             const TourPreDialogButtonPressed(PreDialogButtonType.dismiss),
@@ -270,11 +278,11 @@ class FeaturesTourController {
         nextState = await _nextIndex(firstIndex, firstIndexTimeout);
       }
 
-      _logger?.log(() => 'Starting the tour.');
+      _logger?.step(() => 'Starting the tour.');
       while (_states.isNotEmpty) {
         await _removedAllShownIntroductions(force);
         if (_states.isEmpty) {
-          _logger?.log(() => 'No more states to introduce.');
+          _logger?.info(() => 'No more states to introduce.');
           await onState?.call(const TourEmpty());
           break;
         }
@@ -293,23 +301,23 @@ class FeaturesTourController {
         final nextIndex = state.widget.nextIndex;
         final nextIndexTimeout = state.widget.nextIndexTimeout;
         final key = _getPrefKey(state);
-        _logger?.log(() => 'Start introducing $key:');
+        _logger?.step(() => 'Start introducing $key:');
 
         if (!context.mounted) {
-          _logger?.log(() => '   -> The parent widget was unmounted.');
+          _logger?.warning(() => '   -> The parent widget was unmounted.');
           await onState?.call(const TourNotMounted());
           break;
         }
 
         bool shouldShowIntroduce;
         if (force != null) {
-          _logger?.log(
+          _logger?.debug(
             () =>
                 '   -> `force` is $force, so the introduction must respect it.',
           );
           shouldShowIntroduce = force;
         } else {
-          _logger?.log(
+          _logger?.debug(
             () =>
                 '   -> `force` is null, so the introduction will act like normal.',
           );
@@ -322,7 +330,7 @@ class FeaturesTourController {
         }
 
         if (!shouldShowIntroduce) {
-          _logger?.log(
+          _logger?.debug(
             () =>
                 '   -> This widget has been introduced. Moving to the next widget.',
           );
@@ -335,18 +343,20 @@ class FeaturesTourController {
 
         _introducingIndex.value = state.widget.index;
 
-        _logger?.log(() => '   -> Waiting for the page transition...');
+        _logger?.step(() => '   -> Waiting for the page transition...');
         await _waitForTransition(context); // Main page transition
-        _logger?.log(() => '   -> Page transition completed.');
+        _logger?.step(() => '   -> Page transition completed.');
 
         if (!context.mounted) {
-          _logger?.log(() => '   -> The parent widget was unmounted');
+          _logger?.warning(() => '   -> The parent widget was unmounted');
           await onState?.call(const TourNotMounted());
           break;
         }
 
         // Closes the previous cover if it exists.
-        hideCover(_debugLog ? (log) => _logger?.log(() => '   -> $log') : null);
+        hideCover(
+          _debugLog ? (log) => _logger?.debug(() => '   -> $log') : null,
+        );
 
         // Shows the cover to prevent the user from tapping the screen.
         final introduceConfig =
@@ -358,17 +368,17 @@ class FeaturesTourController {
         showCover(
           context,
           introduceBackgroundColor,
-          _debugLog ? (log) => _logger?.log(() => '   -> $log') : null,
+          _debugLog ? (log) => _logger?.debug(() => '   -> $log') : null,
         );
 
         if (state.widget.onBeforeIntroduce != null) {
-          _logger?.log(() => '   -> Calling `onBeforeIntroduce`.');
+          _logger?.step(() => '   -> Calling `onBeforeIntroduce`.');
           await state.widget.onBeforeIntroduce!();
           await onState?.call(const TourBeforeIntroduceCalled());
         }
 
         if (!context.mounted) {
-          _logger?.log(() => '   -> The parent widget was unmounted.');
+          _logger?.warning(() => '   -> The parent widget was unmounted.');
           await onState?.call(const TourNotMounted());
           break;
         }
@@ -381,13 +391,13 @@ class FeaturesTourController {
           state,
           isLastState,
           () async {
-            _logger?.log(() => '   -> The introduction is shown.');
+            _logger?.step(() => '   -> The introduction is shown.');
             await onState?.call(TourIntroducing(index: state.widget.index));
           },
         );
 
         if (state.widget.onAfterIntroduce != null) {
-          _logger?.log(() => '   -> Calling `onAfterIntroduce`.');
+          _logger?.step(() => '   -> Calling `onAfterIntroduce`.');
           await state.widget.onAfterIntroduce!(result);
           await onState?.call(const TourAfterIntroduceCalled());
         }
@@ -416,14 +426,14 @@ class FeaturesTourController {
           };
         }
 
-        _logger?.log(() => '   -> ${status()}');
+        _logger?.info(() => '   -> ${status()}');
 
         // Does not continue if the tour has ended.
         if (result != IntroduceResult.next) break;
 
         // Waits for the next state to appear if `nextIndex` is non-null.
         if (nextIndex != null) {
-          _logger?.log(
+          _logger?.step(
             () =>
                 'The `nextIndex` is non-null. Waiting for the next index: $nextIndex...',
           );
@@ -431,7 +441,7 @@ class FeaturesTourController {
           nextState = await _nextIndex(nextIndex, nextIndexTimeout);
 
           if (nextState == null) {
-            _logger?.log(
+            _logger?.warning(
               () =>
                   'Cannot wait for the next index $nextIndex because the timeout was reached. Using the next ordered value instead.',
             );
@@ -440,7 +450,7 @@ class FeaturesTourController {
             // be introduced even when it's shown.
             _introducedIndexes.add(nextIndex);
           } else {
-            _logger?.log(
+            _logger?.info(
               () => 'The next index is available with state: $nextState.',
             );
           }
@@ -453,9 +463,9 @@ class FeaturesTourController {
         state._allowPop();
       }
       _introducingIndex.value = null;
-      hideCover(_debugLog ? (log) => _logger?.log(() => log) : null);
+      hideCover(_debugLog ? (log) => _logger?.debug(() => log) : null);
       await onState?.call(const TourCompleted());
-      _logger?.log(() => 'This tour has been completed.');
+      _logger?.step(() => 'This tour has been completed.');
       _isIntroducing = false;
     }
   }
@@ -612,7 +622,7 @@ class FeaturesTourController {
 
   void _handlePopScope() {
     if (!_popToSkip) {
-      _logger?.log(() => 'Pop to skip is disabled.');
+      _logger?.debug(() => 'Pop to skip is disabled.');
       return;
     }
 
@@ -621,7 +631,7 @@ class FeaturesTourController {
     }
 
     _introduceCompleter?.complete(IntroduceResult.skip);
-    _logger?.log(() => 'Pop to skip is enabled. Skipping the tour.');
+    _logger?.info(() => 'Pop to skip is enabled. Skipping the tour.');
   }
 
   Future<void> _removedAllShownIntroductions(bool? force) async {
@@ -661,16 +671,16 @@ class FeaturesTourController {
 
     // Respects `force`.
     if (force != null) {
-      _logger?.log(() => '`force` is $force, so the dialog must respect it.');
+      _logger?.debug(() => '`force` is $force, so the dialog must respect it.');
       shouldShowPredialog = force;
     }
 
     if (shouldShowPredialog) {
-      _logger?.log(() => 'Should show pre-dialog returned true.');
+      _logger?.debug(() => 'Should show pre-dialog returned true.');
       final effectiveConfig = config ?? PreDialogConfig.global;
 
       if (effectiveConfig.enabled) {
-        _logger?.log(() => 'The pre-dialog is enabled.');
+        _logger?.info(() => 'The pre-dialog is enabled.');
 
         final predialogResult = await showPreDialog(
           context,
@@ -678,16 +688,16 @@ class FeaturesTourController {
           onPreDialogIsDisplayed,
           onAppliedToAllPages,
           onApplyToAllPagesCheckboxChanged,
-          _debugLog ? (log) => _logger?.log(() => log) : null,
+          _debugLog ? (log) => _logger?.debug(() => log) : null,
         );
 
         return predialogResult;
       } else {
-        _logger?.log(() => 'The pre-dialog is not enabled.');
+        _logger?.debug(() => 'The pre-dialog is not enabled.');
       }
       return null;
     } else {
-      _logger?.log(() => 'Should show pre-dialog returned false.');
+      _logger?.debug(() => 'Should show pre-dialog returned false.');
     }
 
     return null;
@@ -706,7 +716,7 @@ class FeaturesTourController {
     try {
       return await _pendingIndexes[index]!.future.timeout(timeout);
     } on TimeoutException {
-      _logger?.log(() => '   -> Timeout waiting for index $index.');
+      _logger?.warning(() => '   -> Timeout waiting for index $index.');
       _pendingIndexes.remove(index); // Cleans up the completer.
       return null;
     }
@@ -738,7 +748,7 @@ class FeaturesTourController {
   /// Removes all controllers for a specific `pageName`.
   Future<void> _removePage({bool markAsShowed = true}) async {
     if (_states.isEmpty) {
-      _logger?.log(() => '   -> Page $pageName has already been removed.');
+      _logger?.debug(() => '   -> Page $pageName has already been removed.');
       return;
     }
 
@@ -749,7 +759,7 @@ class FeaturesTourController {
       await _removeState(state, markAsShowed);
     }
 
-    _logger?.log(() => '   -> Removing page: $pageName.');
+    _logger?.info(() => '   -> Removing page: $pageName.');
   }
 
   /// Removes a specific state of this page.

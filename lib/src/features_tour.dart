@@ -6,8 +6,8 @@ import 'package:features_tour/src/components/cover_dialog.dart';
 import 'package:features_tour/src/components/dialogs.dart';
 import 'package:features_tour/src/components/features_child.dart';
 import 'package:features_tour/src/components/unfeatures_tour.dart';
-import 'package:features_tour/src/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:lite_logger/lite_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'components/features_tour_padding.dart';
@@ -71,7 +71,7 @@ class FeaturesTour extends StatefulWidget {
   static bool _debugLog = false;
 
   /// The global logger for all controllers.
-  static Logger? _globalLogger;
+  static LiteLogger? _globalLogger;
 
   /// Sets the global configs.
   ///
@@ -162,14 +162,16 @@ class FeaturesTour extends StatefulWidget {
       if (_globalLogger == null) {
         debugPrint('[FeaturesTour] All pages have been removed.');
       } else {
-        _globalLogger!.log(() => '[FeaturesTour] All pages have been removed.');
+        _globalLogger!.info(
+          () => '[FeaturesTour] All pages have been removed.',
+        );
       }
     }
   }
 
   /// Sets a global logger for all controllers.
   @visibleForTesting
-  static void setTestingLogger(Logger? logger) {
+  static void setTestingLogger(LiteLogger? logger) {
     if (logger == null) {
       _debugLog = false;
       _globalLogger = null;

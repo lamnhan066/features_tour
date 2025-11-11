@@ -4,9 +4,9 @@ import 'package:features_tour/src/components/dialogs.dart';
 import 'package:features_tour/src/extensions/get_widget_position.dart';
 import 'package:features_tour/src/features_tour.dart'
     show DismissAllTourStorage;
-import 'package:features_tour/src/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lite_logger/lite_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
@@ -28,7 +28,7 @@ void main() {
   var collectedStates = <TourState>[];
 
   setUp(() {
-    FeaturesTour.setTestingLogger(Logger((s) {}));
+    FeaturesTour.setTestingLogger(const LiteLogger(minLevel: LogLevel.debug));
     resetPreDialog();
     SharedPreferences.setMockInitialValues({});
     collectedStates = [];
