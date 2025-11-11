@@ -369,6 +369,7 @@ class FeaturesTourController {
           context,
           introduceBackgroundColor,
           _debugLog ? (log) => _logger?.debug(() => '   -> $log') : null,
+          useRootOverlay: introduceConfig.useRootOverlay,
         );
 
         if (state.widget.onBeforeIntroduce != null) {

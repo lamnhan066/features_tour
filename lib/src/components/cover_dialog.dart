@@ -6,8 +6,9 @@ OverlayEntry? _coverOverlay;
 void showCover(
   BuildContext context,
   Color color,
-  void Function(String log)? printDebug,
-) {
+  void Function(String log)? printDebug, {
+  bool useRootOverlay = false,
+}) {
   if (!context.mounted) {
     printDebug?.call(
       'Cannot show the cover because the build context is not mounted',
@@ -28,7 +29,7 @@ void showCover(
     },
   );
 
-  Overlay.of(context, rootOverlay: true).insert(_coverOverlay!);
+  Overlay.of(context, rootOverlay: useRootOverlay).insert(_coverOverlay!);
 }
 
 /// Hides the cover to allow the user to tap the screen.
