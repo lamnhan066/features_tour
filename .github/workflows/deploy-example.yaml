@@ -31,7 +31,7 @@ jobs:
         with:
           server: ${{ secrets.SFTP_REMOTE_HOST }}
           username: ${{ secrets.SFTP_REMOTE_USER }}
-          password: ${{ secrets.SFTP_REMOTE_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SFTP_REMOTE_PORT }}
           uploads: |
-            ./example/build/web/ => ./pub/features_tour/
+            ./example/build/web/ => ./features_tour/
