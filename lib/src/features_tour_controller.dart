@@ -471,6 +471,72 @@ class FeaturesTourController {
     }
   }
 
+  /// Completes the current tour introduction with the specified result.
+  ///
+  /// This method programmatically finishes the currently displayed tour step
+  /// by completing its internal completer with the given [result].
+  ///
+  /// **Parameters:**
+  ///
+  /// [result] - The result to complete with:
+  /// - [IntroduceResult.next] - Move to the next tour item in sequence
+  /// - [IntroduceResult.skip] - Skip the entire remaining tour
+  /// - [IntroduceResult.done] - Mark the tour as complete
+  /// - [IntroduceResult.disabled] - Mark current step as disabled
+  /// - [IntroduceResult.notMounted] - Mark current step as not mounted
+  ///
+  /// **Behavior:**
+  /// - Safe to call multiple times - only completes once if active
+  /// - Does nothing if no tour step is currently showing
+  /// - Triggers the tour loop to process the result and decide next action
+  ///
+  /// **Use Cases:**
+  ///
+  /// 1. **Custom button actions in introduction widgets:**
+  ///    ```dart
+  ///    SdfButton(
+  ///      buttonLabel: 'Continue',
+  ///      onAction: () {
+  ///        controller.complete(IntroduceResult.next);
+  ///      },
+  ///    )
+  ///    ```
+  ///
+  /// 2. **Programmatic tour navigation:**
+  ///    ```dart
+  ///    // Skip tour based on user preference
+  ///    if (userWantsToSkip) {
+  ///      controller.complete(IntroduceResult.skip);
+  ///    }
+  ///    ```
+  ///
+  /// 3. **External events triggering tour progression:**
+  ///    ```dart
+  ///    // Timer auto-advances tour
+  ///    Timer(Duration(seconds: 5), () {
+  ///      controller.complete(IntroduceResult.next);
+  ///    });
+  ///    ```
+  ///
+  /// 4. **Custom skip/next logic based on user actions:**
+  ///    ```dart
+  ///    // Complete based on user interaction
+  ///    onUserCompletedTask() {
+  ///      controller.complete(IntroduceResult.done);
+  ///    }
+  ///    ```
+  ///
+  /// **Important Notes:**
+  /// - Calling with [IntroduceResult.skip] will end the entire tour
+  /// - Calling with [IntroduceResult.next] continues to the next item
+  /// - Calling with [IntroduceResult.done] marks the tour as complete
+  /// - This method is used internally by the built-in Next/Skip/Done buttons
+  void complete(IntroduceResult result) {
+    if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
+      _introduceCompleter?.complete(result);
+    }
+  }
+
   Future<IntroduceResult> _showIntroduce(
     BuildContext context,
     _FeaturesTourState state,
@@ -493,12 +559,6 @@ class FeaturesTourController {
     final doneConfig = state.widget.doneConfig ?? DoneConfig.global;
 
     _introduceCompleter = Completer<IntroduceResult>();
-
-    void complete(IntroduceResult result) {
-      if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
-        _introduceCompleter?.complete(result);
-      }
-    }
 
     void skipAction() => complete(IntroduceResult.skip);
 
@@ -791,5 +851,100 @@ class FeaturesTourController {
   /// Gets the key for shared preferences.
   String _getPrefKey(_FeaturesTourState state) {
     return '${FeaturesTour._prefix}_${pageName}_${state.widget.index}';
+  }
+
+  /// Resets the tour state from a specific index by clearing shown flags
+  /// and preparing states for restart.
+  ///
+  /// This method does NOT automatically start the tour. After calling [reset],
+  /// you must manually call [start] to begin the tour from the target index.
+  ///
+  /// **What it does:**
+  /// - Cancels the current tour if one is running
+  /// - Clears SharedPreferences "shown" flags for [targetIndex] and all indices >= targetIndex
+  /// - Restores all cached states to the active states map
+  ///
+  /// **Use Cases:**
+  /// - Implementing "go to previous" functionality where you want full control
+  ///   over when the tour restarts
+  /// - Resetting tour progress to allow re-showing previously seen items
+  /// - Preparing the tour for a custom restart sequence
+  ///
+  /// [targetIndex] - The index to reset from. This index and all higher indices
+  ///                 will have their "shown" flags cleared in SharedPreferences.
+  ///
+  /// **Important Notes:**
+  /// - After calling [reset], you MUST call [start] with `force: true` to show
+  ///   the reset items, otherwise they may be skipped
+  /// - If a tour is currently running, it will be cancelled with [IntroduceResult.skip]
+  /// - The overlay from the previous tour will be removed when you call [start]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Reset to index 1.0 and manually restart
+  /// await controller.reset(1.0);
+  /// await controller.start(
+  ///   context,
+  ///   firstIndex: 1.0,
+  ///   force: true, // Required to show reset items
+  ///   delay: Duration.zero,
+  /// );
+  ///
+  /// // Reset and restart with custom state tracking
+  /// await controller.reset(2.0);
+  /// await controller.start(
+  ///   context,
+  ///   firstIndex: 2.0,
+  ///   force: true,
+  ///   onState: (state) {
+  ///     if (state is TourIntroducing) {
+  ///       print('Now showing index: ${state.index}');
+  ///     }
+  ///   },
+  /// );
+  /// ```
+  Future<void> reset(double targetIndex) async {
+    if (_debugLog) {
+      _logger?.info(() => 'Restarting tour from index $targetIndex');
+    }
+
+    // Cancel current tour if running (don't wait - start() will handle it)
+    if (_isIntroducing) {
+      _logger?.debug(() => 'Cancelling current tour...');
+      complete(IntroduceResult.skip);
+    }
+
+    // Clear shown flags FIRST so they're ready when start() is called
+    await _clearShownFlagsFrom(targetIndex);
+
+    // Restore states that need to be shown again
+    _states
+      ..clear()
+      ..addAll(_cachedStates);
+  }
+
+  /// Clears the "shown" flags in SharedPreferences for all items
+  /// from [startIndex] onwards (inclusive)
+  Future<void> _clearShownFlagsFrom(double startIndex) async {
+    _prefs ??= await SharedPreferences.getInstance();
+
+    final indexesToClear = _cachedStates.keys.where((idx) => idx >= startIndex);
+
+    for (final index in indexesToClear) {
+      final state = _cachedStates[index];
+      if (state != null) {
+        final key = _getPrefKey(state);
+        await _prefs!.remove(key);
+        _introducedIndexes.remove(index);
+
+        if (_debugLog) {
+          _logger?.debug(() => 'Cleared shown flag for index $index');
+        }
+      }
+    }
+
+    if (_debugLog) {
+      _logger?.info(() => 'Cleared ${indexesToClear.length} shown flags');
+    }
   }
 }

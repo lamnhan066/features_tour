@@ -295,47 +295,49 @@ class _FeaturesChildState extends State<FeaturesChild>
   Widget build(BuildContext context) {
     return rect == null
         ? const Center(child: CircularProgressIndicator())
-        : Stack(
-          children: [
-            // Border widget
-            Positioned.fromRect(
-              rect: rect!.inflate(widget.childConfig.borderSizeInflate),
-              child: AnimatedBuilder(
-                animation: _scaleAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _scaleAnimation.value,
-                    child: Material(
-                      color: widget.childConfig.backgroundColor,
-                      shape: widget.childConfig.shapeBorder,
-                    ),
-                  );
-                },
-              ),
-            ),
-
-            // Child widget.
-            if (widget.childConfig.enableAnimation &&
-                widget.childConfig.isAnimateChild)
+        : Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: [
+              // Border widget
               Positioned.fromRect(
-                rect: rect!,
+                rect: rect!.inflate(widget.childConfig.borderSizeInflate),
                 child: AnimatedBuilder(
                   animation: _scaleAnimation,
                   builder: (context, child) {
                     return Transform.scale(
                       scale: _scaleAnimation.value,
-                      child: widget.child,
+                      child: Material(
+                        color: widget.childConfig.backgroundColor,
+                        shape: widget.childConfig.shapeBorder,
+                      ),
                     );
                   },
                 ),
-              )
-            else
-              Positioned.fromRect(rect: rect!, child: widget.child),
+              ),
 
-            // Introduction widget.
-            Positioned.fromRect(
-              rect: introduceRect,
-              child: IgnorePointer(
+              // Child widget.
+              if (widget.childConfig.enableAnimation &&
+                  widget.childConfig.isAnimateChild)
+                Positioned.fromRect(
+                  rect: rect!,
+                  child: AnimatedBuilder(
+                    animation: _scaleAnimation,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: _scaleAnimation.value,
+                        child: widget.child,
+                      );
+                    },
+                  ),
+                )
+              else
+                Positioned.fromRect(rect: rect!, child: widget.child),
+
+              // Introduction widget.
+              Positioned.fromRect(
+                rect: introduceRect,
                 child: Padding(
                   padding: widget.padding,
                   child: Align(
@@ -348,45 +350,36 @@ class _FeaturesChildState extends State<FeaturesChild>
                   ),
                 ),
               ),
-            ),
+              // Skip text widget.
+              if (!(widget.isLastState && widget.doneConfig.enabled) &&
+                  widget.skipConfig.enabled)
+                Positioned.fill(
+                  child: Align(
+                    alignment: widget.skipConfig.alignment,
+                    child: widget.skip,
+                  ),
+                ),
 
-            Scaffold(
-              resizeToAvoidBottomInset: true,
-              backgroundColor: Colors.transparent,
-              body: Stack(
-                children: [
-                  // Skip text widget.
-                  if (!(widget.isLastState && widget.doneConfig.enabled) &&
-                      widget.skipConfig.enabled)
-                    Positioned.fill(
-                      child: Align(
-                        alignment: widget.skipConfig.alignment,
-                        child: widget.skip,
-                      ),
-                    ),
+              // Next text widget.
+              if (!(widget.isLastState && widget.doneConfig.enabled) &&
+                  widget.nextConfig.enabled)
+                Positioned.fill(
+                  child: Align(
+                    alignment: widget.nextConfig.alignment,
+                    child: widget.next,
+                  ),
+                ),
 
-                  // Next text widget.
-                  if (!(widget.isLastState && widget.doneConfig.enabled) &&
-                      widget.nextConfig.enabled)
-                    Positioned.fill(
-                      child: Align(
-                        alignment: widget.nextConfig.alignment,
-                        child: widget.next,
-                      ),
-                    ),
-
-                  // Done text widget.
-                  if (widget.isLastState && widget.doneConfig.enabled)
-                    Positioned.fill(
-                      child: Align(
-                        alignment: widget.doneConfig.alignment,
-                        child: widget.done,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ],
+              // Done text widget.
+              if (widget.isLastState && widget.doneConfig.enabled)
+                Positioned.fill(
+                  child: Align(
+                    alignment: widget.doneConfig.alignment,
+                    child: widget.done,
+                  ),
+                ),
+            ],
+          ),
         );
   }
 }
