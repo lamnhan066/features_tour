@@ -492,17 +492,7 @@ class FeaturesTourController {
   ///
   /// **Use Cases:**
   ///
-  /// 1. **Custom button actions in introduction widgets:**
-  ///    ```dart
-  ///    SdfButton(
-  ///      buttonLabel: 'Continue',
-  ///      onAction: () {
-  ///        controller.complete(IntroduceResult.next);
-  ///      },
-  ///    )
-  ///    ```
-  ///
-  /// 2. **Programmatic tour navigation:**
+  /// 1. **Programmatic tour navigation:**
   ///    ```dart
   ///    // Skip tour based on user preference
   ///    if (userWantsToSkip) {
@@ -510,7 +500,7 @@ class FeaturesTourController {
   ///    }
   ///    ```
   ///
-  /// 3. **External events triggering tour progression:**
+  /// 2. **External events triggering tour progression:**
   ///    ```dart
   ///    // Timer auto-advances tour
   ///    Timer(Duration(seconds: 5), () {
@@ -518,7 +508,7 @@ class FeaturesTourController {
   ///    });
   ///    ```
   ///
-  /// 4. **Custom skip/next logic based on user actions:**
+  /// 3. **Custom skip/next logic based on user actions:**
   ///    ```dart
   ///    // Complete based on user interaction
   ///    onUserCompletedTask() {
