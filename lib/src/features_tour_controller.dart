@@ -471,59 +471,24 @@ class FeaturesTourController {
     }
   }
 
-  /// Completes the current tour introduction with the specified result.
-  ///
-  /// This method programmatically finishes the currently displayed tour step
-  /// by completing its internal completer with the given [result].
-  ///
-  /// **Parameters:**
-  ///
-  /// [result] - The result to complete with:
-  /// - [IntroduceResult.next] - Move to the next tour item in sequence
-  /// - [IntroduceResult.skip] - Skip the entire remaining tour
-  /// - [IntroduceResult.done] - Mark the tour as complete
-  /// - [IntroduceResult.disabled] - Mark current step as disabled
-  /// - [IntroduceResult.notMounted] - Mark current step as not mounted
-  ///
-  /// **Behavior:**
-  /// - Safe to call multiple times - only completes once if active
-  /// - Does nothing if no tour step is currently showing
-  /// - Triggers the tour loop to process the result and decide next action
-  ///
-  /// **Use Cases:**
-  ///
-  /// 1. **Programmatic tour navigation:**
-  ///    ```dart
-  ///    // Skip tour based on user preference
-  ///    if (userWantsToSkip) {
-  ///      controller.complete(IntroduceResult.skip);
-  ///    }
-  ///    ```
-  ///
-  /// 2. **External events triggering tour progression:**
-  ///    ```dart
-  ///    // Timer auto-advances tour
-  ///    Timer(Duration(seconds: 5), () {
-  ///      controller.complete(IntroduceResult.next);
-  ///    });
-  ///    ```
-  ///
-  /// 3. **Custom skip/next logic based on user actions:**
-  ///    ```dart
-  ///    // Complete based on user interaction
-  ///    onUserCompletedTask() {
-  ///      controller.complete(IntroduceResult.done);
-  ///    }
-  ///    ```
-  ///
-  /// **Important Notes:**
-  /// - Calling with [IntroduceResult.skip] will end the entire tour
-  /// - Calling with [IntroduceResult.next] continues to the next item
-  /// - Calling with [IntroduceResult.done] marks the tour as complete
-  /// - This method is used internally by the built-in Next/Skip/Done buttons
-  void complete(IntroduceResult result) {
+  /// continues to the next item
+  void next() {
     if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
-      _introduceCompleter?.complete(result);
+      _introduceCompleter?.complete(IntroduceResult.next);
+    }
+  }
+
+  /// end the entire tour
+  void skip() {
+    if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
+      _introduceCompleter?.complete(IntroduceResult.skip);
+    }
+  }
+
+  ///  marks the tour as complete
+  void done() {
+    if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
+      _introduceCompleter?.complete(IntroduceResult.done);
     }
   }
 
@@ -549,6 +514,12 @@ class FeaturesTourController {
     final doneConfig = state.widget.doneConfig ?? DoneConfig.global;
 
     _introduceCompleter = Completer<IntroduceResult>();
+
+    void complete(IntroduceResult result) {
+      if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
+        _introduceCompleter?.complete(result);
+      }
+    }
 
     void skipAction() => complete(IntroduceResult.skip);
 
@@ -901,7 +872,7 @@ class FeaturesTourController {
     // Cancel current tour if running (don't wait - start() will handle it)
     if (_isIntroducing) {
       _logger?.debug(() => 'Cancelling current tour...');
-      complete(IntroduceResult.skip);
+      skip();
     }
 
     // Clear shown flags FIRST so they're ready when start() is called
