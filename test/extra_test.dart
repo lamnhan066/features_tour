@@ -631,9 +631,7 @@ void main() {
       );
     });
 
-    testWidgets('complete() with IntroduceResult.next moves to next step', (
-      tester,
-    ) async {
+    testWidgets('next() should move to next step', (tester) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -705,9 +703,7 @@ void main() {
       );
     });
 
-    testWidgets('complete() with IntroduceResult.skip stops the tour', (
-      tester,
-    ) async {
+    testWidgets('skip() should stop the tour', (tester) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -772,9 +768,7 @@ void main() {
       );
     });
 
-    testWidgets('complete() with IntroduceResult.done completes the tour', (
-      tester,
-    ) async {
+    testWidgets('done() should complete the tour', (tester) async {
       final controller = FeaturesTourController('App');
 
       await tester.pumpWidget(
@@ -829,7 +823,7 @@ void main() {
       );
     });
 
-    testWidgets('complete() does nothing when tour is not active', (
+    testWidgets('next() should do nothing when tour is not active', (
       tester,
     ) async {
       final controller = FeaturesTourController('App');
@@ -858,166 +852,92 @@ void main() {
       expect(find.text('a'), findsOneWidget);
     });
 
-    testWidgets('complete() does nothing when called multiple times', (
-      tester,
-    ) async {
-      final controller = FeaturesTourController('App');
+    testWidgets(
+      'next() and done() can be used with external events like timers',
+      (tester) async {
+        final controller = FeaturesTourController('App');
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: App(
-            tours: [
-              FeaturesTour(
-                index: 1,
-                controller: controller,
-                introduce: const Text('a.intro'),
-                child: const Text('a'),
-              ),
-              FeaturesTour(
-                index: 2,
-                controller: controller,
-                introduce: const Text('b.intro'),
-                child: const Text('b'),
-              ),
-            ],
+        await tester.pumpWidget(
+          MaterialApp(
+            home: App(
+              tours: [
+                FeaturesTour(
+                  index: 1,
+                  controller: controller,
+                  introduce: const Text('a.intro'),
+                  child: const Text('a'),
+                ),
+                FeaturesTour(
+                  index: 2,
+                  controller: controller,
+                  introduce: const Text('b.intro'),
+                  child: const Text('b'),
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-      final context = tester.element(find.byType(App));
-
-      await tester.runAsync(() async {
-        await controller.start(
-          context,
-          force: true,
-          delay: Duration.zero,
-          onState: (state) async {
-            collectedStates.add(state);
-            if (state case TourIntroducing(index: final index)) {
-              await tester.pump();
-              if (index == 1) {
-                expect(find.text('a.intro'), findsOneWidget);
-                // Call complete multiple times - only first should take effect
-                controller.next();
-              } else if (index == 2) {
-                expect(find.text('b.intro'), findsOneWidget);
-                controller.done();
-              }
-            }
-          },
-        );
-      });
-
-      await tester.pumpAndSettle();
-
-      // Should have moved to next (first complete call), not skip or done
-      expect(
-        collectedStates,
-        containsAllInOrder([
-          isA<TourPreDialogHidden>(),
-          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>().having(
-            (s) => s.result,
-            'result',
-            IntroduceResult.next,
-          ),
-          isA<TourIntroducing>().having((s) => s.index, 'index', 2),
-          isA<TourIntroduceResultEmitted>().having(
-            (s) => s.result,
-            'result',
-            IntroduceResult.done,
-          ),
-          isA<TourCompleted>(),
-        ]),
-      );
-    });
-
-    testWidgets('complete() can be used with external events like timers', (
-      tester,
-    ) async {
-      final controller = FeaturesTourController('App');
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: App(
-            tours: [
-              FeaturesTour(
-                index: 1,
-                controller: controller,
-                introduce: const Text('a.intro'),
-                child: const Text('a'),
-              ),
-              FeaturesTour(
-                index: 2,
-                controller: controller,
-                introduce: const Text('b.intro'),
-                child: const Text('b'),
-              ),
-            ],
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-      final context = tester.element(find.byType(App));
-
-      var firstIntroShown = false;
-      var secondIntroShown = false;
-
-      await tester.runAsync(() async {
-        // Start tour with state tracking
-        final tourFuture = controller.start(
-          context,
-          force: true,
-          delay: Duration.zero,
-          onState: (state) async {
-            collectedStates.add(state);
-            if (state case TourIntroducing(index: final index)) {
-              await tester.pump();
-              if (index == 1) {
-                firstIntroShown = true;
-              } else if (index == 2) {
-                secondIntroShown = true;
-              }
-            }
-          },
         );
 
-        // Wait for first introduction to appear
-        await tester.pump();
-        await Future<void>.delayed(const Duration(milliseconds: 100));
-        expect(firstIntroShown, isTrue);
+        await tester.pumpAndSettle();
+        final context = tester.element(find.byType(App));
 
-        // Simulate external event (e.g., timer) completing the tour
-        controller.next();
+        var firstIntroShown = false;
+        var secondIntroShown = false;
 
-        // Wait for transition to second introduction
-        await tester.pump();
-        await Future<void>.delayed(const Duration(milliseconds: 100));
-        expect(secondIntroShown, isTrue);
+        await tester.runAsync(() async {
+          // Start tour with state tracking
+          final tourFuture = controller.start(
+            context,
+            force: true,
+            delay: Duration.zero,
+            onState: (state) async {
+              collectedStates.add(state);
+              if (state case TourIntroducing(index: final index)) {
+                await tester.pump();
+                if (index == 1) {
+                  firstIntroShown = true;
+                } else if (index == 2) {
+                  secondIntroShown = true;
+                }
+              }
+            },
+          );
 
-        // Complete the tour
-        controller.done();
+          // Wait for first introduction to appear
+          await tester.pump();
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+          expect(firstIntroShown, isTrue);
 
-        // Wait for tour to finish
-        await tourFuture;
-      });
+          // Simulate external event (e.g., timer) completing the tour
+          controller.next();
 
-      await tester.pumpAndSettle();
+          // Wait for transition to second introduction
+          await tester.pump();
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+          expect(secondIntroShown, isTrue);
 
-      // Verify tour completed successfully
-      expect(find.text('a.intro'), findsNothing);
-      expect(find.text('b.intro'), findsNothing);
-      expect(
-        collectedStates,
-        containsAllInOrder([
-          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroducing>().having((s) => s.index, 'index', 2),
-          isA<TourCompleted>(),
-        ]),
-      );
-    });
+          // Complete the tour
+          controller.done();
+
+          // Wait for tour to finish
+          await tourFuture;
+        });
+
+        await tester.pumpAndSettle();
+
+        // Verify tour completed successfully
+        expect(find.text('a.intro'), findsNothing);
+        expect(find.text('b.intro'), findsNothing);
+        expect(
+          collectedStates,
+          containsAllInOrder([
+            isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+            isA<TourIntroducing>().having((s) => s.index, 'index', 2),
+            isA<TourCompleted>(),
+          ]),
+        );
+      },
+    );
 
     testWidgets('reset() clears shown flags from target index onwards', (
       tester,
