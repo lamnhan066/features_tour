@@ -233,6 +233,83 @@ void main() {
       );
     });
 
+    testWidgets('Programmatic next and dismiss complete the tour', (
+      tester,
+    ) async {
+      final controller = FeaturesTourController('App');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state case TourIntroducing(index: final index)) {
+              await tester.pump();
+
+              if (index == 1) {
+                expect(find.text('a.intro'), findsOneWidget);
+                expect(controller.next(), isTrue);
+              } else if (index == 2) {
+                expect(find.text('b.intro'), findsOneWidget);
+                expect(controller.dismiss(), isTrue);
+              }
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('a.intro'), findsNothing);
+      expect(find.text('b.intro'), findsNothing);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogHidden>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result,
+            'result',
+            IntroduceResult.next,
+          ),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 2),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result,
+            'result',
+            IntroduceResult.skip,
+          ),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+
     testWidgets('Tapping DONE on last feature dismisses the tour', (
       tester,
     ) async {

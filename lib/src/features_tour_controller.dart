@@ -54,6 +54,26 @@ class FeaturesTourController {
 
   Completer<IntroduceResult>? _introduceCompleter;
 
+  bool _completeIntroduce(IntroduceResult result) {
+    if (_introduceCompleter == null || _introduceCompleter!.isCompleted) {
+      return false;
+    }
+
+    _introduceCompleter?.complete(result);
+    return true;
+  }
+
+  /// Dismisses the current introduction.
+  ///
+  /// This completes the active tour step with [IntroduceResult.skip].
+  bool dismiss() => _completeIntroduce(IntroduceResult.skip);
+
+  /// Moves to the next introduction.
+  bool next() => _completeIntroduce(IntroduceResult.next);
+
+  /// Completes the current introduction.
+  bool done() => _completeIntroduce(IntroduceResult.done);
+
   bool _isIntroducing = false;
   final _introducingIndex = ValueNotifier<double?>(null);
   final bool _debugLog;
@@ -494,13 +514,7 @@ class FeaturesTourController {
 
     _introduceCompleter = Completer<IntroduceResult>();
 
-    void complete(IntroduceResult result) {
-      if (_introduceCompleter != null && !_introduceCompleter!.isCompleted) {
-        _introduceCompleter?.complete(result);
-      }
-    }
-
-    void skipAction() => complete(IntroduceResult.skip);
+    void skipAction() => dismiss();
 
     final skipButton =
         skipConfig.builder?.call(context, skipAction) ??
@@ -513,7 +527,7 @@ class FeaturesTourController {
           ),
         );
 
-    void nextAction() => complete(IntroduceResult.next);
+    void nextAction() => next();
 
     final nextButton =
         nextConfig.builder?.call(context, nextAction) ??
@@ -526,7 +540,7 @@ class FeaturesTourController {
           ),
         );
 
-    void doneAction() => complete(IntroduceResult.done);
+    void doneAction() => done();
 
     final doneButton =
         doneConfig.builder?.call(context, doneAction) ??
@@ -542,10 +556,7 @@ class FeaturesTourController {
     final overlayEntry = OverlayEntry(
       builder: (ctx) {
         return GestureDetector(
-          onTap:
-              childConfig.barrierDismissible
-                  ? () => complete(IntroduceResult.next)
-                  : null,
+          onTap: childConfig.barrierDismissible ? next : null,
           child: Material(
             color: Colors.transparent,
             child: FeaturesChild(
@@ -579,9 +590,7 @@ class FeaturesTourController {
               alignment: introduceConfig.alignment,
               quadrantAlignment: introduceConfig.quadrantAlignment,
               child: GestureDetector(
-                onTap: () {
-                  complete(IntroduceResult.next);
-                },
+                onTap: next,
                 child: Material(
                   color: Colors.transparent,
                   child: AbsorbPointer(

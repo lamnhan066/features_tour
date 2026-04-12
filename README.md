@@ -6,7 +6,7 @@ Features Tour is a package that enables you to easily create tours to introduce 
 
 ## Introduction
 
-Demo: [pub.lamnhan.dev/features_tour](https://pub.lamnhan.dev/features_tour)
+Demo: [pub.lamnhan.dev/features\_tour](https://pub.lamnhan.dev/features_tour)
 
 ## Usage
 
@@ -50,9 +50,16 @@ FeaturesTour(
 ),
 ```
 
+You can also control the active step programmatically from the controller when you build a custom introduction UI:
+
+```dart
+tourController.next();
+tourController.dismiss();
+```
+
 ### Start a tour
 
-``` dart
+```dart
 @override
 void initState() {
     tourController.start(context);
@@ -64,7 +71,7 @@ void initState() {
 
 You can set the default configuration for the app using the `FeaturesTour.setGlobalConfig()` method. This sets the default values for all the configuration options for the Features Tour. You can override these values when you create individual tour steps. **Please notice** that this method should be call in `main` method or before the widget is rendered to avoid unexpected behavior. Here is an example:
 
-``` dart
+```dart
 void main() {
     // Set the default value for this app. Please notice that this method should be call here or before
     // the widget is rendered to avoid unexpected behavior.
@@ -116,29 +123,29 @@ With these steps, you can easily create a tour to showcase the features of your 
 
 The following steps outline the flow of a Features Tour:
 
-1. **Start the Tour**  
-    Begin the tour by calling the `start` method on the `FeaturesTourController`.
+1. **Start the Tour**\
+   Begin the tour by calling the `start` method on the `FeaturesTourController`.
 
-2. **Wait for the First Widget**  
-    The tour waits for the first widget to be displayed. This is determined using `FeaturesTourController.firstIndex`. If no specific index is set, the widget with the smallest index will be used as the starting point.
+2. **Wait for the First Widget**\
+   The tour waits for the first widget to be displayed. This is determined using `FeaturesTourController.firstIndex`. If no specific index is set, the widget with the smallest index will be used as the starting point.
 
-3. **Execute Before-Introduction Logic**  
-    Before introducing a widget, the `FeaturesTour.onBeforeIntroduce` callback is executed. This allows you to perform any necessary actions before the introduction begins.
+3. **Execute Before-Introduction Logic**\
+   Before introducing a widget, the `FeaturesTour.onBeforeIntroduce` callback is executed. This allows you to perform any necessary actions before the introduction begins.
 
-4. **Show the Introduction**  
-    The widget's introduction is displayed, along with navigation buttons:
-    * **Next**: Shown if there is a subsequent widget in the tour.
-    * **Skip**: Allows the user to skip the tour.
-    * **Done**: Shown if the current widget is the last in the tour.
+4. **Show the Introduction**\
+   The widget's introduction is displayed, along with navigation buttons:
+   * **Next**: Shown if there is a subsequent widget in the tour.
+   * **Skip**: Allows the user to skip the tour.
+   * **Done**: Shown if the current widget is the last in the tour.
 
-5. **Execute After-Introduction Logic**  
-    After the user interacts with the introduction (e.g., presses `Next`, `Done`, or `Skip`), the `FeaturesTour.onAfterIntroduce` callback is executed. This callback provides information about the user's action, enabling you to handle it accordingly.
+5. **Execute After-Introduction Logic**\
+   After the user interacts with the introduction (e.g., presses `Next`, `Done`, or `Skip`), the `FeaturesTour.onAfterIntroduce` callback is executed. This callback provides information about the user's action, enabling you to handle it accordingly.
 
-6. **Wait for the Next Widget**  
-    The tour waits for the next widget to be displayed. This is determined using `FeaturesTour.nextIndex`.
+6. **Wait for the Next Widget**\
+   The tour waits for the next widget to be displayed. This is determined using `FeaturesTour.nextIndex`.
 
-7. **Repeat the Process**  
-    Steps 3 to 6 are repeated for each widget in the tour until the last widget is introduced.
+7. **Repeat the Process**\
+   Steps 3 to 6 are repeated for each widget in the tour until the last widget is introduced.
 
 By following this flow, you can create an engaging and seamless tour experience for your app's users.
 
@@ -164,14 +171,14 @@ When your tour involves introducing widgets inside a `Drawer` or a `Dialog`, you
 #### Case 1: The Introduced Widget is at the First Index
 
 1. Open the `Drawer` or `Dialog` programmatically:
-    * For a `Drawer`, use `scaffoldKey.currentState?.openDrawer()`.
-    * For a `Dialog`, use `showDialog()`.
+   * For a `Drawer`, use `scaffoldKey.currentState?.openDrawer()`.
+   * For a `Dialog`, use `showDialog()`.
 
 2. Start the tour with the following code:
 
-    ```dart
-    tourController.start(context, firstIndex: 1);
-    ```
+   ```dart
+   tourController.start(context, firstIndex: 1);
+   ```
 
 #### Case 2: The Introduced Widget is at a Later Index (e.g., Index 4)
 
