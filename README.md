@@ -40,7 +40,12 @@ FeaturesTour(
             // Do something after introducing the current widget
             // and the user press the next or done button.
         }
-    }
+    },
+
+    onBeforePrevious: () async {
+        // Do something before going back to the previous feature.
+    },
+
 
     /// This is the real widget
     child: TextButton(
@@ -141,10 +146,13 @@ The following steps outline the flow of a Features Tour:
 5. **Execute After-Introduction Logic**\
    After the user interacts with the introduction (e.g., presses `Next`, `Done`, or `Skip`), the `FeaturesTour.onAfterIntroduce` callback is executed. This callback provides information about the user's action, enabling you to handle it accordingly.
 
-6. **Wait for the Next Widget**\
+6. **Handle Back Navigation**\
+    When the user presses `Previous`, the `FeaturesTour.onBeforePrevious` callback is executed before the tour moves back. Use `onAfterIntroduce` and check for `IntroduceResult.previous` to react to a previous action.
+
+7. **Wait for the Next Widget**\
    The tour waits for the next widget to be displayed. This is determined using `FeaturesTour.nextIndex`.
 
-7. **Repeat the Process**\
+8. **Repeat the Process**\
    Steps 3 to 6 are repeated for each widget in the tour until the last widget is introduced.
 
 By following this flow, you can create an engaging and seamless tour experience for your app's users.

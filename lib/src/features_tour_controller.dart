@@ -73,7 +73,18 @@ class FeaturesTourController {
   bool done() => _completeIntroduce(IntroduceResult.done);
 
   /// Moves to the previous introduction.
-  bool previous() => _completeIntroduce(IntroduceResult.previous);
+  ///
+  /// Returns `false` when no introduction is active or there is no previous
+  /// step available.
+  bool previous() {
+    final currentIndex = _introducingIndex.value;
+
+    if (currentIndex == null || _previousIndexFor(currentIndex) == null) {
+      return false;
+    }
+
+    return _completeIntroduce(IntroduceResult.previous);
+  }
 
   bool _isIntroducing = false;
   final _introducingIndex = ValueNotifier<double?>(null);
@@ -417,6 +428,12 @@ class FeaturesTourController {
             await onState?.call(TourIntroducing(index: state.widget.index));
           },
         );
+
+        if (result == IntroduceResult.previous &&
+            state.widget.onBeforePrevious != null) {
+          _logger?.step(() => '   -> Calling `onBeforePrevious`.');
+          await state.widget.onBeforePrevious!();
+        }
 
         if (state.widget.onAfterIntroduce != null) {
           _logger?.step(() => '   -> Calling `onAfterIntroduce`.');

@@ -882,6 +882,457 @@ void main() {
         ]),
       );
     });
+
+    testWidgets('Previous callbacks wrap the previous action', (tester) async {
+      final controller = FeaturesTourController('App');
+      final events = <String>[];
+      var returnedToFirstFeature = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+                onAfterIntroduce: (result) {
+                  events.add('feature1.afterIntroduce:${result.name}');
+                },
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+                onBeforePrevious: () {
+                  events.add('feature2.beforePrevious');
+                },
+                onAfterIntroduce: (result) {
+                  events.add('feature2.afterIntroduce:${result.name}');
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state case TourIntroduceResultEmitted(
+              result: IntroduceResult.previous,
+            )) {
+              events.add('state.previousEmitted');
+            }
+
+            if (state case TourIntroducing(index: final index)) {
+              await tester.pump();
+
+              if (index == 1) {
+                expect(find.text('a.intro'), findsOneWidget);
+                if (!returnedToFirstFeature) {
+                  await tester.tap(find.text('NEXT'));
+                } else {
+                  await tester.tap(find.text('SKIP'));
+                }
+              } else if (index == 2) {
+                expect(find.text('b.intro'), findsOneWidget);
+                expect(find.text('PREVIOUS'), findsOneWidget);
+                returnedToFirstFeature = true;
+                await tester.tap(find.text('PREVIOUS'));
+              }
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      expect(events, [
+        'feature1.afterIntroduce:next',
+        'feature2.beforePrevious',
+        'feature2.afterIntroduce:previous',
+        'state.previousEmitted',
+        'feature1.afterIntroduce:skip',
+      ]);
+      expect(find.text('a.intro'), findsNothing);
+      expect(find.text('b.intro'), findsNothing);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogHidden>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result,
+            'result',
+            IntroduceResult.next,
+          ),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 2),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result,
+            'result',
+            IntroduceResult.previous,
+          ),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result,
+            'result',
+            IntroduceResult.skip,
+          ),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+
+    testWidgets('controller.previous matches PREVIOUS callback behavior', (
+      tester,
+    ) async {
+      final controller = FeaturesTourController('App');
+      final events = <String>[];
+      var returnedToFirstFeature = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+                onAfterIntroduce: (result) {
+                  events.add('feature1.afterIntroduce:${result.name}');
+                },
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+                onBeforePrevious: () {
+                  events.add('feature2.beforePrevious');
+                },
+                onAfterIntroduce: (result) {
+                  events.add('feature2.afterIntroduce:${result.name}');
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state case TourIntroduceResultEmitted(
+              result: IntroduceResult.previous,
+            )) {
+              events.add('state.previousEmitted');
+            }
+
+            if (state case TourIntroducing(index: final index)) {
+              await tester.pump();
+
+              if (index == 1) {
+                expect(find.text('a.intro'), findsOneWidget);
+                if (!returnedToFirstFeature) {
+                  await tester.tap(find.text('NEXT'));
+                } else {
+                  await tester.tap(find.text('SKIP'));
+                }
+              } else if (index == 2) {
+                expect(find.text('b.intro'), findsOneWidget);
+                returnedToFirstFeature = true;
+                final didMovePrevious = controller.previous();
+                expect(didMovePrevious, isTrue);
+              }
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      expect(events, [
+        'feature1.afterIntroduce:next',
+        'feature2.beforePrevious',
+        'feature2.afterIntroduce:previous',
+        'state.previousEmitted',
+        'feature1.afterIntroduce:skip',
+      ]);
+      expect(find.text('a.intro'), findsNothing);
+      expect(find.text('b.intro'), findsNothing);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogHidden>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result,
+            'result',
+            IntroduceResult.next,
+          ),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 2),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result,
+            'result',
+            IntroduceResult.previous,
+          ),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result,
+            'result',
+            IntroduceResult.skip,
+          ),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+
+    testWidgets('controller.previous returns false when no previous exists', (
+      tester,
+    ) async {
+      final controller = FeaturesTourController('App');
+      var didAttemptPrevious = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state case TourIntroducing(index: 1)) {
+              await tester.pump();
+              final moved = controller.previous();
+              didAttemptPrevious = true;
+              expect(moved, isFalse);
+              await tester.tap(find.text('DONE'));
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      expect(didAttemptPrevious, isTrue);
+      final previousResults = collectedStates
+          .whereType<TourIntroduceResultEmitted>()
+          .where((state) => state.result == IntroduceResult.previous);
+      expect(previousResults, isEmpty);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogHidden>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourIntroduceResultEmitted>().having(
+            (s) => s.result,
+            'result',
+            IntroduceResult.done,
+          ),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+
+    testWidgets('controller.previous returns false outside active introduce', (
+      tester,
+    ) async {
+      final controller = FeaturesTourController('App');
+
+      expect(controller.previous(), isFalse);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            if (state case TourIntroducing(index: 1)) {
+              await tester.pump();
+              await tester.tap(find.text('DONE'));
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+      expect(controller.previous(), isFalse);
+    });
+
+    testWidgets(
+      'controller.previous does not call onBeforePrevious when unavailable',
+      (tester) async {
+        final controller = FeaturesTourController('App');
+        var beforePreviousCalled = false;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: App(
+              tours: [
+                FeaturesTour(
+                  index: 1,
+                  controller: controller,
+                  introduce: const Text('a.intro'),
+                  child: const Text('a'),
+                  onBeforePrevious: () {
+                    beforePreviousCalled = true;
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+        final context = tester.element(find.byType(App));
+
+        await tester.runAsync(() async {
+          await controller.start(
+            context,
+            force: true,
+            delay: Duration.zero,
+            onState: (state) async {
+              if (state case TourIntroducing(index: 1)) {
+                await tester.pump();
+                expect(controller.previous(), isFalse);
+                await tester.tap(find.text('DONE'));
+              }
+            },
+          );
+        });
+
+        await tester.pumpAndSettle();
+        expect(beforePreviousCalled, isFalse);
+      },
+    );
+
+    testWidgets('controller.previous completes only once per introduction', (
+      tester,
+    ) async {
+      final controller = FeaturesTourController('App');
+      var previousTriggeredTwice = false;
+      var returnedToFirstFeature = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state case TourIntroducing(index: final index)) {
+              await tester.pump();
+
+              if (index == 1) {
+                if (!returnedToFirstFeature) {
+                  await tester.tap(find.text('NEXT'));
+                } else {
+                  await tester.tap(find.text('SKIP'));
+                }
+              } else if (index == 2) {
+                final first = controller.previous();
+                final second = controller.previous();
+                expect(first, isTrue);
+                expect(second, isFalse);
+                previousTriggeredTwice = true;
+                returnedToFirstFeature = true;
+              }
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      expect(previousTriggeredTwice, isTrue);
+      final previousResults =
+          collectedStates
+              .whereType<TourIntroduceResultEmitted>()
+              .where((state) => state.result == IntroduceResult.previous)
+              .toList();
+      expect(previousResults.length, 1);
+    });
   });
 
   group('PreDialog', () {

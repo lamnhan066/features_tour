@@ -39,10 +39,11 @@ class FeaturesTour extends StatefulWidget {
   ///
   /// Configure the Next and Skip buttons using [nextConfig] and [skipConfig].
   ///
-  /// To perform actions before or after the introduction, use [onBeforeIntroduce] and [onAfterIntroduce].
-  /// In the [onAfterIntroduce] callback, you can access the [IntroduceResult] to determine
-  /// whether the user pressed the Next or Skip button or if they tapped outside the introduction
-  /// to dismiss it. This allows you to control the flow of the tour based on user interactions.
+  /// To perform actions before or after the introduction, use [onBeforeIntroduce],
+  /// [onAfterIntroduce], and [onBeforePrevious].
+  /// In the [onAfterIntroduce] callback, you can access the [IntroduceResult]
+  /// to determine whether the user pressed the Next, Previous, or Skip button
+  /// or if they tapped outside the introduction to dismiss it.
   const FeaturesTour({
     required this.controller,
     required this.index,
@@ -60,6 +61,7 @@ class FeaturesTour extends StatefulWidget {
     this.enabled = true,
     this.onBeforeIntroduce,
     this.onAfterIntroduce,
+    this.onBeforePrevious,
   });
 
   /// The prefix of this package.
@@ -253,6 +255,14 @@ class FeaturesTour extends StatefulWidget {
   /// proceeding to the next step.
   final FutureOr<void> Function(IntroduceResult introduceResult)?
   onAfterIntroduce;
+
+  /// A callback that is triggered before the "previous" action is executed.
+  ///
+  /// This mirrors `onBeforeIntroduce` but is invoked when the user taps the
+  /// Previous button (or when a previous action is initiated) before the
+  /// previous flow proceeds. If the callback returns a [Future], the tour will
+  /// wait for it to complete before executing the previous action.
+  final FutureOr<void> Function()? onBeforePrevious;
 
   @override
   State<FeaturesTour> createState() => _FeaturesTourState();
