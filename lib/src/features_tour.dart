@@ -40,11 +40,12 @@ class FeaturesTour extends StatefulWidget {
   /// Configure the Next and Skip buttons using [nextConfig] and [skipConfig].
   ///
   /// To perform actions before or after the introduction, use [onBeforeAction]
-  /// and [onAfterIntroduce]. The [onBeforeIntroduce] and [onBeforePrevious]
+  /// and [onAfterAction]. The [onBeforeIntroduce]
   /// callbacks are deprecated and will be removed in a future release.
-  /// In the [onAfterIntroduce] callback, you can access the [TourAction]
+  /// In the [onAfterAction] callback, you can access the [TourAction]
   /// to determine whether the user pressed the Next, Previous, or Skip button
-  /// or if they tapped outside the introduction to dismiss it.
+  /// or if they tapped outside the introduction to dismiss it. Note: the
+  /// `onAfterIntroduce` callback is deprecated in favor of `onAfterAction`.
   const FeaturesTour({
     required this.controller,
     required this.index,
@@ -63,8 +64,16 @@ class FeaturesTour extends StatefulWidget {
     this.onBeforeAction,
     @Deprecated('Use onBeforeAction(TourAction.introduce) instead.')
     this.onBeforeIntroduce,
-    this.onAfterIntroduce,
-  });
+    this.onAfterAction,
+    @Deprecated('Use onAfterAction(TourAction) instead.') this.onAfterIntroduce,
+  }) : assert(
+         onBeforeAction != null || onBeforeIntroduce == null,
+         'Cannot use both onBeforeAction and onBeforeIntroduce. Please use onBeforeAction(TourAction.introduce) instead of onBeforeIntroduce.',
+       ),
+       assert(
+         onAfterAction != null || onAfterIntroduce == null,
+         'Cannot use both onAfterAction and onAfterIntroduce. Please use onAfterAction(TourAction) instead of onAfterIntroduce.',
+       );
 
   /// The prefix of this package.
   static String _prefix = 'FeaturesTour';
@@ -258,11 +267,20 @@ class FeaturesTour extends StatefulWidget {
   /// If the callback returns a [Future], the tour will wait for it to complete before proceeding.
   final FutureOr<void> Function()? onBeforeIntroduce;
 
+  /// A callback that is triggered after a tour action occurs.
+  ///
+  /// This replaces `onAfterIntroduce` and receives the emitted [TourAction].
+  /// If the callback returns a [Future], the tour will wait for it to complete before proceeding.
+  final FutureOr<void> Function(TourAction action)? onAfterAction;
+
   /// A callback that is triggered after the [introduce] widget is shown.
+  ///
+  /// Deprecated in favor of [onAfterAction]. Use [TourAction] for the result.
   ///
   /// This can be used to perform actions or preparations right after the introduction step appears.
   /// If the callback returns a [Future], the tour will wait for it to complete before
   /// proceeding to the next step.
+  @Deprecated('Use onAfterAction(TourAction) instead.')
   final FutureOr<void> Function(IntroduceResult introduceResult)?
   onAfterIntroduce;
 

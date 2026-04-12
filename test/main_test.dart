@@ -630,7 +630,7 @@ void main() {
                     introduce: const Text('a.intro'),
                     nextIndex: 2,
                     child: const Text('a'),
-                    onAfterIntroduce: (_) {
+                    onAfterAction: (_) {
                       showSecond.value = true;
                     },
                   ),
@@ -824,7 +824,7 @@ void main() {
       },
     );
 
-    testWidgets('onAfterIntroduce is called after showing the intro', (
+    testWidgets('onAfterAction is called after showing the intro', (
       tester,
     ) async {
       final controller = FeaturesTourController('App');
@@ -840,7 +840,7 @@ void main() {
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
-                onAfterIntroduce: (result) {
+                onAfterAction: (result) {
                   called = true;
                   receivedResult = result;
                 },
@@ -900,7 +900,7 @@ void main() {
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
-                onAfterIntroduce: (result) {
+                onAfterAction: (result) {
                   events.add('feature1.afterIntroduce:${result.name}');
                 },
               ),
@@ -914,7 +914,7 @@ void main() {
                     events.add('feature2.beforePrevious');
                   }
                 },
-                onAfterIntroduce: (result) {
+                onAfterAction: (result) {
                   events.add('feature2.afterIntroduce:${result.name}');
                 },
               ),
@@ -1013,7 +1013,7 @@ void main() {
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
-                onAfterIntroduce: (result) {
+                onAfterAction: (result) {
                   events.add('feature1.afterIntroduce:${result.name}');
                 },
               ),
@@ -1027,7 +1027,7 @@ void main() {
                     events.add('feature2.beforePrevious');
                   }
                 },
-                onAfterIntroduce: (result) {
+                onAfterAction: (result) {
                   events.add('feature2.afterIntroduce:${result.name}');
                 },
               ),

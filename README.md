@@ -37,7 +37,7 @@ FeaturesTour(
         }
     },
 
-    onAfterIntroduce: (introduceResult) async {
+    onAfterAction: (introduceResult) async {
         if (introduceResult case TourAction.next || TourAction.done) {
             // Do something after introducing the current widget
             // and the user press the next or done button.
@@ -148,10 +148,10 @@ The following steps outline the flow of a Features Tour:
    * **Done**: Shown if the current widget is the last in the tour.
 
 5. **Execute After-Introduction Logic**\
-   After the user interacts with the introduction (e.g., presses `Next`, `Done`, or `Skip`), the `FeaturesTour.onAfterIntroduce` callback is executed. This callback provides information about the user's action, enabling you to handle it accordingly.
+    After the user interacts with the introduction (e.g., presses `Next`, `Done`, or `Skip`), the `FeaturesTour.onAfterAction` callback is executed. This callback provides information about the user's action, enabling you to handle it accordingly. Note: `onAfterIntroduce` is deprecated and replaced by `onAfterAction`.
 
 6. **Handle Back Navigation**\
-    When the user presses `Previous`, the `FeaturesTour.onBeforeAction` callback is executed with `TourAction.previous` before the tour moves back. Use `onAfterIntroduce` and check for `TourAction.previous` to react to a previous action.
+    When the user presses `Previous`, the `FeaturesTour.onBeforeAction` callback is executed with `TourAction.previous` before the tour moves back. Use `onAfterAction` and check for `TourAction.previous` to react to a previous action.
 
 7. **Wait for the Next Widget**\
    The tour waits for the next widget to be displayed. This is determined using `FeaturesTour.nextIndex`.
@@ -200,7 +200,7 @@ In the widget at the preceding index (e.g., Index 3), configure the `FeaturesTou
 FeaturesTour(
      // Other configurations...
      nextIndex: 4, // Specify the next index
-     onAfterIntroduce: (introduceResult) {
+    onAfterAction: (introduceResult) {
           if (introduceResult case TourAction.next || TourAction.done) {
                 // Open the Drawer or Dialog
                 scaffoldKey.currentState?.openDrawer(); // For Drawer

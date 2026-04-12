@@ -404,14 +404,21 @@ class FeaturesTourController {
           useRootOverlay: introduceConfig.useRootOverlay,
         );
 
+        var didCallBefore = false;
         if (state.widget.onBeforeAction != null) {
           _logger?.step(() => '   -> Calling `onBeforeAction(introduce)`.');
           await state.widget.onBeforeAction!(TourAction.introduce);
-          await onState?.call(const TourBeforeIntroduceCalled());
-        } else if (state.widget.onBeforeIntroduce != null) {
+          didCallBefore = true;
+        }
+
+        if (state.widget.onBeforeIntroduce != null) {
           _logger?.step(() => '   -> Calling `onBeforeIntroduce`.');
           await state.widget.onBeforeIntroduce!();
-          await onState?.call(const TourBeforeIntroduceCalled());
+          didCallBefore = true;
+        }
+
+        if (didCallBefore) {
+          await onState?.call(const TourBeforeActionCalled());
         }
 
         if (!context.mounted) {
@@ -440,10 +447,19 @@ class FeaturesTourController {
           }
         }
 
+        var didCallAfter = false;
+        if (state.widget.onAfterAction != null) {
+          _logger?.step(() => '   -> Calling `onAfterAction`.');
+          await state.widget.onAfterAction!(result);
+          didCallAfter = true;
+        }
         if (state.widget.onAfterIntroduce != null) {
-          _logger?.step(() => '   -> Calling `onAfterIntroduce`.');
+          _logger?.step(() => '   -> Calling `onAfterIntroduce` (deprecated).');
           await state.widget.onAfterIntroduce!(result);
-          await onState?.call(const TourAfterIntroduceCalled());
+          didCallAfter = true;
+        }
+        if (didCallAfter) {
+          await onState?.call(const TourAfterActionCalled());
         }
 
         final previousIndex = _previousIndexFor(state.widget.index);

@@ -113,7 +113,7 @@ class _AppState extends State<App> {
           controller: tourController,
           index: MainTourIndex.drawer,
           nextIndex: MainTourIndex.buttonOnDrawer,
-          onAfterIntroduce: (result) {
+          onAfterAction: (result) {
             if (result != TourAction.next && result != TourAction.done) {
               return;
             }
@@ -152,7 +152,7 @@ class _AppState extends State<App> {
             controller: tourController,
             index: MainTourIndex.buttonOnDrawer,
             introduce: const Text('Tap here to close the drawer'),
-            onAfterIntroduce: (result) {
+            onAfterAction: (result) {
               if (result case TourAction.next || TourAction.done) {
                 scaffoldKey.currentState?.closeDrawer();
               }
@@ -230,7 +230,7 @@ class _AppState extends State<App> {
                             curve: Curves.easeInOut,
                           );
                         },
-                        onAfterIntroduce: (introduceResult) async {
+                        onAfterAction: (introduceResult) async {
                           if (introduceResult
                               case TourAction.next || TourAction.done) {
                             // Scroll to the first item when item 90 is tapped
@@ -255,7 +255,7 @@ class _AppState extends State<App> {
                                         introduce: const Text(
                                           'Tap here to close the dialog',
                                         ),
-                                        onAfterIntroduce: (result) {
+                                        onAfterAction: (result) {
                                           if (introduceResult !=
                                                   TourAction.next &&
                                               introduceResult !=

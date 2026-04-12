@@ -80,7 +80,7 @@ void main() {
                       controller: controller,
                       introduce: const Text('a.intro'),
                       child: const Text('a'),
-                      onAfterIntroduce: (_) {
+                      onAfterAction: (_) {
                         showChild.value = false;
                       },
                     ),

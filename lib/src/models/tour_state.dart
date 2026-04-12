@@ -94,16 +94,24 @@ class TourSkippedIntroduction extends TourState {
   final double? index;
 }
 
+@Deprecated('Use TourBeforeActionCalled instead of TourBeforeIntroduceCalled')
 /// Indicates that the `introduce` method has been called, but the introduction has not yet started.
-class TourBeforeIntroduceCalled extends TourState {
-  /// Creates a new instance of [TourBeforeIntroduceCalled].
-  const TourBeforeIntroduceCalled();
+typedef TourBeforeIntroduceCalled = TourBeforeActionCalled;
+
+/// Indicates that the `introduce` method has been called, but the introduction has not yet started.
+class TourBeforeActionCalled extends TourState {
+  /// Creates a new instance of [TourBeforeActionCalled].
+  const TourBeforeActionCalled();
 }
 
+@Deprecated('Use TourAfterActionCalled instead of TourAfterIntroduceCalled')
 /// Indicates that the `introduce` method has been called, and the introduction has finished.
-class TourAfterIntroduceCalled extends TourState {
-  /// Creates a new instance of [TourAfterIntroduceCalled].
-  const TourAfterIntroduceCalled();
+typedef TourAfterIntroduceCalled = TourAfterActionCalled;
+
+/// Indicates that the `introduce` method has been called, and the introduction has finished.
+class TourAfterActionCalled extends TourState {
+  /// Creates a new instance of [TourAfterActionCalled].
+  const TourAfterActionCalled();
 }
 
 /// Indicates that an introduction has been completed, and an action has been emitted.
