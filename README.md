@@ -31,19 +31,23 @@ FeaturesTour(
     /// Introduction of this widget (Known as the description of the feature)
     introduce: const Text('This is TextButton 1'),
     
-    onBeforeIntroduce: () async {
-        // Do something before introducing the current widget
+    onBeforeAction: (action) async {
+        if (action == TourAction.introduce) {
+            // Do something before introducing the current widget
+        }
     },
 
     onAfterIntroduce: (introduceResult) async {
-        if (introduceResult case IntroduceResult.next || IntroduceResult.done) {
+        if (introduceResult case TourAction.next || TourAction.done) {
             // Do something after introducing the current widget
             // and the user press the next or done button.
         }
     },
 
-    onBeforePrevious: () async {
-        // Do something before going back to the previous feature.
+    onBeforeAction: (action) async {
+        if (action == TourAction.previous) {
+            // Do something before going back to the previous feature.
+        }
     },
 
 
@@ -135,7 +139,7 @@ The following steps outline the flow of a Features Tour:
    The tour waits for the first widget to be displayed. This is determined using `FeaturesTourController.firstIndex`. If no specific index is set, the widget with the smallest index will be used as the starting point.
 
 3. **Execute Before-Introduction Logic**\
-   Before introducing a widget, the `FeaturesTour.onBeforeIntroduce` callback is executed. This allows you to perform any necessary actions before the introduction begins.
+    Before introducing a widget, the `FeaturesTour.onBeforeAction` callback is executed with `TourAction.introduce`. This allows you to perform any necessary actions before the introduction begins.
 
 4. **Show the Introduction**\
    The widget's introduction is displayed, along with navigation buttons:
@@ -147,7 +151,7 @@ The following steps outline the flow of a Features Tour:
    After the user interacts with the introduction (e.g., presses `Next`, `Done`, or `Skip`), the `FeaturesTour.onAfterIntroduce` callback is executed. This callback provides information about the user's action, enabling you to handle it accordingly.
 
 6. **Handle Back Navigation**\
-    When the user presses `Previous`, the `FeaturesTour.onBeforePrevious` callback is executed before the tour moves back. Use `onAfterIntroduce` and check for `IntroduceResult.previous` to react to a previous action.
+    When the user presses `Previous`, the `FeaturesTour.onBeforeAction` callback is executed with `TourAction.previous` before the tour moves back. Use `onAfterIntroduce` and check for `TourAction.previous` to react to a previous action.
 
 7. **Wait for the Next Widget**\
    The tour waits for the next widget to be displayed. This is determined using `FeaturesTour.nextIndex`.
@@ -197,7 +201,7 @@ FeaturesTour(
      // Other configurations...
      nextIndex: 4, // Specify the next index
      onAfterIntroduce: (introduceResult) {
-          if (introduceResult case IntroduceResult.next || IntroduceResult.done) {
+          if (introduceResult case TourAction.next || TourAction.done) {
                 // Open the Drawer or Dialog
                 scaffoldKey.currentState?.openDrawer(); // For Drawer
                 // or
@@ -221,13 +225,15 @@ Use the `FeaturesTour.onBeforeIntroduce` callback to scroll the widget into view
 ```dart
 FeaturesTour(
     // Other configurations...
-    onBeforeIntroduce: () async {
-        // Scroll to the end of the list to make the widget visible
-        await scrollController.animateTo(
-            scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-        );
+    onBeforeAction: (action) async {
+        if (action == TourAction.introduce) {
+            // Scroll to the end of the list to make the widget visible
+            await scrollController.animateTo(
+                scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+            );
+        }
     },
     // Other configurations...
 )

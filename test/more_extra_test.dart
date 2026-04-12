@@ -133,9 +133,9 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourAfterIntroduceCalled>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -186,7 +186,7 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -244,7 +244,7 @@ void main() {
           isA<TourPreDialogShownDefault>(),
           isA<TourPreDialogButtonPressed>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -413,7 +413,7 @@ void main() {
           isA<TourPreDialogShownDefault>(),
           isA<TourPreDialogButtonPressed>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -479,7 +479,7 @@ void main() {
             PreDialogButtonType.accept,
           ),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -535,7 +535,7 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -587,7 +587,7 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );

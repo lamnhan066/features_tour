@@ -1,3 +1,9 @@
+## Unreleased
+
+* Introduce `TourAction` as the new action/result enum used by tour callbacks and state emission.
+* Add `FeaturesTour.onBeforeAction(TourAction action)` as the new pre-action hook.
+* Deprecate `FeaturesTour.onBeforeIntroduce` and `FeaturesTour.onBeforePrevious` in favor of `onBeforeAction`.
+
 ## 0.6.2
 
 * Fixed the overlay level mismatch that blocked FeaturesTour button interactions.
@@ -111,7 +117,7 @@
 * **Deprecations**:
   * Remove all old deprecated methods.
   * Deprecated the `onPressed` parameter in `FeaturesTour` in favor of `onAfterIntroduce`.
-  * Deprecated the `isCallOnPressed` parameter in `SkipConfig` in favor of `onAfterIntroduce(IntroduceResult)`:
+  * Deprecated the `isCallOnPressed` parameter in `SkipConfig` in favor of `onAfterIntroduce(TourAction)`:
 
     ```dart
     // This code
@@ -127,7 +133,7 @@
     FeaturesTour(
       onAfterIntroduce: (result) {
         // We only want to `doSomething` when users press the NEXT or DONE buttons
-        if (result == IntroduceResult.next || result == IntroduceResult.done) {
+        if (result == TourAction.next || result == TourAction.done) {
           doSomething();
         }
       }

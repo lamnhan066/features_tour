@@ -52,9 +52,9 @@ class FeaturesTourController {
   /// The internal list of the introduced states.
   final Set<double> _introducedIndexes = {};
 
-  Completer<IntroduceResult>? _introduceCompleter;
+  Completer<TourAction>? _introduceCompleter;
 
-  bool _completeIntroduce(IntroduceResult result) {
+  bool _completeIntroduce(TourAction result) {
     if (_introduceCompleter == null || _introduceCompleter!.isCompleted) {
       return false;
     }
@@ -64,13 +64,13 @@ class FeaturesTourController {
   }
 
   /// Skips the current introduction.
-  bool skip() => _completeIntroduce(IntroduceResult.skip);
+  bool skip() => _completeIntroduce(TourAction.skip);
 
   /// Moves to the next introduction.
-  bool next() => _completeIntroduce(IntroduceResult.next);
+  bool next() => _completeIntroduce(TourAction.next);
 
   /// Completes the current introduction.
-  bool done() => _completeIntroduce(IntroduceResult.done);
+  bool done() => _completeIntroduce(TourAction.done);
 
   /// Moves to the previous introduction.
   ///
@@ -83,7 +83,7 @@ class FeaturesTourController {
       return false;
     }
 
-    return _completeIntroduce(IntroduceResult.previous);
+    return _completeIntroduce(TourAction.previous);
   }
 
   bool _isIntroducing = false;
@@ -404,7 +404,11 @@ class FeaturesTourController {
           useRootOverlay: introduceConfig.useRootOverlay,
         );
 
-        if (state.widget.onBeforeIntroduce != null) {
+        if (state.widget.onBeforeAction != null) {
+          _logger?.step(() => '   -> Calling `onBeforeAction(introduce)`.');
+          await state.widget.onBeforeAction!(TourAction.introduce);
+          await onState?.call(const TourBeforeIntroduceCalled());
+        } else if (state.widget.onBeforeIntroduce != null) {
           _logger?.step(() => '   -> Calling `onBeforeIntroduce`.');
           await state.widget.onBeforeIntroduce!();
           await onState?.call(const TourBeforeIntroduceCalled());
@@ -429,10 +433,11 @@ class FeaturesTourController {
           },
         );
 
-        if (result == IntroduceResult.previous &&
-            state.widget.onBeforePrevious != null) {
-          _logger?.step(() => '   -> Calling `onBeforePrevious`.');
-          await state.widget.onBeforePrevious!();
+        if (result == TourAction.previous) {
+          if (state.widget.onBeforeAction != null) {
+            _logger?.step(() => '   -> Calling `onBeforeAction(previous)`.');
+            await state.widget.onBeforeAction!(TourAction.previous);
+          }
         }
 
         if (state.widget.onAfterIntroduce != null) {
@@ -444,10 +449,11 @@ class FeaturesTourController {
         final previousIndex = _previousIndexFor(state.widget.index);
 
         switch (result) {
-          case IntroduceResult.disabled:
-          case IntroduceResult.notMounted:
+          case TourAction.introduce:
+          case TourAction.disabled:
+          case TourAction.notMounted:
             await _removeState(state, false);
-          case IntroduceResult.previous:
+          case TourAction.previous:
             _states[state.widget.index] = state;
 
             if (previousIndex != null) {
@@ -459,38 +465,39 @@ class FeaturesTourController {
                 nextState = previousState;
               }
             }
-          case IntroduceResult.done:
-          case IntroduceResult.next:
+          case TourAction.done:
+          case TourAction.next:
             await _removeState(state, true);
-          case IntroduceResult.skip:
+          case TourAction.skip:
             await _removeState(state, true);
             await _removePage();
         }
 
-        await onState?.call(TourIntroduceResultEmitted(result: result));
+        await onState?.call(TourActionEmitted(result: result));
 
         String status() {
           return switch (result) {
-            IntroduceResult.disabled || IntroduceResult.notMounted =>
+            TourAction.introduce => 'Showing the introduction.',
+            TourAction.disabled || TourAction.notMounted =>
               'This widget has been canceled with result: ${result.name}.',
-            IntroduceResult.next => 'Moving to the next widget.',
-            IntroduceResult.previous => 'Moving to the previous widget.',
-            IntroduceResult.skip => 'Skipping this tour.',
-            IntroduceResult.done => 'The tour has been completed.',
+            TourAction.next => 'Moving to the next widget.',
+            TourAction.previous => 'Moving to the previous widget.',
+            TourAction.skip => 'Skipping this tour.',
+            TourAction.done => 'The tour has been completed.',
           };
         }
 
         _logger?.info(() => '   -> ${status()}');
 
         // Continue only when moving next or previous.
-        if (result == IntroduceResult.previous) {
+        if (result == TourAction.previous) {
           if (nextState != null) {
             continue;
           }
           break;
         }
 
-        if (result != IntroduceResult.next) {
+        if (result != TourAction.next) {
           break;
         }
 
@@ -533,18 +540,18 @@ class FeaturesTourController {
     }
   }
 
-  Future<IntroduceResult> _showIntroduce(
+  Future<TourAction> _showIntroduce(
     BuildContext context,
     _FeaturesTourState state,
     bool isLastState,
     FutureOr<void> Function() onShownIntroduction,
   ) async {
     if (!context.mounted) {
-      return IntroduceResult.notMounted;
+      return TourAction.notMounted;
     }
 
     if (!state.widget.enabled || UnfeaturesTour.isUnfeaturesTour(context)) {
-      return IntroduceResult.disabled;
+      return TourAction.disabled;
     }
 
     final introduceConfig =
@@ -556,7 +563,7 @@ class FeaturesTourController {
     final previousConfig = state.widget.previousConfig ?? PreviousConfig.global;
     final canShowPrevious = _previousIndexFor(state.widget.index) != null;
 
-    _introduceCompleter = Completer<IntroduceResult>();
+    _introduceCompleter = Completer<TourAction>();
 
     final skipButton =
         skipConfig.builder?.call(context, skip) ??
@@ -672,7 +679,7 @@ class FeaturesTourController {
       },
     );
 
-    if (!context.mounted) return IntroduceResult.notMounted;
+    if (!context.mounted) return TourAction.notMounted;
 
     Overlay.of(
       context,
@@ -701,7 +708,7 @@ class FeaturesTourController {
       return;
     }
 
-    _introduceCompleter?.complete(IntroduceResult.skip);
+    _introduceCompleter?.complete(TourAction.skip);
     _logger?.info(() => 'Pop to skip is enabled. Skipping the tour.');
   }
 

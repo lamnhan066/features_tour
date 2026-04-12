@@ -416,7 +416,7 @@ void main() {
             PreDialogButtonType.accept,
           ),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -621,10 +621,10 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>().having(
+          isA<TourActionEmitted>().having(
             (s) => s.result,
             'result',
-            IntroduceResult.skip,
+            TourAction.skip,
           ),
           isA<TourCompleted>(),
         ]),

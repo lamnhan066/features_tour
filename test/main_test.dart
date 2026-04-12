@@ -89,9 +89,9 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -158,13 +158,13 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>().having(
-            (s) => s.result == IntroduceResult.next,
-            'IntroduceResult.next',
+          isA<TourActionEmitted>().having(
+            (s) => s.result == TourAction.next,
+            'TourAction.next',
             true,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -240,21 +240,21 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>().having(
-            (s) => s.result == IntroduceResult.next,
-            'IntroduceResult.next',
+          isA<TourActionEmitted>().having(
+            (s) => s.result == TourAction.next,
+            'TourAction.next',
             true,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
-          isA<TourIntroduceResultEmitted>().having(
-            (s) => s.result == IntroduceResult.previous,
-            'IntroduceResult.previous',
+          isA<TourActionEmitted>().having(
+            (s) => s.result == TourAction.previous,
+            'TourAction.previous',
             true,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>().having(
-            (s) => s.result == IntroduceResult.skip,
-            'IntroduceResult.skip',
+          isA<TourActionEmitted>().having(
+            (s) => s.result == TourAction.skip,
+            'TourAction.skip',
             true,
           ),
           isA<TourCompleted>(),
@@ -315,9 +315,9 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>().having(
-            (s) => s.result == IntroduceResult.skip,
-            'IntroduceResult.skip',
+          isA<TourActionEmitted>().having(
+            (s) => s.result == TourAction.skip,
+            'TourAction.skip',
             true,
           ),
           isA<TourCompleted>(),
@@ -386,16 +386,16 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>().having(
+          isA<TourActionEmitted>().having(
             (s) => s.result,
             'result',
-            IntroduceResult.next,
+            TourAction.next,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
-          isA<TourIntroduceResultEmitted>().having(
+          isA<TourActionEmitted>().having(
             (s) => s.result,
             'result',
-            IntroduceResult.skip,
+            TourAction.skip,
           ),
           isA<TourCompleted>(),
         ]),
@@ -465,11 +465,11 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>().having(
-            (s) => s.result == IntroduceResult.done,
-            'IntroduceResult.done',
+          isA<TourActionEmitted>().having(
+            (s) => s.result == TourAction.done,
+            'TourAction.done',
             true,
           ),
           isA<TourCompleted>(),
@@ -599,11 +599,11 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>().having(
-            (s) => s.result == IntroduceResult.done,
-            'IntroduceResult.done',
+          isA<TourActionEmitted>().having(
+            (s) => s.result == TourAction.done,
+            'TourAction.done',
             true,
           ),
           isA<TourCompleted>(),
@@ -691,9 +691,9 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourAfterIntroduceCalled>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -754,7 +754,7 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -762,71 +762,74 @@ void main() {
   });
 
   group('Callbacks', () {
-    testWidgets('onBeforeIntroduce is called before showing the intro', (
-      tester,
-    ) async {
-      final controller = FeaturesTourController('App');
-      var called = false;
+    testWidgets(
+      'onBeforeAction(introduce) is called before showing the intro',
+      (tester) async {
+        final controller = FeaturesTourController('App');
+        var called = false;
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: App(
-            tours: [
-              FeaturesTour(
-                index: 1,
-                controller: controller,
-                introduce: const Text('a.intro'),
-                child: const Text('a'),
-                onBeforeIntroduce: () {
-                  called = true;
-                },
-              ),
-            ],
+        await tester.pumpWidget(
+          MaterialApp(
+            home: App(
+              tours: [
+                FeaturesTour(
+                  index: 1,
+                  controller: controller,
+                  introduce: const Text('a.intro'),
+                  child: const Text('a'),
+                  onBeforeAction: (action) {
+                    if (action == TourAction.introduce) {
+                      called = true;
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-      final context = tester.element(find.byType(App));
-
-      await tester.runAsync(() async {
-        await controller.start(
-          context,
-          force: true,
-          delay: Duration.zero,
-          onState: (state) async {
-            collectedStates.add(state);
-
-            if (state is TourIntroducing) {
-              await tester.pump();
-              expect(find.text('a.intro'), findsOneWidget);
-              await tester.tap(find.text('DONE'));
-            }
-          },
         );
-      });
 
-      await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
+        final context = tester.element(find.byType(App));
 
-      expect(called, isTrue);
-      expect(
-        collectedStates,
-        containsAllInOrder([
-          isA<TourPreDialogHidden>(),
-          isA<TourBeforeIntroduceCalled>(),
-          isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
-          isA<TourCompleted>(),
-        ]),
-      );
-    });
+        await tester.runAsync(() async {
+          await controller.start(
+            context,
+            force: true,
+            delay: Duration.zero,
+            onState: (state) async {
+              collectedStates.add(state);
+
+              if (state is TourIntroducing) {
+                await tester.pump();
+                expect(find.text('a.intro'), findsOneWidget);
+                await tester.tap(find.text('DONE'));
+              }
+            },
+          );
+        });
+
+        await tester.pumpAndSettle();
+
+        expect(called, isTrue);
+        expect(
+          collectedStates,
+          containsAllInOrder([
+            isA<TourPreDialogHidden>(),
+            isA<TourBeforeIntroduceCalled>(),
+            isA<TourIntroducing>(),
+            isA<TourActionEmitted>(),
+            isA<TourCompleted>(),
+          ]),
+        );
+      },
+    );
 
     testWidgets('onAfterIntroduce is called after showing the intro', (
       tester,
     ) async {
       final controller = FeaturesTourController('App');
       var called = false;
-      IntroduceResult? receivedResult;
+      TourAction? receivedResult;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -870,14 +873,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(called, isTrue);
-      expect(receivedResult, IntroduceResult.done);
+      expect(receivedResult, TourAction.done);
       expect(
         collectedStates,
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourAfterIntroduceCalled>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -906,8 +909,10 @@ void main() {
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
-                onBeforePrevious: () {
-                  events.add('feature2.beforePrevious');
+                onBeforeAction: (action) {
+                  if (action == TourAction.previous) {
+                    events.add('feature2.beforePrevious');
+                  }
                 },
                 onAfterIntroduce: (result) {
                   events.add('feature2.afterIntroduce:${result.name}');
@@ -929,9 +934,7 @@ void main() {
           onState: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroduceResultEmitted(
-              result: IntroduceResult.previous,
-            )) {
+            if (state case TourActionEmitted(result: TourAction.previous)) {
               events.add('state.previousEmitted');
             }
 
@@ -972,22 +975,22 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>().having(
+          isA<TourActionEmitted>().having(
             (s) => s.result,
             'result',
-            IntroduceResult.next,
+            TourAction.next,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
-          isA<TourIntroduceResultEmitted>().having(
+          isA<TourActionEmitted>().having(
             (s) => s.result,
             'result',
-            IntroduceResult.previous,
+            TourAction.previous,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>().having(
+          isA<TourActionEmitted>().having(
             (s) => s.result,
             'result',
-            IntroduceResult.skip,
+            TourAction.skip,
           ),
           isA<TourCompleted>(),
         ]),
@@ -1019,8 +1022,10 @@ void main() {
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
-                onBeforePrevious: () {
-                  events.add('feature2.beforePrevious');
+                onBeforeAction: (action) {
+                  if (action == TourAction.previous) {
+                    events.add('feature2.beforePrevious');
+                  }
                 },
                 onAfterIntroduce: (result) {
                   events.add('feature2.afterIntroduce:${result.name}');
@@ -1042,9 +1047,7 @@ void main() {
           onState: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroduceResultEmitted(
-              result: IntroduceResult.previous,
-            )) {
+            if (state case TourActionEmitted(result: TourAction.previous)) {
               events.add('state.previousEmitted');
             }
 
@@ -1085,22 +1088,22 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>().having(
+          isA<TourActionEmitted>().having(
             (s) => s.result,
             'result',
-            IntroduceResult.next,
+            TourAction.next,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
-          isA<TourIntroduceResultEmitted>().having(
+          isA<TourActionEmitted>().having(
             (s) => s.result,
             'result',
-            IntroduceResult.previous,
+            TourAction.previous,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>().having(
+          isA<TourActionEmitted>().having(
             (s) => s.result,
             'result',
-            IntroduceResult.skip,
+            TourAction.skip,
           ),
           isA<TourCompleted>(),
         ]),
@@ -1154,18 +1157,18 @@ void main() {
 
       expect(didAttemptPrevious, isTrue);
       final previousResults = collectedStates
-          .whereType<TourIntroduceResultEmitted>()
-          .where((state) => state.result == IntroduceResult.previous);
+          .whereType<TourActionEmitted>()
+          .where((state) => state.result == TourAction.previous);
       expect(previousResults, isEmpty);
       expect(
         collectedStates,
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>().having(
+          isA<TourActionEmitted>().having(
             (s) => s.result,
             'result',
-            IntroduceResult.done,
+            TourAction.done,
           ),
           isA<TourCompleted>(),
         ]),
@@ -1216,7 +1219,7 @@ void main() {
     });
 
     testWidgets(
-      'controller.previous does not call onBeforePrevious when unavailable',
+      'controller.previous does not call onBeforeAction(previous) when unavailable',
       (tester) async {
         final controller = FeaturesTourController('App');
         var beforePreviousCalled = false;
@@ -1230,8 +1233,10 @@ void main() {
                   controller: controller,
                   introduce: const Text('a.intro'),
                   child: const Text('a'),
-                  onBeforePrevious: () {
-                    beforePreviousCalled = true;
+                  onBeforeAction: (action) {
+                    if (action == TourAction.previous) {
+                      beforePreviousCalled = true;
+                    }
                   },
                 ),
               ],
@@ -1328,8 +1333,8 @@ void main() {
       expect(previousTriggeredTwice, isTrue);
       final previousResults =
           collectedStates
-              .whereType<TourIntroduceResultEmitted>()
-              .where((state) => state.result == IntroduceResult.previous)
+              .whereType<TourActionEmitted>()
+              .where((state) => state.result == TourAction.previous)
               .toList();
       expect(previousResults.length, 1);
     });
@@ -1399,7 +1404,7 @@ void main() {
             PreDialogButtonType.accept,
           ),
           isA<TourIntroducing>(),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -1608,7 +1613,7 @@ void main() {
               PreDialogButtonType.accept,
             ),
             isA<TourIntroducing>(),
-            isA<TourIntroduceResultEmitted>(),
+            isA<TourActionEmitted>(),
             isA<TourCompleted>(),
           ]),
         );
@@ -1664,7 +1669,7 @@ void main() {
             ),
             isA<TourPreDialogButtonPressed>(),
             isA<TourIntroducing>(),
-            isA<TourIntroduceResultEmitted>(),
+            isA<TourActionEmitted>(),
             isA<TourCompleted>(),
           ]),
         );
@@ -1738,9 +1743,9 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 3),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );
@@ -1805,7 +1810,7 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourIntroduceResultEmitted>(),
+          isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
       );

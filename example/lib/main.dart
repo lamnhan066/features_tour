@@ -114,8 +114,7 @@ class _AppState extends State<App> {
           index: MainTourIndex.drawer,
           nextIndex: MainTourIndex.buttonOnDrawer,
           onAfterIntroduce: (result) {
-            if (result != IntroduceResult.next &&
-                result != IntroduceResult.done) {
+            if (result != TourAction.next && result != TourAction.done) {
               return;
             }
 
@@ -154,7 +153,7 @@ class _AppState extends State<App> {
             index: MainTourIndex.buttonOnDrawer,
             introduce: const Text('Tap here to close the drawer'),
             onAfterIntroduce: (result) {
-              if (result case IntroduceResult.next || IntroduceResult.done) {
+              if (result case TourAction.next || TourAction.done) {
                 scaffoldKey.currentState?.closeDrawer();
               }
             },
@@ -219,7 +218,11 @@ class _AppState extends State<App> {
                         index: MainTourIndex.item90,
                         nextIndex: MainTourIndex.dialogButton,
                         introduce: Text('This is the item $index'),
-                        onBeforeIntroduce: () async {
+                        onBeforeAction: (action) async {
+                          if (action != TourAction.introduce) {
+                            return;
+                          }
+
                           // Scroll to the last item when the first item is tapped
                           await scrollController.animateTo(
                             scrollController.position.maxScrollExtent,
@@ -229,8 +232,7 @@ class _AppState extends State<App> {
                         },
                         onAfterIntroduce: (introduceResult) async {
                           if (introduceResult
-                              case IntroduceResult.next ||
-                                  IntroduceResult.done) {
+                              case TourAction.next || TourAction.done) {
                             // Scroll to the first item when item 90 is tapped
                             await scrollController.animateTo(
                               0,
@@ -255,9 +257,9 @@ class _AppState extends State<App> {
                                         ),
                                         onAfterIntroduce: (result) {
                                           if (introduceResult !=
-                                                  IntroduceResult.next &&
+                                                  TourAction.next &&
                                               introduceResult !=
-                                                  IntroduceResult.done) {
+                                                  TourAction.done) {
                                             return;
                                           }
 

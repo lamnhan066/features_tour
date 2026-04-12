@@ -106,13 +106,13 @@ class TourAfterIntroduceCalled extends TourState {
   const TourAfterIntroduceCalled();
 }
 
-/// Indicates that an introduction has been completed, and a result has been emitted.
-class TourIntroduceResultEmitted extends TourState {
-  /// Creates a new instance of [TourIntroduceResultEmitted].
-  const TourIntroduceResultEmitted({required this.result});
+/// Indicates that an introduction has been completed, and an action has been emitted.
+class TourActionEmitted extends TourState {
+  /// Creates a new instance of [TourActionEmitted].
+  const TourActionEmitted({required this.result});
 
-  /// The result of the introduction.
-  final IntroduceResult result;
+  /// The action emitted by the introduction.
+  final TourAction result;
 }
 
 /// Indicates that the feature tour has been completed.
