@@ -63,16 +63,17 @@ class FeaturesTourController {
     return true;
   }
 
-  /// Dismisses the current introduction.
-  ///
-  /// This completes the active tour step with [IntroduceResult.skip].
-  bool dismiss() => _completeIntroduce(IntroduceResult.skip);
+  /// Skips the current introduction.
+  bool skip() => _completeIntroduce(IntroduceResult.skip);
 
   /// Moves to the next introduction.
   bool next() => _completeIntroduce(IntroduceResult.next);
 
   /// Completes the current introduction.
   bool done() => _completeIntroduce(IntroduceResult.done);
+
+  /// Moves to the previous introduction.
+  bool previous() => _completeIntroduce(IntroduceResult.previous);
 
   bool _isIntroducing = false;
   final _introducingIndex = ValueNotifier<double?>(null);
@@ -423,10 +424,24 @@ class FeaturesTourController {
           await onState?.call(const TourAfterIntroduceCalled());
         }
 
+        final previousIndex = _previousIndexFor(state.widget.index);
+
         switch (result) {
           case IntroduceResult.disabled:
           case IntroduceResult.notMounted:
             await _removeState(state, false);
+          case IntroduceResult.previous:
+            _states[state.widget.index] = state;
+
+            if (previousIndex != null) {
+              final previousState = _cachedStates[previousIndex];
+              if (previousState != null) {
+                final key = _getPrefKey(previousState);
+                await _prefs!.remove(key);
+                _introducedIndexes.remove(previousIndex);
+                nextState = previousState;
+              }
+            }
           case IntroduceResult.done:
           case IntroduceResult.next:
             await _removeState(state, true);
@@ -442,6 +457,7 @@ class FeaturesTourController {
             IntroduceResult.disabled || IntroduceResult.notMounted =>
               'This widget has been canceled with result: ${result.name}.',
             IntroduceResult.next => 'Moving to the next widget.',
+            IntroduceResult.previous => 'Moving to the previous widget.',
             IntroduceResult.skip => 'Skipping this tour.',
             IntroduceResult.done => 'The tour has been completed.',
           };
@@ -449,8 +465,17 @@ class FeaturesTourController {
 
         _logger?.info(() => '   -> ${status()}');
 
-        // Does not continue if the tour has ended.
-        if (result != IntroduceResult.next) break;
+        // Continue only when moving next or previous.
+        if (result == IntroduceResult.previous) {
+          if (nextState != null) {
+            continue;
+          }
+          break;
+        }
+
+        if (result != IntroduceResult.next) {
+          break;
+        }
 
         // Waits for the next state to appear if `nextIndex` is non-null.
         if (nextIndex != null) {
@@ -511,15 +536,15 @@ class FeaturesTourController {
     final skipConfig = state.widget.skipConfig ?? SkipConfig.global;
     final nextConfig = state.widget.nextConfig ?? NextConfig.global;
     final doneConfig = state.widget.doneConfig ?? DoneConfig.global;
+    final previousConfig = state.widget.previousConfig ?? PreviousConfig.global;
+    final canShowPrevious = _previousIndexFor(state.widget.index) != null;
 
     _introduceCompleter = Completer<IntroduceResult>();
 
-    void skipAction() => dismiss();
-
     final skipButton =
-        skipConfig.builder?.call(context, skipAction) ??
+        skipConfig.builder?.call(context, skip) ??
         ElevatedButton(
-          onPressed: skipAction,
+          onPressed: skip,
           style: skipConfig.buttonStyle,
           child: Text(
             skipConfig.text,
@@ -527,16 +552,27 @@ class FeaturesTourController {
           ),
         );
 
-    void nextAction() => next();
-
     final nextButton =
-        nextConfig.builder?.call(context, nextAction) ??
+        nextConfig.builder?.call(context, next) ??
         ElevatedButton(
-          onPressed: nextAction,
+          onPressed: next,
           style: nextConfig.buttonStyle,
           child: Text(
             nextConfig.text,
             style: nextConfig.textStyle ?? TextStyle(color: nextConfig.color),
+          ),
+        );
+
+    final previousButton =
+        previousConfig.builder?.call(context, previous) ??
+        ElevatedButton(
+          onPressed: previous,
+          style: previousConfig.buttonStyle,
+          child: Text(
+            previousConfig.text,
+            style:
+                previousConfig.textStyle ??
+                TextStyle(color: previousConfig.color),
           ),
         );
 
@@ -562,6 +598,7 @@ class FeaturesTourController {
             child: FeaturesChild(
               globalKey: _globalKeys[state.widget.index]!,
               childConfig: childConfig,
+              canShowPrevious: canShowPrevious,
               introduce: state.widget.introduce,
               introduceConfig: introduceConfig,
               skip: SafeArea(
@@ -571,6 +608,13 @@ class FeaturesTourController {
                 ),
               ),
               skipConfig: skipConfig,
+              previous: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: previousButton,
+                ),
+              ),
+              previousConfig: previousConfig,
               next: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(12),
@@ -800,5 +844,18 @@ class FeaturesTourController {
   /// Gets the key for shared preferences.
   String _getPrefKey(_FeaturesTourState state) {
     return '${FeaturesTour._prefix}_${pageName}_${state.widget.index}';
+  }
+
+  double? _previousIndexFor(double currentIndex) {
+    double? previousIndex;
+
+    for (final index in _introducedIndexes) {
+      if (index < currentIndex &&
+          (previousIndex == null || index > previousIndex)) {
+        previousIndex = index;
+      }
+    }
+
+    return previousIndex;
   }
 }

@@ -9,8 +9,11 @@ class FeaturesChild extends StatefulWidget {
     required this.globalKey,
     required this.child,
     required this.childConfig,
+    required this.canShowPrevious,
     required this.skip,
     required this.skipConfig,
+    required this.previous,
+    required this.previousConfig,
     required this.next,
     required this.nextConfig,
     required this.done,
@@ -33,11 +36,20 @@ class FeaturesChild extends StatefulWidget {
   /// The child's configuration.
   final ChildConfig childConfig;
 
+  /// Whether the previous button should be shown.
+  final bool canShowPrevious;
+
   /// The skip button widget.
   final Widget skip;
 
   /// Skips all the steps.
   final SkipConfig skipConfig;
+
+  /// The previous button widget.
+  final Widget previous;
+
+  /// The previous button's configuration.
+  final PreviousConfig previousConfig;
 
   /// The next button widget.
   final Widget next;
@@ -355,6 +367,15 @@ class _FeaturesChildState extends State<FeaturesChild>
               backgroundColor: Colors.transparent,
               body: Stack(
                 children: [
+                  // Previous text widget.
+                  if (widget.canShowPrevious && widget.previousConfig.enabled)
+                    Positioned.fill(
+                      child: Align(
+                        alignment: widget.previousConfig.alignment,
+                        child: widget.previous,
+                      ),
+                    ),
+
                   // Skip text widget.
                   if (!(widget.isLastState && widget.doneConfig.enabled) &&
                       widget.skipConfig.enabled)

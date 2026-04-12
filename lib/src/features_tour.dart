@@ -54,6 +54,7 @@ class FeaturesTour extends StatefulWidget {
     this.introduce = const SizedBox.shrink(),
     this.introduceConfig,
     this.nextConfig,
+    this.previousConfig,
     this.skipConfig,
     this.doneConfig,
     this.enabled = true,
@@ -132,6 +133,9 @@ class FeaturesTour extends StatefulWidget {
     /// The configuration of the next button. The default is [NextConfig.global].
     NextConfig? nextConfig,
 
+    /// The configuration of the previous button. The default is [PreviousConfig.global].
+    PreviousConfig? previousConfig,
+
     /// The configuration of the done button. The default is [DoneConfig.global].
     ///
     /// This button is only shown when the current introduction is the last and
@@ -145,6 +149,7 @@ class FeaturesTour extends StatefulWidget {
     if (childConfig != null) ChildConfig.global = childConfig;
     if (skipConfig != null) SkipConfig.global = skipConfig;
     if (nextConfig != null) NextConfig.global = nextConfig;
+    if (previousConfig != null) PreviousConfig.global = previousConfig;
     if (doneConfig != null) DoneConfig.global = doneConfig;
     if (introduceConfig != null) IntroduceConfig.global = introduceConfig;
     if (preDialogConfig != null) PreDialogConfig.global = preDialogConfig;
@@ -218,6 +223,10 @@ class FeaturesTour extends StatefulWidget {
   /// The configuration for the "Next" button.
   /// If `null`, the global configuration ([NextConfig.global]) will be used.
   final NextConfig? nextConfig;
+
+  /// The configuration for the "Previous" button.
+  /// If `null`, the global configuration ([PreviousConfig.global]) will be used.
+  final PreviousConfig? previousConfig;
 
   /// The configuration for the "Skip" button.
   /// If `null`, the global configuration ([SkipConfig.global]) will be used.

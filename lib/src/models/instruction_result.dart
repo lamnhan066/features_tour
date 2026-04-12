@@ -9,6 +9,9 @@ enum IntroduceResult {
   /// [skip] is returned when the skip button is pressed.
   skip,
 
+  /// [previous] is returned when the previous button is pressed.
+  previous,
+
   /// [next] is returned when the next button is pressed.
   next,
 
