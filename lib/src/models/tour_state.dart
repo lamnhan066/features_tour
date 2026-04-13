@@ -114,6 +114,10 @@ class TourAfterActionCalled extends TourState {
   const TourAfterActionCalled();
 }
 
+@Deprecated('Use TourIntroduceResultEmitted instead of TourActionEmitted')
+/// Indicates that an introduction has been completed, and an action has been emitted.
+typedef TourIntroduceResultEmitted = TourActionEmitted;
+
 /// Indicates that an introduction has been completed, and an action has been emitted.
 class TourActionEmitted extends TourState {
   /// Creates a new instance of [TourActionEmitted].

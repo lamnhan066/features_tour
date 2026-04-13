@@ -311,6 +311,7 @@ class FeaturesTourController {
       }
 
       _logger?.step(() => 'Starting the tour.');
+      var arrivalAction = TourAction.introduce;
       while (_states.isNotEmpty) {
         await _removedAllShownIntroductions(force);
         if (_states.isEmpty) {
@@ -406,8 +407,10 @@ class FeaturesTourController {
 
         var didCallBefore = false;
         if (state.widget.onBeforeAction != null) {
-          _logger?.step(() => '   -> Calling `onBeforeAction(introduce)`.');
-          await state.widget.onBeforeAction!(TourAction.introduce);
+          _logger?.step(
+            () => '   -> Calling `onBeforeAction(${arrivalAction.name})`',
+          );
+          await state.widget.onBeforeAction!(arrivalAction);
           didCallBefore = true;
         }
 
@@ -440,12 +443,7 @@ class FeaturesTourController {
           },
         );
 
-        if (result == TourAction.previous) {
-          if (state.widget.onBeforeAction != null) {
-            _logger?.step(() => '   -> Calling `onBeforeAction(previous)`.');
-            await state.widget.onBeforeAction!(TourAction.previous);
-          }
-        }
+        final previousIndex = _previousIndexFor(state.widget.index);
 
         var didCallAfter = false;
         if (state.widget.onAfterAction != null) {
@@ -461,8 +459,6 @@ class FeaturesTourController {
         if (didCallAfter) {
           await onState?.call(const TourAfterActionCalled());
         }
-
-        final previousIndex = _previousIndexFor(state.widget.index);
 
         switch (result) {
           case TourAction.introduce:
@@ -490,6 +486,10 @@ class FeaturesTourController {
         }
 
         await onState?.call(TourActionEmitted(result: result));
+
+        if (result == TourAction.next || result == TourAction.previous) {
+          arrivalAction = result;
+        }
 
         String status() {
           return switch (result) {

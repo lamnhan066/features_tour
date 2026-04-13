@@ -900,6 +900,9 @@ void main() {
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
+                onBeforeAction: (action) {
+                  events.add('feature1.beforeAction:${action.name}');
+                },
                 onAfterAction: (result) {
                   events.add('feature1.afterIntroduce:${result.name}');
                 },
@@ -910,9 +913,7 @@ void main() {
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
                 onBeforeAction: (action) {
-                  if (action == TourAction.previous) {
-                    events.add('feature2.beforePrevious');
-                  }
+                  events.add('feature2.beforeAction:${action.name}');
                 },
                 onAfterAction: (result) {
                   events.add('feature2.afterIntroduce:${result.name}');
@@ -962,10 +963,12 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(events, [
+        'feature1.beforeAction:introduce',
         'feature1.afterIntroduce:next',
-        'feature2.beforePrevious',
+        'feature2.beforeAction:next',
         'feature2.afterIntroduce:previous',
         'state.previousEmitted',
+        'feature1.beforeAction:previous',
         'feature1.afterIntroduce:skip',
       ]);
       expect(find.text('a.intro'), findsNothing);
@@ -1013,6 +1016,9 @@ void main() {
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
+                onBeforeAction: (action) {
+                  events.add('feature1.beforeAction:${action.name}');
+                },
                 onAfterAction: (result) {
                   events.add('feature1.afterIntroduce:${result.name}');
                 },
@@ -1023,9 +1029,7 @@ void main() {
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
                 onBeforeAction: (action) {
-                  if (action == TourAction.previous) {
-                    events.add('feature2.beforePrevious');
-                  }
+                  events.add('feature2.beforeAction:${action.name}');
                 },
                 onAfterAction: (result) {
                   events.add('feature2.afterIntroduce:${result.name}');
@@ -1075,10 +1079,12 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(events, [
+        'feature1.beforeAction:introduce',
         'feature1.afterIntroduce:next',
-        'feature2.beforePrevious',
+        'feature2.beforeAction:next',
         'feature2.afterIntroduce:previous',
         'state.previousEmitted',
+        'feature1.beforeAction:previous',
         'feature1.afterIntroduce:skip',
       ]);
       expect(find.text('a.intro'), findsNothing);
@@ -1114,7 +1120,7 @@ void main() {
       tester,
     ) async {
       final controller = FeaturesTourController('App');
-      var didAttemptPrevious = false;
+      var previousAttempted = false;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -1144,8 +1150,9 @@ void main() {
 
             if (state case TourIntroducing(index: 1)) {
               await tester.pump();
+              expect(find.text('a.intro'), findsOneWidget);
               final moved = controller.previous();
-              didAttemptPrevious = true;
+              previousAttempted = true;
               expect(moved, isFalse);
               await tester.tap(find.text('DONE'));
             }
@@ -1155,10 +1162,12 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(didAttemptPrevious, isTrue);
-      final previousResults = collectedStates
-          .whereType<TourActionEmitted>()
-          .where((state) => state.result == TourAction.previous);
+      expect(previousAttempted, isTrue);
+      final previousResults =
+          collectedStates
+              .whereType<TourActionEmitted>()
+              .where((state) => state.result == TourAction.previous)
+              .toList();
       expect(previousResults, isEmpty);
       expect(
         collectedStates,
@@ -1180,6 +1189,7 @@ void main() {
     ) async {
       final controller = FeaturesTourController('App');
 
+      // Attempt to call previous before tour starts
       expect(controller.previous(), isFalse);
 
       await tester.pumpWidget(
@@ -1206,8 +1216,11 @@ void main() {
           force: true,
           delay: Duration.zero,
           onState: (state) async {
+            collectedStates.add(state);
+
             if (state case TourIntroducing(index: 1)) {
               await tester.pump();
+              expect(find.text('a.intro'), findsOneWidget);
               await tester.tap(find.text('DONE'));
             }
           },
@@ -1215,14 +1228,25 @@ void main() {
       });
 
       await tester.pumpAndSettle();
+
+      // Attempt to call previous after tour completes
       expect(controller.previous(), isFalse);
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogHidden>(),
+          isA<TourIntroducing>(),
+          isA<TourActionEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
 
     testWidgets(
       'controller.previous does not call onBeforeAction(previous) when unavailable',
       (tester) async {
         final controller = FeaturesTourController('App');
-        var beforePreviousCalled = false;
+        final actions = <TourAction>[];
 
         await tester.pumpWidget(
           MaterialApp(
@@ -1234,9 +1258,10 @@ void main() {
                   introduce: const Text('a.intro'),
                   child: const Text('a'),
                   onBeforeAction: (action) {
-                    if (action == TourAction.previous) {
-                      beforePreviousCalled = true;
-                    }
+                    actions.add(action);
+                  },
+                  onAfterAction: (result) {
+                    actions.add(result);
                   },
                 ),
               ],
@@ -1253,9 +1278,13 @@ void main() {
             force: true,
             delay: Duration.zero,
             onState: (state) async {
+              collectedStates.add(state);
+
               if (state case TourIntroducing(index: 1)) {
                 await tester.pump();
-                expect(controller.previous(), isFalse);
+                expect(find.text('a.intro'), findsOneWidget);
+                final result = controller.previous();
+                expect(result, isFalse);
                 await tester.tap(find.text('DONE'));
               }
             },
@@ -1263,7 +1292,16 @@ void main() {
         });
 
         await tester.pumpAndSettle();
-        expect(beforePreviousCalled, isFalse);
+
+        // Verify onBeforeAction(introduce) was called, but onBeforeAction(previous) was not
+        expect(actions, [TourAction.introduce, TourAction.done]);
+        // Verify no previous action was emitted
+        final previousResults =
+            collectedStates
+                .whereType<TourActionEmitted>()
+                .where((state) => state.result == TourAction.previous)
+                .toList();
+        expect(previousResults, isEmpty);
       },
     );
 
@@ -1271,8 +1309,8 @@ void main() {
       tester,
     ) async {
       final controller = FeaturesTourController('App');
-      var previousTriggeredTwice = false;
       var returnedToFirstFeature = false;
+      final previousCallTracker = <String>[];
 
       await tester.pumpWidget(
         MaterialApp(
@@ -1310,17 +1348,19 @@ void main() {
               await tester.pump();
 
               if (index == 1) {
+                expect(find.text('a.intro'), findsOneWidget);
                 if (!returnedToFirstFeature) {
                   await tester.tap(find.text('NEXT'));
                 } else {
                   await tester.tap(find.text('SKIP'));
                 }
               } else if (index == 2) {
+                expect(find.text('b.intro'), findsOneWidget);
+                expect(find.text('PREVIOUS'), findsOneWidget);
                 final first = controller.previous();
+                previousCallTracker.add('first:$first');
                 final second = controller.previous();
-                expect(first, isTrue);
-                expect(second, isFalse);
-                previousTriggeredTwice = true;
+                previousCallTracker.add('second:$second');
                 returnedToFirstFeature = true;
               }
             }
@@ -1330,13 +1370,120 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(previousTriggeredTwice, isTrue);
+      // Verify first call succeeded, second call failed (idempotent)
+      expect(previousCallTracker, ['first:true', 'second:false']);
+      // Verify exactly one previous action was emitted
       final previousResults =
           collectedStates
               .whereType<TourActionEmitted>()
               .where((state) => state.result == TourAction.previous)
               .toList();
       expect(previousResults.length, 1);
+      // Verify full lifecycle
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogHidden>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourActionEmitted>().having(
+            (s) => s.result,
+            'result',
+            TourAction.next,
+          ),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 2),
+          isA<TourActionEmitted>().having(
+            (s) => s.result,
+            'result',
+            TourAction.previous,
+          ),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourActionEmitted>().having(
+            (s) => s.result,
+            'result',
+            TourAction.skip,
+          ),
+          isA<TourCompleted>(),
+        ]),
+      );
+    });
+
+    testWidgets('onBeforeAction receives the action that led to each shown step', (
+      tester,
+    ) async {
+      final controller = FeaturesTourController('App');
+      final actions = <TourAction>[];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: App(
+            tours: [
+              FeaturesTour(
+                index: 1,
+                controller: controller,
+                introduce: const Text('a.intro'),
+                child: const Text('a'),
+                onBeforeAction: (action) {
+                  actions.add(action);
+                },
+              ),
+              FeaturesTour(
+                index: 2,
+                controller: controller,
+                introduce: const Text('b.intro'),
+                child: const Text('b'),
+                onBeforeAction: (action) {
+                  actions.add(action);
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(App));
+
+      await tester.runAsync(() async {
+        await controller.start(
+          context,
+          force: true,
+          delay: Duration.zero,
+          onState: (state) async {
+            collectedStates.add(state);
+
+            if (state case TourIntroducing(index: final index)) {
+              await tester.pump();
+
+              if (index == 1) {
+                expect(find.text('a.intro'), findsOneWidget);
+                await tester.tap(find.text('NEXT'));
+              } else if (index == 2) {
+                expect(find.text('b.intro'), findsOneWidget);
+                await tester.tap(find.text('DONE'));
+              }
+            }
+          },
+        );
+      });
+
+      await tester.pumpAndSettle();
+
+      // The first step starts with introduce; the next step receives the last action.
+      expect(actions, [TourAction.introduce, TourAction.next]);
+      // Verify state emission ordering: onBeforeAction callbacks should cause TourBeforeActionCalled states
+      expect(
+        collectedStates,
+        containsAllInOrder([
+          isA<TourPreDialogHidden>(),
+          isA<TourBeforeActionCalled>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 1),
+          isA<TourActionEmitted>(),
+          isA<TourBeforeActionCalled>(),
+          isA<TourIntroducing>().having((s) => s.index, 'index', 2),
+          isA<TourActionEmitted>(),
+          isA<TourCompleted>(),
+        ]),
+      );
     });
   });
 
