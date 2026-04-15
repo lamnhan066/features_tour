@@ -33,20 +33,18 @@ FeaturesTour(
     
     onBeforeAction: (action) async {
         if (action == TourAction.introduce) {
-            // Do something before introducing the current widget
+            // Do something before introducing this widget for the first time
+        } else if (action == TourAction.previous) {
+            // Do something before returning to this widget from the next step
         }
     },
 
     onAfterAction: (introduceResult) async {
         if (introduceResult case TourAction.next || TourAction.done) {
-            // Do something after introducing the current widget
-            // and the user press the next or done button.
-        }
-    },
-
-    onBeforeAction: (action) async {
-        if (action == TourAction.previous) {
-            // Do something before going back to the previous feature.
+            // Do something after the current widget is shown
+            // and the user presses the next or done button.
+        } else if (introduceResult == TourAction.previous) {
+            // Do something after the user goes back to the previous feature.
         }
     },
 
@@ -63,7 +61,8 @@ You can also control the active step programmatically from the controller when y
 
 ```dart
 tourController.next();
-tourController.dismiss();
+tourController.previous();
+tourController.skip();
 ```
 
 ### Start a tour
@@ -139,19 +138,22 @@ The following steps outline the flow of a Features Tour:
    The tour waits for the first widget to be displayed. This is determined using `FeaturesTourController.firstIndex`. If no specific index is set, the widget with the smallest index will be used as the starting point.
 
 3. **Execute Before-Introduction Logic**\
-    Before introducing a widget, the `FeaturesTour.onBeforeAction` callback is executed with `TourAction.introduce`. This allows you to perform any necessary actions before the introduction begins.
+    Before introducing a widget, the `FeaturesTour.onBeforeAction` callback is executed with the action that led to this widget. The first widget receives `TourAction.introduce`, the next widget receives `TourAction.next`, and a widget shown again after going back receives `TourAction.previous`.
+
+    > Important: `onBeforeAction` runs only after the current tour state is already mounted, so use it to prepare the visible widget, such as scrolling it into view. To open a `Drawer` or show a `Dialog` for a later step, trigger that UI from `onAfterAction` in the previous `FeaturesTour`, then use `nextIndex` so the controller waits for the newly visible step.
 
 4. **Show the Introduction**\
    The widget's introduction is displayed, along with navigation buttons:
    * **Next**: Shown if there is a subsequent widget in the tour.
    * **Skip**: Allows the user to skip the tour.
-   * **Done**: Shown if the current widget is the last in the tour.
+    * **Done**: Shown if the current widget is the last in the tour.
+    * **Previous**: Shown if there is a previous widget in the tour.
 
 5. **Execute After-Introduction Logic**\
-    After the user interacts with the introduction (e.g., presses `Next`, `Done`, or `Skip`), the `FeaturesTour.onAfterAction` callback is executed. This callback provides information about the user's action, enabling you to handle it accordingly. Note: `onAfterIntroduce` is deprecated and replaced by `onAfterAction`.
+    After the user interacts with the introduction (e.g., presses `Next`, `Done`, `Skip`, or `Previous`), the `FeaturesTour.onAfterAction` callback is executed. This callback receives the action chosen from the current widget, so it will be `TourAction.next`, `TourAction.done`, `TourAction.skip`, or `TourAction.previous`. Note: `onAfterIntroduce` is deprecated and replaced by `onAfterAction`.
 
 6. **Handle Back Navigation**\
-    When the user presses `Previous`, the `FeaturesTour.onBeforeAction` callback is executed with `TourAction.previous` before the tour moves back. Use `onAfterAction` and check for `TourAction.previous` to react to a previous action.
+    When the user presses `Previous`, the current widget's `onAfterAction` callback receives `TourAction.previous` first. The controller then attempts to find and wait for the previous step to be available (for example, a widget that appears after opening a dialog). It will wait up to the step's configured `previousIndexTimeout` (default: 3 seconds). If the previous step becomes available within the timeout, the previous widget's `onBeforeAction` callback receives `TourAction.previous` and that widget is shown again. If the previous step is not available before the timeout elapses, the previous action is ignored.
 
 7. **Wait for the Next Widget**\
    The tour waits for the next widget to be displayed. This is determined using `FeaturesTour.nextIndex`.
@@ -198,17 +200,19 @@ In the widget at the preceding index (e.g., Index 3), configure the `FeaturesTou
 
 ```dart
 FeaturesTour(
-     // Other configurations...
-     nextIndex: 4, // Specify the next index
+    // Other configurations...
+    nextIndex: 4, // Specify the next index
     onAfterAction: (introduceResult) {
-          if (introduceResult case TourAction.next || TourAction.done) {
-                // Open the Drawer or Dialog
-                scaffoldKey.currentState?.openDrawer(); // For Drawer
-                // or
-                showDialog(); // For Dialog
-          }
-     },
-     // Other configurations...
+        if (introduceResult case TourAction.next || TourAction.done) {
+            // Open the Drawer or Dialog
+            scaffoldKey.currentState?.openDrawer(); // For Drawer
+            // or
+            showDialog(); // For Dialog
+        } else if (introduceResult == TourAction.previous) {
+            // Keep the current route/state ready while moving back
+        }
+    },
+    // Other configurations...
 )
 ```
 
@@ -220,7 +224,7 @@ When dealing with widgets that are not immediately visible due to scrolling, you
 
 #### Case 1: The Widget is in the Widget Tree but Invisible on the Screen
 
-Use the `FeaturesTour.onBeforeIntroduce` callback to scroll the widget into view. For example:
+Use the `FeaturesTour.onBeforeAction` callback to scroll the widget into view. For the first time a step is shown, the callback receives `TourAction.introduce`. If the user goes back to this step from the next widget, it receives `TourAction.previous`. For example:
 
 ```dart
 FeaturesTour(
@@ -233,6 +237,8 @@ FeaturesTour(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
             );
+        } else if (action == TourAction.previous) {
+            // Restore the widget position if the user goes back
         }
     },
     // Other configurations...

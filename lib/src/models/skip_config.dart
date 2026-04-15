@@ -54,7 +54,7 @@ class SkipConfig extends BaseButtonConfig {
   const SkipConfig._({
     super.builder,
     super.text = 'SKIP',
-    super.alignment = Alignment.bottomLeft,
+    super.alignment = Alignment.bottomCenter,
     super.color,
     super.enabled = true,
     super.textStyle,

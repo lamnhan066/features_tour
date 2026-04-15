@@ -31,6 +31,11 @@ class FeaturesTour extends StatefulWidget {
   /// To avoid a poor user experience, configure a timeout using [nextIndexTimeout], with a default of 3 seconds.
   /// Note that [nextIndex] only applies within the same [controller].
   ///
+  /// There is a [previousIndexTimeout] to specify the timeout duration
+  /// for waiting on the previous index (for the previous action), with
+  /// a default of 3 seconds. We don't need to specify the previous index
+  /// because we can get it from the current index and the list of registered states.
+  ///
   /// You can disable a tour for specific widgets by setting [enabled] to `false`.
   /// This is particularly useful for lists where only one item should have the tour active.
   /// Set [enabled] to `false` for all other items.
@@ -53,6 +58,7 @@ class FeaturesTour extends StatefulWidget {
     super.key,
     this.nextIndex,
     this.nextIndexTimeout = const Duration(seconds: 3),
+    this.previousIndexTimeout = const Duration(seconds: 3),
     this.childConfig,
     this.introduce = const SizedBox.shrink(),
     this.introduceConfig,
@@ -100,7 +106,7 @@ class FeaturesTour extends StatefulWidget {
   ///
   /// [preDialogConfig] to configure the pre-dialog widget.
   ///
-  /// [skipConfig] and [nextConfig] to configure the Skip and Next buttons.
+  /// [skipConfig], [nextConfig] and [previousConfig] to configure the Skip, Next, and Previous buttons.
   ///
   /// [debugLog] allows printing the debug logs. The default is `kDebugMode`.
   ///
@@ -219,6 +225,14 @@ class FeaturesTour extends StatefulWidget {
   ///
   /// Ensure this value is not excessively long to maintain a good user experience.
   final Duration nextIndexTimeout;
+
+  /// The timeout duration for waiting on the previous index. The default is 3 seconds.
+  ///
+  /// Ensure this value is not excessively long to maintain a good user experience.
+  ///
+  /// We don't need to specify the previous index because we can get it from
+  /// the current index and the list of registered states.
+  final Duration previousIndexTimeout;
 
   /// Determines whether this widget's actions are enabled.
   final bool enabled;

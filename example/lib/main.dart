@@ -94,6 +94,40 @@ class _AppState extends State<App> {
   final scrollController = ScrollController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  void _openDrawer() => scaffoldKey.currentState?.openDrawer();
+
+  void _closeDrawer() => scaffoldKey.currentState?.closeDrawer();
+
+  void _showTourDialogIfNeeded() {
+    if (!mounted) return;
+
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('A Dialog'),
+          actions: [
+            FeaturesTour(
+              controller: tourController,
+              index: MainTourIndex.dialogButton,
+              introduce: const Text('Tap here to close the dialog'),
+              onAfterAction: (result) {
+                Navigator.of(dialogContext).pop();
+              },
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+                child: const Text('Ok'),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     tourController.start(context);
@@ -118,13 +152,13 @@ class _AppState extends State<App> {
               return;
             }
 
-            scaffoldKey.currentState?.openDrawer();
+            _openDrawer();
           },
           introduce: const Text('Tap here to open the drawer'),
           child: IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
-              scaffoldKey.currentState?.openDrawer();
+              _openDrawer();
             },
           ),
         ),
@@ -132,6 +166,11 @@ class _AppState extends State<App> {
           FeaturesTour(
             controller: tourController,
             index: MainTourIndex.settingAction,
+            onAfterAction: (action) {
+              if (action == TourAction.previous) {
+                _openDrawer();
+              }
+            },
             introduce: const Text(
                 'Tap here to change the brightness and reset the tour'),
             child: IconButton(
@@ -153,14 +192,18 @@ class _AppState extends State<App> {
             index: MainTourIndex.buttonOnDrawer,
             introduce: const Text('Tap here to close the drawer'),
             onAfterAction: (result) {
-              if (result case TourAction.next || TourAction.done) {
-                scaffoldKey.currentState?.closeDrawer();
+              if (result
+                  case TourAction.next ||
+                      TourAction.done ||
+                      TourAction.previous ||
+                      TourAction.skip) {
+                _closeDrawer();
               }
             },
             child: ElevatedButton(
               child: const Text('Close Drawer'),
               onPressed: () {
-                scaffoldKey.currentState?.closeDrawer();
+                _closeDrawer();
               },
             ),
           ),
@@ -206,6 +249,15 @@ class _AppState extends State<App> {
                       index: MainTourIndex.firstItem,
                       nextIndex: MainTourIndex.item90,
                       introduce: const Text('This is the item 0'),
+                      onBeforeAction: (action) async {
+                        if (action case TourAction.previous) {
+                          await scrollController.animateTo(
+                            0,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
                       child: const Padding(
                         padding: EdgeInsets.all(16.0),
                         child: Text('Item 0'),
@@ -219,64 +271,29 @@ class _AppState extends State<App> {
                         nextIndex: MainTourIndex.dialogButton,
                         introduce: Text('This is the item $index'),
                         onBeforeAction: (action) async {
-                          if (action != TourAction.introduce) {
-                            return;
+                          if (action
+                              case TourAction.next || TourAction.previous) {
+                            // Scroll to the last item when the first item is tapped
+                            await scrollController.animateTo(
+                              scrollController.position.maxScrollExtent,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
                           }
-
-                          // Scroll to the last item when the first item is tapped
-                          await scrollController.animateTo(
-                            scrollController.position.maxScrollExtent,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
                         },
                         onAfterAction: (introduceResult) async {
-                          if (introduceResult
-                              case TourAction.next || TourAction.done) {
+                          if (introduceResult case TourAction.previous) {
                             // Scroll to the first item when item 90 is tapped
                             await scrollController.animateTo(
                               0,
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut,
                             );
+                            return;
+                          }
 
-                            // Show a dialog after item 90 is tapped
-                            if (context.mounted) {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('A Dialog'),
-                                    actions: [
-                                      FeaturesTour(
-                                        controller: tourController,
-                                        index: MainTourIndex.dialogButton,
-                                        introduce: const Text(
-                                          'Tap here to close the dialog',
-                                        ),
-                                        onAfterAction: (result) {
-                                          if (introduceResult !=
-                                                  TourAction.next &&
-                                              introduceResult !=
-                                                  TourAction.done) {
-                                            return;
-                                          }
-
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('Ok'),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
+                          if (introduceResult case TourAction.next) {
+                            _showTourDialogIfNeeded();
                           }
                         },
                         child: Padding(
@@ -300,6 +317,11 @@ class _AppState extends State<App> {
                         FeaturesTour(
                           controller: tourController,
                           index: MainTourIndex.restartTourButton,
+                          onAfterAction: (action) {
+                            if (action case TourAction.previous) {
+                              _showTourDialogIfNeeded();
+                            }
+                          },
                           introduce:
                               const Text('Tap here to run the tour again'),
                           childConfig: ChildConfig(
