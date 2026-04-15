@@ -28,10 +28,18 @@ void main() {
         label: const Text('NEXT'),
       ),
     ),
-    doneConfig: DoneConfig(
-      builder: (context, onPressed) => FilledButton(
+    previousConfig: PreviousConfig(
+      builder: (context, onPressed) => FilledButton.icon(
         onPressed: onPressed,
-        child: const Text('DONE'),
+        icon: const Icon(Icons.arrow_back),
+        label: const Text('PREVIOUS'),
+      ),
+    ),
+    doneConfig: DoneConfig(
+      builder: (context, onPressed) => FilledButton.icon(
+        onPressed: onPressed,
+        icon: const Icon(Icons.done),
+        label: const Text('DONE'),
       ),
     ),
     debugLog: true,
