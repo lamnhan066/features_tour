@@ -20,12 +20,17 @@ final tourController = FeaturesTourController('HomePage');
 ### Create a tour widget
 
 ```dart
+enum TourStep {drawer}
+
 FeaturesTour(
     /// Add the controller
     controller: tourController,
 
-    /// Index of this widget in the tour. It must be unique at the same page 
-    /// (using the same `tourController`).
+    /// The enum-based step for this widget. Declare the enum in your app or tests.
+    /// Prefer `step` for new code.
+    step: TourStep.drawer,
+
+    /// Legacy numeric index used only for migration from older versions.
     index: 0.0,
 
     /// Introduction of this widget (Known as the description of the feature)

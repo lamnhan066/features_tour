@@ -21,9 +21,12 @@ class FeaturesTour extends StatefulWidget {
   /// This widget requires a [controller] of type [FeaturesTourController] and a [child] widget to wrap.
   /// You can use [childConfig] to customize the appearance or behavior of the child widget.
   ///
-  /// The [index] is a unique identifier and determines the order in which widgets are shown.
-  /// It is a `double`, which allows for the insertion of new features between existing ones.
-  /// Ensure this value remains unchanged to prevent re-introducing the same feature unnecessarily.
+  /// The [step] is the enum-based identifier used to order and cache tour entries.
+  /// When a `step` is provided, its `name` is used for cache keys and its enum
+  /// declaration order is used for sequencing.
+  ///
+  /// The legacy [index] is nullable and is only kept for migration from older
+  /// numeric-based callers and persisted data.
   ///
   /// Use [nextIndex] to specify the next index to display.
   /// The app will pause user interaction until the specified index becomes available, making it ideal
@@ -53,8 +56,12 @@ class FeaturesTour extends StatefulWidget {
   /// `onAfterIntroduce` callback is deprecated in favor of `onAfterAction`.
   const FeaturesTour({
     required this.controller,
-    required this.index,
     required this.child,
+    this.step,
+    this.index,
+    this.nextStep,
+    this.nextStepTimeout,
+    this.previousStepTimeout,
     super.key,
     this.nextIndex,
     this.nextIndexTimeout = const Duration(seconds: 3),
@@ -79,6 +86,10 @@ class FeaturesTour extends StatefulWidget {
        assert(
          onAfterAction != null || onAfterIntroduce == null,
          'Cannot use both onAfterAction and onAfterIntroduce. Please use onAfterAction(TourAction) instead of onAfterIntroduce.',
+       ),
+       assert(
+         index != null || step != null,
+         'Provide either a legacy index or an enum step.',
        );
 
   /// The prefix of this package.
@@ -208,9 +219,20 @@ class FeaturesTour extends StatefulWidget {
   /// The controller for the current page, which is responsible for managing the tour.
   final FeaturesTourController controller;
 
-  /// A unique index used to order the tour steps.
-  /// This value must not be duplicated.
-  final double index;
+  /// The enum-based step used for ordering and identity.
+  final Enum? step;
+
+  /// Legacy numeric index retained only for migration from older callers.
+  final double? index;
+
+  /// The enum-based step to start after the current one.
+  final Enum? nextStep;
+
+  /// The timeout for waiting on [nextStep]. If `null`, [nextIndexTimeout] is used.
+  final Duration? nextStepTimeout;
+
+  /// The timeout for waiting on the previous step. If `null`, [previousIndexTimeout] is used.
+  final Duration? previousStepTimeout;
 
   /// Specifies the next [index] to start the tour.
   /// The plugin will wait for this index to appear or until [nextIndexTimeout] is reached.
@@ -336,8 +358,13 @@ class _FeaturesTourState extends State<FeaturesTour> {
 
   @override
   Widget build(BuildContext context) {
+    final keyOrder = widget.index ?? widget.step?.index.toDouble();
+
     return PopScope(
-      key: isEnabled ? widget.controller._globalKeys[widget.index] : null,
+      key:
+          isEnabled && keyOrder != null
+              ? widget.controller._globalKeys[keyOrder]
+              : null,
       canPop: _canPop,
       onPopInvokedWithResult: (didPop, result) async {
         widget.controller._handlePopScope();

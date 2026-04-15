@@ -79,19 +79,25 @@ class TourPreDialogButtonPressed extends TourState {
 /// Indicates that a specific feature is currently being introduced.
 class TourIntroducing extends TourState {
   /// Creates a new instance of [TourIntroducing].
-  const TourIntroducing({required this.index});
+  const TourIntroducing({required this.index, required this.step});
 
   /// The index of the feature being introduced.
   final double? index;
+
+  /// The enum-based step of the feature being introduced.
+  final Enum? step;
 }
 
 /// Indicates that the introduction for a specific feature should not be shown.
 class TourSkippedIntroduction extends TourState {
   /// Creates a new instance of [TourSkippedIntroduction].
-  const TourSkippedIntroduction({required this.index});
+  const TourSkippedIntroduction({required this.index, required this.step});
 
   /// The index of the feature that should not be shown.
   final double? index;
+
+  /// The enum-based step of the feature that should not be shown.
+  final Enum? step;
 }
 
 @Deprecated('Use TourBeforeActionCalled instead of TourBeforeIntroduceCalled')

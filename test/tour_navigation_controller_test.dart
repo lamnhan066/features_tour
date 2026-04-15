@@ -7,30 +7,62 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _TourIndex {
-  static const drawer = 0.0;
-  static const drawerButton = 1.0;
-  static const settingAction = 2.0;
-  static const list = 3.0;
-  static const firstItem = 4.0;
-  static const item90 = 5.0;
-  static const dialogButton = 5.5;
-  static const restartTourButton = 6.0;
-  static const floatingButton = 7.0;
+enum _TourIndex {
+  drawer,
+  drawerButton,
+  settingAction,
+  list,
+  firstItem,
+  item90,
+  dialogButton,
+  restartTourButton,
+  floatingButton,
 }
+
+enum _TimeoutStep { first, missing, second }
 
 class _TourExpectation {
   const _TourExpectation({
-    required this.index,
+    required this.step,
     required this.actionLabel,
     required this.drawerOpen,
     required this.dialogOpen,
   });
 
-  final double index;
+  final Enum step;
   final String actionLabel;
   final bool drawerOpen;
   final bool dialogOpen;
+}
+
+class _TimeoutHarness extends StatelessWidget {
+  const _TimeoutHarness({required this.controller});
+
+  final FeaturesTourController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          FeaturesTour(
+            controller: controller,
+            step: _TimeoutStep.first,
+            nextStep: _TimeoutStep.missing,
+            nextStepTimeout: Duration.zero,
+            introduce: const Text('First intro'),
+            child: const Text('First child'),
+          ),
+          FeaturesTour(
+            controller: controller,
+            step: _TimeoutStep.second,
+            introduce: const Text('Second intro'),
+            child: const Text('Second child'),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _TourHarness extends StatefulWidget {
@@ -97,8 +129,8 @@ class _TourHarnessState extends State<_TourHarness> {
         title: const Text('Tour Harness'),
         leading: FeaturesTour(
           controller: widget.controller,
-          index: _TourIndex.drawer,
-          nextIndex: _TourIndex.drawerButton,
+          step: _TourIndex.drawer,
+          nextStep: _TourIndex.drawerButton,
           introduce: const Text('Tap here to open the drawer'),
           onAfterAction: (result) {
             if (result == TourAction.next || result == TourAction.done) {
@@ -114,7 +146,7 @@ class _TourHarnessState extends State<_TourHarness> {
         actions: [
           FeaturesTour(
             controller: widget.controller,
-            index: _TourIndex.settingAction,
+            step: _TourIndex.settingAction,
             introduce: const Text('Tap here to change the brightness'),
             onAfterAction: (action) {
               if (action == TourAction.previous) {
@@ -140,7 +172,7 @@ class _TourHarnessState extends State<_TourHarness> {
                   const SizedBox(height: 16),
                   FeaturesTour(
                     controller: widget.controller,
-                    index: _TourIndex.list,
+                    step: _TourIndex.list,
                     introduce: Text(
                       'This is a list of items',
                       style: TextStyle(
@@ -170,8 +202,8 @@ class _TourHarnessState extends State<_TourHarness> {
                   ),
                   FeaturesTour(
                     controller: widget.controller,
-                    index: _TourIndex.firstItem,
-                    nextIndex: _TourIndex.item90,
+                    step: _TourIndex.firstItem,
+                    nextStep: _TourIndex.item90,
                     introduce: const Text('This is the item 0'),
                     onBeforeAction: (action) async {
                       if (action == TourAction.previous) {
@@ -187,8 +219,8 @@ class _TourHarnessState extends State<_TourHarness> {
                     if (index == 95)
                       FeaturesTour(
                         controller: widget.controller,
-                        index: _TourIndex.item90,
-                        nextIndex: _TourIndex.dialogButton,
+                        step: _TourIndex.item90,
+                        nextStep: _TourIndex.dialogButton,
                         introduce: Text('This is item $index'),
                         onBeforeAction: (action) async {
                           if (action == TourAction.next ||
@@ -242,7 +274,7 @@ class _TourHarnessState extends State<_TourHarness> {
                           const SizedBox(height: 12),
                           FeaturesTour(
                             controller: widget.controller,
-                            index: _TourIndex.drawerButton,
+                            step: _TourIndex.drawerButton,
                             introduce: const Text(
                               'Tap here to close the drawer',
                             ),
@@ -295,7 +327,7 @@ class _TourHarnessState extends State<_TourHarness> {
                           const SizedBox(height: 16),
                           FeaturesTour(
                             controller: widget.controller,
-                            index: _TourIndex.dialogButton,
+                            step: _TourIndex.dialogButton,
                             introduce: const Text(
                               'Tap here to close the dialog',
                             ),
@@ -331,7 +363,7 @@ class _TourHarnessState extends State<_TourHarness> {
                     children: [
                       FeaturesTour(
                         controller: widget.controller,
-                        index: _TourIndex.restartTourButton,
+                        step: _TourIndex.restartTourButton,
                         introduce: const Text('Tap here to run the tour again'),
                         onAfterAction: (action) {
                           if (action == TourAction.previous) {
@@ -355,7 +387,7 @@ class _TourHarnessState extends State<_TourHarness> {
                       ),
                       FeaturesTour(
                         controller: widget.controller,
-                        index: _TourIndex.floatingButton,
+                        step: _TourIndex.floatingButton,
                         introduce: const Text('Tap here to add a new item'),
                         childConfig: ChildConfig(
                           shapeBorder: const CircleBorder(),
@@ -370,10 +402,7 @@ class _TourHarnessState extends State<_TourHarness> {
                   ),
                   FeaturesTourPadding(
                     controller: widget.controller,
-                    indexes: {
-                      _TourIndex.restartTourButton,
-                      _TourIndex.floatingButton,
-                    },
+                    indexes: {7.0, 8.0},
                   ),
                 ],
               ),
@@ -408,55 +437,55 @@ void main() {
 
     final expectations = <_TourExpectation>[
       const _TourExpectation(
-        index: _TourIndex.drawer,
+        step: _TourIndex.drawer,
         actionLabel: 'NEXT',
         drawerOpen: false,
         dialogOpen: false,
       ),
       const _TourExpectation(
-        index: _TourIndex.drawerButton,
+        step: _TourIndex.drawerButton,
         actionLabel: 'NEXT',
         drawerOpen: true,
         dialogOpen: false,
       ),
       const _TourExpectation(
-        index: _TourIndex.settingAction,
+        step: _TourIndex.settingAction,
         actionLabel: 'NEXT',
         drawerOpen: false,
         dialogOpen: false,
       ),
       const _TourExpectation(
-        index: _TourIndex.list,
+        step: _TourIndex.list,
         actionLabel: 'NEXT',
         drawerOpen: false,
         dialogOpen: false,
       ),
       const _TourExpectation(
-        index: _TourIndex.firstItem,
+        step: _TourIndex.firstItem,
         actionLabel: 'NEXT',
         drawerOpen: false,
         dialogOpen: false,
       ),
       const _TourExpectation(
-        index: _TourIndex.item90,
+        step: _TourIndex.item90,
         actionLabel: 'NEXT',
         drawerOpen: false,
         dialogOpen: false,
       ),
       const _TourExpectation(
-        index: _TourIndex.dialogButton,
+        step: _TourIndex.dialogButton,
         actionLabel: 'NEXT',
         drawerOpen: false,
         dialogOpen: true,
       ),
       const _TourExpectation(
-        index: _TourIndex.restartTourButton,
+        step: _TourIndex.restartTourButton,
         actionLabel: 'NEXT',
         drawerOpen: false,
         dialogOpen: false,
       ),
       const _TourExpectation(
-        index: _TourIndex.floatingButton,
+        step: _TourIndex.floatingButton,
         actionLabel: 'DONE',
         drawerOpen: false,
         dialogOpen: false,
@@ -480,11 +509,15 @@ void main() {
         onState: (state) async {
           collectedStates.add(state);
 
-          if (state case TourIntroducing(index: final index)) {
+          if (state case TourIntroducing(
+            index: final index,
+            step: final step,
+          )) {
             expect(stepIndex, lessThan(expectations.length));
 
             final expectation = expectations[stepIndex];
-            expect(index, expectation.index);
+            expect(step, expectation.step);
+            expect(index, expectation.step.index.toDouble());
 
             await tester.pump();
 
@@ -513,17 +546,21 @@ void main() {
     expect(find.text('Drawer is open'), findsNothing);
     expect(find.text('Dialog is open'), findsNothing);
     expect(
+      collectedStates.whereType<TourIntroducing>().map((state) => state.step),
+      equals(expectations.map((expectation) => expectation.step).toList()),
+    );
+    expect(
       collectedStates.whereType<TourIntroducing>().map((state) => state.index),
       equals([
-        _TourIndex.drawer,
-        _TourIndex.drawerButton,
-        _TourIndex.settingAction,
-        _TourIndex.list,
-        _TourIndex.firstItem,
-        _TourIndex.item90,
-        _TourIndex.dialogButton,
-        _TourIndex.restartTourButton,
-        _TourIndex.floatingButton,
+        _TourIndex.drawer.index.toDouble(),
+        _TourIndex.drawerButton.index.toDouble(),
+        _TourIndex.settingAction.index.toDouble(),
+        _TourIndex.list.index.toDouble(),
+        _TourIndex.firstItem.index.toDouble(),
+        _TourIndex.item90.index.toDouble(),
+        _TourIndex.dialogButton.index.toDouble(),
+        _TourIndex.restartTourButton.index.toDouble(),
+        _TourIndex.floatingButton.index.toDouble(),
       ]),
     );
     expect(
@@ -545,52 +582,119 @@ void main() {
     expect(collectedStates, contains(isA<TourCompleted>()));
   });
 
+  testWidgets('falls back to the next ordered step when nextStep times out', (
+    tester,
+  ) async {
+    final controller = FeaturesTourController('TimeoutApp');
+    final collectedStates = <TourState>[];
+
+    await tester.pumpWidget(
+      MaterialApp(home: _TimeoutHarness(controller: controller)),
+    );
+    await tester.pumpAndSettle();
+
+    final context = tester.element(find.byType(_TimeoutHarness));
+
+    await tester.runAsync(() async {
+      await controller.start(
+        context,
+        force: true,
+        delay: Duration.zero,
+        onState: (state) async {
+          collectedStates.add(state);
+
+          if (state case TourIntroducing(
+            index: final index,
+            step: final step,
+          )) {
+            await tester.pump();
+
+            if (index == _TimeoutStep.first.index.toDouble()) {
+              expect(step, _TimeoutStep.first);
+              expect(find.text('First intro'), findsOneWidget);
+              expect(controller.next(), isTrue);
+            } else if (index == _TimeoutStep.second.index.toDouble()) {
+              expect(step, _TimeoutStep.second);
+              expect(find.text('Second intro'), findsOneWidget);
+              expect(controller.done(), isTrue);
+            }
+          }
+        },
+      );
+    });
+
+    await tester.pumpAndSettle();
+
+    expect(
+      collectedStates.whereType<TourIntroducing>().map((state) => state.step),
+      equals([_TimeoutStep.first, _TimeoutStep.second]),
+    );
+    expect(
+      collectedStates.whereType<TourIntroducing>().map((state) => state.index),
+      equals([
+        _TimeoutStep.first.index.toDouble(),
+        _TimeoutStep.second.index.toDouble(),
+      ]),
+    );
+    expect(collectedStates, contains(isA<TourCompleted>()));
+  });
+
   testWidgets(
     'skips at a seeded random point and closes active surfaces (controller)',
     (tester) async {
       final controller = FeaturesTourController('App');
       final collectedStates = <TourState>[];
+      final expectedSteps = <Enum>[
+        _TourIndex.drawer,
+        _TourIndex.drawerButton,
+        _TourIndex.settingAction,
+        _TourIndex.list,
+        _TourIndex.firstItem,
+        _TourIndex.item90,
+        _TourIndex.dialogButton,
+        _TourIndex.restartTourButton,
+      ];
       final random = Random(20260415);
 
       final skipCandidates = <_TourExpectation>[
         const _TourExpectation(
-          index: _TourIndex.drawerButton,
+          step: _TourIndex.drawerButton,
           actionLabel: 'SKIP',
           drawerOpen: true,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.settingAction,
+          step: _TourIndex.settingAction,
           actionLabel: 'SKIP',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.list,
+          step: _TourIndex.list,
           actionLabel: 'SKIP',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.firstItem,
+          step: _TourIndex.firstItem,
           actionLabel: 'SKIP',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.item90,
+          step: _TourIndex.item90,
           actionLabel: 'SKIP',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.dialogButton,
+          step: _TourIndex.dialogButton,
           actionLabel: 'SKIP',
           drawerOpen: false,
           dialogOpen: true,
         ),
         const _TourExpectation(
-          index: _TourIndex.restartTourButton,
+          step: _TourIndex.restartTourButton,
           actionLabel: 'SKIP',
           drawerOpen: false,
           dialogOpen: false,
@@ -600,6 +704,7 @@ void main() {
       final selectedExpectation =
           skipCandidates[random.nextInt(skipCandidates.length)];
       var skippedAtSelectedStep = false;
+      var stepIndex = 0;
 
       await tester.pumpWidget(
         MaterialApp(home: _TourHarness(controller: controller)),
@@ -616,10 +721,14 @@ void main() {
           onState: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(
+              index: final index,
+              step: final step,
+            )) {
               await tester.pump();
 
-              if (index == selectedExpectation.index) {
+              expect(step, expectedSteps[stepIndex]);
+              if (index == selectedExpectation.step.index) {
                 skippedAtSelectedStep = true;
                 // call controller.skip directly
                 expect(controller.skip(), isTrue);
@@ -627,6 +736,7 @@ void main() {
                 // advance normally
                 expect(controller.next(), isTrue);
               }
+              stepIndex++;
             }
           },
         );
@@ -638,10 +748,14 @@ void main() {
       expect(find.text('Drawer is open'), findsNothing);
       expect(find.text('Dialog is open'), findsNothing);
       expect(
+        collectedStates.whereType<TourIntroducing>().map((state) => state.step),
+        contains(selectedExpectation.step),
+      );
+      expect(
         collectedStates.whereType<TourIntroducing>().map(
           (state) => state.index,
         ),
-        contains(selectedExpectation.index),
+        contains(selectedExpectation.step.index.toDouble()),
       );
       expect(
         collectedStates.whereType<TourActionEmitted>().last.result,
@@ -656,6 +770,26 @@ void main() {
   ) async {
     final controller = FeaturesTourController('App');
     final collectedStates = <TourState>[];
+    final expectedSteps = <Enum>[
+      _TourIndex.drawer,
+      _TourIndex.drawerButton,
+      _TourIndex.settingAction,
+      _TourIndex.list,
+      _TourIndex.firstItem,
+      _TourIndex.item90,
+      _TourIndex.dialogButton,
+      _TourIndex.restartTourButton,
+      _TourIndex.floatingButton,
+      _TourIndex.restartTourButton,
+      _TourIndex.dialogButton,
+      _TourIndex.item90,
+      _TourIndex.firstItem,
+      _TourIndex.list,
+      _TourIndex.settingAction,
+      _TourIndex.drawerButton,
+      _TourIndex.drawer,
+    ];
+    var stepIndex = 0;
     var rewinding = false;
     var reachedFirstStep = false;
 
@@ -674,27 +808,34 @@ void main() {
         onState: (state) async {
           collectedStates.add(state);
 
-          if (state case TourIntroducing(index: final index)) {
+          if (state case TourIntroducing(
+            index: final index,
+            step: final step,
+          )) {
             await tester.pump();
+            expect(step, expectedSteps[stepIndex]);
 
             if (!rewinding) {
-              if (index == _TourIndex.floatingButton) {
+              if (index == 8.0) {
                 rewinding = true;
                 expect(controller.previous(), isTrue);
               } else {
                 expect(controller.next(), isTrue);
               }
+              stepIndex++;
               return;
             }
 
-            if (index == _TourIndex.drawer) {
+            if (index == 0.0) {
               reachedFirstStep = true;
               expect(controller.previous(), isFalse);
               expect(controller.skip(), isTrue);
+              stepIndex++;
               return;
             }
 
             expect(controller.previous(), isTrue);
+            stepIndex++;
           }
         },
       );
@@ -704,7 +845,7 @@ void main() {
 
     expect(reachedFirstStep, isTrue);
     expect(
-      collectedStates.whereType<TourIntroducing>().map((state) => state.index),
+      collectedStates.whereType<TourIntroducing>().map((state) => state.step),
       equals([
         _TourIndex.drawer,
         _TourIndex.drawerButton,
@@ -725,6 +866,28 @@ void main() {
         _TourIndex.drawer,
       ]),
     );
+    expect(
+      collectedStates.whereType<TourIntroducing>().map((state) => state.index),
+      equals([
+        _TourIndex.drawer.index.toDouble(),
+        _TourIndex.drawerButton.index.toDouble(),
+        _TourIndex.settingAction.index.toDouble(),
+        _TourIndex.list.index.toDouble(),
+        _TourIndex.firstItem.index.toDouble(),
+        _TourIndex.item90.index.toDouble(),
+        _TourIndex.dialogButton.index.toDouble(),
+        _TourIndex.restartTourButton.index.toDouble(),
+        _TourIndex.floatingButton.index.toDouble(),
+        _TourIndex.restartTourButton.index.toDouble(),
+        _TourIndex.dialogButton.index.toDouble(),
+        _TourIndex.item90.index.toDouble(),
+        _TourIndex.firstItem.index.toDouble(),
+        _TourIndex.list.index.toDouble(),
+        _TourIndex.settingAction.index.toDouble(),
+        _TourIndex.drawerButton.index.toDouble(),
+        _TourIndex.drawer.index.toDouble(),
+      ]),
+    );
     expect(collectedStates, contains(isA<TourCompleted>()));
   });
 
@@ -735,79 +898,79 @@ void main() {
       final collectedStates = <TourState>[];
       final expectations = <_TourExpectation>[
         const _TourExpectation(
-          index: _TourIndex.drawer,
+          step: _TourIndex.drawer,
           actionLabel: 'NEXT',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.drawerButton,
+          step: _TourIndex.drawerButton,
           actionLabel: 'PREVIOUS',
           drawerOpen: true,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.drawer,
+          step: _TourIndex.drawer,
           actionLabel: 'NEXT',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.drawerButton,
+          step: _TourIndex.drawerButton,
           actionLabel: 'NEXT',
           drawerOpen: true,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.settingAction,
+          step: _TourIndex.settingAction,
           actionLabel: 'NEXT',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.list,
+          step: _TourIndex.list,
           actionLabel: 'NEXT',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.firstItem,
+          step: _TourIndex.firstItem,
           actionLabel: 'NEXT',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.item90,
+          step: _TourIndex.item90,
           actionLabel: 'NEXT',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.dialogButton,
+          step: _TourIndex.dialogButton,
           actionLabel: 'PREVIOUS',
           drawerOpen: false,
           dialogOpen: true,
         ),
         const _TourExpectation(
-          index: _TourIndex.item90,
+          step: _TourIndex.item90,
           actionLabel: 'NEXT',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.dialogButton,
+          step: _TourIndex.dialogButton,
           actionLabel: 'NEXT',
           drawerOpen: false,
           dialogOpen: true,
         ),
         const _TourExpectation(
-          index: _TourIndex.restartTourButton,
+          step: _TourIndex.restartTourButton,
           actionLabel: 'NEXT',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _TourExpectation(
-          index: _TourIndex.floatingButton,
+          step: _TourIndex.floatingButton,
           actionLabel: 'DONE',
           drawerOpen: false,
           dialogOpen: false,
@@ -831,11 +994,15 @@ void main() {
           onState: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(
+              index: final index,
+              step: final step,
+            )) {
               expect(stepIndex, lessThan(expectations.length));
 
               final expectation = expectations[stepIndex];
-              expect(index, expectation.index);
+              expect(step, expectation.step);
+              expect(index, expectation.step.index.toDouble());
 
               await tester.pump();
 
@@ -863,23 +1030,27 @@ void main() {
       expect(find.text('Drawer is open'), findsNothing);
       expect(find.text('Dialog is open'), findsNothing);
       expect(
+        collectedStates.whereType<TourIntroducing>().map((state) => state.step),
+        equals(expectations.map((expectation) => expectation.step).toList()),
+      );
+      expect(
         collectedStates.whereType<TourIntroducing>().map(
           (state) => state.index,
         ),
         equals([
-          _TourIndex.drawer,
-          _TourIndex.drawerButton,
-          _TourIndex.drawer,
-          _TourIndex.drawerButton,
-          _TourIndex.settingAction,
-          _TourIndex.list,
-          _TourIndex.firstItem,
-          _TourIndex.item90,
-          _TourIndex.dialogButton,
-          _TourIndex.item90,
-          _TourIndex.dialogButton,
-          _TourIndex.restartTourButton,
-          _TourIndex.floatingButton,
+          _TourIndex.drawer.index.toDouble(),
+          _TourIndex.drawerButton.index.toDouble(),
+          _TourIndex.drawer.index.toDouble(),
+          _TourIndex.drawerButton.index.toDouble(),
+          _TourIndex.settingAction.index.toDouble(),
+          _TourIndex.list.index.toDouble(),
+          _TourIndex.firstItem.index.toDouble(),
+          _TourIndex.item90.index.toDouble(),
+          _TourIndex.dialogButton.index.toDouble(),
+          _TourIndex.item90.index.toDouble(),
+          _TourIndex.dialogButton.index.toDouble(),
+          _TourIndex.restartTourButton.index.toDouble(),
+          _TourIndex.floatingButton.index.toDouble(),
         ]),
       );
       expect(

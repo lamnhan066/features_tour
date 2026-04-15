@@ -91,36 +91,39 @@ class FeaturesTourController {
 
   /// Registers the current FeaturesTour state.
   void _register(_FeaturesTourState state) {
-    if (_debugLog && !_cachedStates.containsKey(state.widget.index)) {
+    final order = _stateOrder(state);
+    final identity = _stateIdentity(state);
+
+    if (_debugLog && !_cachedStates.containsKey(order)) {
       _logger?.debug(
         () =>
-            'Registering index ${state.widget.index}. Total states: ${_cachedStates.length + 1}',
+            'Registering step $identity. Total states: ${_cachedStates.length + 1}',
       );
     }
-    _states[state.widget.index] = state;
-    _cachedStates[state.widget.index] = state;
-    _globalKeys[state.widget.index] ??= GlobalObjectKey(
-      '$pageName-${state.widget.index}',
-    );
+    _states[order] = state;
+    _cachedStates[order] = state;
+    _globalKeys[order] ??= GlobalObjectKey('$pageName-$identity');
 
     // Completes any pending completers for this index.
-    if (_pendingIndexes.containsKey(state.widget.index)) {
-      _pendingIndexes[state.widget.index]!.complete(state);
-      _pendingIndexes.remove(state.widget.index);
+    if (_pendingIndexes.containsKey(order)) {
+      _pendingIndexes[order]!.complete(state);
+      _pendingIndexes.remove(order);
     }
   }
 
   /// Unregisters the current FeaturesTour state.
   void _unregister(_FeaturesTourState state) {
-    if (_debugLog && _cachedStates.containsKey(state.widget.index)) {
+    final order = _stateOrder(state);
+
+    if (_debugLog && _cachedStates.containsKey(order)) {
       _logger?.debug(
         () =>
-            'Unregistering index ${state.widget.index}. '
+            'Unregistering step ${_stateIdentity(state)}. '
             'Active states: ${_states.length - 1}. Cached states: ${_cachedStates.length}',
       );
     }
-    _states.remove(state.widget.index);
-    _cachedStates.remove(state.widget.index);
+    _states.remove(order);
+    _cachedStates.remove(order);
   }
 
   /// Starts the tour. This package automatically saves the state of the tour,
@@ -299,7 +302,7 @@ class FeaturesTourController {
           return;
       }
 
-      // Watches for the [FeaturesTour.nextIndex] value.
+      // Watches for the next step or next index value.
       _FeaturesTourState? nextState;
 
       // Waits for the first index.
@@ -323,15 +326,21 @@ class FeaturesTourController {
           state = _states.remove(_states.firstKey())!;
         } else {
           state = nextState;
-          _states.remove(nextState.widget.index);
+          _states.remove(_stateOrder(nextState));
         }
 
         state._blockPop();
 
+        final nextStep = state.widget.nextStep;
+        final nextStepTimeout =
+            state.widget.nextStepTimeout ?? state.widget.nextIndexTimeout;
         final nextIndex = state.widget.nextIndex;
         final nextIndexTimeout = state.widget.nextIndexTimeout;
-        final previousIndex = _previousIndexFor(state.widget.index);
-        final previousIndexTimeout = state.widget.previousIndexTimeout;
+        final currentOrder = _stateOrder(state);
+        final previousIndex = _previousIndexFor(currentOrder);
+        final previousIndexTimeout =
+            state.widget.previousStepTimeout ??
+            state.widget.previousIndexTimeout;
         final key = _getPrefKey(state);
         _logger?.step(() => 'Start introducing $key:');
 
@@ -357,7 +366,7 @@ class FeaturesTourController {
           shouldShowIntroduce = isShown != true;
         }
 
-        if (_introducedIndexes.contains(state.widget.index)) {
+        if (_introducedIndexes.contains(currentOrder)) {
           shouldShowIntroduce = false;
         }
 
@@ -368,12 +377,15 @@ class FeaturesTourController {
           );
           await _removeState(state, false);
           await onState?.call(
-            TourSkippedIntroduction(index: state.widget.index),
+            TourSkippedIntroduction(
+              index: currentOrder,
+              step: state.widget.step,
+            ),
           );
           continue;
         }
 
-        _introducingIndex.value = state.widget.index;
+        _introducingIndex.value = currentOrder;
 
         _logger?.step(() => '   -> Waiting for the page transition...');
         await _waitForTransition(context); // Main page transition
@@ -429,9 +441,10 @@ class FeaturesTourController {
           break;
         }
 
-        // If there is no state in the queue and no index to wait for, then it's
-        // the last state.
-        final isLastState = _states.isEmpty && nextIndex == null;
+        // If there is no state in the queue and no next step/index to wait for,
+        // then it's the last state.
+        final isLastState =
+            _states.isEmpty && nextStep == null && nextIndex == null;
         final result = await _showIntroduce(
           context,
           state,
@@ -439,7 +452,9 @@ class FeaturesTourController {
           canShowPrevious: previousIndex != null,
           () async {
             _logger?.step(() => '   -> The introduction is shown.');
-            await onState?.call(TourIntroducing(index: state.widget.index));
+            await onState?.call(
+              TourIntroducing(index: currentOrder, step: state.widget.step),
+            );
           },
         );
 
@@ -497,8 +512,30 @@ class FeaturesTourController {
         switch (arrivalAction) {
           case TourAction.introduce:
           case TourAction.next:
-            // Waits for the next state to appear if `nextIndex` is non-null.
-            if (nextIndex != null) {
+            // Waits for the next state to appear if `nextStep` or `nextIndex` is non-null.
+            if (nextStep != null) {
+              final nextStepOrder = nextStep.index.toDouble();
+              _logger?.step(
+                () =>
+                    'The `nextStep` is non-null. Waiting for the next step: $nextStep...',
+              );
+
+              nextState = await _nextIndex(nextStepOrder, nextStepTimeout);
+
+              if (nextState == null) {
+                _logger?.warning(
+                  () =>
+                      'Cannot wait for the next step $nextStep because the timeout was reached. Using the next ordered value instead.',
+                );
+
+                _introducedIndexes.add(nextStepOrder);
+                continue;
+              } else {
+                _logger?.info(
+                  () => 'The next step is available with state: $nextState.',
+                );
+              }
+            } else if (nextIndex != null) {
               _logger?.step(
                 () =>
                     'The `nextIndex` is non-null. '
@@ -537,7 +574,7 @@ class FeaturesTourController {
                   await _nextIndex(previousIndex, previousIndexTimeout);
 
               if (nextState != null) {
-                await _readdState(state.widget.index, state);
+                await _readdState(currentOrder, state);
                 await _readdState(previousIndex, nextState);
               }
             }
@@ -639,7 +676,7 @@ class FeaturesTourController {
           child: Material(
             color: Colors.transparent,
             child: FeaturesChild(
-              globalKey: _globalKeys[state.widget.index]!,
+              globalKey: _globalKeys[_stateOrder(state)]!,
               childConfig: childConfig,
               canShowPrevious: canShowPrevious,
               introduce: state.widget.introduce,
@@ -865,12 +902,14 @@ class FeaturesTourController {
     _FeaturesTourState state,
     bool markAsIntroduced,
   ) async {
+    final order = _stateOrder(state);
+
     if (markAsIntroduced) {
       final key = _getPrefKey(state);
       await _prefs!.setBool(key, true);
     }
-    _states.remove(state.widget.index);
-    _introducedIndexes.add(state.widget.index);
+    _states.remove(order);
+    _introducedIndexes.add(order);
   }
 
   Future<void> _readdState(double index, _FeaturesTourState state) async {
@@ -894,7 +933,25 @@ class FeaturesTourController {
 
   /// Gets the key for shared preferences.
   String _getPrefKey(_FeaturesTourState state) {
-    return '${FeaturesTour._prefix}_${pageName}_${state.widget.index}';
+    return '${FeaturesTour._prefix}_${pageName}_${_stateIdentity(state)}';
+  }
+
+  double _stateOrder(_FeaturesTourState state) {
+    final legacyIndex = state.widget.index;
+    if (legacyIndex != null) {
+      return legacyIndex;
+    }
+
+    return state.widget.step!.index.toDouble();
+  }
+
+  String _stateIdentity(_FeaturesTourState state) {
+    final legacyIndex = state.widget.index;
+    if (legacyIndex != null) {
+      return legacyIndex.toString();
+    }
+
+    return state.widget.step!.name;
   }
 
   double? _previousIndexFor(double currentIndex) {
