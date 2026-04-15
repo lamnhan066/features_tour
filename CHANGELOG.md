@@ -1,14 +1,15 @@
 ## Unreleased
 
-* Introduce `TourAction` as the new action/result enum used by tour callbacks and state emission.
-* Add `FeaturesTour.onBeforeAction(TourAction action)` as the new pre-action hook.
-* Deprecate `FeaturesTour.onBeforeIntroduce` and `FeaturesTour.onBeforePrevious` in favor of `onBeforeAction`.
-* Add `FeaturesTour.onAfterAction(TourAction action)` as the new post-action hook.
-  * `onAfterIntroduce` is deprecated in favor of `onAfterAction`. The controller now
-    invokes `onAfterAction` when available and still calls the deprecated `onAfterIntroduce`
-    for backward compatibility. Consumers should migrate to `onAfterAction`.
-  * Update examples and tests to use `onAfterAction`. `IntroduceResult` remains a
-    deprecated typedef to `TourAction` to ease migration.
+* Add `previous` action feature to move back to the previous introduction:
+  * Add `FeaturesTour.previousConfig` to config the previous button.
+  * Add `FeaturesTour.previousIndexTimeout` to specify the timeout for the move to previous introduction action.
+  * The default position of this button is at the bottom-left.
+
+* `IntroduceResult` is replaced by `TourAction` add has been mark as deprecated.
+* Add `FeaturesTour.onBeforeAction(TourAction action)` as the new pre-action hook and mark `FeaturesTour.onBeforeIntroduce` as deprecated.
+* Add `FeaturesTour.onAfterAction(TourAction action)` as the new post-action hook and mark `FeaturesTour.onAfterIntroduce` as deprecated.
+* The default position of the `skip` button is moved to the bottom-center.
+* Add more tests.
 
 ## 0.6.2
 
