@@ -139,9 +139,15 @@ class FeaturesTourController {
   /// **Important:** Reset [force] to `null` before releasing the app to ensure the
   /// [FeaturesTour] behaves as expected.
   ///
-  /// Set the initial index for the tour using [firstIndex], with a timeout
-  /// specified by [firstIndexTimeout]. If the timeout is exceeded, the smallest
-  /// available index will be used.
+  /// Set the initial step for the tour using [firstStep], with an optional
+  /// timeout specified by [firstStepTimeout]. If [firstStepTimeout] is `null`,
+  /// the controller uses [firstIndexTimeout] instead. If the initial step times
+  /// out, the controller falls back to [firstIndex] and [firstIndexTimeout]
+  /// when they are provided. If neither value resolves to a visible state, the
+  /// smallest available step will be used.
+  ///
+  /// Legacy callers can still use [firstIndex] and [firstIndexTimeout]. When
+  /// both are provided, [firstStep] takes precedence.
   ///
   /// The pre-dialog can be configured using [preDialogConfig]. This dialog prompts
   /// the user to confirm whether they want to start the tour.
@@ -160,6 +166,8 @@ class FeaturesTourController {
   /// ```
   Future<void> start(
     BuildContext context, {
+    Enum? firstStep,
+    Duration? firstStepTimeout,
     double? firstIndex,
     Duration firstIndexTimeout = const Duration(seconds: 3),
     Duration delay = const Duration(milliseconds: 500),
@@ -222,7 +230,7 @@ class FeaturesTourController {
           ..addAll(_cachedStates);
       }
 
-      if (_states.isEmpty && firstIndex == null) {
+      if (_states.isEmpty && firstStep == null && firstIndex == null) {
         _logger?.warning(() => 'The page $pageName has no state.');
         await onState?.call(const TourEmpty());
         return;
@@ -305,8 +313,18 @@ class FeaturesTourController {
       // Watches for the next step or next index value.
       _FeaturesTourState? nextState;
 
-      // Waits for the first index.
-      if (firstIndex != null) {
+      // Waits for the first step or first index.
+      if (firstStep != null) {
+        final firstStepTimeOut = firstStepTimeout ?? firstIndexTimeout;
+        nextState = await _nextIndex(
+          firstStep.index.toDouble(),
+          firstStepTimeOut,
+        );
+
+        if (nextState == null && firstIndex != null) {
+          nextState = await _nextIndex(firstIndex, firstIndexTimeout);
+        }
+      } else if (firstIndex != null) {
         nextState = await _nextIndex(firstIndex, firstIndexTimeout);
       }
 

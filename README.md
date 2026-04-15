@@ -64,7 +64,11 @@ tourController.skip();
 ```dart
 @override
 void initState() {
-    tourController.start(context);
+        tourController.start(
+            context,
+            firstStep: TourStep.drawer,
+            firstStepTimeout: const Duration(seconds: 3),
+        );
     super.initState();
 }
 ```
@@ -129,12 +133,12 @@ The following steps outline the flow of a Features Tour:
    Begin the tour by calling the `start` method on the `FeaturesTourController`.
 
 2. **Wait for the First Widget**\
-   The tour waits for the first widget to be displayed. This is determined using `FeaturesTourController.firstIndex`. If no specific index is set, the widget with the smallest index will be used as the starting point.
+    The tour waits for the first widget to be displayed. Prefer `FeaturesTourController.firstStep` for new code, and use `FeaturesTourController.firstStepTimeout` to control how long the controller waits before falling back to `firstIndex` when one is provided. Legacy `firstIndex` and `firstIndexTimeout` remain available for migration.
 
 3. **Execute Before-Introduction Logic**\
     Before introducing a widget, the `FeaturesTour.onBeforeAction` callback is executed with the action that led to this widget. The first widget receives `TourAction.introduce`, the next widget receives `TourAction.next`, and a widget shown again after going back receives `TourAction.previous`.
 
-    > Important: `onBeforeAction` runs only after the current tour state is already mounted, so use it to prepare the visible widget, such as scrolling it into view. To open a `Drawer` or show a `Dialog` for a later step, trigger that UI from `onAfterAction` in the previous `FeaturesTour`, then use `nextStep` so the controller waits for the newly visible step.
+    > Important: `onBeforeAction` runs only after the current tour state is already mounted, so use it to prepare the visible widget, such as scrolling it into view. To open a `Drawer` or show a `Dialog` for a later step, trigger that UI from `onAfterAction` in the previous `FeaturesTour`, then use `nextStep` so the controller waits for the newly visible step. To start on a later step, use `firstStep`, and the controller will fall back to `firstIndex` if the step is not available in time.
 
 4. **Show the Introduction**\
    The widget's introduction is displayed, along with navigation buttons:
