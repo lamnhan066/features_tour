@@ -689,10 +689,7 @@ void main() {
   testWidgets('keeps the current step when previousStepTimeout times out', (
     tester,
   ) async {
-    final controller = FeaturesTourController(
-      'PreviousTimeoutApp',
-      debugLog: true,
-    );
+    final controller = FeaturesTourController('PreviousTimeoutApp');
     final collectedStates = <TourState>[];
     var sawSecondStepTwice = false;
 

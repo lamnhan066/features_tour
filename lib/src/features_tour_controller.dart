@@ -533,7 +533,7 @@ class FeaturesTourController {
             if (effectiveNextIndex != null) {
               _logger?.step(
                 () =>
-                    'The `nextIndex` is non-null. '
+                    '   -> The `nextIndex` is non-null. '
                     'Waiting for the next index: $effectiveNextIndex...',
               );
 
@@ -545,7 +545,7 @@ class FeaturesTourController {
               if (nextState == null) {
                 _logger?.warning(
                   () =>
-                      'Cannot wait for the next index $effectiveNextIndex because '
+                      '   -> Cannot wait for the next index $effectiveNextIndex because '
                       'the timeout was reached. Using the next ordered '
                       'value instead.',
                 );
@@ -556,12 +556,14 @@ class FeaturesTourController {
                 continue;
               } else {
                 _logger?.info(
-                  () => 'The next index is available with state: $nextState.',
+                  () =>
+                      '   -> The next index is available with state: $nextState.',
                 );
               }
             } else {
               _logger?.debug(
-                () => 'The `nextIndex` is null. Using the next ordered value.',
+                () =>
+                    '   -> The `nextIndex` is null. Using the next ordered value.',
               );
               nextState = null;
             }
@@ -569,7 +571,7 @@ class FeaturesTourController {
             if (previousIndex != null) {
               _logger?.step(
                 () =>
-                    'The `previousIndex` is non-null. '
+                    '   -> The `previousIndex` is non-null. '
                     'Waiting for the previous index: $previousIndex...',
               );
               final previousState =
@@ -580,7 +582,7 @@ class FeaturesTourController {
               if (previousState != null) {
                 _logger?.info(
                   () =>
-                      'The previous index is available '
+                      '   -> The previous index is available '
                       'with state: $previousState.',
                 );
                 nextState = previousState;
@@ -588,7 +590,7 @@ class FeaturesTourController {
               } else {
                 _logger?.warning(
                   () =>
-                      'Cannot wait for the previous index $previousIndex because '
+                      '   -> Cannot wait for the previous index $previousIndex because '
                       'the timeout was reached. Staying on the current widget.',
                 );
                 _introducedIndexes.add(previousIndex);
@@ -599,6 +601,9 @@ class FeaturesTourController {
           case TourAction.done:
           case TourAction.disabled:
           case TourAction.notMounted:
+            _logger?.debug(
+              '   -> No next step or index to wait for. Staying on the current widget.',
+            );
             _introducedIndexes.add(currentOrder);
             nextState = null;
         }
