@@ -94,12 +94,6 @@ class FeaturesTourController {
     final order = _stateOrder(state);
     final identity = _stateIdentity(state);
 
-    if (_debugLog && !_cachedStates.containsKey(order)) {
-      _logger?.debug(
-        () =>
-            'Registering step $identity. Total states: ${_cachedStates.length + 1}',
-      );
-    }
     _states[order] = state;
     _cachedStates[order] = state;
     _globalKeys[order] ??= GlobalObjectKey('$pageName-$identity');
@@ -109,21 +103,29 @@ class FeaturesTourController {
       _pendingIndexes[order]!.complete(state);
       _pendingIndexes.remove(order);
     }
+
+    if (_debugLog && !_cachedStates.containsKey(order)) {
+      _logger?.debug(
+        () =>
+            'Registering step $identity. Total states: ${_cachedStates.length}',
+      );
+    }
   }
 
   /// Unregisters the current FeaturesTour state.
   void _unregister(_FeaturesTourState state) {
     final order = _stateOrder(state);
 
-    if (_debugLog && _cachedStates.containsKey(order)) {
+    _states.remove(order);
+    _cachedStates.remove(order);
+
+    if (_debugLog && !_cachedStates.containsKey(order)) {
       _logger?.debug(
         () =>
             'Unregistering step ${_stateIdentity(state)}. '
-            'Active states: ${_states.length - 1}. Cached states: ${_cachedStates.length}',
+            'Active states: ${_states.length}. Cached states: ${_cachedStates.length}',
       );
     }
-    _states.remove(order);
-    _cachedStates.remove(order);
   }
 
   /// Starts the tour. This package automatically saves the state of the tour,
@@ -314,18 +316,19 @@ class FeaturesTourController {
       _FeaturesTourState? nextState;
 
       // Waits for the first step or first index.
-      if (firstStep != null) {
-        final firstStepTimeOut = firstStepTimeout ?? firstIndexTimeout;
+      final effectiveFirstIndex = firstStep?.index.toDouble() ?? firstIndex;
+
+      if (effectiveFirstIndex != null) {
+        final effectiveFirstStepTimeout = firstStepTimeout ?? firstIndexTimeout;
         nextState = await _nextIndex(
-          firstStep.index.toDouble(),
-          firstStepTimeOut,
+          effectiveFirstIndex,
+          effectiveFirstStepTimeout,
         );
 
-        if (nextState == null && firstIndex != null) {
-          nextState = await _nextIndex(firstIndex, firstIndexTimeout);
-        }
-      } else if (firstIndex != null) {
-        nextState = await _nextIndex(firstIndex, firstIndexTimeout);
+        nextState ??= await _nextIndex(
+          effectiveFirstIndex,
+          effectiveFirstStepTimeout,
+        );
       }
 
       _logger?.step(() => 'Starting the tour.');
@@ -349,11 +352,10 @@ class FeaturesTourController {
 
         state._blockPop();
 
-        final nextStep = state.widget.nextStep;
-        final nextStepTimeout =
+        final effectiveNextIndex =
+            state.widget.nextStep?.index.toDouble() ?? state.widget.nextIndex;
+        final effectiveNextIndexTimeout =
             state.widget.nextStepTimeout ?? state.widget.nextIndexTimeout;
-        final nextIndex = state.widget.nextIndex;
-        final nextIndexTimeout = state.widget.nextIndexTimeout;
         final currentOrder = _stateOrder(state);
         final previousIndex = _previousIndexFor(currentOrder);
         final previousStepTimeout = state.widget.previousStepTimeout;
@@ -459,8 +461,7 @@ class FeaturesTourController {
 
         // If there is no state in the queue and no next step/index to wait for,
         // then it's the last state.
-        final isLastState =
-            _states.isEmpty && nextStep == null && nextIndex == null;
+        final isLastState = _states.isEmpty && effectiveNextIndex == null;
         final result = await _showIntroduce(
           context,
           state,
@@ -529,48 +530,29 @@ class FeaturesTourController {
           case TourAction.introduce:
           case TourAction.next:
             // Waits for the next state to appear if `nextStep` or `nextIndex` is non-null.
-            if (nextStep != null) {
-              final nextStepOrder = nextStep.index.toDouble();
-              _logger?.step(
-                () =>
-                    'The `nextStep` is non-null. Waiting for the next step: $nextStep...',
-              );
-
-              nextState = await _nextIndex(nextStepOrder, nextStepTimeout);
-
-              if (nextState == null) {
-                _logger?.warning(
-                  () =>
-                      'Cannot wait for the next step $nextStep because the timeout was reached. Using the next ordered value instead.',
-                );
-
-                _introducedIndexes.add(nextStepOrder);
-                continue;
-              } else {
-                _logger?.info(
-                  () => 'The next step is available with state: $nextState.',
-                );
-              }
-            } else if (nextIndex != null) {
+            if (effectiveNextIndex != null) {
               _logger?.step(
                 () =>
                     'The `nextIndex` is non-null. '
-                    'Waiting for the next index: $nextIndex...',
+                    'Waiting for the next index: $effectiveNextIndex...',
               );
 
-              nextState = await _nextIndex(nextIndex, nextIndexTimeout);
+              nextState = await _nextIndex(
+                effectiveNextIndex,
+                effectiveNextIndexTimeout,
+              );
 
               if (nextState == null) {
                 _logger?.warning(
                   () =>
-                      'Cannot wait for the next index $nextIndex because '
+                      'Cannot wait for the next index $effectiveNextIndex because '
                       'the timeout was reached. Using the next ordered '
                       'value instead.',
                 );
 
                 // Adds the timeout state index to the introduced list so it will not
                 // be introduced even when it's shown.
-                _introducedIndexes.add(nextIndex);
+                _introducedIndexes.add(effectiveNextIndex);
                 continue;
               } else {
                 _logger?.info(
@@ -585,19 +567,40 @@ class FeaturesTourController {
             }
           case TourAction.previous:
             if (previousIndex != null) {
-              nextState =
+              _logger?.step(
+                () =>
+                    'The `previousIndex` is non-null. '
+                    'Waiting for the previous index: $previousIndex...',
+              );
+              final previousState =
                   _cachedStates[previousIndex] ??
                   await _nextIndex(previousIndex, previousStepTimeout);
 
-              if (nextState != null) {
-                await _readdState(currentOrder, state);
-                await _readdState(previousIndex, nextState);
+              await _readdState(currentOrder, state);
+              if (previousState != null) {
+                _logger?.info(
+                  () =>
+                      'The previous index is available '
+                      'with state: $previousState.',
+                );
+                nextState = previousState;
+                await _readdState(previousIndex, previousState);
+              } else {
+                _logger?.warning(
+                  () =>
+                      'Cannot wait for the previous index $previousIndex because '
+                      'the timeout was reached. Staying on the current widget.',
+                );
+                _introducedIndexes.add(previousIndex);
+                nextState = null;
               }
             }
           case TourAction.skip:
           case TourAction.done:
           case TourAction.disabled:
           case TourAction.notMounted:
+            _introducedIndexes.add(currentOrder);
+            nextState = null;
         }
       }
     } finally {

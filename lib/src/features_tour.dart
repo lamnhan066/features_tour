@@ -366,7 +366,7 @@ class _FeaturesTourState extends State<FeaturesTour> {
 
   @override
   Widget build(BuildContext context) {
-    final keyOrder = widget.index ?? widget.step?.index.toDouble();
+    final keyOrder = widget.step?.index.toDouble() ?? widget.index;
 
     return PopScope(
       key:

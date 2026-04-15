@@ -21,6 +21,8 @@ enum _TourIndex {
 
 enum _TimeoutStep { first, missing, second }
 
+enum _PreviousTimeoutStep { first, second }
+
 class _TourExpectation {
   const _TourExpectation({
     required this.step,
@@ -56,6 +58,51 @@ class _TimeoutHarness extends StatelessWidget {
           FeaturesTour(
             controller: controller,
             step: _TimeoutStep.second,
+            introduce: const Text('Second intro'),
+            child: const Text('Second child'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PreviousTimeoutHarness extends StatefulWidget {
+  const _PreviousTimeoutHarness({required this.controller});
+
+  final FeaturesTourController controller;
+
+  @override
+  State<_PreviousTimeoutHarness> createState() =>
+      _PreviousTimeoutHarnessState();
+}
+
+class _PreviousTimeoutHarnessState extends State<_PreviousTimeoutHarness> {
+  bool _showFirst = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          if (_showFirst)
+            FeaturesTour(
+              controller: widget.controller,
+              step: _PreviousTimeoutStep.first,
+              introduce: const Text('First intro'),
+              child: const Text('First child'),
+              onAfterAction: (result) {
+                if (result == TourAction.next) {
+                  setState(() {
+                    _showFirst = false;
+                  });
+                }
+              },
+            ),
+          FeaturesTour(
+            controller: widget.controller,
+            step: _PreviousTimeoutStep.second,
+            previousStepTimeout: Duration.zero,
             introduce: const Text('Second intro'),
             child: const Text('Second child'),
           ),
@@ -635,6 +682,74 @@ void main() {
         _TimeoutStep.first.index.toDouble(),
         _TimeoutStep.second.index.toDouble(),
       ]),
+    );
+    expect(collectedStates, contains(isA<TourCompleted>()));
+  });
+
+  testWidgets('keeps the current step when previousStepTimeout times out', (
+    tester,
+  ) async {
+    final controller = FeaturesTourController(
+      'PreviousTimeoutApp',
+      debugLog: true,
+    );
+    final collectedStates = <TourState>[];
+    var sawSecondStepTwice = false;
+
+    await tester.pumpWidget(
+      MaterialApp(home: _PreviousTimeoutHarness(controller: controller)),
+    );
+    await tester.pumpAndSettle();
+
+    final context = tester.element(find.byType(_PreviousTimeoutHarness));
+
+    await tester.runAsync(() async {
+      await controller.start(
+        context,
+        force: true,
+        delay: Duration.zero,
+        onState: (state) async {
+          collectedStates.add(state);
+
+          if (state case TourIntroducing(step: final step)) {
+            await tester.pump();
+
+            if (step == _PreviousTimeoutStep.first) {
+              expect(step, _PreviousTimeoutStep.first);
+              expect(find.text('First intro'), findsOneWidget);
+              expect(controller.next(), isTrue);
+            } else if (step == _PreviousTimeoutStep.second) {
+              expect(step, _PreviousTimeoutStep.second);
+              expect(find.text('Second intro'), findsOneWidget);
+
+              if (!sawSecondStepTwice) {
+                sawSecondStepTwice = true;
+                expect(controller.previous(), isTrue);
+              } else {
+                expect(controller.done(), isTrue);
+              }
+            }
+          }
+        },
+      );
+    });
+
+    await tester.pumpAndSettle();
+
+    expect(sawSecondStepTwice, isTrue);
+    expect(
+      collectedStates.whereType<TourIntroducing>().map((state) => state.step),
+      equals([
+        _PreviousTimeoutStep.first,
+        _PreviousTimeoutStep.second,
+        _PreviousTimeoutStep.second,
+      ]),
+    );
+    expect(
+      collectedStates.whereType<TourActionEmitted>().map(
+        (state) => state.result,
+      ),
+      equals([TourAction.next, TourAction.previous, TourAction.done]),
     );
     expect(collectedStates, contains(isA<TourCompleted>()));
   });
