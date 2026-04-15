@@ -338,9 +338,7 @@ class FeaturesTourController {
         final nextIndexTimeout = state.widget.nextIndexTimeout;
         final currentOrder = _stateOrder(state);
         final previousIndex = _previousIndexFor(currentOrder);
-        final previousIndexTimeout =
-            state.widget.previousStepTimeout ??
-            state.widget.previousIndexTimeout;
+        final previousStepTimeout = state.widget.previousStepTimeout;
         final key = _getPrefKey(state);
         _logger?.step(() => 'Start introducing $key:');
 
@@ -571,7 +569,7 @@ class FeaturesTourController {
             if (previousIndex != null) {
               nextState =
                   _cachedStates[previousIndex] ??
-                  await _nextIndex(previousIndex, previousIndexTimeout);
+                  await _nextIndex(previousIndex, previousStepTimeout);
 
               if (nextState != null) {
                 await _readdState(currentOrder, state);

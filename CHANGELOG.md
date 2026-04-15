@@ -2,10 +2,10 @@
 
 * Add `previous` action feature to move back to the previous introduction:
   * Add `FeaturesTour.previousConfig` to config the previous button.
-  * Add `FeaturesTour.previousIndexTimeout` to specify the timeout for the move to previous introduction action.
+  * Add `FeaturesTour.previousStepTimeout` to specify the timeout for the move to previous introduction action.
   * The default position of this button is at the bottom-left.
 * Add `FeaturesTour.step` as `enum` to replace the double `index` so we can easier to add, modify or reorder an introduction without update the index manually, just update the position of the `enum`.
-* Add step-based navigation APIs: `FeaturesTour.nextStep`, `FeaturesTour.nextStepTimeout`, and `FeaturesTour.previousStepTimeout` while keeping the legacy `nextIndex`, `nextIndexTimeout`, and `previousIndexTimeout` APIs for migration compatibility.
+* Add step-based navigation APIs: `FeaturesTour.nextStep`, `FeaturesTour.nextStepTimeout`, and `FeaturesTour.previousStepTimeout` while keeping the legacy `nextIndex` and `nextIndexTimeout` APIs for migration compatibility.
 * `IntroduceResult` is replaced by `TourAction` add has been mark as deprecated.
 * Add `FeaturesTour.onBeforeAction(TourAction action)` as the new pre-action hook and mark `FeaturesTour.onBeforeIntroduce` as deprecated.
 * Add `FeaturesTour.onAfterAction(TourAction action)` as the new post-action hook and mark `FeaturesTour.onAfterIntroduce` as deprecated.
