@@ -20,30 +20,22 @@ final tourController = FeaturesTourController('HomePage');
 ### Create a tour widget
 
 ```dart
-enum TourStep {drawer}
+enum TourStep { buttonOnDialog, button, drawer, details, buttonOnDrawer }
 
 FeaturesTour(
-    /// Add the controller
     controller: tourController,
-
-    /// The enum-based step for this widget. Declare the enum in your app or tests.
-    /// Prefer `step` for new code.
     step: TourStep.drawer,
-
-    /// Legacy numeric index used only for migration from older versions.
-    index: 0.0,
-
-    /// Introduction of this widget (Known as the description of the feature)
+    nextStep: TourStep.details,
+    nextStepTimeout: const Duration(seconds: 3),
+    previousStepTimeout: const Duration(seconds: 3),
     introduce: const Text('This is TextButton 1'),
-    
     onBeforeAction: (action) async {
         if (action == TourAction.introduce) {
-            // Do something before introducing this widget for the first time
+            // Do something before introducing this widget for the first time.
         } else if (action == TourAction.previous) {
-            // Do something before returning to this widget from the next step
+            // Do something before returning to this widget from the next step.
         }
     },
-
     onAfterAction: (introduceResult) async {
         if (introduceResult case TourAction.next || TourAction.done) {
             // Do something after the current widget is shown
@@ -52,14 +44,11 @@ FeaturesTour(
             // Do something after the user goes back to the previous feature.
         }
     },
-
-
-    /// This is the real widget
     child: TextButton(
         onPressed: () {},
         child: const Text('TextButton 1'),
     ),
-),
+)
 ```
 
 You can also control the active step programmatically from the controller when you build a custom introduction UI:
@@ -145,7 +134,7 @@ The following steps outline the flow of a Features Tour:
 3. **Execute Before-Introduction Logic**\
     Before introducing a widget, the `FeaturesTour.onBeforeAction` callback is executed with the action that led to this widget. The first widget receives `TourAction.introduce`, the next widget receives `TourAction.next`, and a widget shown again after going back receives `TourAction.previous`.
 
-    > Important: `onBeforeAction` runs only after the current tour state is already mounted, so use it to prepare the visible widget, such as scrolling it into view. To open a `Drawer` or show a `Dialog` for a later step, trigger that UI from `onAfterAction` in the previous `FeaturesTour`, then use `nextIndex` so the controller waits for the newly visible step.
+    > Important: `onBeforeAction` runs only after the current tour state is already mounted, so use it to prepare the visible widget, such as scrolling it into view. To open a `Drawer` or show a `Dialog` for a later step, trigger that UI from `onAfterAction` in the previous `FeaturesTour`, then use `nextStep` so the controller waits for the newly visible step.
 
 4. **Show the Introduction**\
    The widget's introduction is displayed, along with navigation buttons:
@@ -158,10 +147,10 @@ The following steps outline the flow of a Features Tour:
     After the user interacts with the introduction (e.g., presses `Next`, `Done`, `Skip`, or `Previous`), the `FeaturesTour.onAfterAction` callback is executed. This callback receives the action chosen from the current widget, so it will be `TourAction.next`, `TourAction.done`, `TourAction.skip`, or `TourAction.previous`. Note: `onAfterIntroduce` is deprecated and replaced by `onAfterAction`.
 
 6. **Handle Back Navigation**\
-    When the user presses `Previous`, the current widget's `onAfterAction` callback receives `TourAction.previous` first. The controller then attempts to find and wait for the previous step to be available (for example, a widget that appears after opening a dialog). It will wait up to the step's configured `previousStepTimeout` (default: 3 seconds). If the previous step becomes available within the timeout, the previous widget's `onBeforeAction` callback receives `TourAction.previous` and that widget is shown again. If the previous step is not available before the timeout elapses, the previous action is ignored.
+    When the user presses `Previous`, the current widget's `onAfterAction` callback receives `TourAction.previous` first. The controller then attempts to find and wait for the previous step to become available again, for example after reopening a drawer or dialog. It waits up to the step's configured `previousStepTimeout` (default: 3 seconds). If the previous step becomes available within the timeout, the previous widget's `onBeforeAction` callback receives `TourAction.previous` and that widget is shown again. If the previous step is not available before the timeout elapses, the previous action is ignored.
 
 7. **Wait for the Next Widget**\
-   The tour waits for the next widget to be displayed. This is determined using `FeaturesTour.nextIndex`.
+    The tour waits for the next widget to be displayed. Prefer `FeaturesTour.nextStep` for new code, and use `FeaturesTour.nextStepTimeout` to control how long the controller waits before falling back to the next available step. Legacy `FeaturesTour.nextIndex` and `FeaturesTour.nextIndexTimeout` remain available for migration.
 
 8. **Repeat the Process**\
    Steps 3 to 6 are repeated for each widget in the tour until the last widget is introduced.
@@ -175,8 +164,8 @@ tourController.start(
     context,
     onState: (state) {
         switch (state) {
-            case TourIntroducing(index: final index):
-                print('Introducing: $index');
+            case TourIntroducing(step: final step):
+                print('Introducing: $step');
             default:
         }
     }
@@ -196,17 +185,18 @@ When your tour involves introducing widgets inside a `Drawer` or a `Dialog`, you
 2. Start the tour with the following code:
 
    ```dart
-   tourController.start(context, firstIndex: 1);
+   tourController.start(context, firstStep: TourStep.buttonOnDialog);
    ```
 
 #### Case 2: The Introduced Widget is at a Later Index (e.g., Index 4)
 
-In the widget at the preceding index (e.g., Index 3), configure the `FeaturesTour` as follows:
+In the widget at the preceding index (e.g., Tour step details), configure the `FeaturesTour` as follows:
 
 ```dart
 FeaturesTour(
     // Other configurations...
-    nextIndex: 4, // Specify the next index
+    step: TourStep.button,
+    nextStep: TourStep.buttonOnDrawer, // Specify the next index
     onAfterAction: (introduceResult) {
         if (introduceResult case TourAction.next || TourAction.done) {
             // Open the Drawer or Dialog

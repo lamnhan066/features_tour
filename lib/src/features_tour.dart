@@ -21,22 +21,31 @@ class FeaturesTour extends StatefulWidget {
   /// This widget requires a [controller] of type [FeaturesTourController] and a [child] widget to wrap.
   /// You can use [childConfig] to customize the appearance or behavior of the child widget.
   ///
-  /// The [step] is the enum-based identifier used to order and cache tour entries.
+  /// The [step] is the preferred enum-based identifier used to order, cache,
+  /// and resume tour entries.
+  ///
   /// When a `step` is provided, its `name` is used for cache keys and its enum
-  /// declaration order is used for sequencing.
+  /// declaration order is used for sequencing. Use one enum value per tour step
+  /// so the declaration order matches the intended tour order.
   ///
   /// The legacy [index] is nullable and is only kept for migration from older
   /// numeric-based callers and persisted data.
   ///
-  /// Use [nextIndex] to specify the next index to display.
-  /// The app will pause user interaction until the specified index becomes available, making it ideal
-  /// for scenarios like displaying a [FeaturesTour] in a dialog that opens after the current feature.
-  /// To avoid a poor user experience, configure a timeout using [nextIndexTimeout], with a default of 3 seconds.
-  /// Note that [nextIndex] only applies within the same [controller].
+  /// Use [nextStep] to specify the next step to display.
+  /// The app will pause user interaction until the specified step becomes available,
+  /// making it ideal for scenarios like showing a [FeaturesTour] inside a dialog
+  /// or drawer that opens after the current feature.
   ///
-  /// There is a [previousStepTimeout] to specify the timeout duration
-  /// for waiting on the previous step (for the previous action), with
-  /// a default of 3 seconds.
+  /// If [nextStep] is `null`, the controller falls back to [nextIndex] for legacy
+  /// callers. To avoid a poor user experience, configure a timeout using
+  /// [nextStepTimeout]. If [nextStepTimeout] is `null`, [nextIndexTimeout] is used.
+  /// Note that [nextStep] only applies within the same [controller].
+  ///
+  /// Use [previousStepTimeout] to control how long the controller waits when the
+  /// user presses Previous and the prior step is not available yet.
+  ///
+  /// This is useful when the previous step lives in a surface that needs to be
+  /// reopened first, such as a drawer or dialog. The default is 3 seconds.
   ///
   /// You can disable a tour for specific widgets by setting [enabled] to `false`.
   /// This is particularly useful for lists where only one item should have the tour active.
@@ -224,12 +233,21 @@ class FeaturesTour extends StatefulWidget {
   final double? index;
 
   /// The enum-based step to start after the current one.
+  ///
+  /// Use this when the next tour step appears after the current step triggers a
+  /// surface change, such as opening a drawer or dialog.
   final Enum? nextStep;
 
   /// The timeout for waiting on [nextStep]. If `null`, [nextIndexTimeout] is used.
+  ///
+  /// This is the preferred timeout for step-based navigation. Keep it short so
+  /// the tour can fall back to the next available step quickly.
   final Duration? nextStepTimeout;
 
   /// The timeout for waiting on the previous step.
+  ///
+  /// This applies when the user goes back to a step that must become visible
+  /// again before the controller can show it.
   final Duration previousStepTimeout;
 
   /// Specifies the next [index] to start the tour.

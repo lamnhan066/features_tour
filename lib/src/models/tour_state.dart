@@ -79,7 +79,7 @@ class TourPreDialogButtonPressed extends TourState {
 /// Indicates that a specific feature is currently being introduced.
 class TourIntroducing extends TourState {
   /// Creates a new instance of [TourIntroducing].
-  const TourIntroducing({required this.index, required this.step});
+  const TourIntroducing({this.index, this.step});
 
   /// The index of the feature being introduced.
   final double? index;
@@ -91,7 +91,7 @@ class TourIntroducing extends TourState {
 /// Indicates that the introduction for a specific feature should not be shown.
 class TourSkippedIntroduction extends TourState {
   /// Creates a new instance of [TourSkippedIntroduction].
-  const TourSkippedIntroduction({required this.index, required this.step});
+  const TourSkippedIntroduction({this.index, this.step});
 
   /// The index of the feature that should not be shown.
   final double? index;
