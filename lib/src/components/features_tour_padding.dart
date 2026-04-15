@@ -13,19 +13,26 @@ class FeaturesTourPadding extends StatelessWidget {
   /// [animationCurve] is the curve of the padding animation (default is Curves.easeInOut).
   const FeaturesTourPadding({
     required this.controller,
-    required this.indexes,
+    this.indexes,
+    this.steps,
     this.padding = const EdgeInsets.symmetric(vertical: 30),
     this.child,
     this.animationDuration = const Duration(milliseconds: 300),
     this.animationCurve = Curves.easeInOut,
     super.key,
-  });
+  }) : assert(
+         indexes != null || steps != null,
+         'Either indexes or steps must be provided.',
+       );
 
   /// The controller that manages the tour state.
   final FeaturesTourController controller;
 
   /// Updates the padding of all registered FeaturesTourPadding widgets based on the current tour index.
-  final Set<double> indexes;
+  final Set<double>? indexes;
+
+  /// Updates the padding of all registered FeaturesTourPadding widgets based on the current tour step.
+  final Set<Enum>? steps;
 
   /// The amount of padding to apply (default is 30 pixels vertically).
   final EdgeInsetsGeometry padding;
@@ -48,7 +55,10 @@ class FeaturesTourPadding extends StatelessWidget {
           duration: animationDuration,
           curve: animationCurve,
           padding:
-              value != null && indexes.contains(value)
+              value != null &&
+                      ((indexes != null && indexes!.contains(value)) ||
+                          (steps != null &&
+                              steps!.any((e) => e.index.toDouble() == value)))
                   ? padding
                   : EdgeInsets.zero,
           child: child,

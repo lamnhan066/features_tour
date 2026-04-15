@@ -10,6 +10,7 @@
 * Add `FeaturesTour.onBeforeAction(TourAction action)` as the new pre-action hook and mark `FeaturesTour.onBeforeIntroduce` as deprecated.
 * Add `FeaturesTour.onAfterAction(TourAction action)` as the new post-action hook and mark `FeaturesTour.onAfterIntroduce` as deprecated.
 * The default position of the `skip` button is moved to the bottom-center.
+* Add `FeaturesTourPadding.steps` parameter to accept the set of `step`.
 * Add more tests.
 
 ## 0.6.2

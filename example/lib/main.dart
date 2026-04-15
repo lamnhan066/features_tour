@@ -48,16 +48,16 @@ void main() {
   runApp(const ChangeableThemeMaterialApp());
 }
 
-abstract class MainTourIndex {
-  static const drawer = 0.0;
-  static const buttonOnDrawer = 1.0;
-  static const settingAction = 2.0;
-  static const list = 3.0;
-  static const firstItem = 4.0;
-  static const item90 = 5.0;
-  static const dialogButton = 5.5;
-  static const restartTourButton = 6.0;
-  static const floatingButton = 7.0;
+enum MainTourIndex {
+  drawer,
+  buttonOnDrawer,
+  settingAction,
+  list,
+  firstItem,
+  item90,
+  dialogButton,
+  restartTourButton,
+  floatingButton,
 }
 
 class ChangeableThemeMaterialApp extends StatefulWidget {
@@ -118,7 +118,7 @@ class _AppState extends State<App> {
           actions: [
             FeaturesTour(
               controller: tourController,
-              index: MainTourIndex.dialogButton,
+              step: MainTourIndex.dialogButton,
               introduce: const Text('Tap here to close the dialog'),
               onAfterAction: (result) {
                 Navigator.of(dialogContext).pop();
@@ -153,8 +153,8 @@ class _AppState extends State<App> {
         title: const Text('App'),
         leading: FeaturesTour(
           controller: tourController,
-          index: MainTourIndex.drawer,
-          nextIndex: MainTourIndex.buttonOnDrawer,
+          step: MainTourIndex.drawer,
+          nextStep: MainTourIndex.buttonOnDrawer,
           onAfterAction: (result) {
             if (result != TourAction.next && result != TourAction.done) {
               return;
@@ -173,7 +173,7 @@ class _AppState extends State<App> {
         actions: [
           FeaturesTour(
             controller: tourController,
-            index: MainTourIndex.settingAction,
+            step: MainTourIndex.settingAction,
             onAfterAction: (action) {
               if (action == TourAction.previous) {
                 _openDrawer();
@@ -197,7 +197,7 @@ class _AppState extends State<App> {
         child: Center(
           child: FeaturesTour(
             controller: tourController,
-            index: MainTourIndex.buttonOnDrawer,
+            step: MainTourIndex.buttonOnDrawer,
             introduce: const Text('Tap here to close the drawer'),
             onAfterAction: (result) {
               if (result
@@ -219,7 +219,7 @@ class _AppState extends State<App> {
       ),
       body: FeaturesTour(
         controller: tourController,
-        index: MainTourIndex.list,
+        step: MainTourIndex.list,
         introduce: Text(
           'This is a list of items',
           style: TextStyle(
@@ -254,8 +254,8 @@ class _AppState extends State<App> {
                   children: [
                     FeaturesTour(
                       controller: tourController,
-                      index: MainTourIndex.firstItem,
-                      nextIndex: MainTourIndex.item90,
+                      step: MainTourIndex.firstItem,
+                      nextStep: MainTourIndex.item90,
                       introduce: const Text('This is the item 0'),
                       onBeforeAction: (action) async {
                         if (action case TourAction.previous) {
@@ -275,8 +275,8 @@ class _AppState extends State<App> {
                       FeaturesTour(
                         enabled: index == 95,
                         controller: tourController,
-                        index: MainTourIndex.item90,
-                        nextIndex: MainTourIndex.dialogButton,
+                        step: MainTourIndex.item90,
+                        nextStep: MainTourIndex.dialogButton,
                         introduce: Text('This is the item $index'),
                         onBeforeAction: (action) async {
                           if (action
@@ -324,7 +324,7 @@ class _AppState extends State<App> {
                       children: [
                         FeaturesTour(
                           controller: tourController,
-                          index: MainTourIndex.restartTourButton,
+                          step: MainTourIndex.restartTourButton,
                           onAfterAction: (action) {
                             if (action case TourAction.previous) {
                               _showTourDialogIfNeeded();
@@ -350,7 +350,7 @@ class _AppState extends State<App> {
                         ),
                         FeaturesTour(
                           controller: tourController,
-                          index: MainTourIndex.floatingButton,
+                          step: MainTourIndex.floatingButton,
                           introduce: const Text('Tap here to add a new item'),
                           childConfig: ChildConfig(
                             shapeBorder: const CircleBorder(),
@@ -365,7 +365,7 @@ class _AppState extends State<App> {
                     ),
                     FeaturesTourPadding(
                       controller: tourController,
-                      indexes: {
+                      steps: const {
                         MainTourIndex.floatingButton,
                         MainTourIndex.restartTourButton
                       },
