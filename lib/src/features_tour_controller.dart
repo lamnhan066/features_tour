@@ -94,6 +94,13 @@ class FeaturesTourController {
     final order = _stateOrder(state);
     final identity = _stateIdentity(state);
 
+    if (_debugLog && !_cachedStates.containsKey(order)) {
+      _logger?.debug(
+        () =>
+            'Registering step $identity. Total states: ${_cachedStates.length}',
+      );
+    }
+
     _states[order] = state;
     _cachedStates[order] = state;
     _globalKeys[order] ??= GlobalObjectKey('$pageName-$identity');
@@ -103,21 +110,11 @@ class FeaturesTourController {
       _pendingIndexes[order]!.complete(state);
       _pendingIndexes.remove(order);
     }
-
-    if (_debugLog && !_cachedStates.containsKey(order)) {
-      _logger?.debug(
-        () =>
-            'Registering step $identity. Total states: ${_cachedStates.length}',
-      );
-    }
   }
 
   /// Unregisters the current FeaturesTour state.
   void _unregister(_FeaturesTourState state) {
     final order = _stateOrder(state);
-
-    _states.remove(order);
-    _cachedStates.remove(order);
 
     if (_debugLog && !_cachedStates.containsKey(order)) {
       _logger?.debug(
@@ -126,6 +123,9 @@ class FeaturesTourController {
             'Active states: ${_states.length}. Cached states: ${_cachedStates.length}',
       );
     }
+
+    _states.remove(order);
+    _cachedStates.remove(order);
   }
 
   /// Starts the tour. This package automatically saves the state of the tour,
