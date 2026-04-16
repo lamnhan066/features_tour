@@ -120,7 +120,7 @@ class _AppState extends State<App> {
               controller: tourController,
               step: MainTourIndex.dialogButton,
               introduce: const Text('Tap here to close the dialog'),
-              onAfterAction: (result) {
+              onAfterAction: (action) {
                 Navigator.of(dialogContext).pop();
               },
               child: TextButton(
@@ -155,8 +155,8 @@ class _AppState extends State<App> {
           controller: tourController,
           step: MainTourIndex.drawer,
           nextStep: MainTourIndex.buttonOnDrawer,
-          onAfterAction: (result) {
-            if (result != TourAction.next && result != TourAction.done) {
+          onAfterAction: (action) {
+            if (action != TourAction.next && action != TourAction.done) {
               return;
             }
 
@@ -199,8 +199,8 @@ class _AppState extends State<App> {
             controller: tourController,
             step: MainTourIndex.buttonOnDrawer,
             introduce: const Text('Tap here to close the drawer'),
-            onAfterAction: (result) {
-              if (result
+            onAfterAction: (action) {
+              if (action
                   case TourAction.next ||
                       TourAction.done ||
                       TourAction.previous ||
@@ -289,8 +289,8 @@ class _AppState extends State<App> {
                             );
                           }
                         },
-                        onAfterAction: (introduceResult) async {
-                          if (introduceResult case TourAction.previous) {
+                        onAfterAction: (action) async {
+                          if (action case TourAction.previous) {
                             // Scroll to the first item when item 90 is tapped
                             await scrollController.animateTo(
                               0,
@@ -300,7 +300,7 @@ class _AppState extends State<App> {
                             return;
                           }
 
-                          if (introduceResult case TourAction.next) {
+                          if (action case TourAction.next) {
                             _showTourDialogIfNeeded();
                           }
                         },
