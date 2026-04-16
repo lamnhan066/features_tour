@@ -8,280 +8,247 @@ Features Tour is a package that enables you to easily create tours to introduce 
 
 Demo: [pub.lamnhan.dev/features\_tour](https://pub.lamnhan.dev/features_tour)
 
-## Usage
+## Quick Start
 
 ### Create a controller
 
 ```dart
-// Use this method to set the unique name for the current page.
 final tourController = FeaturesTourController('HomePage');
 ```
 
-### Create a tour widget
+Use a stable page name. The controller persists tour progress by page, so changing the name will make the tour look new again.
+
+### Wrap a feature
+
+Prefer enum-based steps. The enum declaration order becomes the tour order, and the step name becomes the cache key.
 
 ```dart
-enum TourStep { buttonOnDialog, button, drawer, details, buttonOnDrawer }
+enum HomeTourStep {
+    drawer,
+    drawerButton,
+    settings,
+    list,
+    firstItem,
+    lastItem,
+    dialogButton,
+    restart,
+    addButton,
+}
 
 FeaturesTour(
     controller: tourController,
-    step: TourStep.drawer,
-    nextStep: TourStep.details,
-    nextStepTimeout: const Duration(seconds: 3),
-    previousStepTimeout: const Duration(seconds: 3),
-    introduce: const Text('This is TextButton 1'),
-    onBeforeAction: (action) async {
-        if (action == TourAction.introduce) {
-            // Do something before introducing this widget for the first time.
-        } else if (action == TourAction.previous) {
-            // Do something before returning to this widget from the next step.
+    step: HomeTourStep.drawer,
+    nextStep: HomeTourStep.drawerButton,
+    introduce: const Text('Tap here to open the drawer'),
+    onAfterAction: (action) {
+        if (action case TourAction.next || TourAction.done) {
+            scaffoldKey.currentState?.openDrawer();
         }
     },
-    onAfterAction: (introduceResult) async {
-        if (introduceResult case TourAction.next || TourAction.done) {
-            // Do something after the current widget is shown
-            // and the user presses the next or done button.
-        } else if (introduceResult == TourAction.previous) {
-            // Do something after the user goes back to the previous feature.
-        }
-    },
-    child: TextButton(
-        onPressed: () {},
-        child: const Text('TextButton 1'),
+    child: IconButton(
+        icon: const Icon(Icons.menu),
+        onPressed: () => scaffoldKey.currentState?.openDrawer(),
     ),
 )
 ```
 
-You can also control the active step programmatically from the controller when you build a custom introduction UI:
+Use `onBeforeAction` to prepare the current surface, for example by scrolling a widget into view. Use `onAfterAction` when the current step should open a drawer, dialog, or another surface before the next step appears.
 
-```dart
-tourController.next();
-tourController.previous();
-tourController.skip();
-```
-
-### Start a tour
+### Start the tour
 
 ```dart
 @override
 void initState() {
-        tourController.start(
-            context,
-            firstStep: TourStep.drawer,
-            firstStepTimeout: const Duration(seconds: 3),
-        );
     super.initState();
+    tourController.start(
+        context,
+        firstStep: HomeTourStep.drawer,
+        firstStepTimeout: const Duration(seconds: 3),
+    );
 }
 ```
 
-### Set default configuration
+`firstStep` is the preferred entry point. The controller still accepts `firstIndex` and `firstIndexTimeout` for migration, but new code should use the enum-based API.
 
-You can set the default configuration for the app using the `FeaturesTour.setGlobalConfig()` method. This sets the default values for all the configuration options for the Features Tour. You can override these values when you create individual tour steps. **Please notice** that this method should be call in `main` method or before the widget is rendered to avoid unexpected behavior. Here is an example:
+## Global Configuration
+
+Set global defaults in `main()` before the app renders. The example app uses custom dialog labels, custom buttons, rounded introduce styling, and disabled child animation:
 
 ```dart
 void main() {
-    // Set the default value for this app. Please notice that this method should be call here or before
-    // the widget is rendered to avoid unexpected behavior.
     FeaturesTour.setGlobalConfig(
-        /// This value is the base value for all tours, each tour will have its own configurations.
-        ///
-        /// `true` : force to show all the tours, even the pre-dialogs
-        /// `false` : force to not show all the tours and pre-dialogs
-        /// `null` (default) : show when needed.
-        force: null,
-
-        /// Configuration for the `child` widget.
-        childConfig: ChildConfig(
-            backgroundColor: Colors.white,
+        preDialogConfig: PreDialogConfig(
+            enabled: true,
+            title: 'Welcome to Features Tour',
+            content: 'This tour will guide you through the main features of the app.',
+            applyToAllCheckboxLabel: 'Apply to all pages',
+            acceptButtonLabel: 'Start Tour',
+            laterButtonLabel: 'Later',
+            dismissButtonLabel: 'Dismiss',
         ),
-
-        /// Configuration for the `Skip` text button.
+        introduceConfig: RoundedRectIntroduceConfig(),
+        childConfig: ChildConfig(isAnimateChild: false),
         skipConfig: SkipConfig(
-            text: 'SKIP',
+            builder: (context, onPressed) => ElevatedButton.icon(
+                onPressed: onPressed,
+                icon: const Icon(Icons.skip_next),
+                label: const Text('SKIP'),
+            ),
         ),
-
-        /// Configuration for the `Next` text button.
         nextConfig: NextConfig(
-            text: 'NEXT'
+            builder: (context, onPressed) => FilledButton.icon(
+                onPressed: onPressed,
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text('NEXT'),
+            ),
         ),
-
-        /// Configuration for the `Done` text button.
+        previousConfig: PreviousConfig(
+            builder: (context, onPressed) => FilledButton.icon(
+                onPressed: onPressed,
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('PREVIOUS'),
+            ),
+        ),
         doneConfig: DoneConfig(
-            text: 'DONE'
+            builder: (context, onPressed) => FilledButton.icon(
+                onPressed: onPressed,
+                icon: const Icon(Icons.done),
+                label: const Text('DONE'),
+            ),
         ),
-
-        /// Configuration for the `introduce` widget, can know as the description.
-        introduceConfig: IntroduceConfig(
-            backgroundColor: Colors.black,
-        ),
+        debugLog: true,
     );
-  
-    runApp(const MaterialApp(home: MyApp()));
+
+    runApp(const ChangeableThemeMaterialApp());
 }
 ```
 
-With these steps, you can easily create a tour to showcase the features of your app.
+Use `ChildConfig` for the highlighted area, `IntroduceConfig` for the callout, and the button configs for custom navigation affordances. `PreDialogConfig` controls the pre-tour confirmation dialog, including the optional apply-to-all-pages behavior.
 
-## Flows
+## Flow and Callbacks
 
-* The flows of the tour:
+`TourAction` describes the user action that reached or ended a step: `introduce`, `next`, `previous`, `done`, `skip`, `disabled`, and `notMounted`.
 
-### Tour Flow
+`onBeforeAction` runs before the step is introduced. The widget must already be mounted when this hook runs, so use it only for visible preparation like scrolling a list into view or reopening a surface that is already part of the widget tree. Do not use it to open a dialog for the current widget; trigger that from the previous step's `onAfterAction` instead. The first appearance of a step receives `TourAction.introduce`; returning to it from the next step receives `TourAction.previous`.
 
-The following steps outline the flow of a Features Tour:
+`onAfterAction` runs after the user chooses a navigation action from the current step. This is where the example app opens the drawer for the next surface, closes the drawer when going back, or opens a dialog after the last list item.
 
-1. **Start the Tour**\
-   Begin the tour by calling the `start` method on the `FeaturesTourController`.
-
-2. **Wait for the First Widget**\
-    The tour waits for the first widget to be displayed. Prefer `FeaturesTourController.firstStep` for new code, and use `FeaturesTourController.firstStepTimeout` to control how long the controller waits before falling back to `firstIndex` when one is provided. Legacy `firstIndex` and `firstIndexTimeout` remain available for migration.
-
-3. **Execute Before-Introduction Logic**\
-    Before introducing a widget, the `FeaturesTour.onBeforeAction` callback is executed with the action that led to this widget. The first widget receives `TourAction.introduce`, the next widget receives `TourAction.next`, and a widget shown again after going back receives `TourAction.previous`.
-
-    > Important: `onBeforeAction` runs only after the current tour state is already mounted, so use it to prepare the visible widget, such as scrolling it into view. To open a `Drawer` or show a `Dialog` for a later step, trigger that UI from `onAfterAction` in the previous `FeaturesTour`, then use `nextStep` so the controller waits for the newly visible step. To start on a later step, use `firstStep`, and the controller will fall back to `firstIndex` if the step is not available in time.
-
-4. **Show the Introduction**\
-   The widget's introduction is displayed, along with navigation buttons:
-   * **Next**: Shown if there is a subsequent widget in the tour.
-   * **Skip**: Allows the user to skip the tour.
-    * **Done**: Shown if the current widget is the last in the tour.
-    * **Previous**: Shown if there is a previous widget in the tour.
-
-5. **Execute After-Introduction Logic**\
-    After the user interacts with the introduction (e.g., presses `Next`, `Done`, `Skip`, or `Previous`), the `FeaturesTour.onAfterAction` callback is executed. This callback receives the action chosen from the current widget, so it will be `TourAction.next`, `TourAction.done`, `TourAction.skip`, or `TourAction.previous`. Note: `onAfterIntroduce` is deprecated and replaced by `onAfterAction`.
-
-6. **Handle Back Navigation**\
-    When the user presses `Previous`, the current widget's `onAfterAction` callback receives `TourAction.previous` first. The controller then attempts to find and wait for the previous step to become available again, for example after reopening a drawer or dialog. It waits up to the step's configured `previousStepTimeout` (default: 3 seconds). If the previous step becomes available within the timeout, the previous widget's `onBeforeAction` callback receives `TourAction.previous` and that widget is shown again. If the previous step is not available before the timeout elapses, the previous action is ignored.
-
-7. **Wait for the Next Widget**\
-    The tour waits for the next widget to be displayed. Prefer `FeaturesTour.nextStep` for new code, and use `FeaturesTour.nextStepTimeout` to control how long the controller waits before falling back to the next available step. Legacy `FeaturesTour.nextIndex` and `FeaturesTour.nextIndexTimeout` remain available for migration.
-
-8. **Repeat the Process**\
-   Steps 3 to 6 are repeated for each widget in the tour until the last widget is introduced.
-
-By following this flow, you can create an engaging and seamless tour experience for your app's users.
-
-You can also know to the current state of the tour by using `onState` callback:
+`onStateChanged` lets you observe the tour lifecycle. Common states include `TourInProgress`, `TourIntroducing`, `TourPreDialogShownDefault`, `TourPreDialogShownCustom`, `TourCompleted`, and `TourEmpty`.
 
 ```dart
 tourController.start(
     context,
-    onState: (state) {
+    onStateChanged: (state) {
         switch (state) {
             case TourIntroducing(step: final step):
-                print('Introducing: $step');
+                debugPrint('Introducing: $step');
+            case TourCompleted():
+                debugPrint('Tour finished');
             default:
+                break;
         }
-    }
+    },
 );
 ```
 
-### Handling `Drawer` or `Dialog` in the Tour
+## Advanced Flows
 
-When your tour involves introducing widgets inside a `Drawer` or a `Dialog`, you can handle it as follows:
+### Drawer and dialog tours
 
-#### Case 1: The Introduced Widget is at the First Index
-
-1. Open the `Drawer` or `Dialog` programmatically:
-   * For a `Drawer`, use `scaffoldKey.currentState?.openDrawer()`.
-   * For a `Dialog`, use `showDialog()`.
-
-2. Start the tour with the following code:
-
-   ```dart
-   tourController.start(context, firstStep: TourStep.buttonOnDialog);
-   ```
-
-#### Case 2: The Introduced Widget is at a Later Index (e.g., Index 4)
-
-In the widget at the preceding index (e.g., Tour step details), configure the `FeaturesTour` as follows:
+Open the target surface from the previous step and let `nextStep` wait for the new widget to appear. This is the pattern used in the example app and in the drawer/dialog tests.
 
 ```dart
 FeaturesTour(
-    // Other configurations...
-    step: TourStep.button,
-    nextStep: TourStep.buttonOnDrawer, // Specify the next index
-    onAfterAction: (introduceResult) {
-        if (introduceResult case TourAction.next || TourAction.done) {
-            // Open the Drawer or Dialog
-            scaffoldKey.currentState?.openDrawer(); // For Drawer
-            // or
-            showDialog(); // For Dialog
-        } else if (introduceResult == TourAction.previous) {
-            // Keep the current route/state ready while moving back
+    controller: tourController,
+    step: HomeTourStep.drawerButton,
+    nextStep: HomeTourStep.settings,
+    onAfterAction: (action) {
+        if (action case TourAction.next || TourAction.done) {
+            scaffoldKey.currentState?.openDrawer();
         }
     },
-    // Other configurations...
+    child: ElevatedButton(
+        onPressed: () => scaffoldKey.currentState?.openDrawer(),
+        child: const Text('Open drawer'),
+    ),
 )
 ```
 
-By following these steps, you can effortlessly integrate `Drawer`, `Dialog`, or even widgets from other screens into your tour flow. This ensures a cohesive and intuitive user experience, regardless of the complexity of your app's navigation or UI structure.
+For dialogs, open the dialog from the prior step, then use a `FeaturesTour` inside the dialog content for the dialog-specific step.
 
-### Handling the `ScrollController`
+### Scroll-driven steps
 
-When dealing with widgets that are not immediately visible due to scrolling, you can use the following approaches:
-
-#### Case 1: The Widget is in the Widget Tree but Invisible on the Screen
-
-Use the `FeaturesTour.onBeforeAction` callback to scroll the widget into view. For the first time a step is shown, the callback receives `TourAction.introduce`. If the user goes back to this step from the next widget, it receives `TourAction.previous`. For example:
+Use `onBeforeAction` to scroll the current item into view before the introduction starts or when the user returns from the next step. The widget must already be mounted when this callback runs, so it is not a good place to open a dialog for the current step.
 
 ```dart
 FeaturesTour(
-    // Other configurations...
+    controller: tourController,
+    step: HomeTourStep.lastItem,
     onBeforeAction: (action) async {
-        if (action == TourAction.introduce) {
-            // Scroll to the end of the list to make the widget visible
+        if (action case TourAction.next || TourAction.previous) {
             await scrollController.animateTo(
                 scrollController.position.maxScrollExtent,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
             );
-        } else if (action == TourAction.previous) {
-            // Restore the widget position if the user goes back
         }
     },
-    // Other configurations...
+    child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text('Item 90'),
+    ),
 )
 ```
 
-This ensures that the widget is brought into the visible area before the introduction begins.
+### Conditional steps in lists
 
-#### Case 2: The Widget is Not in the Widget Tree (e.g., Due to `ListView.builder`)
+When multiple list items share the same `step`, set `enabled: true` on the one item that should participate in the tour and `enabled: false` on the rest.
 
-If the widget is not part of the widget tree (e.g., dynamically created by `ListView.builder`), you can use the approach described in [Handling `Drawer` or `Dialog` in the Tour](#handling-drawer-or-dialog-in-the-tour) to make the widget visible. This involves programmatically triggering the necessary actions to render the widget before introducing it.
+### Bottom edge padding
 
-By following these methods, you can handle scenarios where widgets are either off-screen or dynamically created, ensuring a smooth and uninterrupted tour experience.
-
-### Handling Bottom Edge Widgets
-
-When introducing widgets located near the bottom edge of the screen, navigation buttons may overlap them. To prevent this, use the built-in `FeaturesTourPadding` widget to add bottom padding during specific tour steps.
+Use `FeaturesTourPadding` to keep navigation buttons from overlapping bottom-aligned widgets. Prefer `steps` for enum-based tours.
 
 ```dart
-Column(
-    children: [
-        FeaturesTour(
-            controller: tourController,
-            index: 1.0,
-            introduce: const Text('A bottom edge widget'),
-            childConfig: ChildConfig(
-                shapeBorder: const CircleBorder(),
-                borderSizeInflate: 10.0,
-            ),
-            child: AnBottomEdgeWidget(),
-        ),
-        FeaturesTourPadding(
-            controller: tourController,
-            indexes: {1.0}, // Adds padding when introducing index 1.0
-        ),
-    ],
+FeaturesTourPadding(
+    controller: tourController,
+    steps: const {
+        HomeTourStep.restart,
+        HomeTourStep.addButton,
+    },
 )
 ```
 
-This approach ensures that your bottom edge widgets remain visible and unobstructed during the tour.
+`indexes` is still supported for migration, but `steps` is the preferred API.
+
+## Customization Notes
+
+`IntroduceConfig` can be customized with a builder, barrier color builder, padding, quadrant alignment, alignment, and root overlay support. `RoundedRectIntroduceConfig()` is the preset to use when you want a rounded callout with better contrast out of the box.
+
+`ChildConfig` supports a custom wrapper builder, background color, shape border, animation settings, zoom scale, and border inflation around the highlighted child.
+
+`PreDialogConfig` supports custom labels, button styles, callbacks, and a `customDialogBuilder` if you want to replace the default dialog entirely.
+
+## Migration Notes
+
+- Prefer `step` over `index`.
+- Prefer `nextStep` and `nextStepTimeout` over `nextIndex` and `nextIndexTimeout`.
+- Prefer `FeaturesTourPadding.steps` over `FeaturesTourPadding.indexes`.
+- Prefer `onBeforeAction` and `onAfterAction` over the deprecated `onBeforeIntroduce` and `onAfterIntroduce` callbacks.
+- Prefer `onBeforeAction` and `onAfterAction` over the deprecated `onBeforeIntroduce` and `onAfterIntroduce` callbacks.
+
+- Prefer `onStateChanged` over the deprecated `onState` callback. The older `onState` parameter is still supported for migration but will be removed in a future release.
+
+## Reference Examples
+
+- [example/lib/main.dart](example/lib/main.dart) shows the full app setup, including global config, drawers, dialogs, scrolling, and bottom padding.
+- [test/step_api_test.dart](test/step_api_test.dart) covers enum-based step ordering and caching.
+- [test/drawer_dialog_action_test.dart](test/drawer_dialog_action_test.dart) covers drawer and dialog transitions.
+- [test/introduce_config_test.dart](test/introduce_config_test.dart) covers introduce customization.
+- [test/main_test.dart](test/main_test.dart) covers controller lifecycle and state reporting.
 
 ## Contributions
 
-Contributions to this project are welcome! If you would like to contribute, please feel free to submit pull requests or open issues.
+Contributions to this project are welcome. Open an issue or submit a pull request if you find a bug or want to improve the package.
 
 ## Donations
 

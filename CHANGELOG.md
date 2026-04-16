@@ -1,17 +1,42 @@
 ## Unreleased
 
-* Add `previous` action feature to move back to the previous introduction:
-  * Add `FeaturesTour.previousConfig` to config the previous button.
-  * Add `FeaturesTour.previousStepTimeout` to specify the timeout for the move to previous introduction action.
-  * The default position of this button is at the bottom-left.
-* Add `FeaturesTour.step` as `enum` to replace the double `index` so we can easier to add, modify or reorder an introduction without update the index manually, just update the position of the `enum`.
-* Add step-based navigation APIs: `FeaturesTour.nextStep`, `FeaturesTour.nextStepTimeout`, and `FeaturesTour.previousStepTimeout` while keeping the legacy `nextIndex` and `nextIndexTimeout` APIs for migration compatibility.
-* `IntroduceResult` is replaced by `TourAction` add has been mark as deprecated.
-* Add `FeaturesTour.onBeforeAction(TourAction action)` as the new pre-action hook and mark `FeaturesTour.onBeforeIntroduce` as deprecated.
-* Add `FeaturesTour.onAfterAction(TourAction action)` as the new post-action hook and mark `FeaturesTour.onAfterIntroduce` as deprecated.
-* The default position of the `skip` button is moved to the bottom-center.
-* Add `FeaturesTourPadding.steps` parameter to accept the set of `step`.
-* Add more tests.
+### 0.7.0-rc.1
+
+* Added support for moving back to the previous introduction.
+  * `FeaturesTour.previousConfig` configures the Previous button.
+  * `FeaturesTour.previousStepTimeout` controls how long the controller waits for the previous step to become available again.
+  * The Previous button is shown at the bottom-left.
+* Added enum-based `FeaturesTour.step` to replace the double-based `index` so steps can be added, reordered, or renamed without manual index management.
+* Added step-based navigation APIs: `FeaturesTour.nextStep`, `FeaturesTour.nextStepTimeout`, and `FeaturesTour.previousStepTimeout`.
+* Added `FeaturesTour.onBeforeAction(TourAction action)` as the new pre-action hook and deprecated `FeaturesTour.onBeforeIntroduce`.
+* Added `FeaturesTour.onAfterAction(TourAction action)` as the new post-action hook and deprecated `FeaturesTour.onAfterIntroduce`.
+* Added `FeaturesTourPadding.steps` for enum-based padding triggers.
+* Added more tests for the updated tour flow.
+* Refreshed the README to document the current API, example app, and advanced flows.
+
+### Changed
+
+* Moved the `SKIP` button from bottom-left to bottom-center.
+* Kept the legacy `nextIndex` and `nextIndexTimeout` APIs available for migration compatibility.
+* Kept the legacy numeric `index` APIs available for migration compatibility.
+
+### Deprecated
+
+* `IntroduceResult` is deprecated in favor of `TourAction`.
+* `TourActionEmitted.result` is deprecated in favor of `TourActionEmitted.action`.
+* `FeaturesTour.onBeforeIntroduce` is deprecated in favor of `onBeforeAction(TourAction.introduce)`.
+* `FeaturesTour.onAfterIntroduce` is deprecated in favor of `onAfterAction(TourAction)`.
+* `FeaturesTour.onState` is deprecated in favor of `onStateChanged(TourState state)`.
+
+### Breaking Changes
+
+* A new `PREVIOUS` button now appears at the bottom-left corner.
+* The `SKIP` button is no longer shown at the bottom-left corner.
+
+### Migration Notes
+
+* The preferred tour identifier is now `step` instead of the double-based `index`, but the legacy `index` API is still supported for migration compatibility.
+* Prefer `onStateChanged` over the deprecated `onState` parameter when observing tour lifecycle updates.
 
 ## 0.6.2
 
