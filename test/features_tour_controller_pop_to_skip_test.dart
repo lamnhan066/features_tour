@@ -56,7 +56,7 @@ void main() {
         context,
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collected.add(state);
           if (state is TourIntroducing) {
             // tap the visible SKIP button to simulate user back navigation
@@ -104,7 +104,7 @@ void main() {
         force: true,
         delay: Duration.zero,
         popToSkip: false,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collected.add(state);
           if (state is TourIntroducing && !seenIntro) {
             seenIntro = true;

@@ -61,7 +61,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -130,7 +130,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -205,7 +205,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -294,7 +294,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: 1)) {
@@ -359,7 +359,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -437,7 +437,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -516,7 +516,7 @@ void main() {
         await controller.start(
           context,
           delay: Duration.zero,
-          onState: (state) {
+          onStateChanged: (state) {
             collectedStates.add(state);
           },
         );
@@ -571,7 +571,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -656,7 +656,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -732,7 +732,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -796,7 +796,7 @@ void main() {
             context,
             force: true,
             delay: Duration.zero,
-            onState: (state) async {
+            onStateChanged: (state) async {
               collectedStates.add(state);
 
               if (state is TourIntroducing) {
@@ -858,7 +858,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state is TourIntroducing) {
@@ -932,7 +932,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourActionEmitted(action: TourAction.previous)) {
@@ -1048,7 +1048,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourActionEmitted(action: TourAction.previous)) {
@@ -1145,7 +1145,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: 1)) {
@@ -1215,7 +1215,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: 1)) {
@@ -1277,7 +1277,7 @@ void main() {
             context,
             force: true,
             delay: Duration.zero,
-            onState: (state) async {
+            onStateChanged: (state) async {
               collectedStates.add(state);
 
               if (state case TourIntroducing(index: 1)) {
@@ -1341,7 +1341,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -1448,7 +1448,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -1531,7 +1531,7 @@ void main() {
             title: 'Introduction',
             acceptButtonLabel: 'Okay',
           ),
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state is TourPreDialogShownDefault) {
@@ -1602,7 +1602,7 @@ void main() {
             title: 'Introduction',
             laterButtonLabel: 'Later',
           ),
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state is TourPreDialogShownDefault) {
@@ -1662,7 +1662,7 @@ void main() {
               dismissButtonLabel: 'Dismiss',
               applyToAllCheckboxLabel: 'Apply to all',
             ),
-            onState: (state) async {
+            onStateChanged: (state) async {
               collectedStates.add(state);
 
               if (state is TourPreDialogShownDefault) {
@@ -1738,7 +1738,7 @@ void main() {
               acceptButtonLabel: 'Okay',
               applyToAllCheckboxLabel: 'Apply to all',
             ),
-            onState: (state) async {
+            onStateChanged: (state) async {
               collectedStates.add(state);
               if (state is TourPreDialogShownDefault) {
                 await tester.pump();
@@ -1804,7 +1804,7 @@ void main() {
             force: true,
             delay: Duration.zero,
             preDialogConfig: PreDialogConfig(enabled: true),
-            onState: (state) async {
+            onStateChanged: (state) async {
               collectedStates.add(state);
               if (state is TourIntroducing) {
                 await tester.pump();
@@ -1873,7 +1873,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {
@@ -1946,7 +1946,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(index: final index)) {

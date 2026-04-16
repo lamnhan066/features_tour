@@ -66,7 +66,7 @@ void main() {
         await controller.start(
           context,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             if (state case TourIntroducing()) {
               await tester.pump();
 
@@ -139,7 +139,7 @@ void main() {
         await controller.start(
           context,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             if (state case TourIntroducing()) {
               await tester.pump();
 
@@ -219,7 +219,7 @@ void main() {
         await controller.start(
           context,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             if (state case TourIntroducing(index: 1.0)) {
               await tester.pump();
 

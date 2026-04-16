@@ -43,7 +43,7 @@ void main() {
         tester.element(find.byType(App)),
         force: true,
         delay: Duration.zero,
-        onState: (s) async {
+        onStateChanged: (s) async {
           states.add(s);
         },
       );
@@ -86,7 +86,7 @@ void main() {
         tester.element(find.byType(App)),
         force: true,
         delay: Duration.zero,
-        onState: (s) async {
+        onStateChanged: (s) async {
           states.add(s);
         },
       );

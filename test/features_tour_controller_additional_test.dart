@@ -50,7 +50,7 @@ void main() {
         context,
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collected.add(state);
         },
       );
@@ -99,7 +99,7 @@ void main() {
         delay: Duration.zero,
         firstIndex: 999, // nonexistent index to force timeout
         firstIndexTimeout: const Duration(milliseconds: 50),
-        onState: (state) async {
+        onStateChanged: (state) async {
           collected.add(state);
           if (state is TourIntroducing) {
             // finish this step
@@ -142,7 +142,7 @@ void main() {
         tester.element(find.byType(Scaffold)),
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collected.add(state);
           if (state is TourIntroducing) {
             controller.done();
@@ -170,7 +170,7 @@ void main() {
         tester.element(find.byType(Scaffold)),
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collected.add(state);
           if (state is TourIntroducing) {
             // stop quickly
@@ -211,7 +211,7 @@ void main() {
         tester.element(find.byType(Scaffold)),
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           if (state is TourIntroducing) {
             c1.skip();
             await tester.pump();
@@ -242,7 +242,7 @@ void main() {
         tester.element(find.byType(Scaffold)),
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           if (state is TourIntroducing) {
             c2.skip();
             await tester.pump();

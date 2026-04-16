@@ -58,7 +58,7 @@ void main() {
         context,
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
@@ -133,7 +133,7 @@ void main() {
         force: true,
         delay: Duration.zero,
         firstStep: _TestStep.drawerButton,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
@@ -195,7 +195,7 @@ void main() {
         force: true,
         delay: Duration.zero,
         firstStep: _TestStep.drawerButton,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
@@ -261,7 +261,7 @@ void main() {
           // Fallback to this index when the firstStep times out.
           firstIndex: _TestStep.drawer.index.toDouble(),
           firstIndexTimeout: const Duration(milliseconds: 5),
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(

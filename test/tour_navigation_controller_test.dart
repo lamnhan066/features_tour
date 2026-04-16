@@ -553,7 +553,7 @@ void main() {
         context,
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
@@ -647,7 +647,7 @@ void main() {
         context,
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
@@ -705,7 +705,7 @@ void main() {
         context,
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collectedStates.add(state);
 
           if (state case TourIntroducing(step: final step)) {
@@ -830,7 +830,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(
@@ -917,7 +917,7 @@ void main() {
         context,
         force: true,
         delay: Duration.zero,
-        onState: (state) async {
+        onStateChanged: (state) async {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
@@ -1103,7 +1103,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(

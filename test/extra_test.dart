@@ -149,7 +149,7 @@ void main() {
             force: true,
             delay: Duration.zero,
             preDialogConfig: PreDialogConfig(enabled: true),
-            onState: (state) async {
+            onStateChanged: (state) async {
               if (state is TourPreDialogShownDefault) {
                 // Simulate an error in onShownPreDialog
                 throw Exception('Simulated error in onShownPreDialog');
@@ -208,7 +208,7 @@ void main() {
             dismissButtonLabel: 'Dismiss',
             applyToAllCheckboxLabel: 'Apply to all',
           ),
-          onState: (state) async {
+          onStateChanged: (state) async {
             if (state is TourPreDialogShownDefault) {
               await tester.pump();
               await tester.tap(find.byType(Checkbox));
@@ -227,7 +227,7 @@ void main() {
           force: true,
           delay: Duration.zero,
           preDialogConfig: PreDialogConfig(enabled: true),
-          onState: (state) {
+          onStateChanged: (state) {
             collectedStates.add(state);
           },
         );
@@ -262,7 +262,7 @@ void main() {
           force: true,
           delay: Duration.zero,
           preDialogConfig: PreDialogConfig(enabled: true),
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
             if (state is TourPreDialogShownDefault) {
               await tester.pump();
@@ -392,7 +392,7 @@ void main() {
             enabled: true,
             customDialogBuilder: (_, _) async => PreDialogButtonType.accept,
           ),
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
             if (state is TourIntroducing) {
               await tester.pump();
@@ -434,7 +434,7 @@ void main() {
             enabled: true,
             customDialogBuilder: (_, _) => PreDialogButtonType.later,
           ),
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
             if (state is TourIntroducing) {
               await tester.pump();
@@ -494,7 +494,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             if (state is TourIntroducing) {
               await tester.pump();
               // Find the Material widget that draws the border
@@ -541,7 +541,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             if (state is TourIntroducing) {
               await tester.pump();
               final introFinder = find.ancestor(
@@ -597,7 +597,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
             if (state case TourIntroducing(index: final index)) {
               if (index == 1) {

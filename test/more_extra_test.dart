@@ -48,7 +48,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) {
+          onStateChanged: (state) {
             collectedStates.add(state);
           },
         );
@@ -107,7 +107,7 @@ void main() {
             context,
             force: true,
             delay: Duration.zero,
-            onState: (state) async {
+            onStateChanged: (state) async {
               collectedStates.add(state);
               if (state is TourIntroducing && state.index == 1) {
                 await tester.pump();
@@ -167,7 +167,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
             if (state is TourIntroducing) {
               await tester.pump();
@@ -221,7 +221,7 @@ void main() {
           force: true,
           delay: const Duration(milliseconds: 200),
           preDialogConfig: PreDialogConfig(enabled: true),
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
             if (state is TourPreDialogShownDefault) {
               await tester.pump();
@@ -304,7 +304,7 @@ void main() {
             context,
             force: true,
             delay: Duration.zero,
-            onState: (state) async {
+            onStateChanged: (state) async {
               if (state is TourIntroducing) {
                 await tester.pump();
                 final introFinder = find.ancestor(
@@ -384,7 +384,7 @@ void main() {
             laterButtonLabel: 'Later',
             dismissButtonLabel: 'Dismiss',
           ),
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
             if (state is TourPreDialogShownDefault) {
               await tester.pump();
@@ -454,7 +454,7 @@ void main() {
               return PreDialogButtonType.accept;
             },
           ),
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state is TourIntroducing) {
@@ -514,7 +514,7 @@ void main() {
           force: true,
           delay: Duration.zero,
           preDialogConfig: PreDialogConfig(enabled: false),
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state is TourIntroducing) {
@@ -566,7 +566,7 @@ void main() {
           context,
           force: true,
           delay: Duration.zero,
-          onState: (state) async {
+          onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state is TourIntroducing) {
