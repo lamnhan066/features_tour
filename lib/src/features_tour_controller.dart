@@ -179,11 +179,6 @@ class FeaturesTourController {
     FutureOr<void> Function(TourState state)? onState,
     bool popToSkip = true,
   }) async {
-    assert(
-      firstStep == null || firstIndex == null,
-      'Cannot provide both `firstStep` and `firstIndex`. Please use `firstStep` with the corresponding enum value.',
-    );
-
     final effectivePreDialogConfig = preDialogConfig;
     _popToSkip = popToSkip;
     if (_debugLog) {

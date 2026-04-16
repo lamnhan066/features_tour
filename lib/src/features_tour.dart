@@ -87,20 +87,7 @@ class FeaturesTour extends StatefulWidget {
     this.onBeforeIntroduce,
     this.onAfterAction,
     @Deprecated('Use onAfterAction(TourAction) instead.') this.onAfterIntroduce,
-  }) : assert(
-         onBeforeAction != null || onBeforeIntroduce == null,
-         'Cannot use both onBeforeAction and onBeforeIntroduce. '
-         'Please use onBeforeAction(TourAction.introduce) instead of onBeforeIntroduce.',
-       ),
-       assert(
-         onAfterAction != null || onAfterIntroduce == null,
-         'Cannot use both onAfterAction and onAfterIntroduce. '
-         'Please use onAfterAction(TourAction) instead of onAfterIntroduce.',
-       ),
-       assert(
-         index != null || step != null,
-         'Provide either a legacy index or an enum step.',
-       );
+  });
 
   /// The prefix of this package.
   static String _prefix = 'FeaturesTour';
