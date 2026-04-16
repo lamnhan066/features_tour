@@ -66,12 +66,13 @@ class FeaturesTour extends StatefulWidget {
     required this.controller,
     required this.child,
     this.step,
-    this.index,
+    @Deprecated('Use `step` (enum) instead of `index` (double).') this.index,
     this.nextStep,
     this.nextStepTimeout,
     this.previousStepTimeout = const Duration(seconds: 3),
     super.key,
-    this.nextIndex,
+    @Deprecated('Use `nextStep` instead of `nextIndex`.') this.nextIndex,
+    @Deprecated('Use `nextStepTimeout` instead of `nextIndexTimeout`.')
     this.nextIndexTimeout = const Duration(seconds: 3),
     this.childConfig,
     this.introduce = const SizedBox.shrink(),
@@ -88,11 +89,13 @@ class FeaturesTour extends StatefulWidget {
     @Deprecated('Use onAfterAction(TourAction) instead.') this.onAfterIntroduce,
   }) : assert(
          onBeforeAction != null || onBeforeIntroduce == null,
-         'Cannot use both onBeforeAction and onBeforeIntroduce. Please use onBeforeAction(TourAction.introduce) instead of onBeforeIntroduce.',
+         'Cannot use both onBeforeAction and onBeforeIntroduce. '
+         'Please use onBeforeAction(TourAction.introduce) instead of onBeforeIntroduce.',
        ),
        assert(
          onAfterAction != null || onAfterIntroduce == null,
-         'Cannot use both onAfterAction and onAfterIntroduce. Please use onAfterAction(TourAction) instead of onAfterIntroduce.',
+         'Cannot use both onAfterAction and onAfterIntroduce. '
+         'Please use onAfterAction(TourAction) instead of onAfterIntroduce.',
        ),
        assert(
          index != null || step != null,
@@ -229,9 +232,6 @@ class FeaturesTour extends StatefulWidget {
   /// The enum-based step used for ordering and identity.
   final Enum? step;
 
-  /// Legacy numeric index retained only for migration from older callers.
-  final double? index;
-
   /// The enum-based step to start after the current one.
   ///
   /// Use this when the next tour step appears after the current step triggers a
@@ -250,6 +250,10 @@ class FeaturesTour extends StatefulWidget {
   /// again before the controller can show it.
   final Duration previousStepTimeout;
 
+  /// Legacy numeric index retained only for migration from older callers.
+  @Deprecated('Use `step` (enum) instead of `index` (double).')
+  final double? index;
+
   /// Specifies the next [index] to start the tour.
   /// The plugin will wait for this index to appear or until [nextIndexTimeout] is reached.
   /// If set to `null`, the tour will proceed in the natural order of the [index].
@@ -257,11 +261,13 @@ class FeaturesTour extends StatefulWidget {
   /// Note: This value applies only within the same [controller].
   ///
   /// Example: Use this to wait for a dialog to appear before displaying the next step.
+  @Deprecated('Use `nextStep` instead of `nextIndex`.')
   final double? nextIndex;
 
   /// The timeout duration for waiting on [nextIndex]. The default is 3 seconds.
   ///
   /// Ensure this value is not excessively long to maintain a good user experience.
+  @Deprecated('Use `nextStepTimeout` instead of `nextIndexTimeout`.')
   final Duration nextIndexTimeout;
 
   /// Determines whether this widget's actions are enabled.

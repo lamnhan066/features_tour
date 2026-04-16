@@ -13,6 +13,7 @@ class FeaturesTourPadding extends StatelessWidget {
   /// [animationCurve] is the curve of the padding animation (default is Curves.easeInOut).
   const FeaturesTourPadding({
     required this.controller,
+    @Deprecated('Use `steps` (enum) instead of `indexes` (double).')
     this.indexes,
     this.steps,
     this.padding = const EdgeInsets.symmetric(vertical: 30),
@@ -29,6 +30,7 @@ class FeaturesTourPadding extends StatelessWidget {
   final FeaturesTourController controller;
 
   /// Updates the padding of all registered FeaturesTourPadding widgets based on the current tour index.
+  @Deprecated('Use `steps` (enum) instead of `indexes` (double).')
   final Set<double>? indexes;
 
   /// Updates the padding of all registered FeaturesTourPadding widgets based on the current tour step.

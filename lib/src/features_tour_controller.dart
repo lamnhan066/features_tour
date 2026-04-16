@@ -170,7 +170,8 @@ class FeaturesTourController {
     BuildContext context, {
     Enum? firstStep,
     Duration? firstStepTimeout,
-    double? firstIndex,
+    @Deprecated('Use `firstStep` instead of `firstIndex`.') double? firstIndex,
+    @Deprecated('Use `firstStepTimeout` instead of `firstIndexTimeout`.')
     Duration firstIndexTimeout = const Duration(seconds: 3),
     Duration delay = const Duration(milliseconds: 500),
     bool? force,
@@ -178,6 +179,11 @@ class FeaturesTourController {
     FutureOr<void> Function(TourState state)? onState,
     bool popToSkip = true,
   }) async {
+    assert(
+      firstStep == null || firstIndex == null,
+      'Cannot provide both `firstStep` and `firstIndex`. Please use `firstStep` with the corresponding enum value.',
+    );
+
     final effectivePreDialogConfig = preDialogConfig;
     _popToSkip = popToSkip;
     if (_debugLog) {
