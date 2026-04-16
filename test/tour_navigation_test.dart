@@ -524,7 +524,7 @@ void main() {
     );
     expect(
       collectedStates.whereType<TourActionEmitted>().map(
-        (state) => state.result,
+        (state) => state.action,
       ),
       equals([
         TourAction.next,
@@ -647,7 +647,7 @@ void main() {
       contains(selectedExpectation.index),
     );
     expect(
-      collectedStates.whereType<TourActionEmitted>().last.result,
+      collectedStates.whereType<TourActionEmitted>().last.action,
       TourAction.skip,
     );
     expect(collectedStates, contains(isA<TourCompleted>()));
@@ -884,7 +884,7 @@ void main() {
     );
     expect(
       collectedStates.whereType<TourActionEmitted>().map(
-        (state) => state.result,
+        (state) => state.action,
       ),
       equals([
         TourAction.next,

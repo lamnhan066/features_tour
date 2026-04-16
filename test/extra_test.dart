@@ -622,8 +622,8 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
-            'result',
+            (s) => s.action,
+            'action',
             TourAction.skip,
           ),
           isA<TourCompleted>(),

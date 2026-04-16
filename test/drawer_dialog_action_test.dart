@@ -5,16 +5,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum _DrawerDialogStep { drawer, drawerButton, settingAction }
+
 class _StepExpectation {
   const _StepExpectation({
-    required this.index,
+    required this.step,
     required this.actionLabel,
     required this.introLabel,
     required this.drawerOpen,
     required this.dialogOpen,
   });
 
-  final double index;
+  final _DrawerDialogStep step;
   final String actionLabel;
   final String introLabel;
   final bool drawerOpen;
@@ -65,8 +67,8 @@ class _DrawerDialogTourAppState extends State<_DrawerDialogTourApp> {
         title: const Text('Drawer Dialog Tour'),
         leading: FeaturesTour(
           controller: widget.controller,
-          index: 1,
-          nextIndex: 2,
+          step: _DrawerDialogStep.drawer,
+          nextStep: _DrawerDialogStep.drawerButton,
           introduce: const Text('w1 intro'),
           onAfterAction: (result) {
             if (result == TourAction.next) {
@@ -107,8 +109,8 @@ class _DrawerDialogTourAppState extends State<_DrawerDialogTourApp> {
                             const SizedBox(height: 12),
                             FeaturesTour(
                               controller: widget.controller,
-                              index: 2,
-                              nextIndex: 3,
+                              step: _DrawerDialogStep.drawerButton,
+                              nextStep: _DrawerDialogStep.settingAction,
                               introduce: const Text('w2 intro'),
                               onBeforeAction: (action) {
                                 if (action == TourAction.previous) {
@@ -162,7 +164,7 @@ class _DrawerDialogTourAppState extends State<_DrawerDialogTourApp> {
                             const SizedBox(height: 16),
                             FeaturesTour(
                               controller: widget.controller,
-                              index: 3,
+                              step: _DrawerDialogStep.settingAction,
                               doneConfig: DoneConfig(enabled: true),
                               introduce: const Text('w3 intro'),
                               onAfterAction: (result) {
@@ -216,63 +218,63 @@ void main() {
 
       final stepExpectations = <_StepExpectation>[
         const _StepExpectation(
-          index: 1,
+          step: _DrawerDialogStep.drawer,
           actionLabel: 'NEXT',
           introLabel: 'w1 intro',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _StepExpectation(
-          index: 2,
+          step: _DrawerDialogStep.drawerButton,
           actionLabel: 'PREVIOUS',
           introLabel: 'w2 intro',
           drawerOpen: true,
           dialogOpen: false,
         ),
         const _StepExpectation(
-          index: 1,
+          step: _DrawerDialogStep.drawer,
           actionLabel: 'NEXT',
           introLabel: 'w1 intro',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _StepExpectation(
-          index: 2,
+          step: _DrawerDialogStep.drawerButton,
           actionLabel: 'NEXT',
           introLabel: 'w2 intro',
           drawerOpen: true,
           dialogOpen: false,
         ),
         const _StepExpectation(
-          index: 3,
+          step: _DrawerDialogStep.settingAction,
           actionLabel: 'PREVIOUS',
           introLabel: 'w3 intro',
           drawerOpen: false,
           dialogOpen: true,
         ),
         const _StepExpectation(
-          index: 2,
+          step: _DrawerDialogStep.drawerButton,
           actionLabel: 'PREVIOUS',
           introLabel: 'w2 intro',
           drawerOpen: true,
           dialogOpen: false,
         ),
         const _StepExpectation(
-          index: 1,
+          step: _DrawerDialogStep.drawer,
           actionLabel: 'NEXT',
           introLabel: 'w1 intro',
           drawerOpen: false,
           dialogOpen: false,
         ),
         const _StepExpectation(
-          index: 2,
+          step: _DrawerDialogStep.drawerButton,
           actionLabel: 'NEXT',
           introLabel: 'w2 intro',
           drawerOpen: true,
           dialogOpen: false,
         ),
         const _StepExpectation(
-          index: 3,
+          step: _DrawerDialogStep.settingAction,
           actionLabel: 'DONE',
           introLabel: 'w3 intro',
           drawerOpen: false,
@@ -297,11 +299,11 @@ void main() {
           onState: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(step: final step)) {
               expect(stepIndex, lessThan(stepExpectations.length));
 
               final expectation = stepExpectations[stepIndex];
-              expect(index, expectation.index);
+              expect(step, expectation.step);
 
               await tester.pump();
 
@@ -331,14 +333,22 @@ void main() {
       expect(find.text('Dialog is open'), findsNothing);
 
       expect(
-        collectedStates.whereType<TourIntroducing>().map(
-          (state) => state.index,
-        ),
-        equals([1, 2, 1, 2, 3, 2, 1, 2, 3]),
+        collectedStates.whereType<TourIntroducing>().map((state) => state.step),
+        equals([
+          _DrawerDialogStep.drawer,
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.drawer,
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.settingAction,
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.drawer,
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.settingAction,
+        ]),
       );
       expect(
         collectedStates.whereType<TourActionEmitted>().map(
-          (state) => state.result,
+          (state) => state.action,
         ),
         equals([
           TourAction.next,
@@ -352,8 +362,60 @@ void main() {
           TourAction.done,
         ]),
       );
-      expect(collectedStates.whereType<TourBeforeActionCalled>().length, 4);
-      expect(collectedStates.whereType<TourAfterActionCalled>().length, 9);
+      expect(
+        collectedStates.whereType<TourBeforeActionCalled>().map(
+          (state) => state.step,
+        ),
+        equals([
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.drawerButton,
+        ]),
+      );
+      expect(
+        collectedStates.whereType<TourBeforeActionCalled>().map(
+          (state) => state.action,
+        ),
+        equals([
+          TourAction.next,
+          TourAction.next,
+          TourAction.previous,
+          TourAction.next,
+        ]),
+      );
+      expect(
+        collectedStates.whereType<TourAfterActionCalled>().map(
+          (state) => state.step,
+        ),
+        equals([
+          _DrawerDialogStep.drawer,
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.drawer,
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.settingAction,
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.drawer,
+          _DrawerDialogStep.drawerButton,
+          _DrawerDialogStep.settingAction,
+        ]),
+      );
+      expect(
+        collectedStates.whereType<TourAfterActionCalled>().map(
+          (state) => state.action,
+        ),
+        equals([
+          TourAction.next,
+          TourAction.previous,
+          TourAction.next,
+          TourAction.next,
+          TourAction.previous,
+          TourAction.previous,
+          TourAction.next,
+          TourAction.next,
+          TourAction.done,
+        ]),
+      );
       expect(collectedStates, contains(isA<TourCompleted>()));
     },
   );

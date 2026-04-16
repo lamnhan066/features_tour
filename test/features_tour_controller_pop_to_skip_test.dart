@@ -71,7 +71,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      collected.whereType<TourActionEmitted>().last.result,
+      collected.whereType<TourActionEmitted>().last.action,
       TourAction.skip,
     );
     expect(collected, contains(isA<TourCompleted>()));
@@ -122,7 +122,7 @@ void main() {
 
     expect(seenIntro, isTrue);
     expect(
-      collected.whereType<TourActionEmitted>().last.result,
+      collected.whereType<TourActionEmitted>().last.action,
       TourAction.skip,
     );
     expect(collected, contains(isA<TourCompleted>()));

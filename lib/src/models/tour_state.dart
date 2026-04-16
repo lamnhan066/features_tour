@@ -107,7 +107,13 @@ typedef TourBeforeIntroduceCalled = TourBeforeActionCalled;
 /// Indicates that the `introduce` method has been called, but the introduction has not yet started.
 class TourBeforeActionCalled extends TourState {
   /// Creates a new instance of [TourBeforeActionCalled].
-  const TourBeforeActionCalled();
+  const TourBeforeActionCalled({this.action, this.step});
+
+  /// The enum-based step associated with this lifecycle event.
+  final Enum? step;
+
+  /// The action that was being handled when this lifecycle event fired.
+  final TourAction? action;
 }
 
 @Deprecated('Use TourAfterActionCalled instead of TourAfterIntroduceCalled')
@@ -117,7 +123,13 @@ typedef TourAfterIntroduceCalled = TourAfterActionCalled;
 /// Indicates that the `introduce` method has been called, and the introduction has finished.
 class TourAfterActionCalled extends TourState {
   /// Creates a new instance of [TourAfterActionCalled].
-  const TourAfterActionCalled();
+  const TourAfterActionCalled({this.action, this.step});
+
+  /// The enum-based step associated with this lifecycle event.
+  final Enum? step;
+
+  /// The action that completed for this lifecycle event.
+  final TourAction? action;
 }
 
 @Deprecated('Use TourIntroduceResultEmitted instead of TourActionEmitted')
@@ -127,10 +139,17 @@ typedef TourIntroduceResultEmitted = TourActionEmitted;
 /// Indicates that an introduction has been completed, and an action has been emitted.
 class TourActionEmitted extends TourState {
   /// Creates a new instance of [TourActionEmitted].
-  const TourActionEmitted({required this.result});
+  const TourActionEmitted({
+    @Deprecated('Use action instead') this.result,
+    this.action,
+  });
 
   /// The action emitted by the introduction.
-  final TourAction result;
+  final TourAction? action;
+
+  @Deprecated('Use action instead')
+  /// The action emitted by the introduction.
+  final TourAction? result;
 }
 
 /// Indicates that the feature tour has been completed.

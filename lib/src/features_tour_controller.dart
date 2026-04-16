@@ -451,7 +451,12 @@ class FeaturesTourController {
         }
 
         if (didCallBefore) {
-          await onState?.call(const TourBeforeActionCalled());
+          await onState?.call(
+            TourBeforeActionCalled(
+              step: state.widget.step,
+              action: arrivalAction,
+            ),
+          );
         }
 
         if (!context.mounted) {
@@ -491,7 +496,9 @@ class FeaturesTourController {
           didCallAfter = true;
         }
         if (didCallAfter) {
-          await onState?.call(const TourAfterActionCalled());
+          await onState?.call(
+            TourAfterActionCalled(step: state.widget.step, action: result),
+          );
         }
 
         switch (result) {
@@ -509,7 +516,7 @@ class FeaturesTourController {
             break;
         }
 
-        await onState?.call(TourActionEmitted(result: result));
+        await onState?.call(TourActionEmitted(action: result));
 
         arrivalAction = result;
 

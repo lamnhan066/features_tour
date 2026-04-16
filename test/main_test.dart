@@ -159,7 +159,7 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourActionEmitted>().having(
-            (s) => s.result == TourAction.next,
+            (s) => s.action == TourAction.next,
             'TourAction.next',
             true,
           ),
@@ -241,19 +241,19 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
-            (s) => s.result == TourAction.next,
+            (s) => s.action == TourAction.next,
             'TourAction.next',
             true,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
           isA<TourActionEmitted>().having(
-            (s) => s.result == TourAction.previous,
+            (s) => s.action == TourAction.previous,
             'TourAction.previous',
             true,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
-            (s) => s.result == TourAction.skip,
+            (s) => s.action == TourAction.skip,
             'TourAction.skip',
             true,
           ),
@@ -316,7 +316,7 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
           isA<TourActionEmitted>().having(
-            (s) => s.result == TourAction.skip,
+            (s) => s.action == TourAction.skip,
             'TourAction.skip',
             true,
           ),
@@ -387,13 +387,13 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
+            (s) => s.action,
             'result',
             TourAction.next,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
+            (s) => s.action,
             'result',
             TourAction.skip,
           ),
@@ -468,7 +468,7 @@ void main() {
           isA<TourActionEmitted>(),
           isA<TourIntroducing>(),
           isA<TourActionEmitted>().having(
-            (s) => s.result == TourAction.done,
+            (s) => s.action == TourAction.done,
             'TourAction.done',
             true,
           ),
@@ -602,7 +602,7 @@ void main() {
           isA<TourActionEmitted>(),
           isA<TourIntroducing>(),
           isA<TourActionEmitted>().having(
-            (s) => s.result == TourAction.done,
+            (s) => s.action == TourAction.done,
             'TourAction.done',
             true,
           ),
@@ -935,7 +935,7 @@ void main() {
           onState: (state) async {
             collectedStates.add(state);
 
-            if (state case TourActionEmitted(result: TourAction.previous)) {
+            if (state case TourActionEmitted(action: TourAction.previous)) {
               events.add('state.previousEmitted');
             }
 
@@ -979,19 +979,19 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
+            (s) => s.action,
             'result',
             TourAction.next,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
+            (s) => s.action,
             'result',
             TourAction.previous,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
+            (s) => s.action,
             'result',
             TourAction.skip,
           ),
@@ -1051,7 +1051,7 @@ void main() {
           onState: (state) async {
             collectedStates.add(state);
 
-            if (state case TourActionEmitted(result: TourAction.previous)) {
+            if (state case TourActionEmitted(action: TourAction.previous)) {
               events.add('state.previousEmitted');
             }
 
@@ -1095,20 +1095,20 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
-            'result',
+            (s) => s.action,
+            'action',
             TourAction.next,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
-            'result',
+            (s) => s.action,
+            'action',
             TourAction.previous,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
-            'result',
+            (s) => s.action,
+            'action',
             TourAction.skip,
           ),
           isA<TourCompleted>(),
@@ -1166,7 +1166,7 @@ void main() {
       final previousResults =
           collectedStates
               .whereType<TourActionEmitted>()
-              .where((state) => state.result == TourAction.previous)
+              .where((state) => state.action == TourAction.previous)
               .toList();
       expect(previousResults, isEmpty);
       expect(
@@ -1175,8 +1175,8 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
-            'result',
+            (s) => s.action,
+            'action',
             TourAction.done,
           ),
           isA<TourCompleted>(),
@@ -1299,7 +1299,7 @@ void main() {
         final previousResults =
             collectedStates
                 .whereType<TourActionEmitted>()
-                .where((state) => state.result == TourAction.previous)
+                .where((state) => state.action == TourAction.previous)
                 .toList();
         expect(previousResults, isEmpty);
       },
@@ -1376,7 +1376,7 @@ void main() {
       final previousResults =
           collectedStates
               .whereType<TourActionEmitted>()
-              .where((state) => state.result == TourAction.previous)
+              .where((state) => state.action == TourAction.previous)
               .toList();
       expect(previousResults.length, 1);
       // Verify full lifecycle
@@ -1386,20 +1386,20 @@ void main() {
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
-            'result',
+            (s) => s.action,
+            'action',
             TourAction.next,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
-            'result',
+            (s) => s.action,
+            'action',
             TourAction.previous,
           ),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
-            (s) => s.result,
-            'result',
+            (s) => s.action,
+            'action',
             TourAction.skip,
           ),
           isA<TourCompleted>(),
@@ -1475,12 +1475,24 @@ void main() {
         collectedStates,
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
-          isA<TourBeforeActionCalled>(),
+          isA<TourBeforeActionCalled>()
+              .having((s) => s.step, 'step', null)
+              .having((s) => s.action, 'action', TourAction.introduce),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourActionEmitted>(),
-          isA<TourBeforeActionCalled>(),
+          isA<TourActionEmitted>().having(
+            (s) => s.action,
+            'action',
+            TourAction.next,
+          ),
+          isA<TourBeforeActionCalled>()
+              .having((s) => s.step, 'step', null)
+              .having((s) => s.action, 'action', TourAction.next),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
-          isA<TourActionEmitted>(),
+          isA<TourActionEmitted>().having(
+            (s) => s.action,
+            'action',
+            TourAction.done,
+          ),
           isA<TourCompleted>(),
         ]),
       );
