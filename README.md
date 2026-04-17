@@ -253,7 +253,3 @@ Contributions to this project are welcome. Open an issue or submit a pull reques
 ## Donations
 
 If you find this project helpful and would like to support its development, you can make a donation through the following channels:
-
-**PayPal:** [Donate](https://www.paypal.com/donate?hosted_button_id=lamnhan066)
-
-<p align='center'><a href="https://www.buymeacoffee.com/lamnhan066"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=lamnhan066&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" width="200"></a></p>
