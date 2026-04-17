@@ -3,11 +3,17 @@ name: 🚀 Deploy Flutter Web Example on Push
 on:
   push:
     branches:
-      - main
+      - deploy-example
+  pull_request:
+    types: [ closed ]
+    branches:
+      - deploy-example
 
 jobs:
   web-deploy:
     name: 🎉 Deploy Flutter Web Example
+    if: ${{ github.repository_owner == 'lamnhan066' && (github.event_name !=
+      'pull_request' || github.event.pull_request.merged == true) }}
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Checkout Repository
