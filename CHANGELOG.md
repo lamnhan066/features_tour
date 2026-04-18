@@ -1,6 +1,20 @@
-## Unreleased
+## 0.7.0-rc.2
 
-### 0.7.0-rc.1
+### Added
+* Update README to add migration note.
+
+### Migration Notes
+
+* If you don't want to use the `previous` action button, you can use this setting to keeps the old behavior:
+  ```dart
+  FeaturesTour.setGlobalConfig(
+    previousConfig: PreviousConfig(enabled: false),
+    skipConfig: SkipConfig(alignment: Alignment.bottomLeft),
+  );
+
+## 0.7.0-rc.1
+
+### Added
 
 * Added support for moving back to the previous introduction.
   * `FeaturesTour.previousConfig` configures the Previous button.

@@ -230,13 +230,20 @@ FeaturesTourPadding(
 
 ## Migration Notes
 
+### 0.6.0-0.7.0
+
 - Prefer `step` over `index`.
 - Prefer `nextStep` and `nextStepTimeout` over `nextIndex` and `nextIndexTimeout`.
 - Prefer `FeaturesTourPadding.steps` over `FeaturesTourPadding.indexes`.
 - Prefer `onBeforeAction` and `onAfterAction` over the deprecated `onBeforeIntroduce` and `onAfterIntroduce` callbacks.
-- Prefer `onBeforeAction` and `onAfterAction` over the deprecated `onBeforeIntroduce` and `onAfterIntroduce` callbacks.
-
 - Prefer `onStateChanged` over the deprecated `onState` callback. The older `onState` parameter is still supported for migration but will be removed in a future release.
+- If you don't want to use the `previous` action button, you can use this setting to keeps the old behavior:
+  ```dart
+  FeaturesTour.setGlobalConfig(
+    previousConfig: PreviousConfig(enabled: false),
+    skipConfig: SkipConfig(alignment: Alignment.bottomLeft),
+  );
+  ```
 
 ## Reference Examples
 
