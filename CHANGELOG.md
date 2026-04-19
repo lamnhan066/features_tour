@@ -1,6 +1,26 @@
+## 0.7.0-rc.3
+
+### Added
+
+* Make `FeaturesTourController` and `FeaturesTour` generic: `T extends Enum`.
+
+### Changed
+
+* Replace public `step` Enum usages with a generic `T` across public API and internals.
+* Update `FeaturesTourPadding` and related components to accept typed steps/indexes where applicable.
+
+### Migration Notes
+
+* Public API now uses `FeaturesTourController<T extends Enum>` and `FeaturesTour<T extends Enum>`.
+* Update code and tests to instantiate controllers with a concrete enum type, e.g.:
+  ```dart
+  final controller = FeaturesTourController<TourStep>('App');
+  ```
+
 ## 0.7.0-rc.2
 
 ### Added
+
 * Update README to add migration note.
 
 ### Migration Notes
@@ -11,7 +31,6 @@
     previousConfig: PreviousConfig(enabled: false),
     skipConfig: SkipConfig(alignment: Alignment.bottomLeft),
   );
-
 ## 0.7.0-rc.1
 
 ### Added

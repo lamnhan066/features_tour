@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'test_steps.dart';
+
 void main() {
   setUp(() {
     FeaturesTour.setTestingLogger(const LiteLogger(minLevel: LogLevel.debug));
@@ -23,7 +25,7 @@ void main() {
   testWidgets('start returns TourNotMounted when context unmounted', (
     tester,
   ) async {
-    final controller = FeaturesTourController('UnmountTest');
+    final controller = FeaturesTourController<TestStep>('UnmountTest');
     final collected = <TourState>[];
 
     await tester.pumpWidget(
@@ -64,7 +66,7 @@ void main() {
   testWidgets('firstIndex timeout is handled and tour completes', (
     tester,
   ) async {
-    final controller = FeaturesTourController('TimeoutTest');
+    final controller = FeaturesTourController<TestStep>('TimeoutTest');
     final collected = <TourState>[];
 
     await tester.pumpWidget(
@@ -118,7 +120,7 @@ void main() {
   testWidgets('removeState marks preference and re-show after clearing pref', (
     tester,
   ) async {
-    final controller = FeaturesTourController('PrefsTest');
+    final controller = FeaturesTourController<TestStep>('PrefsTest');
     final collected = <TourState>[];
 
     await tester.pumpWidget(
@@ -187,8 +189,8 @@ void main() {
   });
 
   testWidgets('constructor debugLog true/false does not crash', (tester) async {
-    final c1 = FeaturesTourController('Debug1', debugLog: true);
-    final c2 = FeaturesTourController('Debug2', debugLog: false);
+    final c1 = FeaturesTourController<TestStep>('Debug1', debugLog: true);
+    final c2 = FeaturesTourController<TestStep>('Debug2', debugLog: false);
 
     await tester.pumpWidget(
       MaterialApp(

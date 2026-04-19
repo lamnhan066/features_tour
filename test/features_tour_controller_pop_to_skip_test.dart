@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'test_steps.dart';
+
 void main() {
   setUp(() {
     FeaturesTour.setTestingLogger(const LiteLogger(minLevel: LogLevel.debug));
@@ -23,7 +25,7 @@ void main() {
   testWidgets('pop-to-skip completes the tour when back pressed', (
     tester,
   ) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<TestStep>('App');
     final collected = <TourState>[];
 
     await tester.pumpWidget(
@@ -78,7 +80,7 @@ void main() {
   });
 
   testWidgets('pop-to-skip ignored when popToSkip is false', (tester) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<TestStep>('App');
     final collected = <TourState>[];
     var seenIntro = false;
 

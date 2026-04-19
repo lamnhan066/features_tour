@@ -26,7 +26,7 @@ class _StepExpectation {
 class _DrawerDialogTourApp extends StatefulWidget {
   const _DrawerDialogTourApp({required this.controller});
 
-  final FeaturesTourController controller;
+  final FeaturesTourController<_DrawerDialogStep> controller;
 
   @override
   State<_DrawerDialogTourApp> createState() => _DrawerDialogTourAppState();
@@ -213,7 +213,7 @@ void main() {
   testWidgets(
     'navigates across the main screen, drawer, and dialog using TourAction hooks',
     (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<_DrawerDialogStep>('App');
       final collectedStates = <TourState>[];
 
       final stepExpectations = <_StepExpectation>[

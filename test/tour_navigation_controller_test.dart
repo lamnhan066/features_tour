@@ -40,7 +40,7 @@ class _TourExpectation {
 class _TimeoutHarness extends StatelessWidget {
   const _TimeoutHarness({required this.controller});
 
-  final FeaturesTourController controller;
+  final FeaturesTourController<_TimeoutStep> controller;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class _TimeoutHarness extends StatelessWidget {
 class _PreviousTimeoutHarness extends StatefulWidget {
   const _PreviousTimeoutHarness({required this.controller});
 
-  final FeaturesTourController controller;
+  final FeaturesTourController<_PreviousTimeoutStep> controller;
 
   @override
   State<_PreviousTimeoutHarness> createState() =>
@@ -115,7 +115,7 @@ class _PreviousTimeoutHarnessState extends State<_PreviousTimeoutHarness> {
 class _TourHarness extends StatefulWidget {
   const _TourHarness({required this.controller});
 
-  final FeaturesTourController controller;
+  final FeaturesTourController<_TourIndex> controller;
 
   @override
   State<_TourHarness> createState() => _TourHarnessState();
@@ -479,7 +479,7 @@ void main() {
   testWidgets('walks next through all widgets and completes (controller)', (
     tester,
   ) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<_TourIndex>('App');
     final collectedStates = <TourState>[];
 
     final expectations = <_TourExpectation>[
@@ -632,7 +632,7 @@ void main() {
   testWidgets('falls back to the next ordered step when nextStep times out', (
     tester,
   ) async {
-    final controller = FeaturesTourController('TimeoutApp');
+    final controller = FeaturesTourController<_TimeoutStep>('TimeoutApp');
     final collectedStates = <TourState>[];
 
     await tester.pumpWidget(
@@ -689,7 +689,9 @@ void main() {
   testWidgets('keeps the current step when previousStepTimeout times out', (
     tester,
   ) async {
-    final controller = FeaturesTourController('PreviousTimeoutApp');
+    final controller = FeaturesTourController<_PreviousTimeoutStep>(
+      'PreviousTimeoutApp',
+    );
     final collectedStates = <TourState>[];
     var sawSecondStepTwice = false;
 
@@ -754,7 +756,7 @@ void main() {
   testWidgets(
     'skips at a seeded random point and closes active surfaces (controller)',
     (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<_TourIndex>('App');
       final collectedStates = <TourState>[];
       final expectedSteps = <Enum>[
         _TourIndex.drawer,
@@ -880,7 +882,7 @@ void main() {
   testWidgets('walks previous back through all widgets (controller)', (
     tester,
   ) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<_TourIndex>('App');
     final collectedStates = <TourState>[];
     final expectedSteps = <Enum>[
       _TourIndex.drawer,
@@ -1006,7 +1008,7 @@ void main() {
   testWidgets(
     'moves next and previous around drawer and dialog transitions (controller)',
     (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<_TourIndex>('App');
       final collectedStates = <TourState>[];
       final expectations = <_TourExpectation>[
         const _TourExpectation(

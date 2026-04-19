@@ -7,6 +7,7 @@ import 'package:lite_logger/lite_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
+import 'test_steps.dart';
 
 void main() {
   var collectedStates = <TourState>[];
@@ -30,7 +31,7 @@ void main() {
     testWidgets('When tour starts, it should show the first feature', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -98,7 +99,7 @@ void main() {
     });
 
     testWidgets('Tapping NEXT shows the next feature', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -173,7 +174,7 @@ void main() {
     testWidgets('Tapping PREVIOUS returns to the prior feature', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       var returnedToFirstFeature = false;
 
       await tester.pumpWidget(
@@ -263,7 +264,7 @@ void main() {
     });
 
     testWidgets('Tapping SKIP dismisses the tour', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -328,7 +329,7 @@ void main() {
     testWidgets('Programmatic next and dismiss complete the tour', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -405,7 +406,7 @@ void main() {
     testWidgets('Tapping DONE on last feature dismisses the tour', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -487,7 +488,7 @@ void main() {
         'FeaturesTour_App_2.0': true,
       });
 
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       await tester.pumpWidget(
         MaterialApp(
           home: App(
@@ -540,7 +541,7 @@ void main() {
         'FeaturesTour_App_2.0': true,
       });
 
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       await tester.pumpWidget(
         MaterialApp(
           home: App(
@@ -614,7 +615,7 @@ void main() {
     testWidgets('nextIndex waits for the specified feature to appear', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       final showSecond = ValueNotifier(false);
 
       await tester.pumpWidget(
@@ -700,7 +701,7 @@ void main() {
     });
 
     testWidgets('Tour skips features with enabled: false', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -765,7 +766,7 @@ void main() {
     testWidgets(
       'onBeforeAction(introduce) is called before showing the intro',
       (tester) async {
-        final controller = FeaturesTourController('App');
+        final controller = FeaturesTourController<TestStep>('App');
         var called = false;
 
         await tester.pumpWidget(
@@ -827,7 +828,7 @@ void main() {
     testWidgets('onAfterAction is called after showing the intro', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       var called = false;
       TourAction? receivedResult;
 
@@ -887,7 +888,7 @@ void main() {
     });
 
     testWidgets('Previous callbacks wrap the previous action', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       final events = <String>[];
       var returnedToFirstFeature = false;
 
@@ -1003,7 +1004,7 @@ void main() {
     testWidgets('controller.previous matches PREVIOUS callback behavior', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       final events = <String>[];
       var returnedToFirstFeature = false;
 
@@ -1119,7 +1120,7 @@ void main() {
     testWidgets('controller.previous returns false when no previous exists', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       var previousAttempted = false;
 
       await tester.pumpWidget(
@@ -1187,7 +1188,7 @@ void main() {
     testWidgets('controller.previous returns false outside active introduce', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       // Attempt to call previous before tour starts
       expect(controller.previous(), isFalse);
@@ -1245,7 +1246,7 @@ void main() {
     testWidgets(
       'controller.previous does not call onBeforeAction(previous) when unavailable',
       (tester) async {
-        final controller = FeaturesTourController('App');
+        final controller = FeaturesTourController<TestStep>('App');
         final actions = <TourAction>[];
 
         await tester.pumpWidget(
@@ -1308,7 +1309,7 @@ void main() {
     testWidgets('controller.previous completes only once per introduction', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       var returnedToFirstFeature = false;
       final previousCallTracker = <String>[];
 
@@ -1410,7 +1411,7 @@ void main() {
     testWidgets('onBeforeAction receives the action that led to each shown step', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       final actions = <TourAction>[];
 
       await tester.pumpWidget(
@@ -1501,7 +1502,7 @@ void main() {
 
   group('PreDialog', () {
     testWidgets('Tapping "Okay" in pre-dialog starts the tour', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -1572,7 +1573,7 @@ void main() {
     testWidgets('Tapping "Later" in pre-dialog dismisses the tour for now', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -1631,7 +1632,7 @@ void main() {
     testWidgets(
       'Tapping "Dismiss" with "Apply to all" dismisses all tours permanently',
       (tester) async {
-        final controller = FeaturesTourController('App');
+        final controller = FeaturesTourController<TestStep>('App');
 
         await tester.pumpWidget(
           MaterialApp(
@@ -1704,8 +1705,8 @@ void main() {
     testWidgets(
       'Tapping "Okay" with "Apply to all" accepts for all subsequent tours',
       (tester) async {
-        final controller1 = FeaturesTourController('Page1');
-        final controller2 = FeaturesTourController('Page2');
+        final controller1 = FeaturesTourController<TestStep>('Page1');
+        final controller2 = FeaturesTourController<TestStep>('Page2');
 
         // Start with page 1
         await tester.pumpWidget(
@@ -1840,7 +1841,7 @@ void main() {
     testWidgets('nextIndex times out and proceeds to next available feature', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -1913,7 +1914,7 @@ void main() {
     testWidgets('UnfeaturesTour widget prevents tour for descendants', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(

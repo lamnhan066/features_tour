@@ -3,7 +3,7 @@ part of '../features_tour.dart';
 /// A widget that adds padding around its child when the current tour index matches any of the specified indexes.
 /// This is useful for creating space around features during a guided tour.
 /// The padding is animated for a smooth transition.
-class FeaturesTourPadding extends StatelessWidget {
+class FeaturesTourPadding<T extends Enum> extends StatelessWidget {
   /// Creates a FeaturesTourPadding widget.
   ///
   /// [indexes] is a set of tour indexes at which the padding should be applied.
@@ -27,14 +27,14 @@ class FeaturesTourPadding extends StatelessWidget {
        );
 
   /// The controller that manages the tour state.
-  final FeaturesTourController controller;
+  final FeaturesTourController<T> controller;
 
   /// Updates the padding of all registered FeaturesTourPadding widgets based on the current tour index.
   @Deprecated('Use `steps` (enum) instead of `indexes` (double).')
   final Set<double>? indexes;
 
   /// Updates the padding of all registered FeaturesTourPadding widgets based on the current tour step.
-  final Set<Enum>? steps;
+  final Set<T>? steps;
 
   /// The amount of padding to apply (default is 30 pixels vertically).
   final EdgeInsetsGeometry padding;

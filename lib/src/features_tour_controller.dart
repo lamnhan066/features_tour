@@ -5,7 +5,7 @@ part of 'features_tour.dart';
 ///
 /// **Note:** Avoid changing the [pageName] to prevent re-displaying the instructions
 /// for this page.
-class FeaturesTourController {
+class FeaturesTourController<T extends Enum> {
   /// Creates a [FeaturesTourController] for the tour with a unique [pageName].
   /// The [pageName] is used to persist the state of the current page.
   ///
@@ -35,19 +35,19 @@ class FeaturesTourController {
   final String pageName;
 
   /// The internal list of the states.
-  final SplayTreeMap<double, _FeaturesTourState> _states = SplayTreeMap.from(
+  final SplayTreeMap<double, _FeaturesTourState<T>> _states = SplayTreeMap.from(
     {},
     (a, b) => a.compareTo(b),
   );
 
   /// The internal cached states that have been unregistered.
-  final _cachedStates = SplayTreeMap<double, _FeaturesTourState>.from(
+  final _cachedStates = SplayTreeMap<double, _FeaturesTourState<T>>.from(
     {},
     (a, b) => a.compareTo(b),
   );
 
   final _globalKeys = <double, GlobalKey>{};
-  final Map<double, Completer<_FeaturesTourState>> _pendingIndexes = {};
+  final Map<double, Completer<_FeaturesTourState<T>>> _pendingIndexes = {};
 
   /// The internal list of the introduced states.
   final Set<double> _introducedIndexes = {};
@@ -90,7 +90,7 @@ class FeaturesTourController {
   LiteLogger? _logger = FeaturesTour._globalLogger;
 
   /// Registers the current FeaturesTour state.
-  void _register(_FeaturesTourState state) {
+  void _register(_FeaturesTourState<T> state) {
     final order = _stateOrder(state);
     final identity = _stateIdentity(state);
 
@@ -113,7 +113,7 @@ class FeaturesTourController {
   }
 
   /// Unregisters the current FeaturesTour state.
-  void _unregister(_FeaturesTourState state) {
+  void _unregister(_FeaturesTourState<T> state) {
     final order = _stateOrder(state);
 
     if (_debugLog && !_cachedStates.containsKey(order)) {
@@ -171,7 +171,7 @@ class FeaturesTourController {
   /// ```
   Future<void> start(
     BuildContext context, {
-    Enum? firstStep,
+    T? firstStep,
     Duration? firstStepTimeout,
     @Deprecated('Use `firstStep` instead of `firstIndex`.') double? firstIndex,
     @Deprecated('Use `firstStepTimeout` instead of `firstIndexTimeout`.')
@@ -330,7 +330,7 @@ class FeaturesTourController {
       }
 
       // Watches for the next step or next index value.
-      _FeaturesTourState? nextState;
+      _FeaturesTourState<T>? nextState;
 
       // Waits for the first step or first index.
       final effectiveFirstIndex = firstStep?.index.toDouble() ?? firstIndex;
@@ -358,7 +358,7 @@ class FeaturesTourController {
           break;
         }
 
-        final _FeaturesTourState state;
+        final _FeaturesTourState<T> state;
 
         if (nextState == null) {
           state = _states.remove(_states.firstKey())!;
@@ -646,7 +646,7 @@ class FeaturesTourController {
 
   Future<TourAction> _showIntroduce(
     BuildContext context,
-    _FeaturesTourState state,
+    _FeaturesTourState<T> state,
     bool isLastState,
     FutureOr<void> Function() onShownIntroduction, {
     required bool canShowPrevious,
@@ -886,14 +886,17 @@ class FeaturesTourController {
   }
 
   /// Waits for the next index to be available.
-  Future<_FeaturesTourState?> _nextIndex(double index, Duration timeout) async {
+  Future<_FeaturesTourState<T>?> _nextIndex(
+    double index,
+    Duration timeout,
+  ) async {
     if (_pendingIndexes[index]?.isCompleted ?? false) {
-      _pendingIndexes[index] = Completer<_FeaturesTourState>();
+      _pendingIndexes[index] = Completer<_FeaturesTourState<T>>();
     } else {
       if (_states.containsKey(index)) {
         return _states[index];
       }
-      _pendingIndexes.putIfAbsent(index, Completer<_FeaturesTourState>.new);
+      _pendingIndexes.putIfAbsent(index, Completer<_FeaturesTourState<T>>.new);
     }
 
     try {
@@ -947,7 +950,7 @@ class FeaturesTourController {
 
   /// Removes a specific state of this page.
   Future<void> _removeState(
-    _FeaturesTourState state,
+    _FeaturesTourState<T> state,
     bool markAsIntroduced,
   ) async {
     final order = _stateOrder(state);
@@ -960,7 +963,7 @@ class FeaturesTourController {
     _introducedIndexes.add(order);
   }
 
-  Future<void> _readdState(double index, _FeaturesTourState state) async {
+  Future<void> _readdState(double index, _FeaturesTourState<T> state) async {
     _states[index] = state;
     _introducedIndexes.remove(index);
 
@@ -980,11 +983,11 @@ class FeaturesTourController {
   }
 
   /// Gets the key for shared preferences.
-  String _getPrefKey(_FeaturesTourState state) {
+  String _getPrefKey(_FeaturesTourState<T> state) {
     return '${FeaturesTour._prefix}_${pageName}_${_stateIdentity(state)}';
   }
 
-  double _stateOrder(_FeaturesTourState state) {
+  double _stateOrder(_FeaturesTourState<T> state) {
     final legacyIndex = state.widget.index;
     if (legacyIndex != null) {
       return legacyIndex;
@@ -993,7 +996,7 @@ class FeaturesTourController {
     return state.widget.step!.index.toDouble();
   }
 
-  String _stateIdentity(_FeaturesTourState state) {
+  String _stateIdentity(_FeaturesTourState<T> state) {
     final legacyIndex = state.widget.index;
     if (legacyIndex != null) {
       return legacyIndex.toString();

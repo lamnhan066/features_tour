@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test_steps.dart';
+
 void main() {
   group('FeaturesTourPadding', () {
     setUp(() {
@@ -18,7 +20,7 @@ void main() {
     testWidgets('applies and removes padding when tour index matches', (
       WidgetTester tester,
     ) async {
-      final controller = FeaturesTourController('test_page');
+      final controller = FeaturesTourController<TestStep>('test_page');
       const padding = EdgeInsets.all(25);
       const animationDuration = Duration(milliseconds: 500);
 
@@ -91,7 +93,7 @@ void main() {
     testWidgets('does not apply padding when tour index does not match', (
       WidgetTester tester,
     ) async {
-      final controller = FeaturesTourController('test_page');
+      final controller = FeaturesTourController<TestStep>('test_page');
       const padding = EdgeInsets.all(25);
       const animationDuration = Duration(milliseconds: 500);
 
@@ -164,7 +166,7 @@ void main() {
     testWidgets('applies padding for one of multiple indexes', (
       WidgetTester tester,
     ) async {
-      final controller = FeaturesTourController('test_page');
+      final controller = FeaturesTourController<TestStep>('test_page');
       const padding = EdgeInsets.all(25);
       const animationDuration = Duration(milliseconds: 500);
 

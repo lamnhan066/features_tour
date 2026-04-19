@@ -24,7 +24,7 @@ void main() {
   testWidgets('supports enum step identity and caches by step name', (
     tester,
   ) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<_TestStep>('App');
     final collectedStates = <TourState>[];
 
     await tester.pumpWidget(
@@ -98,7 +98,7 @@ void main() {
   });
 
   testWidgets('starts from firstStep when it is provided', (tester) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<_TestStep>('App');
     final collectedStates = <TourState>[];
 
     await tester.pumpWidget(
@@ -160,7 +160,7 @@ void main() {
   });
 
   testWidgets('supports omitted firstStepTimeout', (tester) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<_TestStep>('App');
     final collectedStates = <TourState>[];
 
     await tester.pumpWidget(
@@ -224,7 +224,7 @@ void main() {
   testWidgets(
     'firstStepTimeout falls back to firstIndex when firstStep not present',
     (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<_TestStep>('App');
       final collectedStates = <TourState>[];
 
       // Only register the `drawer` step in the widget tree. The provided

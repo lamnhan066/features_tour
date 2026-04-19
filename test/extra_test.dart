@@ -10,6 +10,7 @@ import 'package:lite_logger/lite_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
+import 'test_steps.dart';
 
 class BuildContextFake implements BuildContext {
   @override
@@ -46,8 +47,8 @@ void main() {
     testWidgets('FeaturesTour.removeAll marks all tours as shown', (
       tester,
     ) async {
-      final controller1 = FeaturesTourController('Page1');
-      final controller2 = FeaturesTourController('Page2');
+      final controller1 = FeaturesTourController<TestStep>('Page1');
+      final controller2 = FeaturesTourController<TestStep>('Page2');
       await tester.pumpWidget(
         MaterialApp(
           home: Column(
@@ -119,7 +120,7 @@ void main() {
     });
 
     testWidgets('pre-dialog handles error in onShownPreDialog', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -176,7 +177,7 @@ void main() {
     testWidgets('resetPreDialog resets the cached pre-dialog selection', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -362,7 +363,7 @@ void main() {
     testWidgets('pre-dialogConfig.customDialogBuilder overrides dialog', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -465,7 +466,7 @@ void main() {
     testWidgets('ChildConfig applies custom shape and animation settings', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -510,7 +511,7 @@ void main() {
     });
 
     testWidgets('IntroduceConfig applies quadrant alignment', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -566,7 +567,7 @@ void main() {
 
   group('Controller and State Management', () {
     testWidgets('controller stop ends the tour', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(

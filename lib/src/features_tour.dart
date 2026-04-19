@@ -15,7 +15,7 @@ part 'features_tour_controller.dart';
 part 'utils/shared_prefs.dart';
 
 /// The main widget for displaying a guided tour for a specific widget.
-class FeaturesTour extends StatefulWidget {
+class FeaturesTour<T extends Enum> extends StatefulWidget {
   /// Creates a [FeaturesTour] to display a guided tour for a specific widget.
   ///
   /// This widget requires a [controller] of type [FeaturesTourController] and a [child] widget to wrap.
@@ -214,16 +214,16 @@ class FeaturesTour extends StatefulWidget {
   }
 
   /// The controller for the current page, which is responsible for managing the tour.
-  final FeaturesTourController controller;
+  final FeaturesTourController<T> controller;
 
   /// The enum-based step used for ordering and identity.
-  final Enum? step;
+  final T? step;
 
   /// The enum-based step to start after the current one.
   ///
   /// Use this when the next tour step appears after the current step triggers a
   /// surface change, such as opening a drawer or dialog.
-  final Enum? nextStep;
+  final T? nextStep;
 
   /// The timeout for waiting on [nextStep]. If `null`, [nextIndexTimeout] is used.
   ///
@@ -322,10 +322,10 @@ class FeaturesTour extends StatefulWidget {
   onAfterIntroduce;
 
   @override
-  State<FeaturesTour> createState() => _FeaturesTourState();
+  State<FeaturesTour<T>> createState() => _FeaturesTourState<T>();
 }
 
-class _FeaturesTourState extends State<FeaturesTour> {
+class _FeaturesTourState<T extends Enum> extends State<FeaturesTour<T>> {
   late bool isEnabled;
   bool _canPop = true;
 

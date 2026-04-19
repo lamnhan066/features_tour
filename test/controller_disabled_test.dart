@@ -16,7 +16,7 @@ void main() {
   testWidgets('start emits disabled when FeaturesTour.enabled is false', (
     tester,
   ) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<_TestStep>('App');
 
     await tester.pumpWidget(
       MaterialApp(
@@ -58,7 +58,7 @@ void main() {
   testWidgets('start emits disabled when wrapped by UnfeaturesTour', (
     tester,
   ) async {
-    final controller = FeaturesTourController('App2');
+    final controller = FeaturesTourController<_TestStep>('App2');
 
     await tester.pumpWidget(
       MaterialApp(

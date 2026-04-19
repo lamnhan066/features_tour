@@ -7,6 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'test_steps.dart';
+
 class _TourIndex {
   static const drawer = 0.0;
   static const drawerButton = 1.0;
@@ -36,7 +38,7 @@ class _TourExpectation {
 class _TourHarness extends StatefulWidget {
   const _TourHarness({required this.controller});
 
-  final FeaturesTourController controller;
+  final FeaturesTourController<TestStep> controller;
 
   @override
   State<_TourHarness> createState() => _TourHarnessState();
@@ -401,7 +403,7 @@ void main() {
   });
 
   testWidgets('walks next through all widgets and completes', (tester) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<TestStep>('App');
     final collectedStates = <TourState>[];
 
     final expectations = <_TourExpectation>[
@@ -544,7 +546,7 @@ void main() {
   testWidgets('skips at a seeded random point and closes active surfaces', (
     tester,
   ) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<TestStep>('App');
     final collectedStates = <TourState>[];
     final random = Random(20260415);
 
@@ -654,7 +656,7 @@ void main() {
   });
 
   testWidgets('walks previous back through all widgets', (tester) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<TestStep>('App');
     final collectedStates = <TourState>[];
     var rewinding = false;
     var reachedFirstStep = false;
@@ -734,7 +736,7 @@ void main() {
   testWidgets('moves next and previous around drawer and dialog transitions', (
     tester,
   ) async {
-    final controller = FeaturesTourController('App');
+    final controller = FeaturesTourController<TestStep>('App');
     final collectedStates = <TourState>[];
     final expectations = <_TourExpectation>[
       const _TourExpectation(

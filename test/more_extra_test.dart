@@ -7,6 +7,7 @@ import 'package:lite_logger/lite_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
+import 'test_steps.dart';
 
 void main() {
   var collectedStates = <TourState>[];
@@ -36,7 +37,7 @@ void main() {
     testWidgets('controller.start with empty tour list completes immediately', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(const MaterialApp(home: App(tours: [])));
 
@@ -64,7 +65,7 @@ void main() {
     testWidgets('Tour fails gracefully if child widget is not found', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
       final showChild = ValueNotifier(true);
 
       await tester.pumpWidget(
@@ -142,7 +143,7 @@ void main() {
     });
 
     testWidgets('controller stops the tour and clears overlay', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -195,7 +196,7 @@ void main() {
     testWidgets('controller.start with delay shows pre-dialog after delay', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -283,7 +284,7 @@ void main() {
             home: Scaffold(
               body: FeaturesTour(
                 index: 1,
-                controller: FeaturesTourController('TestApp'),
+                controller: FeaturesTourController<TestStep>('TestApp'),
                 introduce: Text(alignment.name),
                 introduceConfig: IntroduceConfig(quadrantAlignment: alignment),
                 child: SizedBox(
@@ -298,7 +299,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final controller = FeaturesTourController('TestApp');
+        final controller = FeaturesTourController<TestStep>('TestApp');
         await tester.runAsync(() async {
           await controller.start(
             context,
@@ -352,7 +353,7 @@ void main() {
     });
 
     testWidgets('Pre-dialog respects disabled buttons', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -422,7 +423,7 @@ void main() {
     testWidgets('showPreDialog with customDialogBuilder returning a value', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -488,7 +489,7 @@ void main() {
     testWidgets('showPreDialog when preDialogConfig.enabled is false', (
       tester,
     ) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -542,7 +543,7 @@ void main() {
     });
 
     testWidgets('showIntroduceDialog when introduce is null', (tester) async {
-      final controller = FeaturesTourController('App');
+      final controller = FeaturesTourController<TestStep>('App');
 
       await tester.pumpWidget(
         MaterialApp(
