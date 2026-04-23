@@ -256,7 +256,3 @@ FeaturesTourPadding(
 ## Contributions
 
 Contributions to this project are welcome. Open an issue or submit a pull request if you find a bug or want to improve the package.
-
-## Donations
-
-If you find this project helpful and would like to support its development, you can make a donation through the following channels:
