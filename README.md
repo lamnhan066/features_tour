@@ -13,7 +13,7 @@ Demo: [pub.lamnhan.dev/features\_tour](https://pub.lamnhan.dev/features_tour)
 ### Create a controller
 
 ```dart
-final tourController = FeaturesTourController('HomePage');
+final tourController = FeaturesTourController<HomeTourStep>('HomePage');
 ```
 
 Use a stable page name. The controller persists tour progress by page, so changing the name will make the tour look new again.
@@ -35,7 +35,7 @@ enum HomeTourStep {
     addButton,
 }
 
-FeaturesTour(
+FeaturesTour<HomeTourStep>(
     controller: tourController,
     step: HomeTourStep.drawer,
     nextStep: HomeTourStep.drawerButton,
@@ -69,6 +69,7 @@ void initState() {
 ```
 
 `firstStep` is the preferred entry point. The controller still accepts `firstIndex` and `firstIndexTimeout` for migration, but new code should use the enum-based API.
+Instantiate the controller and widgets with the same enum type so `step`, `nextStep`, and `firstStep` stay type-safe.
 
 ## Global Configuration
 
@@ -158,7 +159,7 @@ tourController.start(
 Open the target surface from the previous step and let `nextStep` wait for the new widget to appear. This is the pattern used in the example app and in the drawer/dialog tests.
 
 ```dart
-FeaturesTour(
+FeaturesTour<HomeTourStep>(
     controller: tourController,
     step: HomeTourStep.drawerButton,
     nextStep: HomeTourStep.settings,
@@ -181,7 +182,7 @@ For dialogs, open the dialog from the prior step, then use a `FeaturesTour` insi
 Use `onBeforeAction` to scroll the current item into view before the introduction starts or when the user returns from the next step. The widget must already be mounted when this callback runs, so it is not a good place to open a dialog for the current step.
 
 ```dart
-FeaturesTour(
+FeaturesTour<HomeTourStep>(
     controller: tourController,
     step: HomeTourStep.lastItem,
     onBeforeAction: (action) async {
@@ -232,6 +233,7 @@ FeaturesTourPadding(
 
 ### 0.6.0-0.7.0
 
+- Instantiate the new generic API as `FeaturesTourController<YourStepEnum>('PageName')` and `FeaturesTour<YourStepEnum>(...)`.
 - Prefer `step` over `index`.
 - Prefer `nextStep` and `nextStepTimeout` over `nextIndex` and `nextIndexTimeout`.
 - Prefer `FeaturesTourPadding.steps` over `FeaturesTourPadding.indexes`.
