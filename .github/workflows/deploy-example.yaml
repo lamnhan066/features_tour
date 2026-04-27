@@ -2,12 +2,8 @@ name: 🚀 Deploy Flutter Web Example on Push
 
 on:
   push:
-    branches:
-      - deploy-example
-  pull_request:
-    types: [ closed ]
-    branches:
-      - deploy-example
+    tags:
+      - "v*"
 
 jobs:
   web-deploy:
