@@ -440,9 +440,11 @@ class FeaturesTourController<T extends Enum> {
         // Shows the cover to prevent the user from tapping the screen.
         final introduceConfig =
             state.widget.introduceConfig ?? IntroduceConfig.global;
-        final introduceBackgroundColor = introduceConfig.barrierColorBuilder(
-          context,
-        );
+        final theme =
+            FeaturesTour._theme?.colorScheme ?? ColorScheme.of(context);
+        final introduceBackgroundColor =
+            introduceConfig.barrierColorBuilder?.call(context) ??
+            theme.onSurface.withValues(alpha: 0.82);
 
         showCover(
           context,
@@ -781,8 +783,8 @@ class FeaturesTourController<T extends Enum> {
           ),
         );
 
-        if (FeaturesTour.theme != null) {
-          child = Theme(data: FeaturesTour.theme!, child: child);
+        if (FeaturesTour._theme != null) {
+          child = Theme(data: FeaturesTour._theme!, child: child);
         }
 
         return child;

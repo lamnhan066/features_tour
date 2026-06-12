@@ -102,7 +102,7 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
   static LiteLogger? _globalLogger;
 
   /// The overridden global theme for all widgets.
-  static ThemeData? theme;
+  static ThemeData? _theme;
 
   /// Sets the global configs.
   ///
@@ -192,6 +192,7 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
     if (introduceConfig != null) IntroduceConfig.global = introduceConfig;
     if (preDialogConfig != null) PreDialogConfig.global = preDialogConfig;
     if (preferencePrefix != null) _prefix = preferencePrefix;
+    if (theme != null) _theme = theme;
     if (debugLog != null) _debugLog = debugLog;
   }
 

@@ -51,7 +51,7 @@ class IntroduceConfig {
 
   const IntroduceConfig._({
     required this.builder,
-    required this.barrierColorBuilder,
+    this.barrierColorBuilder,
     this.padding = const EdgeInsets.all(20),
     this.quadrantAlignment,
     this.alignment,
@@ -61,14 +61,13 @@ class IntroduceConfig {
   /// Global configuration.
   static IntroduceConfig global = const IntroduceConfig._(
     builder: _introduceDefaultBuilder,
-    barrierColorBuilder: _barrierColorDefaultBuilder,
   );
 
   /// A builder function to wrap the `introduce` widget.
   final IntroduceBuilder builder;
 
   /// The color of the modal barrier that darkens everything behind the tour.
-  final Color Function(BuildContext context) barrierColorBuilder;
+  final Color Function(BuildContext context)? barrierColorBuilder;
 
   /// The padding around the `introduce` widget.
   final EdgeInsetsGeometry padding;
@@ -121,10 +120,6 @@ class IntroduceConfig {
       ),
       child: introduce,
     );
-  }
-
-  static Color _barrierColorDefaultBuilder(BuildContext context) {
-    return ColorScheme.of(context).onSurface.withValues(alpha: 0.82);
   }
 }
 
