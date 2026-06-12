@@ -1,3 +1,7 @@
+## 0.7.0-rc.4
+
+* Add theme customization support to `FeaturesTour.setGlobalConfig(theme)`.
+
 ## 0.7.0-rc.3
 
 ### Added
