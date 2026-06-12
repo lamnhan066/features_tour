@@ -719,7 +719,7 @@ class FeaturesTourController<T extends Enum> {
 
     final overlayEntry = OverlayEntry(
       builder: (ctx) {
-        return GestureDetector(
+        Widget child = GestureDetector(
           onTap: childConfig.barrierDismissible ? next : null,
           child: Material(
             color: Colors.transparent,
@@ -780,6 +780,12 @@ class FeaturesTourController<T extends Enum> {
             ),
           ),
         );
+
+        if (FeaturesTour.theme != null) {
+          child = Theme(data: FeaturesTour.theme!, child: child);
+        }
+
+        return child;
       },
     );
 

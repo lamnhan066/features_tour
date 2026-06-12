@@ -101,6 +101,9 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
   /// The global logger for all controllers.
   static LiteLogger? _globalLogger;
 
+  /// The overridden global theme for all widgets.
+  static ThemeData? theme;
+
   /// Sets the global configs.
   ///
   /// [force] to show or hide all the instructions, including pre-dialogs.
@@ -114,7 +117,11 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
   ///
   /// [preDialogConfig] to configure the pre-dialog widget.
   ///
-  /// [skipConfig], [nextConfig] and [previousConfig] to configure the Skip, Next, and Previous buttons.
+  /// [skipConfig], [nextConfig], [previousConfig] and [doneConfig] to configure
+  /// the Skip, Next, Previous, and Done buttons.
+  ///
+  /// [theme] to override the global theme for all widgets.
+  /// The default is `null`, which means it will use the app's theme.
   ///
   /// [debugLog] allows printing the debug logs. The default is `kDebugMode`.
   ///
@@ -168,6 +175,10 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
     /// This button is only shown when the current introduction is the last and
     /// `doneConfig.enabled` is `true`.
     DoneConfig? doneConfig,
+
+    /// The global theme for all widgets. The default is `null`, which means it
+    /// will use the app's theme.
+    ThemeData? theme,
 
     /// Allows printing the debug logs. The default is `kDebugMode`.
     bool? debugLog,
