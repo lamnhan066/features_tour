@@ -1,3 +1,8 @@
+## 0.7.0-rc.5
+
+* Fix the highlighted child re-applying screen padding/insets inside the tour
+  overlay, which caused RenderFlex overflows for targets that use SafeArea.
+
 ## 0.7.0-rc.4
 
 * Add theme customization support to `FeaturesTour.setGlobalConfig(theme)`.
