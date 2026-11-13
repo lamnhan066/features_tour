@@ -3,3 +3,5 @@ analyzer:
   errors:
     lines_longer_than_80_chars: ignore
     avoid_positional_boolean_parameters: ignore
+  exclude:
+    - build/**
