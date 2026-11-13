@@ -100,6 +100,13 @@ class _FeaturesChildState extends State<FeaturesChild>
   late final AnimationController _scaleController;
   late final Animation<double> _scaleAnimation;
 
+  /// The [MediaQueryData] the target widget currently sees.
+  ///
+  /// It is captured from the target's own context so the overlay copy can be
+  /// rendered with the same environment instead of the overlay's full-screen
+  /// one (which still carries the screen padding/insets).
+  MediaQueryData? _targetMediaQuery;
+
   /// Continuously updates the rect while the widget is mounted.
   /// It stops automatically when disposed.
   void _autoUpdate() {
@@ -124,6 +131,16 @@ class _FeaturesChildState extends State<FeaturesChild>
     if (!mounted || widget.globalKey.currentContext?.mounted != true) {
       return false;
     }
+
+    final targetContext = widget.globalKey.currentContext;
+    if (targetContext == null || !targetContext.mounted) return false;
+
+    // The overlay copy is placed at the target's global rect, which already
+    // accounts for any ancestor SafeArea/insets. Reuse the MediaQuery the real
+    // target sees so the copy does not apply screen padding a second time.
+    _targetMediaQuery = targetContext
+        .getInheritedWidgetOfExactType<MediaQuery>()
+        ?.data;
 
     final tempRect = widget.globalKey.globalPaintBounds;
     if (tempRect != null) {
@@ -303,6 +320,19 @@ class _FeaturesChildState extends State<FeaturesChild>
     super.didChangeMetrics();
   }
 
+  /// Renders [child] with the [MediaQuery] the real target sees.
+  ///
+  /// The child is positioned at the measured target rect, so applying the
+  /// overlay's screen padding again would squeeze it. When the target context
+  /// is gone, or it has no [MediaQuery] ancestor, the current environment is
+  /// kept.
+  Widget _applyTargetMediaQuery(Widget child) {
+    final mediaQuery = _targetMediaQuery;
+    return mediaQuery == null
+        ? child
+        : MediaQuery(data: mediaQuery, child: child);
+  }
+
   @override
   Widget build(BuildContext context) {
     return rect == null
@@ -336,13 +366,16 @@ class _FeaturesChildState extends State<FeaturesChild>
                   builder: (context, child) {
                     return Transform.scale(
                       scale: _scaleAnimation.value,
-                      child: widget.child,
+                      child: _applyTargetMediaQuery(widget.child),
                     );
                   },
                 ),
               )
             else
-              Positioned.fromRect(rect: rect!, child: widget.child),
+              Positioned.fromRect(
+                rect: rect!,
+                child: _applyTargetMediaQuery(widget.child),
+              ),
 
             // Introduction widget.
             Positioned.fromRect(
