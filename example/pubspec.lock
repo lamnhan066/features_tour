@@ -139,10 +139,10 @@ packages:
     dependency: transitive
     description:
       name: lite_logger
-      sha256: "6d92fa704e2e70da300d62ffdd4ff4e54a5d923eeb434cbc03d1f95fc5eebc75"
+      sha256: "62c739a2d2d36187df08892c2c120391ee047f99720591677f11972cdefa18fa"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0"
+    version: "0.3.3"
   matcher:
     dependency: transitive
     description:
