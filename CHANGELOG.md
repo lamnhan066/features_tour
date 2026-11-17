@@ -1,3 +1,7 @@
+## 0.7.0-rc.6
+
+* Bump `lite_logger` to `v0.3.3`.
+
 ## 0.7.0-rc.5
 
 * Fix the highlighted child re-applying screen padding/insets inside the tour
