@@ -1,3 +1,43 @@
+## 0.7.0
+
+### Added
+
+* Enum-based step API: `FeaturesTourController<T extends Enum>` and `FeaturesTour<T extends Enum>` with `step`, `nextStep`, `nextStepTimeout`, `firstStep`, and `firstStepTimeout`. `FeaturesTourPadding.steps` is the preferred way to reserve bottom padding.
+* Previous navigation: `PREVIOUS` button with `PreviousConfig`, `previousStepTimeout`, and programmatic `next`/`dismiss` control on the controller.
+* Action and state hooks: `onBeforeAction(TourAction)` and `onAfterAction(TourAction)` with the `TourAction` enum (`introduce`, `next`, `previous`, `done`, `skip`, `disabled`, `notMounted`), plus `onStateChanged` with step/action-aware `TourState`.
+* Theme customization via `FeaturesTour.setGlobalConfig(theme)` and `IntroduceConfig` improvements, including `RoundedRectIntroduceConfig` and `IntroduceConfig.builder`.
+
+### Changed
+
+* `SKIP` moved from bottom-left to bottom-center; `PREVIOUS` now occupies bottom-left.
+* License changed from BSD 3-Clause to MIT.
+* Minimum versions are now Dart `^3.10.0` and Flutter `>=3.38.1`; bumped `lite_logger` to `^0.3.3`.
+* Refreshed README with enum-based quick start, drawer/dialog and scroll-driven flows, and migration notes; expanded widget coverage for controllers, navigation, padding, and introduce config.
+
+### Deprecated
+
+* `IntroduceResult` in favor of `TourAction`; `TourActionEmitted.result` in favor of `action`.
+* `onBeforeIntroduce` in favor of `onBeforeAction(TourAction.introduce)` and `onAfterIntroduce` in favor of `onAfterAction(TourAction)`.
+* `onState` in favor of `onStateChanged`.
+* Double-based `index`, `nextIndex`, `nextIndexTimeout`, `firstIndex`, `firstIndexTimeout`, `waitFor*` aliases, and `FeaturesTourPadding.indexes` in favor of the enum-based `step` APIs. Legacy numeric APIs are still supported for migration.
+
+### Fixed
+
+* Highlighted child no longer re-applies screen padding/insets inside the tour overlay, fixing `RenderFlex` overflows for targets that use `SafeArea`, by reusing the target `MediaQuery`.
+
+### Migration Notes
+
+* Instantiate the generic API with a concrete enum, e.g. `FeaturesTourController<HomeTourStep>('HomePage')` and `FeaturesTour<HomeTourStep>(...)`.
+* Prefer `step`, `nextStep`/`nextStepTimeout`, `firstStep`/`firstStepTimeout`, and `FeaturesTourPadding.steps`.
+* Prefer `onBeforeAction`/`onAfterAction` and `onStateChanged`.
+* To keep the pre-0.7.0 button layout without the `PREVIOUS` button:
+  ```dart
+  FeaturesTour.setGlobalConfig(
+    previousConfig: PreviousConfig(enabled: false),
+    skipConfig: SkipConfig(alignment: Alignment.bottomLeft),
+  );
+  ```
+
 ## 0.7.0-rc.6
 
 * Bump `lite_logger` to `v0.3.3`.
