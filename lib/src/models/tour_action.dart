@@ -1,7 +1,3 @@
-/// A result returned by a tour instruction, indicating the action taken during the tour.
-@Deprecated('Use TourAction instead of IntroduceResult')
-typedef IntroduceResult = TourAction;
-
 /// The action taken during the tour.
 enum TourAction {
   /// The introduction is about to be shown.

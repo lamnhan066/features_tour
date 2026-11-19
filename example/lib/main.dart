@@ -1,5 +1,5 @@
 import 'package:features_tour/features_tour.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   FeaturesTour.setGlobalConfig(

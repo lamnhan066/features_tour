@@ -1,5 +1,5 @@
 // https://stackoverflow.com/questions/50316219/how-to-get-widgets-absolute-coordinates-on-a-screen-in-flutter
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// An extension on [GlobalKey] to get the global position of a widget.
 extension GlobalKeyExtension on GlobalKey {

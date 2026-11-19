@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:features_tour/features_tour.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A function type that defines a custom pre-dialog builder.
 ///
@@ -20,7 +20,7 @@ typedef CustomPreDialog =
 /// Configuration for the pre-dialog shown before starting a features tour.
 class PreDialogConfig {
   /// Creates a new `PredialogConfig` instance with optional overrides.
-  factory PreDialogConfig({
+  factory({
     /// Whether the pre-dialog should be displayed.
     bool? enabled,
 
@@ -108,7 +108,7 @@ class PreDialogConfig {
   }
 
   /// Creates a new instance of `PredialogConfig` with customizable options.
-  PreDialogConfig._({
+  new _({
     this.enabled = true,
     this.title = 'Introduction',
     this.content =

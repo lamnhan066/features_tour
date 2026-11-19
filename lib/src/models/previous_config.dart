@@ -1,10 +1,10 @@
 import 'package:features_tour/src/models/base_button_config.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Configuration for the "Previous" button in the Features Tour.
 class PreviousConfig extends BaseButtonConfig {
   /// Creates a new [PreviousConfig] based on the [global] values.
-  factory PreviousConfig({
+  factory({
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
     String? text,
     Alignment? alignment,
@@ -24,7 +24,7 @@ class PreviousConfig extends BaseButtonConfig {
     );
   }
 
-  const PreviousConfig._({
+  const new _({
     super.builder,
     super.text = 'PREVIOUS',
     super.alignment = Alignment.bottomLeft,

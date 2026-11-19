@@ -1,11 +1,11 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/extensions/get_widget_position.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// An internal widget that displays all the necessary widgets in a Stack.
 class FeaturesChild extends StatefulWidget {
   /// An internal widget that displays all the necessary widgets in a Stack.
-  const FeaturesChild({
+  const new({
     required this.globalKey,
     required this.child,
     required this.childConfig,

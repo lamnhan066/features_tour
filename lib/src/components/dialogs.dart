@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:features_tour/src/features_tour.dart';
 import 'package:features_tour/src/models/pre_dialog_button_type.dart';
 import 'package:features_tour/src/models/pre_dialog_config.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Caches the last "Do not ask again" selection.
 PreDialogButtonType? _applyToAllPages;
@@ -146,7 +146,7 @@ Future<PreDialogButtonType> showPreDialog(
 
 /// A stateful checkbox row with text for "Apply to all pages".
 class _CheckboxRow extends StatefulWidget {
-  const _CheckboxRow({
+  const new({
     required this.text,
     required this.baseTextColor,
     required this.checkboxTextStyle,

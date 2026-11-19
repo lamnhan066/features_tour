@@ -4,9 +4,9 @@ import 'package:features_tour/src/components/dialogs.dart';
 import 'package:features_tour/src/extensions/get_widget_position.dart';
 import 'package:features_tour/src/features_tour.dart'
     show DismissAllTourStorage;
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
@@ -54,13 +54,13 @@ void main() {
           home: Column(
             children: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller1,
                 introduce: const Text('p1.i1'),
                 child: const Text('p1.c1'),
               ),
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller2,
                 introduce: const Text('p2.i1'),
                 child: const Text('p2.c1'),
@@ -75,8 +75,8 @@ void main() {
       await FeaturesTour.removeAll();
 
       final prefs = await SharedPreferences.getInstance();
-      expect(prefs.getBool('FeaturesTour_Page1_1.0'), isTrue);
-      expect(prefs.getBool('FeaturesTour_Page2_1.0'), isTrue);
+      expect(prefs.getBool('FeaturesTour_Page1_b'), isTrue);
+      expect(prefs.getBool('FeaturesTour_Page2_b'), isTrue);
     });
 
     testWidgets('DismissAllTourStorage saves and retrieves dismissal state', (
@@ -127,7 +127,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -184,7 +184,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -370,7 +370,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -473,7 +473,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 childConfig: ChildConfig(
@@ -517,7 +517,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: FeaturesTour(
-              index: 1,
+              step: TestStep.b,
               controller: controller,
               introduce: const Text('a.intro'),
               introduceConfig: IntroduceConfig(
@@ -574,13 +574,13 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -600,7 +600,7 @@ void main() {
           delay: Duration.zero,
           onStateChanged: (state) async {
             collectedStates.add(state);
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);

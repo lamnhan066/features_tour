@@ -6,8 +6,8 @@ import 'package:features_tour/src/components/cover_dialog.dart';
 import 'package:features_tour/src/components/dialogs.dart';
 import 'package:features_tour/src/components/features_child.dart';
 import 'package:features_tour/src/components/unfeatures_tour.dart';
-import 'package:flutter/material.dart';
 import 'package:lite_logger/lite_logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'components/features_tour_padding.dart';
@@ -28,17 +28,14 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
   /// declaration order is used for sequencing. Use one enum value per tour step
   /// so the declaration order matches the intended tour order.
   ///
-  /// The legacy [index] is nullable and is only kept for migration from older
-  /// numeric-based callers and persisted data.
-  ///
   /// Use [nextStep] to specify the next step to display.
   /// The app will pause user interaction until the specified step becomes available,
   /// making it ideal for scenarios like showing a [FeaturesTour] inside a dialog
   /// or drawer that opens after the current feature.
   ///
-  /// If [nextStep] is `null`, the controller falls back to [nextIndex] for legacy
-  /// callers. To avoid a poor user experience, configure a timeout using
-  /// [nextStepTimeout]. If [nextStepTimeout] is `null`, [nextIndexTimeout] is used.
+  /// If [nextStep] is `null`, the controller falls back to the next ordered
+  /// step. To avoid a poor user experience, configure a timeout using
+  /// [nextStepTimeout].
   /// Note that [nextStep] only applies within the same [controller].
   ///
   /// Use [previousStepTimeout] to control how long the controller waits when the
@@ -56,24 +53,17 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
   /// Configure the Next and Skip buttons using [nextConfig] and [skipConfig].
   ///
   /// To perform actions before or after the introduction, use [onBeforeAction]
-  /// and [onAfterAction]. The [onBeforeIntroduce]
-  /// callbacks are deprecated and will be removed in a future release.
-  /// In the [onAfterAction] callback, you can access the [TourAction]
-  /// to determine whether the user pressed the Next, Previous, or Skip button
-  /// or if they tapped outside the introduction to dismiss it. Note: the
-  /// `onAfterIntroduce` callback is deprecated in favor of `onAfterAction`.
-  const FeaturesTour({
+  /// and [onAfterAction]. In the [onAfterAction] callback, you can access the
+  /// [TourAction] to determine whether the user pressed the Next, Previous,
+  /// or Skip button or if they tapped outside the introduction to dismiss it.
+  const new ({
     required this.controller,
     required this.child,
-    this.step,
-    @Deprecated('Use `step` (enum) instead of `index` (double).') this.index,
+    required this.step,
     this.nextStep,
     this.nextStepTimeout,
     this.previousStepTimeout = const Duration(seconds: 3),
     super.key,
-    @Deprecated('Use `nextStep` instead of `nextIndex`.') this.nextIndex,
-    @Deprecated('Use `nextStepTimeout` instead of `nextIndexTimeout`.')
-    this.nextIndexTimeout = const Duration(seconds: 3),
     this.childConfig,
     this.introduce = const SizedBox.shrink(),
     this.introduceConfig,
@@ -83,10 +73,7 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
     this.doneConfig,
     this.enabled = true,
     this.onBeforeAction,
-    @Deprecated('Use onBeforeAction(TourAction.introduce) instead.')
-    this.onBeforeIntroduce,
     this.onAfterAction,
-    @Deprecated('Use onAfterAction(TourAction) instead.') this.onAfterIntroduce,
   });
 
   /// The prefix of this package.
@@ -229,7 +216,7 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
   final FeaturesTourController<T> controller;
 
   /// The enum-based step used for ordering and identity.
-  final T? step;
+  final T step;
 
   /// The enum-based step to start after the current one.
   ///
@@ -237,7 +224,7 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
   /// surface change, such as opening a drawer or dialog.
   final T? nextStep;
 
-  /// The timeout for waiting on [nextStep]. If `null`, [nextIndexTimeout] is used.
+  /// The timeout for waiting on [nextStep].
   ///
   /// This is the preferred timeout for step-based navigation. Keep it short so
   /// the tour can fall back to the next available step quickly.
@@ -248,26 +235,6 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
   /// This applies when the user goes back to a step that must become visible
   /// again before the controller can show it.
   final Duration previousStepTimeout;
-
-  /// Legacy numeric index retained only for migration from older callers.
-  @Deprecated('Use `step` (enum) instead of `index` (double).')
-  final double? index;
-
-  /// Specifies the next [index] to start the tour.
-  /// The plugin will wait for this index to appear or until [nextIndexTimeout] is reached.
-  /// If set to `null`, the tour will proceed in the natural order of the [index].
-  ///
-  /// Note: This value applies only within the same [controller].
-  ///
-  /// Example: Use this to wait for a dialog to appear before displaying the next step.
-  @Deprecated('Use `nextStep` instead of `nextIndex`.')
-  final double? nextIndex;
-
-  /// The timeout duration for waiting on [nextIndex]. The default is 3 seconds.
-  ///
-  /// Ensure this value is not excessively long to maintain a good user experience.
-  @Deprecated('Use `nextStepTimeout` instead of `nextIndexTimeout`.')
-  final Duration nextIndexTimeout;
 
   /// Determines whether this widget's actions are enabled.
   final bool enabled;
@@ -308,30 +275,11 @@ class FeaturesTour<T extends Enum> extends StatefulWidget {
   /// before proceeding.
   final FutureOr<void> Function(TourAction action)? onBeforeAction;
 
-  /// A callback that is triggered before the [introduce] widget is shown.
-  ///
-  /// Deprecated in favor of [onBeforeAction]. Use [TourAction.introduce].
-  @Deprecated('Use onBeforeAction(TourAction.introduce) instead.')
-  /// This can be used to perform actions or preparations right before the introduction step appears.
-  /// If the callback returns a [Future], the tour will wait for it to complete before proceeding.
-  final FutureOr<void> Function()? onBeforeIntroduce;
-
   /// A callback that is triggered after a tour action occurs.
   ///
-  /// This replaces `onAfterIntroduce` and receives the emitted [TourAction].
+  /// It receives the emitted [TourAction].
   /// If the callback returns a [Future], the tour will wait for it to complete before proceeding.
   final FutureOr<void> Function(TourAction action)? onAfterAction;
-
-  /// A callback that is triggered after the [introduce] widget is shown.
-  ///
-  /// Deprecated in favor of [onAfterAction]. Use [TourAction] for the result.
-  ///
-  /// This can be used to perform actions or preparations right after the introduction step appears.
-  /// If the callback returns a [Future], the tour will wait for it to complete before
-  /// proceeding to the next step.
-  @Deprecated('Use onAfterAction(TourAction) instead.')
-  final FutureOr<void> Function(IntroduceResult introduceResult)?
-  onAfterIntroduce;
 
   @override
   State<FeaturesTour<T>> createState() => _FeaturesTourState<T>();
@@ -371,13 +319,11 @@ class _FeaturesTourState<T extends Enum> extends State<FeaturesTour<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final keyOrder = widget.step?.index.toDouble() ?? widget.index;
+    final keyOrder = widget.step.index.toDouble();
 
     return PopScope(
       key:
-          isEnabled && keyOrder != null
-              ? widget.controller._globalKeys[keyOrder]
-              : null,
+          isEnabled ? widget.controller._globalKeys[keyOrder] : null,
       canPop: _canPop,
       onPopInvokedWithResult: (didPop, result) async {
         widget.controller._handlePopScope();

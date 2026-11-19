@@ -1,14 +1,14 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/dialogs.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum _DrawerDialogStep { drawer, drawerButton, settingAction }
 
 class _StepExpectation {
-  const _StepExpectation({
+  const new({
     required this.step,
     required this.actionLabel,
     required this.introLabel,
@@ -24,7 +24,7 @@ class _StepExpectation {
 }
 
 class _DrawerDialogTourApp extends StatefulWidget {
-  const _DrawerDialogTourApp({required this.controller});
+  const new({required this.controller});
 
   final FeaturesTourController<_DrawerDialogStep> controller;
 
@@ -299,7 +299,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(step: final step)) {
+            if (state case TourIntroducing(: final step)) {
               expect(stepIndex, lessThan(stepExpectations.length));
 
               final expectation = stepExpectations[stepIndex];

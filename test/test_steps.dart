@@ -1,1 +1,1 @@
-enum TestStep { a, b, c }
+enum TestStep { a, b, c, d }

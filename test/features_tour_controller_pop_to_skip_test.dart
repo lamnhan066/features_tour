@@ -1,8 +1,8 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/dialogs.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'test_steps.dart';
@@ -35,14 +35,14 @@ void main() {
             title: const Text('Pop Test'),
             leading: FeaturesTour(
               controller: controller,
-              index: 1,
+              step: TestStep.b,
               introduce: const Text('intro 1'),
               child: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
             ),
           ),
           body: FeaturesTour(
             controller: controller,
-            index: 2,
+            step: TestStep.c,
             introduce: const Text('intro 2'),
             child: const Text('content'),
           ),
@@ -89,7 +89,7 @@ void main() {
         home: Scaffold(
           body: FeaturesTour(
             controller: controller,
-            index: 1,
+            step: TestStep.b,
             introduce: const Text('intro only'),
             child: const Text('content'),
           ),

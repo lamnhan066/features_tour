@@ -1,5 +1,5 @@
 import 'package:features_tour/src/models/base_button_config.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Configuration for the "Skip" button in the Features Tour.
 class SkipConfig extends BaseButtonConfig {
@@ -31,7 +31,7 @@ class SkipConfig extends BaseButtonConfig {
   ///    ),
   ///  ),
   /// ```
-  factory SkipConfig({
+  factory({
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
     String? text,
     Alignment? alignment,
@@ -51,7 +51,7 @@ class SkipConfig extends BaseButtonConfig {
     );
   }
 
-  const SkipConfig._({
+  const new _({
     super.builder,
     super.text = 'SKIP',
     super.alignment = Alignment.bottomCenter,

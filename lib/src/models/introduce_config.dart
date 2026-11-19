@@ -1,5 +1,5 @@
 import 'package:features_tour/features_tour.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A builder function to wrap the `introduce` widget.
 typedef IntroduceBuilder =
@@ -31,7 +31,7 @@ class IntroduceConfig {
   /// See also:
   ///   * [RoundedRectIntroduceConfig] for a configuration with rounded rectangle
   ///     decoration and better visible barrier color.
-  factory IntroduceConfig({
+  factory({
     IntroduceBuilder? builder,
     BarrierColorBuilder? barrierColorBuilder,
     EdgeInsetsGeometry? padding,
@@ -49,7 +49,7 @@ class IntroduceConfig {
     );
   }
 
-  const IntroduceConfig._({
+  const new _({
     required this.builder,
     this.barrierColorBuilder,
     this.padding = const EdgeInsets.all(20),
@@ -126,7 +126,7 @@ class IntroduceConfig {
 /// An IntroduceConfig with rounded rectangle decoration and better visible barrier color.
 class RoundedRectIntroduceConfig extends IntroduceConfig {
   /// Creates a new RoundedRectIntroduceConfig with rounded rectangle decoration.
-  RoundedRectIntroduceConfig({double borderRadius = 4})
+  new({double borderRadius = 4})
     : super._(
         builder: (context, childRect, introduce) {
           return _introduceRoundedRectBuilder(

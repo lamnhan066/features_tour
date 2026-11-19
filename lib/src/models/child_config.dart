@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Configuration for the `child` widget.
 class ChildConfig {
   /// Applies new settings to the `child` widget based on [global] settings.
-  factory ChildConfig({
+  factory({
     Widget Function(BuildContext context, Widget child)? builder,
     bool? isAnimateChild,
     double? borderSizeInflate,
@@ -30,7 +30,7 @@ class ChildConfig {
   }
 
   /// The default value of the `child` widget.
-  const ChildConfig._({
+  const new _({
     this.builder,
     this.isAnimateChild = true,
     this.borderSizeInflate = 3,

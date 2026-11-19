@@ -1,9 +1,9 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/dialogs.dart';
 import 'package:features_tour/src/components/unfeatures_tour.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
@@ -38,13 +38,13 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -65,7 +65,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -106,14 +106,14 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 introduceConfig: RoundedRectIntroduceConfig(),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -134,7 +134,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -182,13 +182,13 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -209,7 +209,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -271,13 +271,13 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -336,13 +336,13 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -363,7 +363,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               await tester.pump();
 
               if (index == 1) {
@@ -413,13 +413,13 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 doneConfig: DoneConfig(enabled: true),
@@ -441,7 +441,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -494,13 +494,13 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -547,13 +547,13 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 doneConfig: DoneConfig(enabled: true),
@@ -575,7 +575,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -612,7 +612,7 @@ void main() {
       );
     });
 
-    testWidgets('nextIndex waits for the specified feature to appear', (
+    testWidgets('nextStep waits for the specified feature to appear', (
       tester,
     ) async {
       final controller = FeaturesTourController<TestStep>('App');
@@ -626,10 +626,10 @@ void main() {
               return App(
                 tours: [
                   FeaturesTour(
-                    index: 1,
+                    step: TestStep.b,
                     controller: controller,
                     introduce: const Text('a.intro'),
-                    nextIndex: 2,
+                    nextStep: TestStep.c,
                     child: const Text('a'),
                     onAfterAction: (_) {
                       showSecond.value = true;
@@ -637,7 +637,7 @@ void main() {
                   ),
                   if (value)
                     FeaturesTour(
-                      index: 2,
+                      step: TestStep.c,
                       controller: controller,
                       introduce: const Text('b.intro'),
                       child: const Text('b'),
@@ -660,7 +660,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -675,7 +675,7 @@ void main() {
               }
             }
 
-            if (state is TourAfterIntroduceCalled) {
+            if (state is TourAfterActionCalled) {
               await tester.pump();
               expect(showSecond.value, isTrue);
               await tester.pump();
@@ -691,7 +691,7 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
-          isA<TourAfterIntroduceCalled>(),
+          isA<TourAfterActionCalled>(),
           isA<TourActionEmitted>(),
           isA<TourIntroducing>(),
           isA<TourActionEmitted>(),
@@ -708,14 +708,14 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 enabled: false,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -736,7 +736,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               // It should go directly to index 2
               expect(index, 2);
               await tester.pump();
@@ -774,7 +774,7 @@ void main() {
             home: App(
               tours: [
                 FeaturesTour(
-                  index: 1,
+                  step: TestStep.b,
                   controller: controller,
                   introduce: const Text('a.intro'),
                   child: const Text('a'),
@@ -816,7 +816,7 @@ void main() {
           collectedStates,
           containsAllInOrder([
             isA<TourPreDialogHidden>(),
-            isA<TourBeforeIntroduceCalled>(),
+            isA<TourBeforeActionCalled>(),
             isA<TourIntroducing>(),
             isA<TourActionEmitted>(),
             isA<TourCompleted>(),
@@ -837,7 +837,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -880,7 +880,7 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>(),
-          isA<TourAfterIntroduceCalled>(),
+          isA<TourAfterActionCalled>(),
           isA<TourActionEmitted>(),
           isA<TourCompleted>(),
         ]),
@@ -897,7 +897,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -909,7 +909,7 @@ void main() {
                 },
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -940,7 +940,7 @@ void main() {
               events.add('state.previousEmitted');
             }
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               await tester.pump();
 
               if (index == 1) {
@@ -1013,7 +1013,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -1025,7 +1025,7 @@ void main() {
                 },
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -1056,7 +1056,7 @@ void main() {
               events.add('state.previousEmitted');
             }
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               await tester.pump();
 
               if (index == 1) {
@@ -1128,7 +1128,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -1198,7 +1198,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -1254,7 +1254,7 @@ void main() {
             home: App(
               tours: [
                 FeaturesTour(
-                  index: 1,
+                  step: TestStep.b,
                   controller: controller,
                   introduce: const Text('a.intro'),
                   child: const Text('a'),
@@ -1318,13 +1318,13 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -1345,7 +1345,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               await tester.pump();
 
               if (index == 1) {
@@ -1419,7 +1419,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -1428,7 +1428,7 @@ void main() {
                 },
               ),
               FeaturesTour(
-                index: 2,
+                step: TestStep.c,
                 controller: controller,
                 introduce: const Text('b.intro'),
                 child: const Text('b'),
@@ -1452,7 +1452,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               await tester.pump();
 
               if (index == 1) {
@@ -1477,7 +1477,7 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourBeforeActionCalled>()
-              .having((s) => s.step, 'step', null)
+              .having((s) => s.step, 'step', TestStep.b)
               .having((s) => s.action, 'action', TourAction.introduce),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
           isA<TourActionEmitted>().having(
@@ -1486,7 +1486,7 @@ void main() {
             TourAction.next,
           ),
           isA<TourBeforeActionCalled>()
-              .having((s) => s.step, 'step', null)
+              .having((s) => s.step, 'step', TestStep.c)
               .having((s) => s.action, 'action', TourAction.next),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
           isA<TourActionEmitted>().having(
@@ -1509,7 +1509,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -1541,7 +1541,7 @@ void main() {
               await tester.tap(find.text('Okay'));
             }
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -1580,7 +1580,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -1639,7 +1639,7 @@ void main() {
             home: App(
               tours: [
                 FeaturesTour(
-                  index: 1,
+                  step: TestStep.b,
                   controller: controller,
                   introduce: const Text('a.intro'),
                   child: const Text('a'),
@@ -1715,7 +1715,7 @@ void main() {
               key: const Key('Page1'),
               tours: [
                 FeaturesTour(
-                  index: 1,
+                  step: TestStep.b,
                   controller: controller1,
                   introduce: const Text('page1.intro'),
                   child: const Text('page1'),
@@ -1786,7 +1786,7 @@ void main() {
               key: const Key('Page2'),
               tours: [
                 FeaturesTour(
-                  index: 1,
+                  step: TestStep.b,
                   controller: controller2,
                   introduce: const Text('page2.intro'),
                   child: const Text('page2'),
@@ -1838,7 +1838,7 @@ void main() {
   });
 
   group('Advanced Scenarios', () {
-    testWidgets('nextIndex times out and proceeds to next available feature', (
+    testWidgets('nextStep times out and proceeds to next available feature', (
       tester,
     ) async {
       final controller = FeaturesTourController<TestStep>('App');
@@ -1848,15 +1848,15 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
-                nextIndex: 99, // This index will never appear
-                nextIndexTimeout: const Duration(milliseconds: 100),
+                nextStep: TestStep.a, // This step will never appear
+                nextStepTimeout: const Duration(milliseconds: 100),
                 child: const Text('a'),
               ),
               FeaturesTour(
-                index: 3,
+                step: TestStep.d,
                 controller: controller,
                 introduce: const Text('c.intro'),
                 child: const Text('c'),
@@ -1877,7 +1877,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               if (index == 1) {
                 await tester.pump();
                 expect(find.text('a.intro'), findsOneWidget);
@@ -1921,14 +1921,14 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
               ),
               UnfeaturesTour(
                 child: FeaturesTour(
-                  index: 2,
+                  step: TestStep.c,
                   controller: controller,
                   introduce: const Text('b.intro'),
                   child: const Text('b'),
@@ -1950,7 +1950,7 @@ void main() {
           onStateChanged: (state) async {
             collectedStates.add(state);
 
-            if (state case TourIntroducing(index: final index)) {
+            if (state case TourIntroducing(: final index)) {
               // It should only show index 1
               expect(index, 1);
               await tester.pump();

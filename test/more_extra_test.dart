@@ -1,9 +1,9 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/cover_dialog.dart'; // Added for showCover and hideCover
 import 'package:features_tour/src/components/dialogs.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
@@ -77,7 +77,7 @@ void main() {
                 tours: [
                   if (value)
                     FeaturesTour(
-                      index: 1,
+                      step: TestStep.b,
                       controller: controller,
                       introduce: const Text('a.intro'),
                       child: const Text('a'),
@@ -86,7 +86,7 @@ void main() {
                       },
                     ),
                   FeaturesTour(
-                    index: 2,
+                    step: TestStep.c,
                     controller: controller,
                     introduce: const Text('b.intro'),
                     child: const Text('b'),
@@ -133,7 +133,7 @@ void main() {
         containsAllInOrder([
           isA<TourPreDialogHidden>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 1),
-          isA<TourAfterIntroduceCalled>(),
+          isA<TourAfterActionCalled>(),
           isA<TourActionEmitted>(),
           isA<TourIntroducing>().having((s) => s.index, 'index', 2),
           isA<TourActionEmitted>(),
@@ -150,7 +150,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -203,7 +203,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -283,7 +283,7 @@ void main() {
           MaterialApp(
             home: Scaffold(
               body: FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: FeaturesTourController<TestStep>('TestApp'),
                 introduce: Text(alignment.name),
                 introduceConfig: IntroduceConfig(quadrantAlignment: alignment),
@@ -360,7 +360,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -430,7 +430,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -496,7 +496,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 introduce: const Text('a.intro'),
                 child: const Text('a'),
@@ -550,7 +550,7 @@ void main() {
           home: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: TestStep.b,
                 controller: controller,
                 child: const Text('a'),
               ),

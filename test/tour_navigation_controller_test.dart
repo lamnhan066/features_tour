@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/dialogs.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum _TourIndex {
@@ -24,7 +25,7 @@ enum _TimeoutStep { first, missing, second }
 enum _PreviousTimeoutStep { first, second }
 
 class _TourExpectation {
-  const _TourExpectation({
+  const new({
     required this.step,
     required this.actionLabel,
     required this.drawerOpen,
@@ -38,7 +39,7 @@ class _TourExpectation {
 }
 
 class _TimeoutHarness extends StatelessWidget {
-  const _TimeoutHarness({required this.controller});
+  const new({required this.controller});
 
   final FeaturesTourController<_TimeoutStep> controller;
 
@@ -68,7 +69,7 @@ class _TimeoutHarness extends StatelessWidget {
 }
 
 class _PreviousTimeoutHarness extends StatefulWidget {
-  const _PreviousTimeoutHarness({required this.controller});
+  const new({required this.controller});
 
   final FeaturesTourController<_PreviousTimeoutStep> controller;
 
@@ -113,7 +114,7 @@ class _PreviousTimeoutHarnessState extends State<_PreviousTimeoutHarness> {
 }
 
 class _TourHarness extends StatefulWidget {
-  const _TourHarness({required this.controller});
+  const new({required this.controller});
 
   final FeaturesTourController<_TourIndex> controller;
 
@@ -423,10 +424,12 @@ class _TourHarnessState extends State<_TourHarness> {
                         ),
                         child: FloatingActionButton(
                           onPressed: () {
-                            widget.controller.start(
-                              context,
-                              force: true,
-                              preDialogConfig: PreDialogConfig(enabled: false),
+                            unawaited(
+                              widget.controller.start(
+                                context,
+                                force: true,
+                                preDialogConfig: PreDialogConfig(enabled: false),
+                              ),
                             );
                           },
                           child: const Icon(Icons.restart_alt_rounded),
@@ -449,7 +452,10 @@ class _TourHarnessState extends State<_TourHarness> {
                   ),
                   FeaturesTourPadding(
                     controller: widget.controller,
-                    indexes: {7.0, 8.0},
+                    steps: const {
+                      _TourIndex.restartTourButton,
+                      _TourIndex.floatingButton,
+                    },
                   ),
                 ],
               ),
@@ -557,8 +563,8 @@ void main() {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
-            index: final index,
-            step: final step,
+            : final index,
+            : final step,
           )) {
             expect(stepIndex, lessThan(expectations.length));
 
@@ -651,8 +657,8 @@ void main() {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
-            index: final index,
-            step: final step,
+            : final index,
+            : final step,
           )) {
             await tester.pump();
 
@@ -710,7 +716,7 @@ void main() {
         onStateChanged: (state) async {
           collectedStates.add(state);
 
-          if (state case TourIntroducing(step: final step)) {
+          if (state case TourIntroducing(: final step)) {
             await tester.pump();
 
             if (step == _PreviousTimeoutStep.first) {
@@ -836,8 +842,8 @@ void main() {
             collectedStates.add(state);
 
             if (state case TourIntroducing(
-              index: final index,
-              step: final step,
+              : final index,
+              : final step,
             )) {
               await tester.pump();
 
@@ -923,8 +929,8 @@ void main() {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
-            index: final index,
-            step: final step,
+            : final index,
+            : final step,
           )) {
             await tester.pump();
             expect(step, expectedSteps[stepIndex]);
@@ -1109,8 +1115,8 @@ void main() {
             collectedStates.add(state);
 
             if (state case TourIntroducing(
-              index: final index,
-              step: final step,
+              : final index,
+              : final step,
             )) {
               expect(stepIndex, lessThan(expectations.length));
 

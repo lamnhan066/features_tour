@@ -1,6 +1,6 @@
 import 'package:features_tour/features_tour.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../test_steps.dart';
@@ -18,7 +18,7 @@ void main() {
     });
 
     testWidgets('applies and removes padding when tour index matches', (
-      WidgetTester tester,
+      tester,
     ) async {
       final controller = FeaturesTourController<TestStep>('test_page');
       const padding = EdgeInsets.all(25);
@@ -33,13 +33,13 @@ void main() {
                   children: [
                     FeaturesTour(
                       controller: controller,
-                      index: 1,
+                      step: TestStep.b,
                       introduce: const Text('Feature 1'),
                       child: const SizedBox(width: 10, height: 10),
                     ),
                     FeaturesTourPadding(
                       controller: controller,
-                      indexes: {1.0},
+                      steps: const {TestStep.b},
                       padding: padding,
                       animationDuration: animationDuration,
                       child: const SizedBox(key: Key('padded_child')),
@@ -91,7 +91,7 @@ void main() {
     });
 
     testWidgets('does not apply padding when tour index does not match', (
-      WidgetTester tester,
+      tester,
     ) async {
       final controller = FeaturesTourController<TestStep>('test_page');
       const padding = EdgeInsets.all(25);
@@ -106,13 +106,13 @@ void main() {
                   children: [
                     FeaturesTour(
                       controller: controller,
-                      index: 1,
+                      step: TestStep.b,
                       introduce: const Text('Feature 1'),
                       child: const SizedBox(width: 10, height: 10),
                     ),
                     FeaturesTourPadding(
                       controller: controller,
-                      indexes: {2.0},
+                      steps: const {TestStep.c},
                       padding: padding,
                       animationDuration: animationDuration,
                       child: const SizedBox(key: Key('padded_child')),
@@ -164,7 +164,7 @@ void main() {
     });
 
     testWidgets('applies padding for one of multiple indexes', (
-      WidgetTester tester,
+      tester,
     ) async {
       final controller = FeaturesTourController<TestStep>('test_page');
       const padding = EdgeInsets.all(25);
@@ -179,20 +179,20 @@ void main() {
                   children: [
                     FeaturesTour(
                       controller: controller,
-                      index: 1,
-                      nextIndex: 2,
+                      step: TestStep.b,
+                      nextStep: TestStep.c,
                       introduce: const Text('Feature 1'),
                       child: const SizedBox(width: 10, height: 10),
                     ),
                     FeaturesTour(
                       controller: controller,
-                      index: 2,
+                      step: TestStep.c,
                       introduce: const Text('Feature 2'),
                       child: const SizedBox(width: 10, height: 10),
                     ),
                     FeaturesTourPadding(
                       controller: controller,
-                      indexes: {2.0},
+                      steps: const {TestStep.c},
                       padding: padding,
                       animationDuration: animationDuration,
                       child: const SizedBox(key: Key('padded_child')),

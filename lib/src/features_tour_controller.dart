@@ -11,7 +11,7 @@ class FeaturesTourController<T extends Enum> {
   ///
   /// **Note:** Avoid changing the [pageName] to prevent re-displaying the instructions
   /// for this page.
-  FeaturesTourController(this.pageName, {bool? debugLog})
+  new(this.pageName, {bool? debugLog})
     : _debugLog = debugLog ?? FeaturesTour._debugLog {
     _controllers.add(this);
 
@@ -142,24 +142,15 @@ class FeaturesTourController<T extends Enum> {
   /// [FeaturesTour] behaves as expected.
   ///
   /// Set the initial step for the tour using [firstStep], with an optional
-  /// timeout specified by [firstStepTimeout]. If [firstStepTimeout] is `null`,
-  /// the controller uses [firstIndexTimeout] instead. If the initial step times
-  /// out, the controller falls back to [firstIndex] and [firstIndexTimeout]
-  /// when they are provided. If neither value resolves to a visible state, the
-  /// smallest available step will be used.
-  ///
-  /// Legacy callers can still use [firstIndex] and [firstIndexTimeout]. When
-  /// both are provided, [firstStep] takes precedence.
+  /// timeout specified by [firstStepTimeout]. If the initial step times
+  /// out, the controller falls back to the smallest available step.
   ///
   /// The pre-dialog can be configured using [preDialogConfig]. This dialog prompts
   /// the user to confirm whether they want to start the tour.
   ///
-  /// The `onStateChanged` callback is an optional callback function that is invoked
+  /// The [onStateChanged] callback is an optional callback function that is invoked
   /// with the current [TourState] of the tour. This allows you to monitor the tour's
   /// progress and respond to different states as they occur.
-  ///
-  /// The older `onState` parameter is deprecated and will be removed in a
-  /// future release. Prefer `onStateChanged`.
   ///
   /// If [popToSkip] is `true`, the user can skip the current tour by pressing
   /// the back button (Android) or swipe back gesture (iOS). If `false`, the
@@ -173,21 +164,13 @@ class FeaturesTourController<T extends Enum> {
     BuildContext context, {
     T? firstStep,
     Duration? firstStepTimeout,
-    @Deprecated('Use `firstStep` instead of `firstIndex`.') double? firstIndex,
-    @Deprecated('Use `firstStepTimeout` instead of `firstIndexTimeout`.')
-    Duration firstIndexTimeout = const Duration(seconds: 3),
     Duration delay = const Duration(milliseconds: 500),
     bool? force,
     PreDialogConfig? preDialogConfig,
-    @Deprecated(
-      'Use `onStateChanged` instead. This parameter will be removed in a future release.',
-    )
-    FutureOr<void> Function(TourState state)? onState,
     FutureOr<void> Function(TourState state)? onStateChanged,
     bool popToSkip = true,
   }) async {
     final effectivePreDialogConfig = preDialogConfig;
-    final effectiveOnStateChanged = onStateChanged ?? onState;
     _popToSkip = popToSkip;
     if (_debugLog) {
       _logger ??= const LiteLogger(
@@ -200,7 +183,7 @@ class FeaturesTourController<T extends Enum> {
 
     if (_isIntroducing) {
       _logger?.warning(() => 'The tour is already in progress.');
-      await effectiveOnStateChanged?.call(const TourInProgress());
+      await onStateChanged?.call(const TourInProgress());
       return;
     }
     _isIntroducing = true;
@@ -212,7 +195,7 @@ class FeaturesTourController<T extends Enum> {
       if (!context.mounted) {
         _logger?.warning(() => 'The page $pageName context is not mounted.');
 
-        await effectiveOnStateChanged?.call(const TourNotMounted());
+        await onStateChanged?.call(const TourNotMounted());
         return;
       }
 
@@ -221,7 +204,7 @@ class FeaturesTourController<T extends Enum> {
       if (!context.mounted) {
         _logger?.warning(() => 'The page $pageName context is not mounted.');
 
-        await effectiveOnStateChanged?.call(const TourNotMounted());
+        await onStateChanged?.call(const TourNotMounted());
         return;
       }
 
@@ -241,9 +224,9 @@ class FeaturesTourController<T extends Enum> {
           ..addAll(_cachedStates);
       }
 
-      if (_states.isEmpty && firstStep == null && firstIndex == null) {
+      if (_states.isEmpty && firstStep == null) {
         _logger?.warning(() => 'The page $pageName has no state.');
-        await effectiveOnStateChanged?.call(const TourEmpty());
+        await onStateChanged?.call(const TourEmpty());
         return;
       }
 
@@ -251,7 +234,7 @@ class FeaturesTourController<T extends Enum> {
       if (force == null && await DismissAllTourStorage.getDismissAllTours()) {
         _logger?.info(() => 'All tours have been dismissed.');
         await _removePage();
-        await effectiveOnStateChanged?.call(const TourDismissedAllByUser());
+        await onStateChanged?.call(const TourDismissedAllByUser());
         return;
       }
 
@@ -263,13 +246,13 @@ class FeaturesTourController<T extends Enum> {
         _logger?.info(
           () => 'There are no new `FeaturesTour`s. Tour completed.',
         );
-        await effectiveOnStateChanged?.call(const TourEmpty());
+        await onStateChanged?.call(const TourEmpty());
         return;
       }
 
       if (!context.mounted) {
         _logger?.warning(() => 'The page $pageName context is not mounted.');
-        await effectiveOnStateChanged?.call(const TourNotMounted());
+        await onStateChanged?.call(const TourNotMounted());
         return;
       }
 
@@ -280,19 +263,19 @@ class FeaturesTourController<T extends Enum> {
         (isCustom) async {
           if (isCustom) {
             _logger?.info(() => 'A custom dialog is shown for the pre-dialog.');
-            await effectiveOnStateChanged?.call(
+            await onStateChanged?.call(
               const TourPreDialogShownCustom(),
             );
           } else {
             _logger?.info(() => 'The pre-dialog is shown.');
-            await effectiveOnStateChanged?.call(
+            await onStateChanged?.call(
               const TourPreDialogShownDefault(),
             );
           }
         },
         (type) async {
           _logger?.info(() => 'This has been applied to all pages.');
-          await effectiveOnStateChanged?.call(
+          await onStateChanged?.call(
             TourPreDialogHiddenByAppliedToAll(type),
           );
         },
@@ -300,7 +283,7 @@ class FeaturesTourController<T extends Enum> {
           _logger?.debug(
             () => 'The "Apply to all pages" checkbox is now $value.',
           );
-          await effectiveOnStateChanged?.call(
+          await onStateChanged?.call(
             TourPreDialogApplyToAllChanged(value),
           );
         },
@@ -308,44 +291,38 @@ class FeaturesTourController<T extends Enum> {
 
       switch (result) {
         case null:
-          await effectiveOnStateChanged?.call(const TourPreDialogHidden());
+          await onStateChanged?.call(const TourPreDialogHidden());
         case PreDialogButtonType.accept:
           _logger?.info(() => 'The user accepted to show the introduction.');
-          await effectiveOnStateChanged?.call(
+          await onStateChanged?.call(
             const TourPreDialogButtonPressed(PreDialogButtonType.accept),
           );
         case PreDialogButtonType.later:
           _logger?.info(() => 'The user chose to show the introduction later.');
-          await effectiveOnStateChanged?.call(
+          await onStateChanged?.call(
             const TourPreDialogButtonPressed(PreDialogButtonType.later),
           );
           return;
         case PreDialogButtonType.dismiss:
           _logger?.info(() => 'The user dismissed the introduction.');
           await _removePage();
-          await effectiveOnStateChanged?.call(
+          await onStateChanged?.call(
             const TourPreDialogButtonPressed(PreDialogButtonType.dismiss),
           );
           return;
       }
 
-      // Watches for the next step or next index value.
+      // Watches for the next step value.
       _FeaturesTourState<T>? nextState;
 
-      // Waits for the first step or first index.
-      final effectiveFirstIndex = firstStep?.index.toDouble() ?? firstIndex;
+      // Waits for the first step.
+      final effectiveFirstIndex = firstStep?.index.toDouble();
 
       if (effectiveFirstIndex != null) {
-        final effectiveFirstStepTimeout = firstStepTimeout ?? firstIndexTimeout;
-        nextState = await _nextIndex(
-          effectiveFirstIndex,
-          effectiveFirstStepTimeout,
-        );
+        final timeout = firstStepTimeout ?? const Duration(seconds: 3);
+        nextState = await _nextIndex(effectiveFirstIndex, timeout);
 
-        nextState ??= await _nextIndex(
-          effectiveFirstIndex,
-          effectiveFirstStepTimeout,
-        );
+        nextState ??= await _nextIndex(effectiveFirstIndex, timeout);
       }
 
       _logger?.step(() => 'Starting the tour.');
@@ -354,7 +331,7 @@ class FeaturesTourController<T extends Enum> {
         await _removedAllShownIntroductions(force);
         if (_states.isEmpty) {
           _logger?.info(() => 'No more states to introduce.');
-          await effectiveOnStateChanged?.call(const TourEmpty());
+          await onStateChanged?.call(const TourEmpty());
           break;
         }
 
@@ -369,10 +346,9 @@ class FeaturesTourController<T extends Enum> {
 
         state._blockPop();
 
-        final effectiveNextIndex =
-            state.widget.nextStep?.index.toDouble() ?? state.widget.nextIndex;
+        final effectiveNextIndex = state.widget.nextStep?.index.toDouble();
         final effectiveNextIndexTimeout =
-            state.widget.nextStepTimeout ?? state.widget.nextIndexTimeout;
+            state.widget.nextStepTimeout ?? const Duration(seconds: 3);
         final currentOrder = _stateOrder(state);
         final previousIndex = _previousIndexFor(currentOrder);
         final previousStepTimeout = state.widget.previousStepTimeout;
@@ -381,7 +357,7 @@ class FeaturesTourController<T extends Enum> {
 
         if (!context.mounted) {
           _logger?.warning(() => '   -> The parent widget was unmounted.');
-          await effectiveOnStateChanged?.call(const TourNotMounted());
+          await onStateChanged?.call(const TourNotMounted());
           break;
         }
 
@@ -411,7 +387,7 @@ class FeaturesTourController<T extends Enum> {
                 '   -> This widget has been introduced. Moving to the next widget.',
           );
           await _removeState(state, false);
-          await effectiveOnStateChanged?.call(
+          await onStateChanged?.call(
             TourSkippedIntroduction(
               index: currentOrder,
               step: state.widget.step,
@@ -428,7 +404,7 @@ class FeaturesTourController<T extends Enum> {
 
         if (!context.mounted) {
           _logger?.warning(() => '   -> The parent widget was unmounted');
-          await effectiveOnStateChanged?.call(const TourNotMounted());
+          await onStateChanged?.call(const TourNotMounted());
           break;
         }
 
@@ -462,14 +438,8 @@ class FeaturesTourController<T extends Enum> {
           didCallBefore = true;
         }
 
-        if (state.widget.onBeforeIntroduce != null) {
-          _logger?.step(() => '   -> Calling `onBeforeIntroduce`.');
-          await state.widget.onBeforeIntroduce!();
-          didCallBefore = true;
-        }
-
         if (didCallBefore) {
-          await effectiveOnStateChanged?.call(
+          await onStateChanged?.call(
             TourBeforeActionCalled(
               step: state.widget.step,
               action: arrivalAction,
@@ -479,11 +449,11 @@ class FeaturesTourController<T extends Enum> {
 
         if (!context.mounted) {
           _logger?.warning(() => '   -> The parent widget was unmounted.');
-          await effectiveOnStateChanged?.call(const TourNotMounted());
+          await onStateChanged?.call(const TourNotMounted());
           break;
         }
 
-        // If there is no state in the queue and no next step/index to wait for,
+        // If there is no state in the queue and no next step to wait for,
         // then it's the last state.
         final isLastState = _states.isEmpty && effectiveNextIndex == null;
         final result = await _showIntroduce(
@@ -493,7 +463,7 @@ class FeaturesTourController<T extends Enum> {
           canShowPrevious: previousIndex != null,
           () async {
             _logger?.step(() => '   -> The introduction is shown.');
-            await effectiveOnStateChanged?.call(
+            await onStateChanged?.call(
               TourIntroducing(index: currentOrder, step: state.widget.step),
             );
           },
@@ -505,16 +475,8 @@ class FeaturesTourController<T extends Enum> {
           await state.widget.onAfterAction!(result);
           didCallAfter = true;
         }
-        if (state.widget.onAfterIntroduce != null) {
-          _logger?.step(
-            () =>
-                '   -> Calling `onAfterIntroduce(${result.name})` (deprecated).',
-          );
-          await state.widget.onAfterIntroduce!(result);
-          didCallAfter = true;
-        }
         if (didCallAfter) {
-          await effectiveOnStateChanged?.call(
+          await onStateChanged?.call(
             TourAfterActionCalled(step: state.widget.step, action: result),
           );
         }
@@ -534,7 +496,7 @@ class FeaturesTourController<T extends Enum> {
             break;
         }
 
-        await effectiveOnStateChanged?.call(TourActionEmitted(action: result));
+        await onStateChanged?.call(TourActionEmitted(action: result));
 
         arrivalAction = result;
 
@@ -555,12 +517,12 @@ class FeaturesTourController<T extends Enum> {
         switch (arrivalAction) {
           case TourAction.introduce:
           case TourAction.next:
-            // Waits for the next state to appear if `nextStep` or `nextIndex` is non-null.
+            // Waits for the next state to appear if `nextStep` is non-null.
             if (effectiveNextIndex != null) {
               _logger?.step(
                 () =>
-                    '   -> The `nextIndex` is non-null. '
-                    'Waiting for the next index: $effectiveNextIndex...',
+                    '   -> The `nextStep` is non-null. '
+                    'Waiting for the next step: $effectiveNextIndex...',
               );
 
               nextState = await _nextIndex(
@@ -571,7 +533,7 @@ class FeaturesTourController<T extends Enum> {
               if (nextState == null) {
                 _logger?.warning(
                   () =>
-                      '   -> Cannot wait for the next index $effectiveNextIndex because '
+                      '   -> Cannot wait for the next step $effectiveNextIndex because '
                       'the timeout was reached. Using the next ordered '
                       'value instead.',
                 );
@@ -583,13 +545,13 @@ class FeaturesTourController<T extends Enum> {
               } else {
                 _logger?.info(
                   () =>
-                      '   -> The next index is available with state: $nextState.',
+                      '   -> The next step is available with state: $nextState.',
                 );
               }
             } else {
               _logger?.debug(
                 () =>
-                    '   -> The `nextIndex` is null. Using the next ordered value.',
+                    '   -> The `nextStep` is null. Using the next ordered value.',
               );
               nextState = null;
             }
@@ -628,7 +590,7 @@ class FeaturesTourController<T extends Enum> {
           case TourAction.disabled:
           case TourAction.notMounted:
             _logger?.debug(
-              '   -> No next step or index to wait for. Staying on the current widget.',
+              '   -> No next step to wait for. Staying on the current widget.',
             );
             _introducedIndexes.add(currentOrder);
             nextState = null;
@@ -640,7 +602,7 @@ class FeaturesTourController<T extends Enum> {
       }
       _introducingIndex.value = null;
       hideCover(_debugLog ? (log) => _logger?.debug(() => log) : null);
-      await effectiveOnStateChanged?.call(const TourCompleted());
+      await onStateChanged?.call(const TourCompleted());
       _logger?.step(() => 'This tour has been completed.');
       _isIntroducing = false;
     }
@@ -996,21 +958,11 @@ class FeaturesTourController<T extends Enum> {
   }
 
   double _stateOrder(_FeaturesTourState<T> state) {
-    final legacyIndex = state.widget.index;
-    if (legacyIndex != null) {
-      return legacyIndex;
-    }
-
-    return state.widget.step!.index.toDouble();
+    return state.widget.step.index.toDouble();
   }
 
   String _stateIdentity(_FeaturesTourState<T> state) {
-    final legacyIndex = state.widget.index;
-    if (legacyIndex != null) {
-      return legacyIndex.toString();
-    }
-
-    return state.widget.step!.name;
+    return state.widget.step.name;
   }
 
   double? _previousIndexFor(double currentIndex) {

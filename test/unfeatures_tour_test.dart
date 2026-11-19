@@ -1,6 +1,6 @@
 import 'package:features_tour/src/components/unfeatures_tour.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('isUnfeaturesTour returns false for null or outside context', (

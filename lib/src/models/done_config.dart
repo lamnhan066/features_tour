@@ -1,5 +1,5 @@
 import 'package:features_tour/src/models/base_button_config.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Configuration for the "Done" button in the Features Tour.
 class DoneConfig extends BaseButtonConfig {
@@ -32,7 +32,7 @@ class DoneConfig extends BaseButtonConfig {
   ///    ),
   ///  ),
   /// ```
-  factory DoneConfig({
+  factory({
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
     String? text,
     Alignment? alignment,
@@ -50,7 +50,7 @@ class DoneConfig extends BaseButtonConfig {
     buttonStyle: buttonStyle,
   );
 
-  DoneConfig._({
+  new _({
     super.builder,
     super.text = 'DONE',
     super.alignment = Alignment.bottomRight,

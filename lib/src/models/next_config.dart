@@ -1,5 +1,5 @@
 import 'package:features_tour/src/models/base_button_config.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Configuration for the "Next" button in the Features Tour.
 class NextConfig extends BaseButtonConfig {
@@ -32,7 +32,7 @@ class NextConfig extends BaseButtonConfig {
   ///    ),
   ///  ),
   /// ```
-  factory NextConfig({
+  factory({
     Widget Function(BuildContext context, VoidCallback onPressed)? builder,
     String? text,
     Alignment? alignment,
@@ -52,7 +52,7 @@ class NextConfig extends BaseButtonConfig {
     );
   }
 
-  const NextConfig._({
+  const new _({
     super.builder,
     super.text = 'NEXT',
     super.alignment = Alignment.bottomRight,

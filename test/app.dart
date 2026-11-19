@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class App extends StatelessWidget {
-  const App({required this.tours, super.key});
+  const new({required this.tours, super.key});
 
   final List<Widget> tours;
 

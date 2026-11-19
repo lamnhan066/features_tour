@@ -1,7 +1,7 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/unfeatures_tour.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
@@ -66,7 +66,7 @@ void main() {
           child: App(
             tours: [
               FeaturesTour(
-                index: 1,
+                step: _TestStep.step1,
                 controller: controller,
                 introduce: const Text('intro'),
                 child: const Text('child'),

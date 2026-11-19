@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The base configuration for buttons used in the Features Tour.
 abstract class BaseButtonConfig {
   /// Creates a [BaseButtonConfig] instance.
-  const BaseButtonConfig({
+  const new({
     this.builder,
     this.text = '',
     this.alignment = Alignment.bottomRight,

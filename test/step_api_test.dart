@@ -1,8 +1,8 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/dialogs.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum _TestStep { drawer, drawerButton }
@@ -62,8 +62,8 @@ void main() {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
-            index: final index,
-            step: final step,
+            : final index,
+            : final step,
           )) {
             if (index == _TestStep.drawer.index.toDouble()) {
               expect(step, _TestStep.drawer);
@@ -137,8 +137,8 @@ void main() {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
-            index: final index,
-            step: final step,
+            : final index,
+            : final step,
           )) {
             await tester.pump();
             await tester.pump();
@@ -199,8 +199,8 @@ void main() {
           collectedStates.add(state);
 
           if (state case TourIntroducing(
-            index: final index,
-            step: final step,
+            : final index,
+            : final step,
           )) {
             await tester.pump();
             await tester.pump();
@@ -222,14 +222,15 @@ void main() {
   });
 
   testWidgets(
-    'firstStepTimeout falls back to firstIndex when firstStep not present',
+    'firstStepTimeout falls back to the smallest available step',
     (tester) async {
       final controller = FeaturesTourController<_TestStep>('App');
       final collectedStates = <TourState>[];
 
       // Only register the `drawer` step in the widget tree. The provided
       // `firstStep` is `drawerButton` which is not present, so after the
-      // `firstStepTimeout` the controller should fall back to `firstIndex`.
+      // `firstStepTimeout` the controller should fall back to the smallest
+      // available step.
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -258,19 +259,16 @@ void main() {
           // Ask to start at a step that doesn't exist in the tree.
           firstStep: _TestStep.drawerButton,
           firstStepTimeout: const Duration(milliseconds: 5),
-          // Fallback to this index when the firstStep times out.
-          firstIndex: _TestStep.drawer.index.toDouble(),
-          firstIndexTimeout: const Duration(milliseconds: 5),
           onStateChanged: (state) async {
             collectedStates.add(state);
 
             if (state case TourIntroducing(
-              index: final index,
-              step: final step,
+              : final index,
+              : final step,
             )) {
               await tester.pump();
               await tester.pump();
-              // Ensure we fell back to the `drawer` index.
+              // Ensure we fell back to the `drawer` step.
               expect(index, _TestStep.drawer.index.toDouble());
               expect(step, _TestStep.drawer);
               expect(find.text('drawer intro'), findsOneWidget);

@@ -1,8 +1,8 @@
 import 'package:features_tour/features_tour.dart';
 import 'package:features_tour/src/components/dialogs.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lite_logger/lite_logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'test_steps.dart';
@@ -33,7 +33,7 @@ void main() {
         home: Scaffold(
           body: FeaturesTour(
             controller: controller,
-            index: 1,
+            step: TestStep.b,
             introduce: const Text('intro'),
             child: const Text('content'),
           ),
@@ -63,7 +63,7 @@ void main() {
     expect(collected, contains(isA<TourNotMounted>()));
   });
 
-  testWidgets('firstIndex timeout is handled and tour completes', (
+  testWidgets('firstStep timeout is handled and tour completes', (
     tester,
   ) async {
     final controller = FeaturesTourController<TestStep>('TimeoutTest');
@@ -76,13 +76,13 @@ void main() {
             children: [
               FeaturesTour(
                 controller: controller,
-                index: 1,
+                step: TestStep.b,
                 introduce: const Text('intro1'),
                 child: const Text('a'),
               ),
               FeaturesTour(
                 controller: controller,
-                index: 2,
+                step: TestStep.c,
                 introduce: const Text('intro2'),
                 child: const Text('b'),
               ),
@@ -99,8 +99,8 @@ void main() {
         tester.element(find.byType(Scaffold)),
         force: true,
         delay: Duration.zero,
-        firstIndex: 999, // nonexistent index to force timeout
-        firstIndexTimeout: const Duration(milliseconds: 50),
+        firstStep: TestStep.d, // nonexistent step to force timeout
+        firstStepTimeout: const Duration(milliseconds: 50),
         onStateChanged: (state) async {
           collected.add(state);
           if (state is TourIntroducing) {
@@ -128,7 +128,7 @@ void main() {
         home: Scaffold(
           body: FeaturesTour(
             controller: controller,
-            index: 1,
+            step: TestStep.b,
             introduce: const Text('intro-pref'),
             child: const Text('content'),
           ),
@@ -197,7 +197,7 @@ void main() {
         home: Scaffold(
           body: FeaturesTour(
             controller: c1,
-            index: 1,
+            step: TestStep.b,
             introduce: const Text('i1'),
             child: const Text('c'),
           ),
@@ -230,7 +230,7 @@ void main() {
         home: Scaffold(
           body: FeaturesTour(
             controller: c2,
-            index: 1,
+            step: TestStep.b,
             introduce: const Text('i2'),
             child: const Text('c2'),
           ),
