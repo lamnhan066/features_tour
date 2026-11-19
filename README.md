@@ -68,7 +68,7 @@ void initState() {
 }
 ```
 
-`firstStep` is the preferred entry point. The controller still accepts `firstIndex` and `firstIndexTimeout` for migration, but new code should use the enum-based API.
+`firstStep` is the entry point for the tour.
 Instantiate the controller and widgets with the same enum type so `step`, `nextStep`, and `firstStep` stay type-safe.
 
 ## Global Configuration
@@ -207,7 +207,7 @@ When multiple list items share the same `step`, set `enabled: true` on the one i
 
 ### Bottom edge padding
 
-Use `FeaturesTourPadding` to keep navigation buttons from overlapping bottom-aligned widgets. Prefer `steps` for enum-based tours.
+Use `FeaturesTourPadding` to keep navigation buttons from overlapping bottom-aligned widgets. Pass the enum `steps` that need extra padding.
 
 ```dart
 FeaturesTourPadding(
@@ -219,8 +219,6 @@ FeaturesTourPadding(
 )
 ```
 
-`indexes` is still supported for migration, but `steps` is the preferred API.
-
 ## Customization Notes
 
 `IntroduceConfig` can be customized with a builder, barrier color builder, padding, quadrant alignment, alignment, and root overlay support. `RoundedRectIntroduceConfig()` is the preset to use when you want a rounded callout with better contrast out of the box.
@@ -231,14 +229,24 @@ FeaturesTourPadding(
 
 ## Migration Notes
 
+### 0.7.0-0.8.0 (breaking)
+
+- The numeric API was removed. Instantiate the generic API as
+  `FeaturesTourController<YourStepEnum>('PageName')` and
+  `FeaturesTour<YourStepEnum>(...)`, and use `step`, `nextStep`/`nextStepTimeout`,
+  `firstStep`/`firstStepTimeout`, and `FeaturesTourPadding.steps`.
+- Use `onBeforeAction`/`onAfterAction` and `onStateChanged`.
+- Persisted tour state keys now use the step name, so tours will be shown
+  again once after upgrading.
+
 ### 0.6.0-0.7.0
 
 - Instantiate the new generic API as `FeaturesTourController<YourStepEnum>('PageName')` and `FeaturesTour<YourStepEnum>(...)`.
-- Prefer `step` over `index`.
-- Prefer `nextStep` and `nextStepTimeout` over `nextIndex` and `nextIndexTimeout`.
-- Prefer `FeaturesTourPadding.steps` over `FeaturesTourPadding.indexes`.
-- Prefer `onBeforeAction` and `onAfterAction` over the deprecated `onBeforeIntroduce` and `onAfterIntroduce` callbacks.
-- Prefer `onStateChanged` over the deprecated `onState` callback. The older `onState` parameter is still supported for migration but will be removed in a future release.
+- Use `step` instead of `index`.
+- Use `nextStep` and `nextStepTimeout` instead of `nextIndex` and `nextIndexTimeout`.
+- Use `FeaturesTourPadding.steps` instead of `FeaturesTourPadding.indexes`.
+- Use `onBeforeAction` and `onAfterAction` instead of `onBeforeIntroduce` and `onAfterIntroduce`.
+- Use `onStateChanged` instead of the `onState` callback.
 - If you don't want to use the `previous` action button, you can use this setting to keeps the old behavior:
   ```dart
   FeaturesTour.setGlobalConfig(

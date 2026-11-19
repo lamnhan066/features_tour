@@ -1,3 +1,47 @@
+## 0.8.0
+
+### Breaking Changes
+
+* Removed all deprecated numeric and callback shims kept for migration in `0.7.0`.
+  The enum-based API is now the only API:
+  * `FeaturesTour.index`, `nextIndex`, `nextIndexTimeout`, `onBeforeIntroduce`,
+    and `onAfterIntroduce` were removed. Use `step`, `nextStep`,
+    `nextStepTimeout`, `onBeforeAction`, and `onAfterAction`.
+  * `FeaturesTourController.start` no longer accepts `firstIndex`,
+    `firstIndexTimeout`, or `onState`. Use `firstStep`, `firstStepTimeout`,
+    and `onStateChanged`.
+  * `FeaturesTourPadding.indexes` was removed. Use `steps`.
+  * `IntroduceResult`, `TourBeforeIntroduceCalled`, `TourAfterIntroduceCalled`,
+    and `TourIntroduceResultEmitted` were removed. Use `TourAction`,
+    `TourBeforeActionCalled`, `TourAfterActionCalled`, and `TourActionEmitted`.
+  * `TourActionEmitted.result` was removed. Use `action`.
+* `FeaturesTour.step` is now required; `FeaturesTourPadding.steps` is now required.
+* Requires Dart `^3.14.0` and Flutter `>=3.50.0`.
+
+### Changed
+
+* Adopted the Dart 3.14 `new` constructor syntax and `: final` pattern
+  shorthand across the codebase.
+* Depends on `material_ui` `^1.0.0`; Material imports now resolve through it.
+* Bumped `very_good_analysis` to `^11.0.0` with all new lints resolved.
+
+### Migration Notes
+
+* Replace numeric identifiers with enum steps, e.g.
+  `FeaturesTour(index: 1, ...)` becomes
+  `FeaturesTour(step: HomeTourStep.drawer, ...)` with the controller typed as
+  `FeaturesTourController<HomeTourStep>`.
+* Persisted tour state keys now use the step name (e.g.
+  `FeaturesTour_HomePage_drawer`) instead of the numeric order, so tours will
+  be shown again once after upgrading.
+* To keep the pre-0.7.0 button layout without the `PREVIOUS` button:
+  ```dart
+  FeaturesTour.setGlobalConfig(
+    previousConfig: PreviousConfig(enabled: false),
+    skipConfig: SkipConfig(alignment: Alignment.bottomLeft),
+  );
+  ```
+
 ## 0.7.0
 
 ### Added
